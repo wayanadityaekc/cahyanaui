@@ -3,10 +3,10 @@
 import { useAccount } from '@/state/AccountProvider';
 
 export default function useAuth() {
-  const ctx = useAccount();
-  const account = ctx && ctx.account;
+  const accountContext = useAccount();
+  const account = accountContext && accountContext.account;
   return {
-    ...ctx,
+    ...accountContext,
     account,
     signedIn: !!account,
     name: (account && account.name) || '',

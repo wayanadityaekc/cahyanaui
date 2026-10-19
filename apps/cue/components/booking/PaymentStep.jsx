@@ -5,10 +5,12 @@ import { ChevronDown, CreditCard } from 'lucide-react';
 import InfoDot from '@/components/ui/InfoDot';
 import { withSymbol } from '@/components/Price';
 import ModalPresence from '@/components/ui/ModalPresence';
-import { REFERRAL_INPUT, REFERRAL_BTN, refMsgCls } from '@/components/ui/modalClasses';
+import { REFERRAL_INPUT, REFERRAL_BTN, buildReferralMessageClass } from '@/components/ui/modalClasses';
 import { PAY_COPY, payOptions } from '@/lib/payment';
 import { usePricing } from '@/state/PricingProvider';
-import { noteFor, railFor, RAIL_CHOICES } from '@/lib/rails';
+import { buildRailNote, pickRail, RAIL_CHOICES } from '@/lib/rails';
+
+const ICON_STROKE_WIDTH_REGULAR = 1.7;
 
 const CARD = 'rounded-md bg-white [transition:border-color_var(--dur)_ease,background-color_var(--dur)_ease]';
 const CARD_ON = '[border:1.5px_solid_var(--color-cta)] bg-cream';
@@ -92,34 +94,34 @@ export default function PaymentStep({
   const deposit = cat && cat.currency === currency && cat.deposit ? cat.deposit.display : null;
   const depositIdr = cat && cat.deposit && cat.deposit.idr != null ? cat.deposit.idr : null;
   const options = payOptions({ total, currency, stay, hasReferral, deposit, totalIdr, depositIdr, totalUsd });
-  const rail = railFor(railChoice);
-  const inRupiah = rail === 'doku' && String(currency).toUpperCase() !== 'IDR';
-  const inUsd = rail === 'paypal' && String(currency).toUpperCase() === 'IDR';
-  const [openFine, setOpenFine] = useState(false);
-  const railNote = noteFor(currency, rail);
-  function money(v) {
-    return withSymbol(symbol + v.toLocaleString(symbol === 'Rp' ? 'id-ID' : 'en-US'));
+  const rail = pickRail(railChoice);
+  const isInRupiah = rail === 'doku' && String(currency).toUpperCase() !== 'IDR';
+  const isInUsd = rail === 'paypal' && String(currency).toUpperCase() === 'IDR';
+  const [isFinePrintOpen, setIsFinePrintOpen] = useState(false);
+  const railNote = buildRailNote(currency, rail);
+  function formatMoney(amount) {
+    return withSymbol(symbol + amount.toLocaleString(symbol === 'Rp' ? 'id-ID' : 'en-US'));
   }
-  function rupiah(v) {
-    return withSymbol(`Rp${v.toLocaleString('id-ID')}`);
+  function formatRupiah(amount) {
+    return withSymbol(`Rp${amount.toLocaleString('id-ID')}`);
   }
-  function dollars(v) {
-    return withSymbol(`$${v.toLocaleString('en-US')}`);
+  function formatDollars(amount) {
+    return withSymbol(`$${amount.toLocaleString('en-US')}`);
   }
 
   useEffect(() => {
-    const picked = options.find((o) => o.id === option);
+    const picked = options.find((optionItem) => optionItem.id === option);
     if (picked && !picked.available) onOption('deposit');
   }, [options, option, onOption]);
 
   useEffect(() => {
-    if (!openFine) return undefined;
-    function onKey(e) {
-      if (e.key === 'Escape') setOpenFine(false);
+    if (!isFinePrintOpen) return undefined;
+    function handleKeyDown(event) {
+      if (event.key === 'Escape') setIsFinePrintOpen(false);
     }
-    document.addEventListener('keydown', onKey);
-    return () => document.removeEventListener('keydown', onKey);
-  }, [openFine]);
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [isFinePrintOpen]);
 
   return (
     <div className="my-5">
@@ -127,10 +129,10 @@ export default function PaymentStep({
         <p className={`${HEAD} !mb-0`}>{PAY_COPY.heading}</p>
         <InfoDot label="How the payment methods work" align="end" subtle>
           <span className="flex flex-col gap-[var(--space-1)]" data-rail-info>
-            {RAIL_CHOICES.map((m) => (
-              <span key={m.id}>
-                <span className={INFO_TERM}>{m.label}</span>
-                {m.how}
+            {RAIL_CHOICES.map((railChoiceItem) => (
+              <span key={railChoiceItem.id}>
+                <span className={INFO_TERM}>{railChoiceItem.label}</span>
+                {railChoiceItem.how}
               </span>
             ))}
             {railNote && <span className="text-muted">{railNote}</span>}
@@ -139,22 +141,26 @@ export default function PaymentStep({
       </div>
 
       <div className={METHODS} role="radiogroup" aria-label={PAY_COPY.methodHeading} data-rail-choice>
-        {RAIL_CHOICES.map((m) => {
-          const selected = rail === m.id;
+        {RAIL_CHOICES.map((railChoiceItem) => {
+          const isSelected = rail === railChoiceItem.id;
           return (
             <button
-              key={m.id}
+              key={railChoiceItem.id}
               type="button"
               role="radio"
-              aria-checked={selected}
-              data-rail={m.id}
-              aria-label={m.label}
-              title={m.label}
-              className={`${METHOD} ${selected ? CARD_ON : CARD_OFF}`}
-              onClick={() => onRail && onRail(m.id)}
+              aria-checked={isSelected}
+              data-rail={railChoiceItem.id}
+              aria-label={railChoiceItem.label}
+              title={railChoiceItem.label}
+              className={`${METHOD} ${isSelected ? CARD_ON : CARD_OFF}`}
+              onClick={() => onRail && onRail(railChoiceItem.id)}
             >
-              {m.id === 'doku' ? (
-                <CreditCard strokeWidth={1.7} className={`${METHOD_ICON} text-green`} aria-hidden="true" />
+              {railChoiceItem.id === 'doku' ? (
+                <CreditCard
+                  strokeWidth={ICON_STROKE_WIDTH_REGULAR}
+                  className={`${METHOD_ICON} text-green`}
+                  aria-hidden="true"
+                />
               ) : (
                 <PayPalMark className={METHOD_ICON} />
               )}
@@ -164,45 +170,59 @@ export default function PaymentStep({
       </div>
 
       <div className="flex flex-col gap-2" role="radiogroup" aria-label={PAY_COPY.heading}>
-        {options.map((o) => {
-          const selected = option === o.id;
-          const dim = !o.available;
-          const isRef = o.id === 'referral';
+        {options.map((optionItem) => {
+          const isSelected = option === optionItem.id;
+          const isDimmed = !optionItem.available;
+          const isRef = optionItem.id === 'referral';
+          function pickCardClasses() {
+            if (isDimmed) return CARD_DIM;
+            if (isSelected) return CARD_ON;
+            return CARD_OFF;
+          }
+
+          function renderAmountLine() {
+            if (isInRupiah)
+              return (
+                <span className={AMOUNT} data-amount-idr>
+                  {optionItem.amountIdr != null ? formatRupiah(optionItem.amountIdr) : '-'}
+                  {optionItem.amount != null && <span className={APPROX}>≈ {formatMoney(optionItem.amount)}</span>}
+                </span>
+              );
+            if (isInUsd)
+              return (
+                <span className={AMOUNT} data-amount-usd>
+                  {optionItem.amountUsd != null ? formatDollars(optionItem.amountUsd) : '-'}
+                  {optionItem.amount != null && <span className={APPROX}>≈ {formatMoney(optionItem.amount)}</span>}
+                </span>
+              );
+            return <span className={AMOUNT}>{optionItem.amount != null ? formatMoney(optionItem.amount) : '-'}</span>;
+          }
+
           return (
-            <div key={o.id} className={`${CARD} ${dim ? CARD_DIM : selected ? CARD_ON : CARD_OFF}`}>
+            <div key={optionItem.id} className={`${CARD} ${pickCardClasses()}`}>
               <button
                 type="button"
                 role="radio"
-                aria-checked={selected}
-                aria-disabled={dim}
-                disabled={dim}
-                className={`${PICK} ${isRef ? PICK_TIGHT : ''} ${dim ? PICK_DIM : ''}`}
-                onClick={() => !dim && onOption(o.id)}
+                aria-checked={isSelected}
+                aria-disabled={isDimmed}
+                disabled={isDimmed}
+                className={`${PICK} ${isRef ? PICK_TIGHT : ''} ${isDimmed ? PICK_DIM : ''}`}
+                onClick={() => !isDimmed && onOption(optionItem.id)}
               >
-                <Radio on={selected} dim={dim} />
+                <Radio on={isSelected} dim={isDimmed} />
                 <span className="flex-1 min-w-0">
                   <span className={LABEL}>
-                    {o.label}
-                    {o.badge && <span className={BADGE}>{o.badge}</span>}
+                    {optionItem.label}
+                    {optionItem.badge && <span className={BADGE}>{optionItem.badge}</span>}
                   </span>
                   <span className={SUB}>
-                    {o.sub}
-                    {o.balance != null && <> Then {money(o.balance)} cash to your driver on the day.</>}
+                    {optionItem.sub}
+                    {optionItem.balance != null && (
+                      <> Then {formatMoney(optionItem.balance)} cash to your driver on the day.</>
+                    )}
                   </span>
                 </span>
-                {inRupiah ? (
-                  <span className={AMOUNT} data-amount-idr>
-                    {o.amountIdr != null ? rupiah(o.amountIdr) : '-'}
-                    {o.amount != null && <span className={APPROX}>≈ {money(o.amount)}</span>}
-                  </span>
-                ) : inUsd ? (
-                  <span className={AMOUNT} data-amount-usd>
-                    {o.amountUsd != null ? dollars(o.amountUsd) : '-'}
-                    {o.amount != null && <span className={APPROX}>≈ {money(o.amount)}</span>}
-                  </span>
-                ) : (
-                  <span className={AMOUNT}>{o.amount != null ? money(o.amount) : '-'}</span>
-                )}
+                {renderAmountLine()}
               </button>
 
               {isRef && (
@@ -214,15 +234,15 @@ export default function PaymentStep({
                       id="referral"
                       placeholder="Enter code"
                       value={referral}
-                      onChange={(e) => onReferral(e.target.value)}
+                      onChange={(event) => onReferral(event.target.value)}
                       aria-label={PAY_COPY.referralLabel}
                     />
                     <button className={REFERRAL_BTN} type="button" onClick={onApplyReferral}>
                       Apply
                     </button>
                   </div>
-                  {refMsg && <small className={refMsgCls(refMsg.ok)}>{refMsg.text}</small>}
-                  {dim && !refMsg && <p className={LOCKED}>{PAY_COPY.referralLocked}</p>}
+                  {refMsg && <small className={buildReferralMessageClass(refMsg.ok)}>{refMsg.text}</small>}
+                  {isDimmed && !refMsg && <p className={LOCKED}>{PAY_COPY.referralLocked}</p>}
                 </div>
               )}
             </div>
@@ -235,22 +255,22 @@ export default function PaymentStep({
         <button
           type="button"
           className={MORE}
-          aria-expanded={openFine}
+          aria-expanded={isFinePrintOpen}
           aria-haspopup="dialog"
-          onClick={() => setOpenFine((v) => !v)}
+          onClick={() => setIsFinePrintOpen((wasFineOpen) => !wasFineOpen)}
         >
           {PAY_COPY.detailsMore}
           <ChevronDown
             className="w-[var(--icon-sm)] h-[var(--icon-sm)] shrink-0"
-            strokeWidth={1.7}
+            strokeWidth={ICON_STROKE_WIDTH_REGULAR}
             aria-hidden="true"
           />
         </button>
       </div>
 
       <ModalPresence
-        open={openFine}
-        onClose={() => setOpenFine(false)}
+        open={isFinePrintOpen}
+        onClose={() => setIsFinePrintOpen(false)}
         label={PAY_COPY.detailsTitle}
         box={FINE_BOX}
         shellClass={FINE_SHELL}
@@ -271,7 +291,7 @@ export default function PaymentStep({
             </a>
           </p>
         </div>
-        <button type="button" className={FINE_CLOSE} onClick={() => setOpenFine(false)}>
+        <button type="button" className={FINE_CLOSE} onClick={() => setIsFinePrintOpen(false)}>
           {PAY_COPY.detailsClose}
         </button>
       </ModalPresence>

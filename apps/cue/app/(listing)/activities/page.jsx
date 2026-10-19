@@ -1,7 +1,7 @@
 import ListingPage from '@/components/sections/ListingPage';
 import JsonLd from '@/components/JsonLd';
 import { LISTINGS } from '@/content/shared/listings';
-import { withAttractionCards } from '@/lib/tourIndex';
+import { addAttractionCards } from '@/lib/tourIndex';
 import { ATTRACTION_CONTENT } from '@/content/attractions';
 
 export const metadata = {
@@ -15,7 +15,7 @@ export default function Page() {
   return (
     <>
       <JsonLd page="activities" />
-      <ListingPage data={withAttractionCards(LISTINGS.activities, ATTRACTION_CONTENT)} page="activities" />
+      <ListingPage data={addAttractionCards(LISTINGS.activities, ATTRACTION_CONTENT)} page="activities" />
     </>
   );
 }

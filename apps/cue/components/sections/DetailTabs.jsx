@@ -5,26 +5,30 @@ import InfoBoxes, { InfoBox, InfoBoxList } from '@/components/ui/InfoBoxes';
 import { useEffect, useRef, useState } from 'react';
 import ReviewsStrip from '@/components/reviews/ReviewsStrip';
 import LoadFallback from '@/components/ui/LoadFallback';
-import { CARD, CARD_WRAP, STRIP, TRACK, segment, SEC, SEC_H } from '@/components/ui/detailCardClasses';
+import { CARD, CARD_WRAP, STRIP, TRACK, buildSegmentClass, SEC, SEC_H } from '@/components/ui/detailCardClasses';
+
+const ICON_STROKE_WIDTH_REGULAR = 1.7;
+const TAB_SCROLL_LINE_OFFSET_PX = 12;
+const TAB_SCROLL_TOP_OFFSET_PX = 8;
 
 function CarIcon() {
-  return <Car strokeWidth={1.7} aria-hidden="true" />;
+  return <Car strokeWidth={ICON_STROKE_WIDTH_REGULAR} aria-hidden="true" />;
 }
 function TicketIcon() {
-  return <Banknote strokeWidth={1.7} aria-hidden="true" />;
+  return <Banknote strokeWidth={ICON_STROKE_WIDTH_REGULAR} aria-hidden="true" />;
 }
 
 function ClockIcon() {
-  return <Clock strokeWidth={1.7} aria-hidden="true" />;
+  return <Clock strokeWidth={ICON_STROKE_WIDTH_REGULAR} aria-hidden="true" />;
 }
 function BagIcon() {
-  return <Backpack strokeWidth={1.7} aria-hidden="true" />;
+  return <Backpack strokeWidth={ICON_STROKE_WIDTH_REGULAR} aria-hidden="true" />;
 }
 function InfoIcon() {
-  return <Info strokeWidth={1.7} aria-hidden="true" />;
+  return <Info strokeWidth={ICON_STROKE_WIDTH_REGULAR} aria-hidden="true" />;
 }
 function CardIcon() {
-  return <CreditCard strokeWidth={1.7} aria-hidden="true" />;
+  return <CreditCard strokeWidth={ICON_STROKE_WIDTH_REGULAR} aria-hidden="true" />;
 }
 
 function GoodToKnow({ isActivity }) {
@@ -133,7 +137,8 @@ export default function DetailTabs({
       content: <GoodToKnow isActivity={bookType === 'experience' || bookType === 'performance'} />,
     });
   }
-  if ((included && included.length) || (excluded && excluded.length)) {
+  const hasIncludedOrExcluded = (included && included.length) || (excluded && excluded.length);
+  if (hasIncludedOrExcluded) {
     sections.push({
       id: 'included',
       label: 'Included',
@@ -157,25 +162,25 @@ export default function DetailTabs({
   const secRefs = useRef({});
 
   useEffect(() => {
-    const ids = sections.map((s) => s.id);
-    function onScroll() {
+    const ids = sections.map((section) => section.id);
+    function handleScroll() {
       const stripH = stripRef.current ? stripRef.current.offsetHeight : 0;
       const header = document.querySelector('header');
       const headerH = header ? header.getBoundingClientRect().height : 0;
-      const line = headerH + stripH + 12;
-      let cur = ids[0];
+      const line = headerH + stripH + TAB_SCROLL_LINE_OFFSET_PX;
+      let current = ids[0];
       ids.forEach((id) => {
         const section = secRefs.current[id];
-        if (section && section.getBoundingClientRect().top <= line) cur = id;
+        if (section && section.getBoundingClientRect().top <= line) current = id;
       });
-      setActive(cur);
+      setActive(current);
     }
-    onScroll();
-    window.addEventListener('scroll', onScroll, { passive: true });
-    window.addEventListener('resize', onScroll);
+    handleScroll();
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    window.addEventListener('resize', handleScroll);
     return () => {
-      window.removeEventListener('scroll', onScroll);
-      window.removeEventListener('resize', onScroll);
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('resize', handleScroll);
     };
   }, []);
 
@@ -185,7 +190,7 @@ export default function DetailTabs({
     const stripH = stripRef.current ? stripRef.current.offsetHeight : 0;
     const header = document.querySelector('header');
     const headerH = header ? header.getBoundingClientRect().height : 0;
-    const top = section.getBoundingClientRect().top + window.scrollY - headerH - stripH - 8;
+    const top = section.getBoundingClientRect().top + window.scrollY - headerH - stripH - TAB_SCROLL_TOP_OFFSET_PX;
     window.scrollTo({ top, behavior: 'smooth' });
   }
 
@@ -194,31 +199,31 @@ export default function DetailTabs({
       <div className={CARD}>
         <div ref={stripRef} className={STRIP}>
           <nav className={TRACK} aria-label="Jump to section">
-            {sections.map((s) => (
+            {sections.map((section) => (
               <button
-                key={s.id}
+                key={section.id}
                 type="button"
-                aria-current={active === s.id ? 'true' : undefined}
-                className={segment(active === s.id)}
-                onClick={() => pick(s.id)}
+                aria-current={active === section.id ? 'true' : undefined}
+                className={buildSegmentClass(active === section.id)}
+                onClick={() => pick(section.id)}
               >
-                {s.label}
+                {section.label}
               </button>
             ))}
           </nav>
         </div>
-        {sections.map((s) => (
+        {sections.map((sectionItem) => (
           <section
-            key={s.id}
-            id={`dsec-${s.id}`}
+            key={sectionItem.id}
+            id={`dsec-${sectionItem.id}`}
             ref={(section) => {
-              secRefs.current[s.id] = section;
+              secRefs.current[sectionItem.id] = section;
             }}
             className={SEC}
-            aria-label={s.heading === false ? s.label : undefined}
+            aria-label={sectionItem.heading === false ? sectionItem.label : undefined}
           >
-            {s.heading !== false && <h2 className={SEC_H}>{s.label}</h2>}
-            {s.content}
+            {sectionItem.heading !== false && <h2 className={SEC_H}>{sectionItem.label}</h2>}
+            {sectionItem.content}
           </section>
         ))}
       </div>

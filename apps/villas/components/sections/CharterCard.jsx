@@ -16,7 +16,8 @@ function useCharterPrices(currency = 'USD') {
         const response = await fetch(`${API_BASE}/pricing/catalog?currency=${encodeURIComponent(currency)}`);
         if (!response.ok) return;
         const data = await response.json();
-        if (!alive || !data || !Array.isArray(data.charters) || data.currency !== currency) return;
+        const isCharterDataUnusable = !alive || !data || !Array.isArray(data.charters) || data.currency !== currency;
+        if (isCharterDataUnusable) return;
         const byTier = {};
         data.charters.forEach((row) => {
           byTier[row.duration] = row.display;

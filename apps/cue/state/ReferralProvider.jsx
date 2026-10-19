@@ -48,7 +48,7 @@ export function ReferralProvider({ children }) {
 }
 
 export function useReferral() {
-  const ctx = useContext(ReferralContext);
-  if (!ctx) throw new Error('useReferral must be used inside ReferralProvider');
-  return ctx;
+  const referralContext = useContext(ReferralContext);
+  if (!referralContext) throw new Error('useReferral must be used inside ReferralProvider');
+  return referralContext;
 }

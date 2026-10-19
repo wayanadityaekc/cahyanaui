@@ -17,26 +17,26 @@ export default function DragSheet({
   const ref = useRef(null);
   const drag = useRef(null);
 
-  function onPointerDown(e) {
+  function handlePointerDown(event) {
     if (!enabled || !ref.current) return;
-    e.currentTarget.setPointerCapture(e.pointerId);
-    drag.current = { y0: e.clientY, t0: e.timeStamp, dy: 0 };
+    event.currentTarget.setPointerCapture(event.pointerId);
+    drag.current = { y0: event.clientY, t0: event.timeStamp, dy: 0 };
     ref.current.style.transition = 'none';
   }
 
-  function onPointerMove(e) {
+  function handlePointerMove(event) {
     const dragState = drag.current;
     if (!dragState || !ref.current) return;
-    dragState.dy = Math.max(0, e.clientY - dragState.y0);
+    dragState.dy = Math.max(0, event.clientY - dragState.y0);
     ref.current.style.transform = `translateY(${dragState.dy}px)`;
   }
 
-  function onPointerUp(e) {
+  function handlePointerUp(event) {
     const dragState = drag.current;
     if (!dragState || !ref.current) return;
     drag.current = null;
     const sheet = ref.current;
-    const velocity = dragState.dy / Math.max(1, e.timeStamp - dragState.t0);
+    const velocity = dragState.dy / Math.max(1, event.timeStamp - dragState.t0);
 
     sheet.style.transition = SPRING_BACK;
     sheet.style.transform = 'translateY(0px)';
@@ -56,10 +56,10 @@ export default function DragSheet({
         <span
           className={handleClassName}
           aria-hidden="true"
-          onPointerDown={onPointerDown}
-          onPointerMove={onPointerMove}
-          onPointerUp={onPointerUp}
-          onPointerCancel={onPointerUp}
+          onPointerDown={handlePointerDown}
+          onPointerMove={handlePointerMove}
+          onPointerUp={handlePointerUp}
+          onPointerCancel={handlePointerUp}
         />
       )}
       {children}

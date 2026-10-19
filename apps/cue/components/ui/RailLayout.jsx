@@ -12,12 +12,12 @@ import {
   RAIL_STICK,
   RAIL_STICK_COLLAPSED,
   RAIL_LABEL,
-  railItem,
+  buildRailItemClass,
   RAIL_SPLIT,
   RAIL_MAIN,
   RAIL_MLIST,
   RAIL_MLABEL,
-  railMobileItem,
+  buildRailMobileItemClass,
   RAIL_MCHEV,
   RAIL_BACK,
   RAIL_HEADER,
@@ -28,6 +28,8 @@ import {
   RAIL_MAIN_SCROLL,
   RAIL_SCROLL_BODY,
 } from './railClasses';
+
+const ICON_STROKE_WIDTH_REGULAR = 1.7;
 
 export default function RailLayout({
   label,
@@ -45,43 +47,43 @@ export default function RailLayout({
   breadcrumb = null,
   scrollContent = false,
 }) {
-  const [collapsed, setCollapsed] = useState(false);
+  const [isCollapsed, setIsCollapsed] = useState(false);
   useEffect(() => {
-    if (collapsible) setCollapsed(readLocal(KEY.railCollapsed, '') === '1');
+    if (collapsible) setIsCollapsed(readLocal(KEY.railCollapsed, '') === '1');
   }, [collapsible]);
-  function toggleCollapsed() {
-    const next = !collapsed;
-    setCollapsed(next);
-    writeLocal(KEY.railCollapsed, next ? '1' : '0');
+  function handleCollapsedToggle() {
+    const isNextCollapsed = !isCollapsed;
+    setIsCollapsed(isNextCollapsed);
+    writeLocal(KEY.railCollapsed, isNextCollapsed ? '1' : '0');
   }
-  const railCollapsed = collapsible && collapsed;
+  const railCollapsed = collapsible && isCollapsed;
   const effectiveFrameClass = scrollContent ? RAIL_FRAME_SCROLL : frameClass;
   const effectiveMainClass = scrollContent ? RAIL_MAIN_SCROLL : mainClass;
 
-  function rows(mobile) {
-    return items.map((t) => {
-      const selected = active === t.id;
-      const cls = mobile ? railMobileItem(selected) : railItem(selected, railCollapsed);
+  function renderRows(mobile) {
+    return items.map((item) => {
+      const isSelected = active === item.id;
+      const cls = mobile ? buildRailMobileItemClass(isSelected) : buildRailItemClass(isSelected, railCollapsed);
       const inner = (
         <>
-          {t.Icon && <t.Icon strokeWidth={1.7} aria-hidden="true" />}
-          {(!railCollapsed || mobile) && t.label}
-          {mobile && <ChevronRight className={RAIL_MCHEV} strokeWidth={1.7} aria-hidden="true" />}
+          {item.Icon && <item.Icon strokeWidth={ICON_STROKE_WIDTH_REGULAR} aria-hidden="true" />}
+          {(!railCollapsed || mobile) && item.label}
+          {mobile && <ChevronRight className={RAIL_MCHEV} strokeWidth={ICON_STROKE_WIDTH_REGULAR} aria-hidden="true" />}
         </>
       );
-      const a11y = !mobile && railCollapsed ? { title: t.label, 'aria-label': t.label } : {};
+      const a11y = !mobile && railCollapsed ? { title: item.label, 'aria-label': item.label } : {};
       return (
-        <div key={t.id} className="contents">
-          {t.split && <span className={RAIL_SPLIT} aria-hidden="true" />}
-          {t.href ? (
-            <a href={t.href} className={`${cls} no-underline`} aria-current={selected || undefined} {...a11y}>
+        <div key={item.id} className="contents">
+          {item.split && <span className={RAIL_SPLIT} aria-hidden="true" />}
+          {item.href ? (
+            <a href={item.href} className={`${cls} no-underline`} aria-current={isSelected || undefined} {...a11y}>
               {inner}
             </a>
           ) : (
             <button
               type="button"
-              aria-current={selected ? 'true' : undefined}
-              onClick={() => onSelect(t.id)}
+              aria-current={isSelected ? 'true' : undefined}
+              onClick={() => onSelect(item.id)}
               className={cls}
               {...a11y}
             >
@@ -99,7 +101,7 @@ export default function RailLayout({
         <div className={railCollapsed ? RAIL_STICK_COLLAPSED : RAIL_STICK}>
           {!railCollapsed && <p className={RAIL_LABEL}>{label}</p>}
           <nav className="flex flex-col" aria-label={label}>
-            {rows(false)}
+            {renderRows(false)}
           </nav>
           {!railCollapsed && help}
         </div>
@@ -108,7 +110,7 @@ export default function RailLayout({
       {!mobileNav && (
         <div className={reading ? 'hidden' : RAIL_MLIST}>
           <p className={RAIL_MLABEL}>{label}</p>
-          {rows(true)}
+          {renderRows(true)}
           {help}
         </div>
       )}
@@ -120,11 +122,11 @@ export default function RailLayout({
               <button
                 type="button"
                 className={RAIL_TRIGGER}
-                onClick={toggleCollapsed}
-                aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
-                aria-expanded={!collapsed}
+                onClick={handleCollapsedToggle}
+                aria-label={isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+                aria-expanded={!isCollapsed}
               >
-                <PanelLeft strokeWidth={1.7} aria-hidden="true" />
+                <PanelLeft strokeWidth={ICON_STROKE_WIDTH_REGULAR} aria-hidden="true" />
               </button>
             )}
             {collapsible && breadcrumb && <span className={RAIL_HEADER_SEP} aria-hidden="true" />}
@@ -133,7 +135,7 @@ export default function RailLayout({
         )}
         {mobileNav || (
           <button type="button" className={RAIL_BACK} onClick={onBack}>
-            <ChevronLeft strokeWidth={1.7} aria-hidden="true" />
+            <ChevronLeft strokeWidth={ICON_STROKE_WIDTH_REGULAR} aria-hidden="true" />
             {label}
           </button>
         )}

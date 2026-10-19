@@ -1,6 +1,11 @@
 import { ImageIcon } from 'lucide-react';
 import { cn } from '../lib/cn.js';
 
+const DEFAULT_COLUMN_COUNT = 4;
+const MENU_IMAGE_WIDTH_PX = 800;
+const MENU_IMAGE_HEIGHT_PX = 600;
+const ICON_STROKE_WIDTH_REGULAR = 1.7;
+
 const GRIDS = {
   4: 'grid grid-cols-2 min-[769px]:grid-cols-4 gap-x-2 gap-y-6 m-0 p-0 list-none',
   3: 'grid grid-cols-2 min-[769px]:grid-cols-3 gap-x-2 gap-y-6 m-0 p-0 list-none',
@@ -14,7 +19,7 @@ const EMPTY =
 
 export default function MenuList({
   groups = [],
-  cols = 4,
+  cols = DEFAULT_COLUMN_COUNT,
   placeholderLabel = 'Photo coming soon',
   fallback = 'Sorry, we could not load the menu. Please try again.',
   className,
@@ -32,14 +37,20 @@ export default function MenuList({
             </div>
           ) : null}
           <ul className={GRIDS[cols] || GRIDS[4]}>
-            {items.map(({ name, desc, img, alt }) => (
+            {items.map(({ name, desc, img: image, alt }) => (
               <li key={name} className="grid gap-2 content-start min-w-0" data-menu-item>
                 <div className={PHOTO}>
-                  {img ? (
-                    <img src={img} alt={alt || name} width={800} height={600} loading="lazy" />
+                  {image ? (
+                    <img
+                      src={image}
+                      alt={alt || name}
+                      width={MENU_IMAGE_WIDTH_PX}
+                      height={MENU_IMAGE_HEIGHT_PX}
+                      loading="lazy"
+                    />
                   ) : (
                     <span className={EMPTY} data-menu-placeholder>
-                      <ImageIcon className="w-5 h-5" strokeWidth={1.7} aria-hidden="true" />
+                      <ImageIcon className="w-5 h-5" strokeWidth={ICON_STROKE_WIDTH_REGULAR} aria-hidden="true" />
                       <span className="text-[0.72rem] font-medium">{placeholderLabel}</span>
                     </span>
                   )}

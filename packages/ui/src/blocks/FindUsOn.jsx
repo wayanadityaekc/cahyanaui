@@ -1,13 +1,13 @@
 import { cn } from '../lib/cn.js';
 
 export default function FindUsOn({ label = '', links = [], className }) {
-  const live = links.filter((link) => link.href);
-  if (!live.length) return null;
+  const linkedItems = links.filter((link) => link.href);
+  if (!linkedItems.length) return null;
   return (
     <div className={cn('flex flex-wrap items-center gap-x-4 gap-y-3', className)}>
       {label ? <span className="text-small font-medium text-green">{label}</span> : null}
       <ul className="flex flex-wrap items-center gap-2 list-none p-0 m-0">
-        {live.map(({ name, href, icon }) => (
+        {linkedItems.map(({ name, href, icon }) => (
           <li key={name}>
             <a
               href={href}

@@ -11,6 +11,9 @@ import DateField from '@/components/ui/DateField';
 import { priceUnit } from '@/lib/priceUnit';
 import { withSymbol } from '@/components/Price';
 
+const ICON_STROKE_WIDTH_LIGHT = 1.6;
+const ICON_STROKE_WIDTH_THIN = 1.5;
+
 const SERVICE_TYPES = [
   { value: 'tour', label: 'Tour Program' },
   { value: 'experience', label: 'Experience' },
@@ -36,10 +39,10 @@ const ACTIVITY_MODE_INFO = {
 
 const GUEST_OPTIONS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
-const CAL_ICON = <Calendar strokeWidth={1.6} />;
-const PEOPLE_ICON = <UserRound strokeWidth={1.6} />;
-const SPARK_ICON = <Sparkles strokeWidth={1.5} />;
-const SHIELD_ICON = <ShieldCheck strokeWidth={1.6} />;
+const CAL_ICON = <Calendar strokeWidth={ICON_STROKE_WIDTH_LIGHT} />;
+const PEOPLE_ICON = <UserRound strokeWidth={ICON_STROKE_WIDTH_LIGHT} />;
+const SPARK_ICON = <Sparkles strokeWidth={ICON_STROKE_WIDTH_THIN} />;
+const SHIELD_ICON = <ShieldCheck strokeWidth={ICON_STROKE_WIDTH_LIGHT} />;
 
 export default function BookingForm({
   presetItem = '',
@@ -60,24 +63,27 @@ export default function BookingForm({
   const [mode, setMode] = useState('standard');
 
   const catalog = pricing && pricing.catalog;
-  const locked = !!presetItem;
+  const isLocked = !!presetItem;
 
   const itemOptions = useMemo(() => {
     if (!catalog || !type) return [];
-    if (type === 'transfer') return catalog.transfers.map((t) => ({ value: t.route, label: t.route }));
+    if (type === 'transfer')
+      return catalog.transfers.map((transfer) => ({ value: transfer.route, label: transfer.route }));
     const cats = CATEGORY_OF[type] || [];
     return catalog.items
-      .filter((i) => cats.includes(i.category) && i.active)
-      .map((i) => ({ value: i.name, label: i.name }));
+      .filter((catalogEntry) => cats.includes(catalogEntry.category) && catalogEntry.active)
+      .map((catalogItem) => ({ value: catalogItem.name, label: catalogItem.name }));
   }, [catalog, type]);
 
   useEffect(() => {
-    if (locked) return;
-    if (itemOptions.length && item && !itemOptions.some((o) => o.value === item)) setItem('');
-  }, [locked, itemOptions, item]);
+    if (isLocked) return;
+    const isItemMissingFromOptions =
+      itemOptions.length && item && !itemOptions.some((itemOption) => itemOption.value === item);
+    if (isItemMissingFromOptions) setItem('');
+  }, [isLocked, itemOptions, item]);
 
-  const entry = catalog && item ? catalog.items.find((i) => i.name === item) : null;
-  const transferEntry = catalog && item ? catalog.transfers.find((t) => t.route === item) : null;
+  const entry = catalog && item ? catalog.items.find((catalogEntry) => catalogEntry.name === item) : null;
+  const transferEntry = catalog && item ? catalog.transfers.find((transfer) => transfer.route === item) : null;
   const hasExclusive = !!(entry && entry.hasExclusive);
   const isActivity = !!(entry && (entry.category === 'experience' || entry.category === 'performance'));
   const showToggle = hasExclusive || isActivity;
@@ -85,23 +91,43 @@ export default function BookingForm({
   const modeInfo = isActivity ? ACTIVITY_MODE_INFO : MODE_INFO;
 
   const symbol = (catalog && catalog.symbol) || '$';
-  function fmt(n) {
-    return n == null ? '-' : symbol + n.toLocaleString(symbol === 'Rp' ? 'id-ID' : 'en-US');
+  function formatPrice(amount) {
+    return amount == null ? '-' : symbol + amount.toLocaleString(symbol === 'Rp' ? 'id-ID' : 'en-US');
   }
 
-  const band = entry ? (effectiveMode === 'exclusive' && entry.exclusive ? entry.exclusive : entry.standard) : null;
-  const display = band ? band.display : transferEntry ? transferEntry.display : null;
-  const priceText = fmt(display);
+  function pickPriceEntry() {
+    if (entry) {
+      if (effectiveMode === 'exclusive' && entry.exclusive) return entry.exclusive;
+      return entry.standard;
+    }
+    return null;
+  }
+
+  const band = pickPriceEntry();
+  function pickDisplayPrice() {
+    if (band) return band.display;
+    if (transferEntry) return transferEntry.display;
+    return null;
+  }
+
+  const display = pickDisplayPrice();
+  const priceText = formatPrice(display);
 
   const surcharge = entry && entry.surcharge && entry.surcharge.display ? entry.surcharge.display : 0;
 
-  const timeCategory = entry ? entry.category : type === 'transfer' ? 'transfer' : null;
+  function pickCategory() {
+    if (entry) return entry.category;
+    if (type === 'transfer') return 'transfer';
+    return null;
+  }
+
+  const timeCategory = pickCategory();
 
   const unit = priceUnit(perPerson, displayGuests);
   const guestWord = displayGuests === 1 ? 'guest' : 'guests';
   const unitLine = perPerson ? unit : `${unit} · ${displayGuests} ${guestWord}`;
 
-  function line() {
+  function buildLine() {
     return {
       type: type === 'transfer' ? 'transfer' : type || 'tour',
       service: item,
@@ -123,7 +149,7 @@ export default function BookingForm({
       time,
       pickupOptional: false,
       dropoffRequired: type === 'transfer',
-      lines: [line()],
+      lines: [buildLine()],
     });
   }
 
@@ -133,7 +159,13 @@ export default function BookingForm({
     ? 'max-w-none m-0 py-6 px-[1.4rem] rounded-none bg-white border-none text-left'
     : 'max-w-[900px] min-[993px]:max-w-[1100px] mx-auto p-8 rounded-md bg-white text-left';
   function typeBtn(active, disabled) {
-    return `flex-1 py-2 px-2 border-none rounded-sm font-body text-small font-semibold transition-[background-color,color,scale] duration-[var(--dur)] ease-[ease] ${disabled ? 'text-muted bg-transparent cursor-not-allowed opacity-60' : active ? 'text-white bg-cta cursor-pointer' : 'text-green bg-transparent cursor-pointer'}`;
+    function pickTabClasses() {
+      if (disabled) return 'text-muted bg-transparent cursor-not-allowed opacity-60';
+      if (active) return 'text-white bg-cta cursor-pointer';
+      return 'text-green bg-transparent cursor-pointer';
+    }
+
+    return `flex-1 py-2 px-2 border-none rounded-sm font-body text-small font-semibold transition-[background-color,color,scale] duration-[var(--dur)] ease-[ease] ${pickTabClasses()}`;
   }
   return (
     <section className={sectionCls} id="booking">
@@ -144,7 +176,7 @@ export default function BookingForm({
           <p className="mt-[0.3rem] text-small text-muted">No hidden fees. No surprises.</p>
         </div>
 
-        {!locked && (
+        {!isLocked && (
           <div className="grid gap-[0.6rem] mb-[1.2rem]">
             <Select label="Service" value={type} onChange={setType} options={SERVICE_TYPES} placeholder="Service" />
             <Select label="Select service" value={item} onChange={setItem} options={itemOptions} placeholder="Choose" />
@@ -228,7 +260,10 @@ export default function BookingForm({
             icon={PEOPLE_ICON}
             value={String(displayGuests)}
             onChange={setGuests}
-            options={GUEST_OPTIONS.map((n) => ({ value: String(n), label: `${n} ${n === 1 ? 'guest' : 'guests'}` }))}
+            options={GUEST_OPTIONS.map((guestCount) => ({
+              value: String(guestCount),
+              label: `${guestCount} ${guestCount === 1 ? 'guest' : 'guests'}`,
+            }))}
           />
         </div>
 

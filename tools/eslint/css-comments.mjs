@@ -33,10 +33,9 @@ function stripComments(postcss, cssText) {
       delete node.raws.selector;
     }
     const rawParams = node.raws && node.raws.params;
-    if (rawParams && rawParams.raw !== rawParams.value) {
-      commentCount += 1;
-      delete node.raws.params;
-    }
+    if (!(rawParams && rawParams.raw !== rawParams.value)) return;
+    commentCount += 1;
+    delete node.raws.params;
   });
   return { text: root.toString(), commentCount };
 }

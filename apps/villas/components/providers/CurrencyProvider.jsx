@@ -3,7 +3,13 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import { BASELINE_FX, formatMoney } from '@cahyana/ui';
 import { API_BASE } from '@/lib/constants';
-import { CURRENCIES, CURRENCY_STORAGE_KEY, DEFAULT_CURRENCY, displayBreakdown, formatCurrency } from '@/lib/currency';
+import {
+  CURRENCIES,
+  CURRENCY_STORAGE_KEY,
+  DEFAULT_CURRENCY,
+  buildDisplayBreakdown,
+  formatCurrency,
+} from '@/lib/currency';
 
 const CurrencyContext = createContext(null);
 
@@ -51,7 +57,7 @@ export function CurrencyProvider({ initialFx = null, children }) {
     setCurrency: changeCurrency,
     format: (idr) => formatCurrency(idr, currency, fx),
     formatAmount: (amount) => formatMoney(amount, currency),
-    breakdown: (priced) => displayBreakdown(priced, currency, fx),
+    breakdown: (priced) => buildDisplayBreakdown(priced, currency, fx),
   };
 
   return <CurrencyContext.Provider value={value}>{children}</CurrencyContext.Provider>;

@@ -8,6 +8,8 @@ import Slider from '@/components/ui/Slider';
 import { BLEED_MOBILE } from '@/components/ui/gridClasses';
 import useBodyLock from '@/components/ui/useBodyLock';
 
+const MOSAIC_PHOTOS_PER_GROUP = 3;
+
 const PILL_FROM = 10;
 
 const TILE_BASE =
@@ -33,60 +35,61 @@ const LB_ICON_BTN =
 
 export default function HeroMosaic({ photos = [], title }) {
   const [openIndex, setOpenIndex] = useState(null);
-  const open = openIndex !== null;
-  useBodyLock(open);
+  const isOpen = openIndex !== null;
+  useBodyLock(isOpen);
 
   useEffect(() => {
-    if (!open) return undefined;
-    function onKey(e) {
-      if (e.key === 'Escape') setOpenIndex(null);
-      else if (e.key === 'ArrowRight') setOpenIndex((i) => (i + 1) % photos.length);
-      else if (e.key === 'ArrowLeft') setOpenIndex((i) => (i - 1 + photos.length) % photos.length);
+    if (!isOpen) return undefined;
+    function handleKeyDown(event) {
+      if (event.key === 'Escape') setOpenIndex(null);
+      else if (event.key === 'ArrowRight') setOpenIndex((currentIndex) => (currentIndex + 1) % photos.length);
+      else if (event.key === 'ArrowLeft')
+        setOpenIndex((currentIndex) => (currentIndex - 1 + photos.length) % photos.length);
     }
-    document.addEventListener('keydown', onKey);
-    return () => document.removeEventListener('keydown', onKey);
-  }, [open, photos.length]);
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, photos.length]);
 
   if (!photos.length) return null;
 
-  function tile(i, cls) {
-    const p = photos[i];
+  function renderTile(photoIndex, cls) {
+    const photo = photos[photoIndex];
     return (
       <button
         type="button"
-        key={p.src}
+        key={photo.src}
         className={cls}
-        onClick={() => setOpenIndex(i)}
-        aria-label={`Open photo ${i + 1} of ${photos.length}${p.title ? `: ${p.title}` : ''}`}
+        onClick={() => setOpenIndex(photoIndex)}
+        aria-label={`Open photo ${photoIndex + 1} of ${photos.length}${photo.title ? `: ${photo.title}` : ''}`}
       >
-        <Img src={p.src} alt={p.alt || ''} width={p.w} height={p.hgt} priority={i === 0} />
+        <Img src={photo.src} alt={photo.alt || ''} width={photo.w} height={photo.hgt} priority={photoIndex === 0} />
       </button>
     );
   }
 
-  const children = [];
-  [...Array(Math.ceil(photos.length / 3)).keys()]
-    .map((k) => k * 3)
-    .forEach((i) => {
-      children.push(tile(i, BIG));
-      const pair = [i + 1, i + 2].filter((n) => n < photos.length);
+  const tiles = [];
+  [...Array(Math.ceil(photos.length / MOSAIC_PHOTOS_PER_GROUP)).keys()]
+    .map((groupIndex) => groupIndex * MOSAIC_PHOTOS_PER_GROUP)
+    .forEach((startIndex) => {
+      tiles.push(renderTile(startIndex, BIG));
+      const pair = [startIndex + 1, startIndex + 2].filter((photoIndex) => photoIndex < photos.length);
       if (pair.length) {
-        children.push(
-          <div className={PAIR} key={`pair-${i}`}>
-            {pair.map((n) => tile(n, TILE_BASE))}
+        tiles.push(
+          <div className={PAIR} key={`pair-${startIndex}`}>
+            {pair.map((photoIndex) => renderTile(photoIndex, TILE_BASE))}
           </div>,
         );
       }
     });
 
-  const gallery =
-    photos.length === 1 ? (
-      <div className={STATIC_1}>{tile(0, TILE_BASE)}</div>
-    ) : photos.length === 2 ? (
-      <div className={STATIC_2}>{photos.map((photo, i) => tile(i, TILE_BASE))}</div>
-    ) : (
-      <Slider gridClassName={TRACK}>{children}</Slider>
-    );
+  function renderHeroMosaic() {
+    if (photos.length === 1) return <div className={STATIC_1}>{renderTile(0, TILE_BASE)}</div>;
+    if (photos.length === 2)
+      return <div className={STATIC_2}>{photos.map((photo, index) => renderTile(index, TILE_BASE))}</div>;
+    return <Slider gridClassName={TRACK}>{tiles}</Slider>;
+  }
+
+  const gallery = renderHeroMosaic();
 
   return (
     <>
@@ -99,7 +102,7 @@ export default function HeroMosaic({ photos = [], title }) {
         )}
       </div>
 
-      {open &&
+      {isOpen &&
         typeof document !== 'undefined' &&
         createPortal(
           <div
@@ -139,7 +142,7 @@ export default function HeroMosaic({ photos = [], title }) {
                   <button
                     type="button"
                     className={LB_ICON_BTN}
-                    onClick={() => setOpenIndex((i) => (i - 1 + photos.length) % photos.length)}
+                    onClick={() => setOpenIndex((currentIndex) => (currentIndex - 1 + photos.length) % photos.length)}
                     aria-label="Previous photo"
                   >
                     &lsaquo;
@@ -147,7 +150,7 @@ export default function HeroMosaic({ photos = [], title }) {
                   <button
                     type="button"
                     className={LB_ICON_BTN}
-                    onClick={() => setOpenIndex((i) => (i + 1) % photos.length)}
+                    onClick={() => setOpenIndex((currentIndex) => (currentIndex + 1) % photos.length)}
                     aria-label="Next photo"
                   >
                     &rsaquo;

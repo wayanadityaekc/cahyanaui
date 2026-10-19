@@ -5,15 +5,17 @@ import CheckoutSheet from '@/components/booking/CheckoutSheet';
 import PayWaiting from '@/components/booking/PayWaiting';
 import { useCart } from '@/components/providers/CartProvider';
 
-function fitsStay(extra, stay) {
+function isExtraWithinStay(extra, stay) {
   if (extra.kind === 'transfer' || !extra.date) return true;
   return extra.date >= stay.checkIn && extra.date <= stay.checkOut;
 }
 
 export default function StayCheckout({ stay = null, open = false, onClose = () => {} }) {
-  const { cart, clear } = useCart();
+  const { cart, clear: handleStayClear } = useCart();
   const [waitingRef, setWaitingRef] = useState('');
-  const booking = stay ? { ...cart, stay, extras: cart.extras.filter((extra) => fitsStay(extra, stay)) } : null;
+  const booking = stay
+    ? { ...cart, stay, extras: cart.extras.filter((extra) => isExtraWithinStay(extra, stay)) }
+    : null;
 
   return (
     <>
@@ -28,7 +30,9 @@ export default function StayCheckout({ stay = null, open = false, onClose = () =
           }}
         />
       )}
-      {waitingRef && <PayWaiting bookingRef={waitingRef} onClose={() => setWaitingRef('')} onConfirmed={clear} />}
+      {waitingRef && (
+        <PayWaiting bookingRef={waitingRef} onClose={() => setWaitingRef('')} onConfirmed={handleStayClear} />
+      )}
     </>
   );
 }

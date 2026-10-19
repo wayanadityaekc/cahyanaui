@@ -1,8 +1,8 @@
 import Img from '@/components/ui/Img';
 import { SECTION_TITLE, SECTION_TITLE_SUB, ST_LEFT } from '@/components/ui/sectionTitle';
 import TourDestinationCards from '@/components/sections/TourDestinationCards';
-import { tourDestinations, priceFallbackFor } from '@/lib/tourIndex';
-import { galleryFrom } from '@/lib/galleryFrom';
+import { listTourDestinations, priceFallbackFor } from '@/lib/tourIndex';
+import { buildGallery } from '@/lib/galleryFrom';
 import { ATTRACTION_CONTENT } from '@/content/attractions';
 
 import { STOPS, STOP, STOP_IMAGE } from '@/components/ui/stopClasses';
@@ -18,7 +18,7 @@ import Related from '@/components/sections/Related';
 import ReviewCtaBand from '@/components/reviews/ReviewCtaBand';
 import DetailTabs from '@/components/sections/DetailTabs';
 import { isHiddenTour } from '@/lib/routes';
-import Breadcrumb, { itemsFromLegacy } from '@/components/ui/Breadcrumb';
+import Breadcrumb, { buildItemsFromLegacy } from '@/components/ui/Breadcrumb';
 
 export const STOP_NUM = 'inline-block mb-[0.6rem] text-label font-medium tracking-[0.14em] uppercase text-muted';
 export const STOP_NAME = 'mb-[0.6rem] font-body text-h3 font-semibold tracking-[0]';
@@ -27,23 +27,31 @@ export const CRUMB_FOOT =
   'crumb max-w-none m-0 py-5 px-6 [border-top:1px_solid_var(--line)] [border-bottom:1px_solid_var(--line)] [&>ol]:justify-center';
 export { HOOK_UL, HOOK_LABEL, HOOK_VALUE, HERO_DESC, HERO_CTA } from '@/components/sections/DetailHero';
 
-function Stop({ s }) {
-  const inner = (
-    <>
-      {s.img ? (
+function Stop({ s: stop }) {
+  function renderStopImage() {
+    if (stop.img)
+      return (
         <div className={STOP_IMAGE}>
-          <Img src={`/assets/images/${s.img}`} alt={s.alt} width={s.w} height={s.hgt} />
+          <Img src={`/assets/images/${stop.img}`} alt={stop.alt} width={stop.w} height={stop.hgt} />
         </div>
-      ) : s.gradient ? (
+      );
+    if (stop.gradient)
+      return (
         <div
           className={STOP_IMAGE}
-          style={{ backgroundImage: s.gradient.replace(/^background-image:\s*/, '').replace(/;$/, '') }}
+          style={{ backgroundImage: stop.gradient.replace(/^background-image:\s*/, '').replace(/;$/, '') }}
         />
-      ) : null}
+      );
+    return null;
+  }
+
+  const inner = (
+    <>
+      {renderStopImage()}
       <div>
-        {s.num && <span className={STOP_NUM}>{s.num}</span>}
-        <h3 className={STOP_NAME}>{s.name}</h3>
-        <p className={STOP_DESC} dangerouslySetInnerHTML={{ __html: s.highlight }} />
+        {stop.num && <span className={STOP_NUM}>{stop.num}</span>}
+        <h3 className={STOP_NAME}>{stop.name}</h3>
+        <p className={STOP_DESC} dangerouslySetInnerHTML={{ __html: stop.highlight }} />
       </div>
     </>
   );
@@ -52,8 +60,8 @@ function Stop({ s }) {
 
 export default function TourPage({ data }) {
   const slug = (data.__page || '').replace(/^\//, '');
-  const destinations = tourDestinations(slug, ATTRACTION_CONTENT);
-  const gallery = galleryFrom(data);
+  const destinations = listTourDestinations(slug, ATTRACTION_CONTENT);
+  const gallery = buildGallery(data);
   return (
     <>
       <JsonLd page={data.__page} />
@@ -86,13 +94,13 @@ export default function TourPage({ data }) {
                 </div>
               ) : (
                 <div className={STOPS} id={data.stopsId}>
-                  {data.items.map((it, i) =>
+                  {data.items.map((it, index) =>
                     it.type === 'sub' ? (
-                      <h3 className={`${SECTION_TITLE_SUB} [transform:translateX(var(--title-shift,0px))]`} key={i}>
+                      <h3 className={`${SECTION_TITLE_SUB} [transform:translateX(var(--title-shift,0px))]`} key={index}>
                         {it.text}
                       </h3>
                     ) : (
-                      <Stop s={it} key={i} />
+                      <Stop s={it} key={index} />
                     ),
                   )}
                 </div>
@@ -118,7 +126,7 @@ export default function TourPage({ data }) {
 
       {data.bookItem && <div id="book-modal-placeholder" data-default={data.bookDefault} data-item={data.bookItem} />}
 
-      {data.crumb && !gallery.length && <Breadcrumb items={itemsFromLegacy(data.crumb)} className={CRUMB_FOOT} />}
+      {data.crumb && !gallery.length && <Breadcrumb items={buildItemsFromLegacy(data.crumb)} className={CRUMB_FOOT} />}
     </>
   );
 }

@@ -1,31 +1,31 @@
-import { VILLAS, nightsBetween } from '@/lib/villas';
-import { serviceById } from '@/lib/bookingCart';
-import { programByKey, transferById, TRANSFER_KEY } from '@/lib/extras';
+import { VILLAS, countNightsBetween } from '@/lib/villas';
+import { findServiceById } from '@/lib/bookingCart';
+import { findProgramByKey, findTransferById, TRANSFER_KEY } from '@/lib/extras';
 
 const PICKUP_AREA = 'Ubud';
 const AIRPORT = 'Ngurah Rai Airport (DPS)';
 
-function villaCatalogName(slug) {
+function findVillaCatalogName(slug) {
   const villa = VILLAS[slug];
   return villa ? villa.name : '';
 }
 
-function extraLine(extra, stay, villaName) {
+function buildExtraLine(extra, stay, villaName) {
   if (extra.kind === 'transfer') {
-    const transfer = transferById(extra.dir);
-    const arriving = extra.dir === 'arrival';
+    const transfer = findTransferById(extra.dir);
+    const isArrival = extra.dir === 'arrival';
     return {
       type: 'transfer',
       service: TRANSFER_KEY,
       date: transfer ? transfer.dateOf(stay) : '',
       time: extra.time || '',
       guests: stay.guests,
-      pickup: arriving ? AIRPORT : villaName,
-      dropoff: arriving ? villaName : AIRPORT,
+      pickup: isArrival ? AIRPORT : villaName,
+      dropoff: isArrival ? villaName : AIRPORT,
       flight_number: String(extra.flight || '').trim(),
     };
   }
-  const program = programByKey(extra.key);
+  const program = findProgramByKey(extra.key);
   return {
     type: 'tour',
     service: extra.key,
@@ -39,12 +39,12 @@ function extraLine(extra, stay, villaName) {
   };
 }
 
-export function bookingLines(cart) {
+export function buildBookingLines(cart) {
   const stay = cart.stay;
-  if (!stay || nightsBetween(stay.checkIn, stay.checkOut) < 1) return [];
-  const villaName = villaCatalogName(stay.villaSlug);
+  if (!stay || countNightsBetween(stay.checkIn, stay.checkOut) < 1) return [];
+  const villaName = findVillaCatalogName(stay.villaSlug);
   const requests = cart.services
-    .map(serviceById)
+    .map(findServiceById)
     .filter(Boolean)
     .map((service) => service.label);
   return [
@@ -56,11 +56,11 @@ export function bookingLines(cart) {
       guests: stay.guests,
       items: requests.length ? `Paid at the villa: ${requests.join(', ')}` : '',
     },
-    ...cart.extras.map((extra) => extraLine(extra, stay, villaName)),
+    ...cart.extras.map((extra) => buildExtraLine(extra, stay, villaName)),
   ];
 }
 
-export function bookingBody({ cart, guest, currency, payOption }) {
+export function buildBookingBody({ cart, guest, currency, payOption }) {
   return {
     name: guest.name.trim(),
     email: guest.email.trim(),
@@ -68,6 +68,6 @@ export function bookingBody({ cart, guest, currency, payOption }) {
     currency,
     stay: PICKUP_AREA,
     pay_option: payOption,
-    lines: bookingLines(cart),
+    lines: buildBookingLines(cart),
   };
 }

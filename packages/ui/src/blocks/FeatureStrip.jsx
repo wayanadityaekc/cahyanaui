@@ -1,5 +1,7 @@
 import { cn } from '../lib/cn.js';
 
+const DEFAULT_COLUMN_COUNT = 6;
+
 const COLUMNS = {
   3: 'min-[993px]:grid-cols-3',
   4: 'min-[993px]:grid-cols-4',
@@ -7,7 +9,7 @@ const COLUMNS = {
   6: 'min-[993px]:grid-cols-6',
 };
 
-export default function FeatureStrip({ items = [], columns = 6, className }) {
+export default function FeatureStrip({ items = [], columns = DEFAULT_COLUMN_COUNT, className }) {
   if (!items.length) return null;
   return (
     <ul

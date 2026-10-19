@@ -1,6 +1,9 @@
 import { cn } from '../lib/cn.js';
 import { BTN_SM } from '../primitives/btnClasses.js';
 
+const IMAGE_WIDTH_PX = 1200;
+const IMAGE_HEIGHT_PX = 900;
+
 const SCRIM =
   'absolute inset-0 [background:linear-gradient(to_top,rgba(34,32,28,0.93)_0%,rgba(34,32,28,0.86)_22%,rgba(34,32,28,0.55)_44%,rgba(34,32,28,0.10)_70%,rgba(34,32,28,0.34)_100%)]';
 
@@ -45,8 +48,8 @@ export default function VillaCard({
       <img
         src={villa.cardImg}
         alt={`${villa.name} private pool and garden`}
-        width={1200}
-        height={900}
+        width={IMAGE_WIDTH_PX}
+        height={IMAGE_HEIGHT_PX}
         className="absolute inset-0 -z-[1] w-full h-full object-cover [transition:scale_var(--dur-slow)_var(--ease)]"
       />
       <div className={SCRIM} aria-hidden="true" />
@@ -99,24 +102,26 @@ export default function VillaCard({
         <div className="mt-5 flex flex-col gap-4 min-[560px]:flex-row min-[560px]:items-end min-[560px]:justify-between min-[560px]:gap-6">
           {facts.length ? (
             <ul className="list-none flex items-center gap-x-2 min-[560px]:gap-x-4 m-0 p-0 text-label min-[560px]:text-small text-white/90 [&_svg]:w-3.5 [&_svg]:h-3.5 min-[560px]:[&_svg]:w-[var(--icon-md)] min-[560px]:[&_svg]:h-[var(--icon-md)]">
-              {facts.map((f, i) => (
+              {facts.map((fact, index) => (
                 <li
-                  key={f.label}
+                  key={fact.label}
                   className={cn(
                     'flex items-center gap-1.5 min-[560px]:gap-2',
-                    i > 0 && 'pl-2 min-[560px]:pl-4 [border-left:1px_solid_rgba(255,255,255,0.28)]',
+                    index > 0 && 'pl-2 min-[560px]:pl-4 [border-left:1px_solid_rgba(255,255,255,0.28)]',
                   )}
                 >
-                  {f.icon}
+                  {fact.icon}
                   <span className="leading-[1.25]">
-                    {f.short ? <span className="block whitespace-nowrap min-[560px]:hidden">{f.short}</span> : null}
+                    {fact.short ? (
+                      <span className="block whitespace-nowrap min-[560px]:hidden">{fact.short}</span>
+                    ) : null}
                     <span
-                      className={f.short ? 'max-[559px]:hidden' : undefined}
-                      aria-hidden={f.short ? 'true' : undefined}
+                      className={fact.short ? 'max-[559px]:hidden' : undefined}
+                      aria-hidden={fact.short ? 'true' : undefined}
                     >
-                      {(f.lines || [f.label]).map((l) => (
-                        <span key={l} className="block whitespace-nowrap">
-                          {l}
+                      {(fact.lines || [fact.label]).map((line) => (
+                        <span key={line} className="block whitespace-nowrap">
+                          {line}
                         </span>
                       ))}
                     </span>

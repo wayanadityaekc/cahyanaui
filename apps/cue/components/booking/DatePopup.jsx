@@ -3,8 +3,8 @@
 import { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import {
-  overlay,
-  panelBookdate,
+  buildOverlayClass,
+  buildPanelBookdateClass,
   PANEL_HEAD_BOOKDATE,
   PANEL_HEAD_H3,
   PANEL_CLOSE,
@@ -15,7 +15,7 @@ import {
   CAL_CAP_BTN,
   CAL_GRID,
   CAL_DOW,
-  calDay,
+  buildCalendarDayClass,
   CAL_FOOT,
   CAL_HINT,
   CAL_APPLY,
@@ -39,8 +39,8 @@ const MONTHS = [
 ];
 const DOW = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
 
-function iso(d) {
-  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+function formatIsoDate(date) {
+  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
 }
 
 export default function DatePopup({
@@ -54,17 +54,17 @@ export default function DatePopup({
   category = null,
   itemName = null,
 }) {
-  const [mounted, setMounted] = useState(false);
-  const [sel, setSel] = useState(initial || '');
+  const [isMounted, setIsMounted] = useState(false);
+  const [selector, setSelector] = useState(initial || '');
   const [time, setTime] = useState(initialTime || '');
   const [cursor, setCursor] = useState(() => {
     const base = initial ? new Date(initial) : new Date();
     return new Date(base.getFullYear(), base.getMonth(), 1);
   });
 
-  useEffect(() => setMounted(true), []);
+  useEffect(() => setIsMounted(true), []);
   useEffect(() => {
-    if (open) setSel(initial || '');
+    if (open) setSelector(initial || '');
   }, [open, initial]);
   useEffect(() => {
     if (open) setTime(initialTime || '');
@@ -72,26 +72,28 @@ export default function DatePopup({
   useBodyLock(open);
   useEffect(() => {
     if (!open) return;
-    function onKey(e) {
-      return e.key === 'Escape' && onClose();
+    function handleKeyDown(event) {
+      return event.key === 'Escape' && onClose();
     }
-    document.addEventListener('keydown', onKey);
-    return () => document.removeEventListener('keydown', onKey);
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
   }, [open, onClose]);
 
-  if (!mounted) return null;
+  if (!isMounted) return null;
 
-  const today = iso(new Date());
+  const today = formatIsoDate(new Date());
   const first = new Date(cursor.getFullYear(), cursor.getMonth(), 1);
   const total = new Date(cursor.getFullYear(), cursor.getMonth() + 1, 0).getDate();
   const cells = [];
   [...Array(first.getDay()).keys()].forEach(() => cells.push(null));
-  [...Array(total).keys()].forEach((i) => cells.push(new Date(cursor.getFullYear(), cursor.getMonth(), i + 1)));
+  [...Array(total).keys()].forEach((dayIndex) =>
+    cells.push(new Date(cursor.getFullYear(), cursor.getMonth(), dayIndex + 1)),
+  );
 
   return createPortal(
     <>
-      <div className={overlay(open, false)} onClick={onClose} />
-      <div className={panelBookdate(open)}>
+      <div className={buildOverlayClass(open, false)} onClick={onClose} />
+      <div className={buildPanelBookdateClass(open)}>
         <div className={PANEL_HEAD_BOOKDATE}>
           <h3 className={PANEL_HEAD_H3}>{title}</h3>
           <button type="button" className={PANEL_CLOSE} aria-label="Close" onClick={onClose}>
@@ -122,23 +124,23 @@ export default function DatePopup({
               </button>
             </div>
             <div className={CAL_GRID}>
-              {DOW.map((d) => (
-                <span className={CAL_DOW} key={d}>
-                  {d}
+              {DOW.map((weekday) => (
+                <span className={CAL_DOW} key={weekday}>
+                  {weekday}
                 </span>
               ))}
-              {cells.map((cell, i) => {
-                if (!cell) return <span className={calDay(true)} key={`e${i}`} />;
-                const v = iso(cell);
-                const past = v < today;
+              {cells.map((cell, index) => {
+                if (!cell) return <span className={buildCalendarDayClass(true)} key={`e${index}`} />;
+                const isoDate = formatIsoDate(cell);
+                const isPast = isoDate < today;
                 return (
                   <button
                     type="button"
-                    key={v}
-                    className={calDay(past, v === sel)}
-                    aria-pressed={v === sel}
-                    disabled={past}
-                    onClick={() => setSel(v)}
+                    key={isoDate}
+                    className={buildCalendarDayClass(isPast, isoDate === selector)}
+                    aria-pressed={isoDate === selector}
+                    disabled={isPast}
+                    onClick={() => setSelector(isoDate)}
                   >
                     {cell.getDate()}
                   </button>
@@ -153,14 +155,14 @@ export default function DatePopup({
               <TimeChoice category={category} itemName={itemName} value={time} onChange={setTime} id="datepopup-time" />
             </div>
           ) : (
-            <span className={CAL_HINT}>{sel ? sel : 'Pick a date'}</span>
+            <span className={CAL_HINT}>{selector ? selector : 'Pick a date'}</span>
           )}
           <button
             type="button"
             className={`${CAL_APPLY}${withTime ? ' self-end' : ''}`}
-            disabled={!sel}
+            disabled={!selector}
             onClick={() => {
-              onPick(sel, time);
+              onPick(selector, time);
               onClose();
             }}
           >

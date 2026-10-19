@@ -2,6 +2,8 @@
 
 import { useEffect, useRef } from 'react';
 
+const DEFAULT_CODE_LENGTH = 6;
+
 const BOX =
   'flex-1 min-w-0 max-w-[2.6rem] h-[2.8rem] text-center font-body text-h3 font-semibold rounded-md ' +
   '[border:1.5px_solid_var(--line)] bg-white text-green ' +
@@ -10,7 +12,7 @@ const BOX =
   'disabled:opacity-50';
 
 export default function OtpFields({
-  length = 6,
+  length = DEFAULT_CODE_LENGTH,
   value = '',
   onChange = () => {},
   onComplete = null,
@@ -19,7 +21,7 @@ export default function OtpFields({
   autoFocus = false,
 }) {
   const refs = useRef([]);
-  const digits = Array.from({ length }, (_, index) => value[index] || '');
+  const digits = Array.from({ length }, (unusedValue, index) => value[index] || '');
 
   useEffect(() => {
     if (autoFocus) refs.current[0]?.focus();
@@ -28,62 +30,64 @@ export default function OtpFields({
   function commit(next) {
     const joined = next.join('');
     onChange(joined);
-    if (joined.length === length && next.every(Boolean) && onComplete) onComplete(joined);
+    const isCodeComplete = joined.length === length && next.every(Boolean) && onComplete;
+    if (isCodeComplete) onComplete(joined);
   }
 
-  function spread(start, raw) {
-    const next = [...digits];
+  function spreadPastedDigits(start, raw) {
+    const nextDigits = [...digits];
     const fits = raw.slice(0, length - start).split('');
     fits.forEach((char, offset) => {
-      next[start + offset] = char;
+      nextDigits[start + offset] = char;
     });
-    commit(next);
+    commit(nextDigits);
     refs.current[Math.min(start + fits.length, length - 1)]?.focus();
   }
 
   function handleChange(index) {
-    return (e) => {
-      const raw = e.target.value.replace(/\D/g, '');
+    return (event) => {
+      const raw = event.target.value.replace(/\D/g, '');
       if (!raw) {
-        const next = [...digits];
-        next[index] = '';
-        commit(next);
+        const nextDigits = [...digits];
+        nextDigits[index] = '';
+        commit(nextDigits);
         return;
       }
       if (raw.length > 1) {
-        spread(index, raw);
+        spreadPastedDigits(index, raw);
         return;
       }
-      const next = [...digits];
-      next[index] = raw;
-      commit(next);
+      const updatedDigits = [...digits];
+      updatedDigits[index] = raw;
+      commit(updatedDigits);
       if (index < length - 1) refs.current[index + 1]?.focus();
     };
   }
 
   function handleKeyDown(index) {
-    return (e) => {
-      if (e.key === 'Backspace' && !digits[index] && index > 0) {
-        const next = [...digits];
-        next[index - 1] = '';
-        commit(next);
+    return (event) => {
+      const isBackspaceOnEmptyDigit = event.key === 'Backspace' && !digits[index] && index > 0;
+      if (isBackspaceOnEmptyDigit) {
+        const nextDigits = [...digits];
+        nextDigits[index - 1] = '';
+        commit(nextDigits);
         refs.current[index - 1]?.focus();
-      } else if (e.key === 'ArrowLeft' && index > 0) {
-        e.preventDefault();
+      } else if (event.key === 'ArrowLeft' && index > 0) {
+        event.preventDefault();
         refs.current[index - 1]?.focus();
-      } else if (e.key === 'ArrowRight' && index < length - 1) {
-        e.preventDefault();
+      } else if (event.key === 'ArrowRight' && index < length - 1) {
+        event.preventDefault();
         refs.current[index + 1]?.focus();
       }
     };
   }
 
   function handlePaste(index) {
-    return (e) => {
-      const raw = (e.clipboardData || window.clipboardData).getData('text').replace(/\D/g, '');
+    return (event) => {
+      const raw = (event.clipboardData || window.clipboardData).getData('text').replace(/\D/g, '');
       if (!raw) return;
-      e.preventDefault();
-      spread(index, raw);
+      event.preventDefault();
+      spreadPastedDigits(index, raw);
     };
   }
 

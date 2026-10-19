@@ -9,44 +9,44 @@ import { BTN } from '@/components/ui/modalClasses';
 
 export default function ReviewGate({ className, children = 'Write review' }) {
   const { account, hydrated, reviewableItems } = useAccount();
-  const [authOpen, setAuthOpen] = useState(false);
-  const [blockedOpen, setBlockedOpen] = useState(false);
-  const [reviewOpen, setReviewOpen] = useState(false);
+  const [isAuthOpen, setIsAuthOpen] = useState(false);
+  const [isBlockedOpen, setIsBlockedOpen] = useState(false);
+  const [isReviewOpen, setIsReviewOpen] = useState(false);
 
-  function onClick() {
+  function handleReviewClick() {
     if (!hydrated) return;
     if (!account) {
-      setAuthOpen(true);
+      setIsAuthOpen(true);
       return;
     }
     if (!reviewableItems.length) {
-      setBlockedOpen(true);
+      setIsBlockedOpen(true);
       return;
     }
-    setReviewOpen(true);
+    setIsReviewOpen(true);
   }
 
   return (
     <>
-      <button type="button" className={className} onClick={onClick}>
+      <button type="button" className={className} onClick={handleReviewClick}>
         {children}
       </button>
 
-      <AuthModal open={authOpen} onClose={() => setAuthOpen(false)} />
+      <AuthModal open={isAuthOpen} onClose={() => setIsAuthOpen(false)} />
 
-      <Modal open={blockedOpen} onClose={() => setBlockedOpen(false)} title="Leave a Review">
+      <Modal open={isBlockedOpen} onClose={() => setIsBlockedOpen(false)} title="Leave a Review">
         <p className="m-0 text-muted text-small leading-[1.5]">
           You&apos;ll be able to leave a review once you&apos;ve completed a booking with us.
         </p>
-        <button type="button" className={`${BTN} mt-4`} onClick={() => setBlockedOpen(false)}>
+        <button type="button" className={`${BTN} mt-4`} onClick={() => setIsBlockedOpen(false)}>
           Got it
         </button>
       </Modal>
 
       <ReviewModal
-        open={reviewOpen}
+        open={isReviewOpen}
         prefill={{ name: (account && account.name) || '', items: reviewableItems }}
-        onClose={() => setReviewOpen(false)}
+        onClose={() => setIsReviewOpen(false)}
       />
     </>
   );

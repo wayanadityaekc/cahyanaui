@@ -2,7 +2,7 @@
 
 import clsx from 'clsx';
 import Breadcrumb from '@/components/ui/Breadcrumb';
-import { crumbsFor } from '@/lib/crumbs';
+import { buildCrumbs } from '@/lib/crumbs';
 import { ChevronDown, Menu, Search } from 'lucide-react';
 import { PopMenu, Stagger, StaggerItem } from '@/components/ui/Reveal';
 import { SECTION_TITLE, SECTION_TITLE_SUB, ST_LEFT } from '@/components/ui/sectionTitle';
@@ -12,6 +12,8 @@ import { useMemo, useState } from 'react';
 import GuideCard from '@/components/cards/GuideCard';
 import { GUIDE_HUB } from '@/content/shared/guide-hub';
 
+const ICON_STROKE_WIDTH_REGULAR = 1.7;
+
 const GC_SECTION = 'mt-[2.4rem] [scroll-margin-top:80px]';
 const GC_NAV = 'relative flex-[0_0_auto] flex order-2 [border-left:1px_solid_var(--line)]';
 const GC_MENU =
@@ -20,7 +22,7 @@ const GC_MENU_A =
   'flex items-center gap-[0.6rem] py-[0.7rem] px-4 no-underline text-green font-semibold text-h3 [border-top:1px_solid_var(--line)] first:[border-top:none] hover:bg-[rgba(34,32,28,0.08)] [&_svg]:w-[var(--icon-sm)] [&_svg]:h-[var(--icon-sm)] [&_svg]:text-gold-d [&_svg]:shrink-0';
 
 export default function GuideHub() {
-  const [open, setOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
   const [query, setQuery] = useState('');
 
   const cats = useMemo(() => {
@@ -29,9 +31,9 @@ export default function GuideHub() {
     return GUIDE_HUB.cats
       .map((cat) => ({
         ...cat,
-        cards: cat.cards.filter((x) => x.title.toLowerCase().includes(term) || (x.kw || '').includes(term)),
+        cards: cat.cards.filter((card) => card.title.toLowerCase().includes(term) || (card.kw || '').includes(term)),
       }))
-      .filter((c) => c.cards.length);
+      .filter((category) => category.cards.length);
   }, [query]);
 
   return (
@@ -45,7 +47,7 @@ export default function GuideHub() {
       >
         <div className={`${SUBHERO_CONTENT} !max-w-[calc(var(--container)_-_2_*_var(--container-x))]`}>
           <Breadcrumb
-            items={crumbsFor('bali-guide')}
+            items={buildCrumbs('bali-guide')}
             className="mb-2 [&_a]:text-white/75 [&_a]:hover:text-white [&_span]:text-white"
           />
           <h1 className={`${SUBHERO_TITLE} !text-white`}>{GUIDE_HUB.title}</h1>
@@ -57,27 +59,27 @@ export default function GuideHub() {
                 className="min-h-[3.15rem] box-border flex items-center gap-[0.35rem] px-[0.95rem] [border:none] [border-radius:0_var(--r-md)_var(--r-md)_0] bg-transparent font-body text-[1rem] font-semibold text-green cursor-pointer whitespace-nowrap [transition:background-color_var(--dur)_ease,scale_var(--dur-fast)_var(--ease)] hover:bg-[rgba(34,32,28,0.08)] [&_span]:hidden"
                 type="button"
                 aria-haspopup="true"
-                aria-expanded={open}
-                onClick={() => setOpen((v) => !v)}
+                aria-expanded={isOpen}
+                onClick={() => setIsOpen((wasOpen) => !wasOpen)}
               >
                 <Menu className="w-[var(--icon-md)] h-[var(--icon-md)]" aria-hidden="true" />
                 <span>Categories</span>
                 <ChevronDown
                   className={clsx(
                     'w-4 h-4 shrink-0 text-muted [transition:transform_var(--dur)_ease]',
-                    open && '[transform:rotate(180deg)]',
+                    isOpen && '[transform:rotate(180deg)]',
                   )}
                   aria-hidden="true"
                 />
               </button>
-              <PopMenu open={open}>
+              <PopMenu open={isOpen}>
                 <div className={GC_MENU}>
-                  {GUIDE_HUB.navItems.map((n) => (
-                    <a className={GC_MENU_A} href={`#${n.id}`} key={n.id} onClick={() => setOpen(false)}>
+                  {GUIDE_HUB.navItems.map((navItem) => (
+                    <a className={GC_MENU_A} href={`#${navItem.id}`} key={navItem.id} onClick={() => setIsOpen(false)}>
                       <span>
-                        <n.Icon strokeWidth={1.7} aria-hidden="true" />
+                        <navItem.Icon strokeWidth={ICON_STROKE_WIDTH_REGULAR} aria-hidden="true" />
                       </span>
-                      {n.label}
+                      {navItem.label}
                     </a>
                   ))}
                 </div>
@@ -93,7 +95,7 @@ export default function GuideHub() {
                   aria-label="Search guides"
                   autoComplete="off"
                   value={query}
-                  onChange={(e) => setQuery(e.target.value)}
+                  onChange={(event) => setQuery(event.target.value)}
                 />
               </div>
               <div
@@ -107,12 +109,12 @@ export default function GuideHub() {
       </section>
 
       <section className={GUIDE_HUB.wrapClass}>
-        {cats.map((c) => (
-          <div className={GC_SECTION} id={c.id} key={c.id}>
-            <h2 className={`${SECTION_TITLE} !text-left !mb-[1.1rem]`}>{c.title}</h2>
+        {cats.map((cat) => (
+          <div className={GC_SECTION} id={cat.id} key={cat.id}>
+            <h2 className={`${SECTION_TITLE} !text-left !mb-[1.1rem]`}>{cat.title}</h2>
             <Stagger className={GRID_GUIDEHUB}>
-              {c.cards.map((card, i) => (
-                <StaggerItem key={card.href} index={i}>
+              {cat.cards.map((card, index) => (
+                <StaggerItem key={card.href} index={index}>
                   <GuideCard
                     href={card.href}
                     img={card.img}

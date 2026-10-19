@@ -1,8 +1,8 @@
-import { fmtTime } from '@/content/shared/timeSlots';
+import { formatTime } from '@/content/shared/timeSlots';
 
-export function bookingPayload({
-  ctx,
-  f,
+export function buildBookingPayload({
+  ctx: bookingContext,
+  f: formValues,
   referral,
   payOn,
   payOption,
@@ -16,36 +16,39 @@ export function bookingPayload({
   timeOf,
 }) {
   return {
-    type: ctx.type,
-    service: ctx.service,
-    name: f.name,
-    phone: f.phone,
-    email: f.email,
+    type: bookingContext.type,
+    service: bookingContext.service,
+    name: formValues.name,
+    phone: formValues.phone,
+    email: formValues.email,
     referral: (referral && referral.code) || '',
     pay_option: payOn ? payOption : '',
     currency: currency || 'USD',
     stay: stay || '',
-    lines: ctx.lines.map((l, i) => {
-      const p = priced && priced.lines && priced.lines[i] && priced.lines[i].ok ? priced.lines[i] : null;
-      const isTarget = !!singleLine && i === 0;
+    lines: bookingContext.lines.map((line, index) => {
+      const linePrice =
+        priced && priced.lines && priced.lines[index] && priced.lines[index].ok ? priced.lines[index] : null;
+      const isTarget = !!singleLine && index === 0;
       return {
-        type: l.type,
-        service: l.service,
-        date: dateOf(l, i) || l.date || '',
-        time: timeOf(l, i) || l.time || '',
-        guests: String(l.guests || displayGuests),
-        pickup: l.pickup || f.pickup,
-        dropoff: l.dropoff || f.dropoff,
-        day_no: l.day_no != null ? l.day_no : null,
-        flight_number: (isTarget && needsFlight ? f.flightNumber || l.flight_number : l.flight_number) || '',
-        flight_datetime: (isTarget && needsFlight ? f.flightDatetime || l.flight_datetime : l.flight_datetime) || '',
-        mode: l.mode || 'standard',
-        area: l.area || '',
-        duration: l.duration || '',
-        extra: l.extra != null ? l.extra : 0,
-        return: !!l.return,
-        price_usd: p ? p.price_usd : null,
-        price_idr: p ? p.price_idr : null,
+        type: line.type,
+        service: line.service,
+        date: dateOf(line, index) || line.date || '',
+        time: timeOf(line, index) || line.time || '',
+        guests: String(line.guests || displayGuests),
+        pickup: line.pickup || formValues.pickup,
+        dropoff: line.dropoff || formValues.dropoff,
+        day_no: line.day_no != null ? line.day_no : null,
+        flight_number:
+          (isTarget && needsFlight ? formValues.flightNumber || line.flight_number : line.flight_number) || '',
+        flight_datetime:
+          (isTarget && needsFlight ? formValues.flightDatetime || line.flight_datetime : line.flight_datetime) || '',
+        mode: line.mode || 'standard',
+        area: line.area || '',
+        duration: line.duration || '',
+        extra: line.extra != null ? line.extra : 0,
+        return: !!line.return,
+        price_usd: linePrice ? linePrice.price_usd : null,
+        price_idr: linePrice ? linePrice.price_idr : null,
       };
     }),
   };
@@ -53,20 +56,29 @@ export function bookingPayload({
 
 export function priceText(priced) {
   if (!priced) return '-';
-  const s = priced.symbol || '$';
-  return s + priced.total.display.toLocaleString(s === 'Rp' ? 'id-ID' : 'en-US');
+  const currencySymbol = priced.symbol || '$';
+  return currencySymbol + priced.total.display.toLocaleString(currencySymbol === 'Rp' ? 'id-ID' : 'en-US');
 }
 
-export function whatsappText({ ctx, f, displayGuests, singleLine, flightNumberDisplay, dateOf, timeOf, price }) {
-  const rowText = ctx.lines
-    .map((l, i) => {
-      const d = dateOf(l, i) || l.date || 'TBD';
-      const t = timeOf(l, i);
-      return `- ${l.day_no ? `Day ${l.day_no} · ` : ''}${d}${t ? ` · ${fmtTime(t)}` : ''} · ${l.service} · ${l.guests || displayGuests} pax`;
+export function buildWhatsappText({
+  ctx: bookingContext,
+  f: formValues,
+  displayGuests,
+  singleLine,
+  flightNumberDisplay,
+  dateOf,
+  timeOf,
+  price,
+}) {
+  const rowText = bookingContext.lines
+    .map((line, index) => {
+      const dateText = dateOf(line, index) || line.date || 'TBD';
+      const timeText = timeOf(line, index);
+      return `- ${line.day_no ? `Day ${line.day_no} · ` : ''}${dateText}${timeText ? ` · ${formatTime(timeText)}` : ''} · ${line.service} · ${line.guests || displayGuests} pax`;
     })
     .join('\n');
   const flightLine = flightNumberDisplay
-    ? `\nFlight: ${flightNumberDisplay} (${f.flightDatetime || singleLine.flight_datetime || 'TBD'})`
+    ? `\nFlight: ${flightNumberDisplay} (${formValues.flightDatetime || singleLine.flight_datetime || 'TBD'})`
     : '';
-  return `Hello, I'd like to book:\nService: ${ctx.service}\nName: ${f.name}\nPhone: ${f.phone}\nEmail: ${f.email}\n${rowText}\nPick-up: ${f.pickup || '-'}\nDrop-off: ${f.dropoff || '-'}${flightLine}\nPrice: ${price}`;
+  return `Hello, I'd like to book:\nService: ${bookingContext.service}\nName: ${formValues.name}\nPhone: ${formValues.phone}\nEmail: ${formValues.email}\n${rowText}\nPick-up: ${formValues.pickup || '-'}\nDrop-off: ${formValues.dropoff || '-'}${flightLine}\nPrice: ${price}`;
 }

@@ -3,6 +3,8 @@
 import { useState } from 'react';
 import { cn } from '../lib/cn.js';
 
+const MAX_SHOWN_IMAGE_COUNT = 5;
+
 export default function TabGallery({ items = [], label = '', className }) {
   const [activeId, setActiveId] = useState(items[0]?.id);
   const [photo, setPhoto] = useState(0);
@@ -52,7 +54,7 @@ export default function TabGallery({ items = [], label = '', className }) {
           <h3 className="text-h2 font-medium text-gold">{item.title}</h3>
           <p className="text-body leading-[var(--lh-body)] text-green m-0">{item.text}</p>
           <div className="grid grid-cols-5 gap-2 mt-2">
-            {images.slice(0, 5).map((image, index) => (
+            {images.slice(0, MAX_SHOWN_IMAGE_COUNT).map((image, index) => (
               <button
                 key={`${image.src}-${index}`}
                 type="button"

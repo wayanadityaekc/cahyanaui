@@ -1,23 +1,24 @@
 import { chromium } from 'playwright-core';
-const B = 'http://127.0.0.1:4000';
+const baseUrl = 'http://127.0.0.1:4000';
 let pass = 0,
   fail = 0;
-function ok(c, m) {
-  c ? pass++ : fail++;
-  console.log(`${c ? 'ok  ' : 'FAIL'} ${m}`);
+function checkAssertion(isPassing, message) {
+  isPassing ? pass++ : fail++;
+  console.log(`${isPassing ? 'ok  ' : 'FAIL'} ${message}`);
 }
 const br = await chromium.launch({
   executablePath: '/opt/pw-browsers/chromium_headless_shell-1194/chrome-linux/headless_shell',
 });
 
-function api(r) {
-  const u = r.request().url();
-  function j(b) {
-    return r.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(b) });
+function handleApiRoute(route) {
+  const requestUrl = route.request().url();
+  function fulfillJson(body) {
+    return route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(body) });
   }
-  if (u.includes('/account/session')) return j({ account: { name: 'Wayan', email: 'w@e.com', phone: '' } });
-  if (u.includes('/bookings/mine')) return j({ bookings: [] });
-  return j({});
+  if (requestUrl.includes('/account/session'))
+    return fulfillJson({ account: { name: 'Wayan', email: 'w@e.com', phone: '' } });
+  if (requestUrl.includes('/bookings/mine')) return fulfillJson({ bookings: [] });
+  return fulfillJson({});
 }
 
 const PAGES = [
@@ -37,20 +38,20 @@ const PAGES = [
   '/destinations.html',
 ];
 
-for (const w of [390, 1280]) {
-  const ctx = await br.newContext({ viewport: { width: w, height: 900 } });
-  await ctx.addInitScript(() => localStorage.setItem('cue_token', 'stub-token'));
-  const page = await ctx.newPage();
-  await page.route('**/api/**', api);
+for (const width of [390, 1280]) {
+  const browserContext = await br.newContext({ viewport: { width: width, height: 900 } });
+  await browserContext.addInitScript(() => localStorage.setItem('cue_token', 'stub-token'));
+  const page = await browserContext.newPage();
+  await page.route('**/api/**', handleApiRoute);
   const errs = [];
-  page.on('pageerror', (e) => errs.push(String(e).slice(0, 110)));
+  page.on('pageerror', (error) => errs.push(String(error).slice(0, 110)));
   let seen = 0,
     token = '';
-  const bad = [];
+  const badRows = [];
   const cards = {};
-  for (const p of PAGES) {
-    const r = await page.goto(B + p, { waitUntil: 'load' });
-    ok(r.status() === 200, `${w} ${p}: HTTP 200`);
+  for (const pagePath of PAGES) {
+    const response = await page.goto(baseUrl + pagePath, { waitUntil: 'load' });
+    checkAssertion(response.status() === 200, `${width} ${pagePath}: HTTP 200`);
     await page.waitForTimeout(350);
     const result = await page.evaluate(() => {
       const tok = getComputedStyle(document.documentElement).getPropertyValue('--shadow-card').trim();
@@ -60,32 +61,32 @@ for (const w of [390, 1280]) {
         .split(/\s+/)
         .filter(Boolean)
         .map(parseFloat);
-      const out = [];
-      let n = 0,
+      const shadowRows = [];
+      let shadowCount = 0,
         card = 0;
       document.querySelectorAll('*').forEach((element) => {
-        const c = getComputedStyle(element);
-        const sh = c.boxShadow;
+        const computedStyle = getComputedStyle(element);
+        const sh = computedStyle.boxShadow;
         if (!sh || sh === 'none') return;
-        n++;
+        shadowCount++;
         const layers = [];
         let depth = 0,
-          cur = '';
+          current = '';
         [...sh].forEach((ch) => {
           if (ch === '(') depth++;
           else if (ch === ')') depth--;
           if (ch === ',' && depth === 0) {
-            layers.push(cur);
-            cur = '';
-          } else cur += ch;
+            layers.push(current);
+            current = '';
+          } else current += ch;
         });
-        layers.push(cur);
+        layers.push(current);
         let elevation = false;
-        layers.forEach((L) => {
-          const nums = (L.match(/-?[\d.]+px/g) || []).map(parseFloat);
+        layers.forEach((layer) => {
+          const nums = (layer.match(/-?[\d.]+px/g) || []).map(parseFloat);
           const [ox = 0, oy = 0, blur = 0] = nums;
-          const m = L.match(/rgba?\([^)]*\)/);
-          if (m && /,\s*0\s*\)$/.test(m[0])) return;
+          const rgbMatch = layer.match(/rgba?\([^)]*\)/);
+          if (rgbMatch && /,\s*0\s*\)$/.test(rgbMatch[0])) return;
           const isCard =
             tokNums.length >= 3 &&
             nums.length >= 3 &&
@@ -96,122 +97,137 @@ for (const w of [390, 1280]) {
             card++;
             return;
           }
-          if (Math.abs(ox) > 0 || Math.abs(oy) > 0 || blur > 2) elevation = true;
+          const hasVisibleShadow = Math.abs(ox) > 0 || Math.abs(oy) > 0 || blur > 2;
+          if (hasVisibleShadow) elevation = true;
         });
         if (elevation) {
-          out.push(
+          shadowRows.push(
             `<${element.tagName.toLowerCase()} class="${(element.className || '').toString().slice(0, 55)}"> ${sh.slice(0, 60)}`,
           );
         }
       });
-      return { n, out, card, tok };
+      return { n: shadowCount, out: shadowRows, card, tok };
     });
     seen += result.n;
-    cards[p] = result.card;
+    cards[pagePath] = result.card;
     token = result.tok;
-    result.out.forEach((b) => {
-      if (bad.length < 8) bad.push(`${p} ${b}`);
+    result.out.forEach((offender) => {
+      if (badRows.length < 8) badRows.push(`${pagePath} ${offender}`);
     });
   }
-  ok(
-    bad.length === 0,
-    `${w}: nol shadow elevasi se-web${bad.length ? `\n        :: ${bad.join('\n        :: ')}` : ''}`,
+  checkAssertion(
+    badRows.length === 0,
+    `${width}: nol shadow elevasi se-web${badRows.length ? `\n        :: ${badRows.join('\n        :: ')}` : ''}`,
   );
-  ok(seen > 0, `${w}: ring/hairline yang disengaja masih ke-render (${seen} elemen)`);
-  ok(/\d/.test(token), `${w}: --shadow-card kedefinisi (${token || 'KOSONG'})`);
-  ['/', '/tour.html', '/activities.html', '/destinations.html', '/bali-guide.html'].forEach((p) => {
-    ok(cards[p] > 0, `${w} ${p}: kartu masih bawa --shadow-card (${cards[p]} elemen)`);
+  checkAssertion(seen > 0, `${width}: ring/hairline yang disengaja masih ke-render (${seen} elemen)`);
+  checkAssertion(/\d/.test(token), `${width}: --shadow-card kedefinisi (${token || 'KOSONG'})`);
+  ['/', '/tour.html', '/activities.html', '/destinations.html', '/bali-guide.html'].forEach((pagePath) => {
+    checkAssertion(
+      cards[pagePath] > 0,
+      `${width} ${pagePath}: kartu masih bawa --shadow-card (${cards[pagePath]} elemen)`,
+    );
   });
-  ok(errs.length === 0, `${w}: nol page error${errs[0] ? ` :: ${errs[0]}` : ''}`);
-  await ctx.close();
+  checkAssertion(errs.length === 0, `${width}: nol page error${errs[0] ? ` :: ${errs[0]}` : ''}`);
+  await browserContext.close();
 }
 
-for (const w of [390, 1280]) {
-  const ctx = await br.newContext({ viewport: { width: w, height: 900 } });
-  const page = await ctx.newPage();
-  await page.route('**/api/**', api);
-  await page.goto(`${B}/ubud-tour.html`, { waitUntil: 'load' });
+for (const width of [390, 1280]) {
+  const browserContext = await br.newContext({ viewport: { width: width, height: 900 } });
+  const page = await browserContext.newPage();
+  await page.route('**/api/**', handleApiRoute);
+  await page.goto(`${baseUrl}/ubud-tour.html`, { waitUntil: 'load' });
   await page.waitForFunction(
     () => getComputedStyle(document.documentElement).getPropertyValue('--header-h').trim() !== '',
   );
-  function box() {
+  function measureHeaderBox() {
     return page.evaluate(() => {
-      const h = document.querySelector('header');
-      const r = h.getBoundingClientRect();
+      const header = document.querySelector('header');
+      const bounds = header.getBoundingClientRect();
       const cs = getComputedStyle(document.documentElement);
       return {
-        top: Math.round(r.top),
-        bottom: Math.round(r.bottom),
-        h: Math.round(r.height),
+        top: Math.round(bounds.top),
+        bottom: Math.round(bounds.bottom),
+        h: Math.round(bounds.height),
         navH: parseFloat(cs.getPropertyValue('--header-h')),
         barH: parseFloat(cs.getPropertyValue('--tripbar-h')),
       };
     });
   }
-  async function scrollTo(y) {
-    await page.evaluate((v) => window.scrollTo(0, v), y);
-    await page.waitForFunction((v) => Math.abs(window.scrollY - v) < 2, y, { timeout: 5000 });
+  async function scrollTo(scrollPosition) {
+    await page.evaluate((targetPosition) => window.scrollTo(0, targetPosition), scrollPosition);
+    await page.waitForFunction((targetPosition) => Math.abs(window.scrollY - targetPosition) < 2, scrollPosition, {
+      timeout: 5000,
+    });
     await page.waitForTimeout(450);
   }
-  async function by(d) {
-    await page.evaluate((v) => window.scrollBy(0, v), d);
+  async function scrollByDistance(distance) {
+    await page.evaluate((scrollAmount) => window.scrollBy(0, scrollAmount), distance);
     await page.waitForTimeout(450);
   }
 
-  const atTop = await box();
-  ok(atTop.top === 0, `${w}: di puncak header rata atas (top ${atTop.top})`);
-  ok(atTop.bottom > 0, `${w}: di puncak header keliatan`);
+  const atTop = await measureHeaderBox();
+  checkAssertion(atTop.top === 0, `${width}: di puncak header rata atas (top ${atTop.top})`);
+  checkAssertion(atTop.bottom > 0, `${width}: di puncak header keliatan`);
 
   await scrollTo(40);
-  ok((await box()).top === 0, `${w}: 40px = masih utuh, ambang tuck itu 80 (top ${(await box()).top})`);
+  checkAssertion(
+    (await measureHeaderBox()).top === 0,
+    `${width}: 40px = masih utuh, ambang tuck itu 80 (top ${(await measureHeaderBox()).top})`,
+  );
 
   await scrollTo(600);
-  const down = await box();
-  ok(down.bottom > 0, `${w}: scroll ke BAWAH header TETEP keliatan - sticky (bottom ${down.bottom})`);
-  ok(Math.abs(down.top + down.barH) < 2, `${w}: yang ketuck cuma trip bar (top ${down.top} vs -${down.barH})`);
+  const down = await measureHeaderBox();
+  checkAssertion(down.bottom > 0, `${width}: scroll ke BAWAH header TETEP keliatan - sticky (bottom ${down.bottom})`);
+  checkAssertion(
+    Math.abs(down.top + down.barH) < 2,
+    `${width}: yang ketuck cuma trip bar (top ${down.top} vs -${down.barH})`,
+  );
 
-  await by(-200);
-  const up = await box();
-  ok(Math.abs(up.top - down.top) < 2, `${w}: scroll ke ATAS gak ngubah apa-apa lagi (top ${up.top})`);
+  await scrollByDistance(-200);
+  const up = await measureHeaderBox();
+  checkAssertion(Math.abs(up.top - down.top) < 2, `${width}: scroll ke ATAS gak ngubah apa-apa lagi (top ${up.top})`);
 
-  await by(300);
-  ok((await box()).bottom > 0, `${w}: turun lagi tetep keliatan`);
+  await scrollByDistance(300);
+  checkAssertion((await measureHeaderBox()).bottom > 0, `${width}: turun lagi tetep keliatan`);
 
   await scrollTo(40);
-  ok((await box()).bottom > 0, `${w}: di 40 nav masih keliatan`);
-  ok(Math.abs((await box()).top + up.barH) < 2, `${w}: turun-balik ke 40 bar TETEP ketuck (ambang buka 8)`);
+  checkAssertion((await measureHeaderBox()).bottom > 0, `${width}: di 40 nav masih keliatan`);
+  checkAssertion(
+    Math.abs((await measureHeaderBox()).top + up.barH) < 2,
+    `${width}: turun-balik ke 40 bar TETEP ketuck (ambang buka 8)`,
+  );
 
   await scrollTo(0);
-  const back = await box();
-  ok(back.top === 0, `${w}: balik ke puncak = trip bar + nav utuh (top ${back.top})`);
+  const back = await measureHeaderBox();
+  checkAssertion(back.top === 0, `${width}: balik ke puncak = trip bar + nav utuh (top ${back.top})`);
 
   await scrollTo(600);
-  const before = (await box()).top;
-  for (const d of [-3, 3, -2, 2, -3]) {
-    await page.evaluate((v) => window.scrollBy(0, v), d);
+  const before = (await measureHeaderBox()).top;
+  for (const distance of [-3, 3, -2, 2, -3]) {
+    await page.evaluate((scrollAmount) => window.scrollBy(0, scrollAmount), distance);
   }
   await page.waitForTimeout(400);
-  ok((await box()).top === before, `${w}: goyangan kecil gak bikin header kedip`);
-  await ctx.close();
+  checkAssertion((await measureHeaderBox()).top === before, `${width}: goyangan kecil gak bikin header kedip`);
+  await browserContext.close();
 }
 
-for (const w of [390, 1280]) {
-  const ctx = await br.newContext({ viewport: { width: w, height: 900 } });
-  const page = await ctx.newPage();
-  await page.route('**/api/**', api);
-  await page.goto(`${B}/ubud-tour.html`, { waitUntil: 'load' });
+for (const width of [390, 1280]) {
+  const browserContext = await br.newContext({ viewport: { width: width, height: 900 } });
+  const page = await browserContext.newPage();
+  await page.route('**/api/**', handleApiRoute);
+  await page.goto(`${baseUrl}/ubud-tour.html`, { waitUntil: 'load' });
   await page.waitForTimeout(300);
-  const g = await page.evaluate(() => {
-    const b = document.getElementById('hamburger').getBoundingClientRect();
-    const l = document.querySelector('header a[href="/"] img').getBoundingClientRect();
+  const hamburgerLayout = await page.evaluate(() => {
+    const hamburgerBox = document.getElementById('hamburger').getBoundingClientRect();
+    const logoBox = document.querySelector('header a[href="/"] img').getBoundingClientRect();
     const row = document.getElementById('hamburger').parentElement.getBoundingClientRect();
     const cs = getComputedStyle(document.getElementById('hamburger').parentElement);
     const slot = document.querySelector('[data-account-slot]').getBoundingClientRect();
     const icons = [...document.getElementById('hamburger').parentElement.querySelectorAll('svg')]
-      .filter((e) => !e.closest('#nav-menu') && e.getBoundingClientRect().width > 0)
-      .map((e) => e.getBoundingClientRect())
-      .filter((r) => r.left >= 0)
-      .sort((a, c) => a.left - c.left);
+      .filter((event) => !event.closest('#nav-menu') && event.getBoundingClientRect().width > 0)
+      .map((event) => event.getBoundingClientRect())
+      .filter((box) => box.left >= 0)
+      .sort((a, b) => a.left - b.left);
     const probe = document.createElement('div');
     probe.style.cssText = 'position:absolute;width:var(--container-x)';
     document.body.appendChild(probe);
@@ -219,10 +235,10 @@ for (const w of [390, 1280]) {
     probe.remove();
     const crumb = document.querySelector('nav[aria-label="Breadcrumb"] li');
     return {
-      bl: Math.round(b.left),
-      br: Math.round(b.right),
-      ll: Math.round(l.left),
-      lr: Math.round(l.right),
+      bl: Math.round(hamburgerBox.left),
+      br: Math.round(hamburgerBox.right),
+      ll: Math.round(logoBox.left),
+      lr: Math.round(logoBox.right),
       rowL: Math.round(row.left),
       padL: parseFloat(cs.paddingLeft),
       rowR: Math.round(row.right),
@@ -230,7 +246,7 @@ for (const w of [390, 1280]) {
       gutter,
       sl: Math.round(slot.left),
       sr: Math.round(slot.right),
-      bw: Math.round(b.width),
+      bw: Math.round(hamburgerBox.width),
       deskNav: !!document.querySelector('[data-desktop-nav]')?.getBoundingClientRect().width,
       crumbL: crumb ? Math.round(crumb.getBoundingClientRect().left) : null,
       icons: icons.map((icon) => ({
@@ -242,93 +258,121 @@ for (const w of [390, 1280]) {
     };
   });
   console.log(
-    `     burger ${g.bl}-${g.br} · logo ${g.ll}-${g.lr} · akun ${g.sl}-${g.sr} · baris ${g.rowL}+${g.padL} .. ${g.rowR}-${g.padR}`,
+    `     burger ${hamburgerLayout.bl}-${hamburgerLayout.br} · logo ${hamburgerLayout.ll}-${hamburgerLayout.lr} · akun ${hamburgerLayout.sl}-${hamburgerLayout.sr} · baris ${hamburgerLayout.rowL}+${hamburgerLayout.padL} .. ${hamburgerLayout.rowR}-${hamburgerLayout.padR}`,
   );
-  if (w <= 992) {
-    ok(g.bw > 0, `${w}: burger keliatan di HP (lebar ${g.bw})`);
-    ok(g.br <= g.ll, `${w}: burger di KIRI logo (burger kanan ${g.br} <= logo kiri ${g.ll})`);
-    ok(
-      Math.abs(g.bl - (g.rowL + g.padL)) < 3,
-      `${w}: burger nempel di gutter KIRI baris (${g.bl} vs ${g.rowL + g.padL})`,
+  if (width <= 992) {
+    checkAssertion(hamburgerLayout.bw > 0, `${width}: burger keliatan di HP (lebar ${hamburgerLayout.bw})`);
+    checkAssertion(
+      hamburgerLayout.br <= hamburgerLayout.ll,
+      `${width}: burger di KIRI logo (burger kanan ${hamburgerLayout.br} <= logo kiri ${hamburgerLayout.ll})`,
     );
-    if (g.crumbL != null)
-      ok(Math.abs(g.bl - g.crumbL) < 2, `${w}: burger satu tepi sama crumb (${g.bl} vs ${g.crumbL})`);
+    checkAssertion(
+      Math.abs(hamburgerLayout.bl - (hamburgerLayout.rowL + hamburgerLayout.padL)) < 3,
+      `${width}: burger nempel di gutter KIRI baris (${hamburgerLayout.bl} vs ${hamburgerLayout.rowL + hamburgerLayout.padL})`,
+    );
+    if (hamburgerLayout.crumbL != null)
+      checkAssertion(
+        Math.abs(hamburgerLayout.bl - hamburgerLayout.crumbL) < 2,
+        `${width}: burger satu tepi sama crumb (${hamburgerLayout.bl} vs ${hamburgerLayout.crumbL})`,
+      );
   } else {
-    ok(g.bw === 0, `${w}: desktop gak punya burger (lebar ${g.bw})`);
-    ok(g.deskNav, `${w}: link halaman keliatan di bar desktop`);
+    checkAssertion(hamburgerLayout.bw === 0, `${width}: desktop gak punya burger (lebar ${hamburgerLayout.bw})`);
+    checkAssertion(hamburgerLayout.deskNav, `${width}: link halaman keliatan di bar desktop`);
   }
-  ok(
-    g.rowR - g.padR - g.sr < 3,
-    `${w}: slot akun nempel di gutter KANAN baris (${Math.round(g.rowR - g.padR - g.sr)}px)`,
+  checkAssertion(
+    hamburgerLayout.rowR - hamburgerLayout.padR - hamburgerLayout.sr < 3,
+    `${width}: slot akun nempel di gutter KANAN baris (${Math.round(hamburgerLayout.rowR - hamburgerLayout.padR - hamburgerLayout.sr)}px)`,
   );
-  ok(
-    g.icons.every((icon) => icon.r <= g.sr + 1),
-    `${w}: slot akun paling kanan di klusternya`,
+  checkAssertion(
+    hamburgerLayout.icons.every((icon) => icon.r <= hamburgerLayout.sr + 1),
+    `${width}: slot akun paling kanan di klusternya`,
   );
 
-  console.log(`     gutter baris nav: kiri ${g.padL} · kanan ${g.padR} · token ${g.gutter}`);
-  ok(Math.abs(g.padL - g.padR) < 0.5, `${w}: gutter kiri == kanan (${g.padL} vs ${g.padR})`);
-  ok(g.padL < 24, `${w}: gutter udah dikecilin dari 24 (${g.padL})`);
-  ok(g.padL >= 14, `${w}: tapi gak kekecilan (${g.padL})`);
-  if (w <= 992)
-    ok(Math.abs(g.padL - g.gutter) < 0.5, `${w}: di HP gutter nav == --container-x (${g.padL} vs ${g.gutter})`);
-  if (w <= 992)
-    ok(
-      Math.abs(w - g.sr - g.gutter) < 2,
-      `${w}: slot akun berhenti satu gutter dari tepi kanan (${Math.round(w - g.sr)} vs ${g.gutter})`,
+  console.log(
+    `     gutter baris nav: kiri ${hamburgerLayout.padL} · kanan ${hamburgerLayout.padR} · token ${hamburgerLayout.gutter}`,
+  );
+  checkAssertion(
+    Math.abs(hamburgerLayout.padL - hamburgerLayout.padR) < 0.5,
+    `${width}: gutter kiri == kanan (${hamburgerLayout.padL} vs ${hamburgerLayout.padR})`,
+  );
+  checkAssertion(hamburgerLayout.padL < 24, `${width}: gutter udah dikecilin dari 24 (${hamburgerLayout.padL})`);
+  checkAssertion(hamburgerLayout.padL >= 14, `${width}: tapi gak kekecilan (${hamburgerLayout.padL})`);
+  if (width <= 992)
+    checkAssertion(
+      Math.abs(hamburgerLayout.padL - hamburgerLayout.gutter) < 0.5,
+      `${width}: di HP gutter nav == --container-x (${hamburgerLayout.padL} vs ${hamburgerLayout.gutter})`,
+    );
+  if (width <= 992)
+    checkAssertion(
+      Math.abs(width - hamburgerLayout.sr - hamburgerLayout.gutter) < 2,
+      `${width}: slot akun berhenti satu gutter dari tepi kanan (${Math.round(width - hamburgerLayout.sr)} vs ${hamburgerLayout.gutter})`,
     );
 
   const gaps = await page.evaluate(() => {
     const row = document.getElementById('hamburger').parentElement;
-    function ink(element) {
+    function measureInk(element) {
       const svg = element.querySelector('svg');
       if (svg) return svg.getBoundingClientRect();
       const bars = [...element.querySelectorAll('span')]
-        .filter((s) => getComputedStyle(s).position === 'static')
-        .map((s) => s.getBoundingClientRect());
+        .filter((candidate) => getComputedStyle(candidate).position === 'static')
+        .map((staticElement) => staticElement.getBoundingClientRect());
       if (!bars.length) return null;
-      return { left: Math.min(...bars.map((b) => b.left)), right: Math.max(...bars.map((b) => b.right)) };
+      return { left: Math.min(...bars.map((bar) => bar.left)), right: Math.max(...bars.map((bar) => bar.right)) };
     }
-    const out = [];
+    const childBoxes = [];
     [...row.children].forEach((element) => {
       if (element.getBoundingClientRect().width === 0) return;
       if (element.querySelector('img')) return;
       if (element.id === 'hamburger') return;
       if (element.matches('[data-desktop-nav], nav')) return;
-      const visSvg = [...element.querySelectorAll('svg')].some((v) => v.getBoundingClientRect().width > 0);
-      const i =
-        element.matches('[data-account-slot]') && !visSvg
+      const hasVisibleSvg = [...element.querySelectorAll('svg')].some((svg) => svg.getBoundingClientRect().width > 0);
+      const contentBox =
+        element.matches('[data-account-slot]') && !hasVisibleSvg
           ? element.querySelector('button').getBoundingClientRect()
-          : ink(element);
-      if (i)
-        out.push({ tag: element.id || element.getAttribute('aria-label') || element.tagName, l: i.left, r: i.right });
+          : measureInk(element);
+      if (contentBox)
+        childBoxes.push({
+          tag: element.id || element.getAttribute('aria-label') || element.tagName,
+          l: contentBox.left,
+          r: contentBox.right,
+        });
     });
-    out.sort((a, b) => a.l - b.l);
-    return out.slice(1).map((c, n) => ({ from: out[n].tag, to: c.tag, gap: +(c.l - out[n].r).toFixed(1) }));
+    childBoxes.sort((a, b) => a.l - b.l);
+    return childBoxes.slice(1).map((current, index) => ({
+      from: childBoxes[index].tag,
+      to: current.tag,
+      gap: +(current.l - childBoxes[index].r).toFixed(1),
+    }));
   });
-  console.log(`     celah tinta ikon: ${gaps.map((x) => `${x.from}->${x.to} ${x.gap}`).join(' · ')}`);
-  ok(gaps.length >= 2, `${w}: minimal 2 celah ke-ukur (${gaps.length}) - kurang = harness rusak, bukan lolos`);
-  const spread = Math.max(...gaps.map((x) => x.gap)) - Math.min(...gaps.map((x) => x.gap));
-  ok(
+  console.log(`     celah tinta ikon: ${gaps.map((gap) => `${gap.from}->${gap.to} ${gap.gap}`).join(' · ')}`);
+  checkAssertion(
+    gaps.length >= 2,
+    `${width}: minimal 2 celah ke-ukur (${gaps.length}) - kurang = harness rusak, bukan lolos`,
+  );
+  const spread = Math.max(...gaps.map((gap) => gap.gap)) - Math.min(...gaps.map((gap) => gap.gap));
+  checkAssertion(
     spread < 0.6,
-    `${w}: celah antar ikon SAMA semua (spread ${spread.toFixed(1)}px :: ${gaps.map((x) => x.gap).join(', ')})`,
+    `${width}: celah antar ikon SAMA semua (spread ${spread.toFixed(1)}px :: ${gaps.map((gap) => gap.gap).join(', ')})`,
   );
 
-  if (w > 992) {
-    await ctx.close();
+  if (width > 992) {
+    await browserContext.close();
     continue;
   }
   await page.click('#hamburger');
   await page.waitForTimeout(400);
-  const d = await page.evaluate(() => {
-    const b = document.getElementById('hamburger').getBoundingClientRect();
+  const menuLayout = await page.evaluate(() => {
+    const hamburgerBox = document.getElementById('hamburger').getBoundingClientRect();
     const panel = document.querySelector('header nav > ul');
     const pr = panel.getBoundingClientRect();
-    const element = document.elementFromPoint(b.left + b.width / 2, b.top + b.height / 2);
+    const element = document.elementFromPoint(
+      hamburgerBox.left + hamburgerBox.width / 2,
+      hamburgerBox.top + hamburgerBox.height / 2,
+    );
     return {
-      overlaps: b.right > pr.left && b.left < pr.right,
+      overlaps: hamburgerBox.right > pr.left && hamburgerBox.left < pr.right,
       panel: `${Math.round(pr.left)}-${Math.round(pr.right)}`,
-      burger: `${Math.round(b.left)}-${Math.round(b.right)}`,
+      burger: `${Math.round(hamburgerBox.left)}-${Math.round(hamburgerBox.right)}`,
       w: Math.round(pr.width),
       panelR: Math.round(pr.right),
       panelL: Math.round(pr.left),
@@ -338,38 +382,54 @@ for (const w of [390, 1280]) {
       hitCls: element ? (element.className || '').toString().slice(0, 40) : '',
     };
   });
-  console.log(`     drawer ${d.panel} · burger ${d.burger} · hit-test ${d.hit} "${d.hitCls}"`);
-  ok(d.w > 100, `${w}: panel drawer beneran ke-ukur (lebar ${d.w}) - rect kosong = harness rusak, bukan lolos`);
-  ok(d.panelL > -1 && d.panelL < 1, `${w}: panel drawer nempel tepi KIRI (kiri ${d.panelL})`);
-  ok(d.overlaps, `${w}: panel nutupin burger - itu konsekuensi drawer sesisi, bukan bug (${d.burger} vs ${d.panel})`);
-  ok(d.hit !== 'hamburger', `${w}: yang ke-tap di posisi burger itu panel, bukan burger (hit: ${d.hit})`);
-  ok(d.closeVisible, `${w}: tombol x keliatan di dalam drawer`);
+  console.log(
+    `     drawer ${menuLayout.panel} · burger ${menuLayout.burger} · hit-test ${menuLayout.hit} "${menuLayout.hitCls}"`,
+  );
+  checkAssertion(
+    menuLayout.w > 100,
+    `${width}: panel drawer beneran ke-ukur (lebar ${menuLayout.w}) - rect kosong = harness rusak, bukan lolos`,
+  );
+  checkAssertion(
+    menuLayout.panelL > -1 && menuLayout.panelL < 1,
+    `${width}: panel drawer nempel tepi KIRI (kiri ${menuLayout.panelL})`,
+  );
+  checkAssertion(
+    menuLayout.overlaps,
+    `${width}: panel nutupin burger - itu konsekuensi drawer sesisi, bukan bug (${menuLayout.burger} vs ${menuLayout.panel})`,
+  );
+  checkAssertion(
+    menuLayout.hit !== 'hamburger',
+    `${width}: yang ke-tap di posisi burger itu panel, bukan burger (hit: ${menuLayout.hit})`,
+  );
+  checkAssertion(menuLayout.closeVisible, `${width}: tombol x keliatan di dalam drawer`);
   await page.click('#nav-menu button[aria-label="Close menu"]');
   await page.waitForTimeout(400);
   const shut = await page.evaluate(() => document.querySelector('header nav > ul').getBoundingClientRect().right);
-  ok(shut <= 1, `${w}: x beneran nutup - panel balik ke luar layar KIRI (kanan ${Math.round(shut)})`);
-  await ctx.close();
+  checkAssertion(shut <= 1, `${width}: x beneran nutup - panel balik ke luar layar KIRI (kanan ${Math.round(shut)})`);
+  await browserContext.close();
 }
 
-for (const w of [390]) {
-  const ctx = await br.newContext({ viewport: { width: w, height: 900 } });
-  const page = await ctx.newPage();
-  page.on('pageerror', (e) => ok(false, `${w}: page error ${e.message}`));
-  await page.route('**/api/**', api);
-  await page.goto(`${B}/ubud-tour.html`, { waitUntil: 'load' });
+for (const width of [390]) {
+  const browserContext = await br.newContext({ viewport: { width: width, height: 900 } });
+  const page = await browserContext.newPage();
+  page.on('pageerror', (error) => checkAssertion(false, `${width}: page error ${error.message}`));
+  await page.route('**/api/**', handleApiRoute);
+  await page.goto(`${baseUrl}/ubud-tour.html`, { waitUntil: 'load' });
 
   function read() {
     return page.evaluate(() => {
-      const b = document.getElementById('hamburger');
-      const bars = [...b.querySelectorAll(':scope > span')].filter((s) => getComputedStyle(s).position === 'static');
-      const br = b.getBoundingClientRect();
+      const hamburger = document.getElementById('hamburger');
+      const bars = [...hamburger.querySelectorAll(':scope > span')].filter(
+        (bar) => getComputedStyle(bar).position === 'static',
+      );
+      const br = hamburger.getBoundingClientRect();
       return {
         btnW: +br.width.toFixed(1),
         btnH: +br.height.toFixed(1),
-        gap: parseFloat(getComputedStyle(b).rowGap) || 0,
-        bars: bars.map((s) => {
-          const r = s.getBoundingClientRect();
-          return { w: +r.width.toFixed(1), h: +r.height.toFixed(1), mid: +(r.top + r.height / 2).toFixed(1) };
+        gap: parseFloat(getComputedStyle(hamburger).rowGap) || 0,
+        bars: bars.map((bar) => {
+          const box = bar.getBoundingClientRect();
+          return { w: +box.width.toFixed(1), h: +box.height.toFixed(1), mid: +(box.top + box.height / 2).toFixed(1) };
         }),
       };
     });
@@ -377,34 +437,41 @@ for (const w of [390]) {
 
   const shut = await read();
   console.log(
-    `  ${w}px  tombol ${shut.btnW}x${shut.btnH} · gap ${shut.gap} · bar ${shut.bars.map((x) => `${x.w}x${x.h}`).join(' ')}`,
+    `  ${width}px  tombol ${shut.btnW}x${shut.btnH} · gap ${shut.gap} · bar ${shut.bars.map((bar) => `${bar.w}x${bar.h}`).join(' ')}`,
   );
-  ok(shut.bars.length === 3, `${w}: tepat 3 bar ke-ukur (${shut.bars.length}) - kurang/lebih = harness rusak`);
-  ok(shut.btnW <= 24.5 && shut.btnW >= 18, `${w}: tombol udah dikecilin & gak kekecilan (${shut.btnW})`);
-  ok(
-    shut.bars.every((x) => x.w <= shut.btnW + 0.5 && x.w >= 16),
-    `${w}: bar muat di tombol & masih kebaca`,
+  checkAssertion(
+    shut.bars.length === 3,
+    `${width}: tepat 3 bar ke-ukur (${shut.bars.length}) - kurang/lebih = harness rusak`,
   );
-  if (w <= 992) ok(shut.btnH >= 32, `${w}: target jempol SENGAJA gak ikut dikecilin, >=32px (${shut.btnH})`);
+  checkAssertion(
+    shut.btnW <= 24.5 && shut.btnW >= 18,
+    `${width}: tombol udah dikecilin & gak kekecilan (${shut.btnW})`,
+  );
+  checkAssertion(
+    shut.bars.every((bar) => bar.w <= shut.btnW + 0.5 && bar.w >= 16),
+    `${width}: bar muat di tombol & masih kebaca`,
+  );
+  if (width <= 992)
+    checkAssertion(shut.btnH >= 32, `${width}: target jempol SENGAJA gak ikut dikecilin, >=32px (${shut.btnH})`);
 
   const step = +(shut.bars[1].mid - shut.bars[0].mid).toFixed(1);
-  ok(
+  checkAssertion(
     Math.abs(step - (shut.bars[0].h + shut.gap)) < 0.6,
-    `${w}: jarak bar == tinggi bar + gap (${step} vs ${shut.bars[0].h + shut.gap})`,
+    `${width}: jarak bar == tinggi bar + gap (${step} vs ${shut.bars[0].h + shut.gap})`,
   );
 
   await page.click('#hamburger');
   await page.waitForTimeout(420);
   const open = await read();
-  ok(
+  checkAssertion(
     open.bars.length === 3,
-    `${w}: 3 bar masih ke-ukur pas kebuka (${open.bars.length}) - kalau kurang, spread-nya bohong`,
+    `${width}: 3 bar masih ke-ukur pas kebuka (${open.bars.length}) - kalau kurang, spread-nya bohong`,
   );
-  const mids = open.bars.map((x) => x.mid);
+  const mids = open.bars.map((bar) => bar.mid);
   const spread = Math.max(...mids) - Math.min(...mids);
   console.log(`         X: titik tengah ${mids.join(' / ')} · spread ${spread.toFixed(1)}`);
-  ok(spread < 1.2, `${w}: X beneran nutup - 3 bar satu titik tengah (spread ${spread.toFixed(1)}px)`);
-  await ctx.close();
+  checkAssertion(spread < 1.2, `${width}: X beneran nutup - 3 bar satu titik tengah (spread ${spread.toFixed(1)}px)`);
+  await browserContext.close();
 }
 
 for (const [label, url] of [
@@ -412,35 +479,42 @@ for (const [label, url] of [
   ['destination', '/attractions/monkey-forest.html'],
   ['experience', '/attractions/atv-ride.html'],
 ]) {
-  const ctx = await br.newContext({ viewport: { width: 1280, height: 900 } });
-  const page = await ctx.newPage();
-  await page.route('**/api/**', api);
-  const r = await page.goto(B + url, { waitUntil: 'load' });
-  ok(r.status() === 200, `hero ${label}: HTTP 200`);
+  const browserContext = await br.newContext({ viewport: { width: 1280, height: 900 } });
+  const page = await browserContext.newPage();
+  await page.route('**/api/**', handleApiRoute);
+  const response = await page.goto(baseUrl + url, { waitUntil: 'load' });
+  checkAssertion(response.status() === 200, `hero ${label}: HTTP 200`);
   await page.waitForTimeout(500);
-  function shot() {
+  function measureImage() {
     return page.evaluate(() => {
-      const img = document.querySelector('header ~ * img, main img') || document.querySelector('img');
-      if (!img) return null;
-      const b = img.getBoundingClientRect();
-      return { w: +b.width.toFixed(1), h: +b.height.toFixed(1), tr: getComputedStyle(img).transform };
+      const image = document.querySelector('header ~ * img, main img') || document.querySelector('img');
+      if (!image) return null;
+      const imageBounds = image.getBoundingClientRect();
+      return {
+        w: +imageBounds.width.toFixed(1),
+        h: +imageBounds.height.toFixed(1),
+        tr: getComputedStyle(image).transform,
+      };
     });
   }
-  const before = await shot();
-  ok(
+  const before = await measureImage();
+  checkAssertion(
     before && before.w > 200,
     `hero ${label}: foto hero ke-ukur (${before ? before.w : 'NULL'}) - rect kosong = harness rusak, bukan lolos`,
   );
   const box = await page.locator('img').first().boundingBox();
   await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
   await page.waitForTimeout(650);
-  const after = await shot();
-  ok(
+  const after = await measureImage();
+  checkAssertion(
     before.w === after.w && before.h === after.h,
     `hero ${label}: foto NOL berubah pas di-hover (${before.w}x${before.h} -> ${after.w}x${after.h})`,
   );
-  ok(after.tr === 'none' || after.tr === before.tr, `hero ${label}: nol transform nyangkut pas hover (${after.tr})`);
-  await ctx.close();
+  checkAssertion(
+    after.tr === 'none' || after.tr === before.tr,
+    `hero ${label}: nol transform nyangkut pas hover (${after.tr})`,
+  );
+  await browserContext.close();
 }
 
 await br.close();

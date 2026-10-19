@@ -2,29 +2,29 @@
 
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { EMPTY, countItems, readCart, writeCart } from '@/lib/bookingCart';
-import { extraId } from '@/lib/extras';
+import { buildExtraId } from '@/lib/extras';
 
 const CartContext = createContext(null);
 
 export function CartProvider({ children }) {
   const [cart, setCart] = useState(EMPTY);
-  const [ready, setReady] = useState(false);
+  const [isReady, setIsReady] = useState(false);
 
   useEffect(() => {
     setCart(readCart());
-    setReady(true);
+    setIsReady(true);
   }, []);
 
   useEffect(() => {
-    if (ready) writeCart(cart);
-  }, [cart, ready]);
+    if (isReady) writeCart(cart);
+  }, [cart, isReady]);
 
   useEffect(() => {
-    function onStorage(e) {
-      if (e.key === null || e.key === 'upv_booking_v1') setCart(readCart());
+    function handleStorageChange(event) {
+      if (event.key === null || event.key === 'upv_booking_v1') setCart(readCart());
     }
-    window.addEventListener('storage', onStorage);
-    return () => window.removeEventListener('storage', onStorage);
+    window.addEventListener('storage', handleStorageChange);
+    return () => window.removeEventListener('storage', handleStorageChange);
   }, []);
 
   const setStay = useCallback((stay) => setCart((prev) => ({ ...prev, stay })), []);
@@ -49,21 +49,21 @@ export function CartProvider({ children }) {
   const addExtra = useCallback(
     (extra) =>
       setCart((prev) =>
-        prev.extras.some((line) => extraId(line) === extraId(extra))
+        prev.extras.some((line) => buildExtraId(line) === buildExtraId(extra))
           ? prev
           : { ...prev, extras: [...prev.extras, extra] },
       ),
     [],
   );
   const removeExtra = useCallback(
-    (id) => setCart((prev) => ({ ...prev, extras: prev.extras.filter((line) => extraId(line) !== id) })),
+    (id) => setCart((prev) => ({ ...prev, extras: prev.extras.filter((line) => buildExtraId(line) !== id) })),
     [],
   );
   const updateExtra = useCallback(
     (id, patch) =>
       setCart((prev) => ({
         ...prev,
-        extras: prev.extras.map((line) => (extraId(line) === id ? { ...line, ...patch } : line)),
+        extras: prev.extras.map((line) => (buildExtraId(line) === id ? { ...line, ...patch } : line)),
       })),
     [],
   );
@@ -72,7 +72,7 @@ export function CartProvider({ children }) {
   const value = useMemo(
     () => ({
       cart,
-      ready,
+      ready: isReady,
       count: countItems(cart),
       setStay,
       clearStay,
@@ -86,7 +86,7 @@ export function CartProvider({ children }) {
     }),
     [
       cart,
-      ready,
+      isReady,
       setStay,
       clearStay,
       addService,
@@ -103,7 +103,7 @@ export function CartProvider({ children }) {
 }
 
 export function useCart() {
-  const ctx = useContext(CartContext);
-  if (!ctx) throw new Error('useCart must be used inside CartProvider');
-  return ctx;
+  const context = useContext(CartContext);
+  if (!context) throw new Error('useCart must be used inside CartProvider');
+  return context;
 }

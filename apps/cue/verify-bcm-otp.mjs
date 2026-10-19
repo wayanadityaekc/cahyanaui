@@ -3,17 +3,17 @@ import { chromium } from '/home/user/CUE/node_modules/playwright-core/index.mjs'
 const BASE = 'http://127.0.0.1:4000';
 let pass = 0,
   fail = 0;
-function ok(c, m) {
-  c ? pass++ : (fail++, console.log('  FAIL:', m));
+function checkAssertion(isPassing, message) {
+  isPassing ? pass++ : (fail++, console.log('  FAIL:', message));
 }
-const b = await chromium.launch({
+const browser = await chromium.launch({
   executablePath: '/opt/pw-browsers/chromium_headless_shell-1194/chrome-linux/headless_shell',
 });
 const DAY = new Date(Date.now() + 40 * 86400000).toISOString().slice(0, 10);
 
-async function run(w) {
-  const ctx = await b.newContext({ viewport: { width: w, height: 900 } });
-  await ctx.route('**/api/**', (route) => {
+async function run(viewportWidth) {
+  const browserContext = await browser.newContext({ viewport: { width: viewportWidth, height: 900 } });
+  await browserContext.route('**/api/**', (route) => {
     const url = route.request().url();
     const body = route.request().postDataJSON ? route.request().postDataJSON() || {} : {};
     if (url.includes('/account/session'))
@@ -45,7 +45,7 @@ async function run(w) {
     if (url.includes('/pricing/catalog')) return route.fulfill({ json: { currency: 'USD', symbol: '$', catalog: {} } });
     return route.fulfill({ json: {} });
   });
-  await ctx.addInitScript((day) => {
+  await browserContext.addInitScript((day) => {
     localStorage.setItem('cue_token', 'tok-signed-in');
     localStorage.setItem(
       'cue_itinerary_v1',
@@ -54,9 +54,9 @@ async function run(w) {
       }),
     );
   }, DAY);
-  const page = await ctx.newPage();
+  const page = await browserContext.newPage();
   const errs = [];
-  page.on('pageerror', (e) => errs.push(String(e)));
+  page.on('pageerror', (error) => errs.push(String(error)));
   await page.goto(`${BASE}/my-trips.html?pay=0`, { waitUntil: 'networkidle' });
   await page
     .locator('button:visible', { hasText: /Pay now|Book now|Checkout/i })
@@ -73,40 +73,52 @@ async function run(w) {
     .last()
     .click();
   await page.waitForTimeout(900);
-  ok(await page.locator('text=Booking Received').isVisible(), `${w}: never reached the success screen`);
-  ok(await page.locator('[data-signin-note]:visible').isVisible(), `${w}: no signin note shown`);
-  const noteText = await page.locator('[data-signin-note]:visible').innerText();
-  ok(!/check your email/i.test(noteText), `${w}: still says "check your email" instead of showing the code entry`);
-  ok(
-    (await page.locator('input[inputmode="numeric"]:visible').count()) === 6,
-    `${w}: no 6-box code entry inside the note`,
+  checkAssertion(
+    await page.locator('text=Booking Received').isVisible(),
+    `${viewportWidth}: never reached the success screen`,
   );
-  await page.screenshot({ path: `shots/bcm-otp-${w}.png` });
+  checkAssertion(
+    await page.locator('[data-signin-note]:visible').isVisible(),
+    `${viewportWidth}: no signin note shown`,
+  );
+  const noteText = await page.locator('[data-signin-note]:visible').innerText();
+  checkAssertion(
+    !/check your email/i.test(noteText),
+    `${viewportWidth}: still says "check your email" instead of showing the code entry`,
+  );
+  checkAssertion(
+    (await page.locator('input[inputmode="numeric"]:visible').count()) === 6,
+    `${viewportWidth}: no 6-box code entry inside the note`,
+  );
+  await page.screenshot({ path: `shots/bcm-otp-${viewportWidth}.png` });
 
   await page.locator('input[inputmode="numeric"]:visible').first().click();
   await page.keyboard.type('000000', { delay: 20 });
   await page.waitForTimeout(500);
-  ok(
+  checkAssertion(
     /incorrect|expired/i.test(await page.locator('[data-signin-note]:visible').innerText()),
-    `${w}: no error for a wrong code`,
+    `${viewportWidth}: no error for a wrong code`,
   );
   const tokAfterWrong = await page.evaluate(() => localStorage.getItem('cue_token'));
-  ok(tokAfterWrong === 'tok-signed-in', `${w}: a WRONG code changed the session (${tokAfterWrong})`);
+  checkAssertion(
+    tokAfterWrong === 'tok-signed-in',
+    `${viewportWidth}: a WRONG code changed the session (${tokAfterWrong})`,
+  );
 
   await page.locator('input[inputmode="numeric"]:visible').first().click();
   await page.keyboard.type('246810', { delay: 20 });
   await page.waitForTimeout(700);
-  ok(
+  checkAssertion(
     /Signed in as/i.test(await page.locator('[data-signin-note]:visible').innerText()),
-    `${w}: no confirmation after a correct code`,
+    `${viewportWidth}: no confirmation after a correct code`,
   );
   const tok = await page.evaluate(() => localStorage.getItem('cue_token'));
-  ok(tok === 'tok-verified', `${w}: session not swapped to the verified account (${tok})`);
-  await page.screenshot({ path: `shots/bcm-otp-verified-${w}.png` });
-  ok(errs.length === 0, `${w}: page errors ${errs.join(' | ')}`);
-  await ctx.close();
+  checkAssertion(tok === 'tok-verified', `${viewportWidth}: session not swapped to the verified account (${tok})`);
+  await page.screenshot({ path: `shots/bcm-otp-verified-${viewportWidth}.png` });
+  checkAssertion(errs.length === 0, `${viewportWidth}: page errors ${errs.join(' | ')}`);
+  await browserContext.close();
 }
-for (const w of [390, 1280]) await run(w);
-await b.close();
+for (const width of [390, 1280]) await run(width);
+await browser.close();
 console.log(`${pass}/${pass + fail}`);
 process.exit(fail ? 1 : 0);

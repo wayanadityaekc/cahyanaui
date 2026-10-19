@@ -16,7 +16,7 @@ const BAR_BTN =
   'hover:[border-color:var(--color-gold)] focus-visible:outline-none ' +
   'focus-visible:[border-color:var(--color-gold)] focus-visible:[box-shadow:var(--focus-ring)]';
 
-function btn(variant) {
+function pickButtonClasses(variant) {
   if (variant === 'bar') return BAR_BTN;
   return cn(
     BTN_BASE,
@@ -67,41 +67,41 @@ export default function CurrencyPicker({
   id,
   className,
 }) {
-  const [open, setOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
   const ref = useRef(null);
 
   useEffect(() => {
-    if (!open) return undefined;
-    function onDoc(e) {
-      if (ref.current && !ref.current.contains(e.target)) setOpen(false);
+    if (!isOpen) return undefined;
+    function handleOutsidePointerDown(event) {
+      if (ref.current && !ref.current.contains(event.target)) setIsOpen(false);
     }
-    function onKey(e) {
-      if (e.key === 'Escape') setOpen(false);
+    function handleEscapeKeyDown(event) {
+      if (event.key === 'Escape') setIsOpen(false);
     }
-    document.addEventListener('click', onDoc);
-    document.addEventListener('keydown', onKey);
+    document.addEventListener('click', handleOutsidePointerDown);
+    document.addEventListener('keydown', handleEscapeKeyDown);
     return () => {
-      document.removeEventListener('click', onDoc);
-      document.removeEventListener('keydown', onKey);
+      document.removeEventListener('click', handleOutsidePointerDown);
+      document.removeEventListener('keydown', handleEscapeKeyDown);
     };
-  }, [open]);
+  }, [isOpen]);
 
   return (
     <div className={cn(wrap(variant), className)} data-cur ref={ref}>
       <button
         type="button"
         id={id}
-        className={btn(variant)}
+        className={pickButtonClasses(variant)}
         aria-label={label}
         aria-haspopup="listbox"
-        aria-expanded={open}
-        onClick={() => setOpen((wasOpen) => !wasOpen)}
+        aria-expanded={isOpen}
+        onClick={() => setIsOpen((wasOpen) => !wasOpen)}
       >
         <Flag code={value} />
         <span className={variant === 'bar' ? undefined : CODE}>{value}</span>
         <ChevronDown className={CARET} aria-hidden="true" />
       </button>
-      <ul className={list(variant, open)} role="listbox" aria-label="Currency">
+      <ul className={list(variant, isOpen)} role="listbox" aria-label="Currency">
         {options.map((option) => {
           const code = typeof option === 'string' ? option : option.code;
           return (
@@ -112,7 +112,7 @@ export default function CurrencyPicker({
               aria-selected={code === value}
               onClick={() => {
                 onChange?.(code);
-                setOpen(false);
+                setIsOpen(false);
               }}
             >
               <Flag code={code} />

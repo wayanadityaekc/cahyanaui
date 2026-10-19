@@ -1,11 +1,14 @@
 import { API_BASE } from '@/lib/constants';
 
-export function chatSocketUrl(thread) {
-  const u = new URL(API_BASE, typeof window === 'undefined' ? 'https://localhost' : window.location.href);
-  u.protocol = u.protocol === 'http:' ? 'ws:' : 'wss:';
-  u.pathname = '/ws/chat';
-  u.search = `?thread=${encodeURIComponent(thread)}`;
-  return u.toString();
+const DEFAULT_TYPING_DURATION_MS = 4000;
+const RECONNECT_JITTER_MAX_MS = 400;
+
+export function buildChatSocketUrl(thread) {
+  const url = new URL(API_BASE, typeof window === 'undefined' ? 'https://localhost' : window.location.href);
+  url.protocol = url.protocol === 'http:' ? 'ws:' : 'wss:';
+  url.pathname = '/ws/chat';
+  url.search = `?thread=${encodeURIComponent(thread)}`;
+  return url.toString();
 }
 
 const PING_MS = 25000;
@@ -26,10 +29,10 @@ export function openChatSocket(thread, { onMessage, onTyping, onPresence, onOpen
   let pongTimer = null;
   let retryTimer = null;
 
-  function setLive(v) {
-    if (live === v) return;
-    live = v;
-    if (onLive) onLive(v);
+  function setLive(isLive) {
+    if (live === isLive) return;
+    live = isLive;
+    if (onLive) onLive(isLive);
   }
 
   function stopTimers() {
@@ -39,7 +42,7 @@ export function openChatSocket(thread, { onMessage, onTyping, onPresence, onOpen
     pongTimer = null;
   }
 
-  function beat() {
+  function startHeartbeat() {
     stopTimers();
     pingTimer = setInterval(() => {
       if (!ws || ws.readyState !== WebSocket.OPEN) return;
@@ -61,7 +64,7 @@ export function openChatSocket(thread, { onMessage, onTyping, onPresence, onOpen
     if (closedByUs) return;
     let sock;
     try {
-      sock = new WebSocket(chatSocketUrl(thread));
+      sock = new WebSocket(buildChatSocketUrl(thread));
     } catch (e) {
       return schedule();
     }
@@ -70,36 +73,37 @@ export function openChatSocket(thread, { onMessage, onTyping, onPresence, onOpen
     sock.onopen = () => {
       tries = 0;
       setLive(true);
-      beat();
+      startHeartbeat();
       if (onOpen) onOpen();
     };
 
-    sock.onmessage = (ev) => {
-      let msg = null;
+    sock.onmessage = (event) => {
+      let message = null;
       try {
-        msg = JSON.parse(ev.data);
+        message = JSON.parse(event.data);
       } catch (e) {
         return;
       }
-      if (!msg || typeof msg.type !== 'string') return;
-      if (msg.type === 'pong') {
+      if (!message || typeof message.type !== 'string') return;
+      if (message.type === 'pong') {
         clearTimeout(pongTimer);
         pongTimer = null;
         return;
       }
-      if (msg.type === 'ready') {
-        if (onPresence) onPresence(!!msg.ownerHere);
+      if (message.type === 'ready') {
+        if (onPresence) onPresence(!!message.ownerHere);
         return;
       }
-      if (msg.type === 'presence') {
-        if (onPresence) onPresence(!!msg.ownerHere);
+      if (message.type === 'presence') {
+        if (onPresence) onPresence(!!message.ownerHere);
         return;
       }
-      if (msg.type === 'typing') {
-        if (onTyping) onTyping(msg.expiresIn || 4000);
+      if (message.type === 'typing') {
+        if (onTyping) onTyping(message.expiresIn || DEFAULT_TYPING_DURATION_MS);
         return;
       }
-      if (msg.type === 'message' && msg.message && onMessage) onMessage(msg.message);
+      const isMessageDeliverable = message.type === 'message' && message.message && onMessage;
+      if (isMessageDeliverable) onMessage(message.message);
     };
 
     sock.onerror = () => {};
@@ -117,7 +121,7 @@ export function openChatSocket(thread, { onMessage, onTyping, onPresence, onOpen
     const wait = BACKOFF_MS[Math.min(tries, BACKOFF_MS.length - 1)];
     tries += 1;
     clearTimeout(retryTimer);
-    retryTimer = setTimeout(connect, wait + Math.floor(Math.random() * 400));
+    retryTimer = setTimeout(connect, wait + Math.floor(Math.random() * RECONNECT_JITTER_MAX_MS));
   }
 
   connect();
@@ -128,12 +132,11 @@ export function openChatSocket(thread, { onMessage, onTyping, onPresence, onOpen
       stopTimers();
       clearTimeout(retryTimer);
       setLive(false);
-      if (ws) {
-        ws.onclose = null;
-        try {
-          ws.close();
-        } catch (e) {}
-      }
+      if (!ws) return;
+      ws.onclose = null;
+      try {
+        ws.close();
+      } catch (e) {}
     },
     typing() {
       if (ws && ws.readyState === WebSocket.OPEN) {

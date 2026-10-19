@@ -1,3 +1,6 @@
+const MAX_RATING_STARS = 5;
+const RADIX_DECIMAL = 10;
+
 const SOURCE_LOGO = {
   cahyana: { src: '/assets/images/logo.webp', alt: 'Cahyana Ubud Experience' },
 };
@@ -15,8 +18,8 @@ const CLS = {
 };
 
 export default function ReviewCard({ name, country, rating, message, service, source = 'cahyana', onClick }) {
-  const n = Math.max(1, Math.min(5, parseInt(rating, 10) || 0));
-  const stars = '★'.repeat(n) + '☆'.repeat(5 - n);
+  const starCount = Math.max(1, Math.min(MAX_RATING_STARS, parseInt(rating, RADIX_DECIMAL) || 0));
+  const stars = '★'.repeat(starCount) + '☆'.repeat(MAX_RATING_STARS - starCount);
   const logo = SOURCE_LOGO[source] || SOURCE_LOGO.cahyana;
 
   return (
@@ -26,7 +29,7 @@ export default function ReviewCard({ name, country, rating, message, service, so
         {country && <span className={CLS.country}>&middot; {country}</span>}
       </div>
       {service && <div className={CLS.service}>{service}</div>}
-      <div className={CLS.stars} aria-label={`${n} out of 5`}>
+      <div className={CLS.stars} aria-label={`${starCount} out of 5`}>
         {stars}
       </div>
       <p className={CLS.text}>{message}</p>

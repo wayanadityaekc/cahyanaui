@@ -5,6 +5,8 @@ import { ChevronDown, Menu, Search } from 'lucide-react';
 import { cn } from '../lib/cn.js';
 import PopPanel from './PopPanel.jsx';
 
+const ICON_STROKE_WIDTH_REGULAR = 1.7;
+
 const BAND =
   'relative flex items-center min-h-[60vh] px-[var(--container-x)] pb-[var(--space-6)] pt-12 text-left bg-green bg-cover bg-center';
 const MENU =
@@ -24,8 +26,8 @@ export default function GuideHubHero({
   pop = null,
   labels = {},
 }) {
-  const [open, setOpen] = useState(false);
-  const t = { categories: 'Categories', search: 'Search', searchAria: 'Search guides', ...labels };
+  const [isOpen, setIsOpen] = useState(false);
+  const mergedLabels = { categories: 'Categories', search: 'Search', searchAria: 'Search guides', ...labels };
   return (
     <section
       className={BAND}
@@ -47,28 +49,28 @@ export default function GuideHubHero({
             <div className="relative flex-[0_0_auto] flex order-2 [border-left:1px_solid_var(--line)]">
               <button
                 type="button"
-                aria-label={t.categories}
+                aria-label={mergedLabels.categories}
                 aria-haspopup="true"
-                aria-expanded={open}
-                onClick={() => setOpen((value) => !value)}
+                aria-expanded={isOpen}
+                onClick={() => setIsOpen((value) => !value)}
                 className="min-h-[3.15rem] box-border flex items-center gap-[0.35rem] px-[0.95rem] [border:none] [border-radius:0_var(--r-md)_var(--r-md)_0] bg-transparent font-body text-[1rem] font-semibold text-green cursor-pointer whitespace-nowrap [transition:background-color_var(--dur)_ease,scale_var(--dur-fast)_var(--ease)] hover:bg-[rgba(34,32,28,0.08)] [&_span]:hidden"
               >
                 <Menu className="w-[var(--icon-md)] h-[var(--icon-md)]" aria-hidden="true" />
-                <span>{t.categories}</span>
+                <span>{mergedLabels.categories}</span>
                 <ChevronDown
                   className={cn(
                     'w-4 h-4 shrink-0 text-muted [transition:transform_var(--dur)_ease]',
-                    open && '[transform:rotate(180deg)]',
+                    isOpen && '[transform:rotate(180deg)]',
                   )}
                   aria-hidden="true"
                 />
               </button>
-              <PopPanel pop={pop} open={open} className={MENU}>
+              <PopPanel pop={pop} open={isOpen} className={MENU}>
                 {categories.map(({ id, label, Icon }) => (
-                  <a className={MENU_ROW} href={`#${id}`} key={id} onClick={() => setOpen(false)}>
+                  <a className={MENU_ROW} href={`#${id}`} key={id} onClick={() => setIsOpen(false)}>
                     {Icon && (
                       <span>
-                        <Icon strokeWidth={1.7} aria-hidden="true" />
+                        <Icon strokeWidth={ICON_STROKE_WIDTH_REGULAR} aria-hidden="true" />
                       </span>
                     )}
                     {label}
@@ -83,8 +85,8 @@ export default function GuideHubHero({
               <input
                 type="text"
                 className="flex-1 min-w-0 border-none [outline:none] bg-transparent font-body text-field text-green placeholder:text-muted"
-                placeholder={t.search}
-                aria-label={t.searchAria}
+                placeholder={mergedLabels.search}
+                aria-label={mergedLabels.searchAria}
                 autoComplete="off"
                 value={query}
                 onChange={(event) => onQuery(event.target.value)}

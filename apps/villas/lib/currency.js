@@ -28,7 +28,7 @@ export function formatRupiah(idr) {
   return formatMoney(displayFromIdr(idr, 'IDR'), 'IDR');
 }
 
-export function displayBreakdown(breakdown, currency, fx) {
+export function buildDisplayBreakdown(breakdown, currency, fx) {
   if (!breakdown) return null;
   const { nights, nightlyIdr } = breakdown;
   const nightly = displayFromIdr(nightlyIdr, currency, fx);

@@ -5,7 +5,8 @@ import { execSync } from 'node:child_process';
 import { chromium } from 'playwright-core';
 
 const [, , page, selAll, outfile] = process.argv;
-if (!page || !selAll || !outfile) {
+const isSnapArgumentMissing = !page || !selAll || !outfile;
+if (isSnapArgumentMissing) {
   console.error('usage: node tools/tw/snap.mjs <page.html> "<selector>" <out.json>');
   process.exit(2);
 }
@@ -43,20 +44,20 @@ const MIME = {
 };
 function serve(root, port) {
   return new Promise((result) => {
-    const s = http.createServer((q, r) => {
-      let p = decodeURIComponent(q.url.split('?')[0]);
-      if (p.endsWith('/')) p += 'index.html';
-      let f = path.join(root, p);
-      if (!fs.existsSync(f) && !path.extname(f)) f = path.join(root, `${p}.html`);
-      if (!fs.existsSync(f)) {
-        r.writeHead(404);
-        r.end();
+    const httpServer = http.createServer((request, response) => {
+      let pathname = decodeURIComponent(request.url.split('?')[0]);
+      if (pathname.endsWith('/')) pathname += 'index.html';
+      let filePath = path.join(root, pathname);
+      if (!fs.existsSync(filePath) && !path.extname(filePath)) filePath = path.join(root, `${pathname}.html`);
+      if (!fs.existsSync(filePath)) {
+        response.writeHead(404);
+        response.end();
         return;
       }
-      r.writeHead(200, { 'content-type': MIME[path.extname(f)] || 'text/html' });
-      r.end(fs.readFileSync(f));
+      response.writeHead(200, { 'content-type': MIME[path.extname(filePath)] || 'text/html' });
+      response.end(fs.readFileSync(filePath));
     });
-    s.listen(port, () => result(s));
+    httpServer.listen(port, () => result(httpServer));
   });
 }
 
@@ -105,35 +106,35 @@ const PROPS = [
 ];
 
 const port = 8000 + Math.floor(Math.random() * 1500);
-const s = await serve(ROOT, port);
-const b = await chromium.launch({ executablePath: EXE });
+const server = await serve(ROOT, port);
+const browser = await chromium.launch({ executablePath: EXE });
 const all = {};
 for (const vw of [1280, 560, 390]) {
-  const pg = await b.newPage({ viewport: { width: vw, height: 1400 } });
+  const pg = await browser.newPage({ viewport: { width: vw, height: 1400 } });
   await pg.goto(`http://localhost:${port}/${page}`, { waitUntil: 'networkidle' });
   await pg.waitForTimeout(500);
   all[vw] = await pg.evaluate(
     ({ selAll, PROPS }) => {
       const roots = [...document.querySelectorAll(selAll)];
-      const els = [];
+      const elements = [];
       roots.forEach((rt) => {
-        els.push(rt);
-        els.push(...rt.querySelectorAll('*'));
+        elements.push(rt);
+        elements.push(...rt.querySelectorAll('*'));
       });
-      return els.map((e) => {
-        const c = getComputedStyle(e);
-        const o = { _t: e.tagName };
-        PROPS.forEach((p) => {
-          o[p] = c[p];
+      return elements.map((event) => {
+        const computedStyle = getComputedStyle(event);
+        const styleSnapshot = { _t: event.tagName };
+        PROPS.forEach((propertyName) => {
+          styleSnapshot[propertyName] = computedStyle[propertyName];
         });
-        return o;
+        return styleSnapshot;
       });
     },
     { selAll, PROPS },
   );
   await pg.close();
 }
-await b.close();
-s.close();
+await browser.close();
+server.close();
 fs.writeFileSync(outfile, JSON.stringify(all));
 console.log(`snapped "${selAll}" on ${page} -> ${outfile} (els: ${(all[1280] || []).length} @1280)`);

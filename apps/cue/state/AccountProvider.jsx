@@ -6,26 +6,26 @@ import { KEY, API_BASE } from '@/lib/constants';
 
 const AccountContext = createContext(null);
 
-function fmtDay(dateStr) {
+function formatDay(dateStr) {
   if (!dateStr) return 'date TBD';
-  const [y, m, d] = dateStr.split('-').map(Number);
-  return new Date(y, m - 1, d).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
+  const [year, month, day] = dateStr.split('-').map(Number);
+  return new Date(year, month - 1, day).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
 }
 
 export function AccountProvider({ children }) {
   const [account, setAccount] = useState(null);
   const [trips, setTrips] = useState(null);
   const [myReviews, setMyReviews] = useState(null);
-  const [hydrated, setHydrated] = useState(false);
-  const [justSignedIn, setJustSignedIn] = useState(false);
+  const [isHydrated, setIsHydrated] = useState(false);
+  const [isJustSignedIn, setIsJustSignedIn] = useState(false);
 
   const refreshTrips = useCallback(async () => {
     const token = readLocal(KEY.token, '');
     if (!token) return;
     try {
       const response = await fetch(`${API_BASE}/bookings/mine`, { headers: { Authorization: `Bearer ${token}` } });
-      const d = response.ok ? await response.json() : null;
-      if (d && Array.isArray(d.upcoming)) setTrips(d);
+      const tripsData = response.ok ? await response.json() : null;
+      if (tripsData && Array.isArray(tripsData.upcoming)) setTrips(tripsData);
     } catch (e) {}
   }, []);
 
@@ -36,7 +36,7 @@ export function AccountProvider({ children }) {
     const magic = params.get('token');
     if (magic) {
       writeLocal(KEY.token, magic);
-      setJustSignedIn(true);
+      setIsJustSignedIn(true);
       params.delete('token');
       const query = params.toString();
       window.history.replaceState({}, '', `${window.location.pathname}${query ? `?${query}` : ''}`);
@@ -44,20 +44,20 @@ export function AccountProvider({ children }) {
 
     const token = readLocal(KEY.token, '');
     if (!token) {
-      setHydrated(true);
+      setIsHydrated(true);
       return;
     }
 
     async function load() {
       try {
         const response = await fetch(`${API_BASE}/account/session`, { headers: { Authorization: `Bearer ${token}` } });
-        const d = response.ok ? await response.json() : null;
+        const accountData = response.ok ? await response.json() : null;
         if (cancelled) return;
-        if (d && d.account) setAccount(d.account);
+        if (accountData && accountData.account) setAccount(accountData.account);
         else removeLocal(KEY.token);
       } catch (e) {
       } finally {
-        if (!cancelled) setHydrated(true);
+        if (!cancelled) setIsHydrated(true);
       }
     }
     load();
@@ -73,18 +73,18 @@ export function AccountProvider({ children }) {
 
   const reviewableItems = useMemo(() => {
     if (!trips || !trips.history) return [];
-    const out = [];
-    trips.history.forEach((t) => {
-      (t.review_items || []).forEach((s) =>
-        out.push({
-          ref: t.ref,
-          service: s,
-          tripName: t.name,
-          date: t.start_date ? fmtDay(t.start_date) : '',
+    const reviewRows = [];
+    trips.history.forEach((trip) => {
+      (trip.review_items || []).forEach((reviewItem) =>
+        reviewRows.push({
+          ref: trip.ref,
+          service: reviewItem,
+          tripName: trip.name,
+          date: trip.start_date ? formatDay(trip.start_date) : '',
         }),
       );
     });
-    return out;
+    return reviewRows;
   }, [trips]);
 
   const refreshMyReviews = useCallback(async () => {
@@ -95,8 +95,8 @@ export function AccountProvider({ children }) {
     }
     try {
       const response = await fetch(`${API_BASE}/reviews/mine`, { headers: { Authorization: `Bearer ${token}` } });
-      const d = response.ok ? await response.json() : [];
-      setMyReviews(Array.isArray(d) ? d : []);
+      const rows = response.ok ? await response.json() : [];
+      setMyReviews(Array.isArray(rows) ? rows : []);
     } catch (e) {
       setMyReviews([]);
     }
@@ -151,7 +151,8 @@ export function AccountProvider({ children }) {
         body: JSON.stringify({ email, code }),
       });
       const data = await response.json().catch(() => ({}));
-      if (response.ok && data.status === 'ok' && data.token) {
+      const isTokenReceived = response.ok && data.status === 'ok' && data.token;
+      if (isTokenReceived) {
         writeLocal(KEY.token, data.token);
         setAccount(data.account || null);
         refreshTrips();
@@ -205,8 +206,8 @@ export function AccountProvider({ children }) {
         requestLogin,
         verifyCode,
         createAccount,
-        hydrated,
-        justSignedIn,
+        hydrated: isHydrated,
+        justSignedIn: isJustSignedIn,
       }}
     >
       {children}
@@ -215,7 +216,7 @@ export function AccountProvider({ children }) {
 }
 
 export function useAccount() {
-  const ctx = useContext(AccountContext);
-  if (!ctx) throw new Error('useAccount must be used inside AccountProvider');
-  return ctx;
+  const accountContext = useContext(AccountContext);
+  if (!accountContext) throw new Error('useAccount must be used inside AccountProvider');
+  return accountContext;
 }

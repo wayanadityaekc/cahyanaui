@@ -3,11 +3,11 @@ import { chromium } from '/home/user/CUE/node_modules/playwright-core/index.mjs'
 const BASE = 'http://127.0.0.1:4000';
 let pass = 0,
   fail = 0;
-function ok(c, m) {
-  c ? pass++ : (fail++, console.log('  FAIL:', m));
+function recordCheck(isPassing, message) {
+  isPassing ? pass++ : (fail++, console.log('  FAIL:', message));
 }
 
-const b = await chromium.launch({
+const browser = await chromium.launch({
   executablePath: '/opt/pw-browsers/chromium_headless_shell-1194/chrome-linux/headless_shell',
 });
 
@@ -43,36 +43,36 @@ const MINE = {
   ],
 };
 
-for (const w of [390, 1280]) {
+for (const width of [390, 1280]) {
   for (const mode of ['all-ok', 'partial']) {
-    const ctx = await b.newContext({ viewport: { width: w, height: 900 } });
-    const page = await ctx.newPage();
+    const browserContext = await browser.newContext({ viewport: { width: width, height: 900 } });
+    const page = await browserContext.newPage();
     const errs = [];
-    page.on('pageerror', (e) => errs.push(String(e)));
+    page.on('pageerror', (error) => errs.push(String(error)));
 
-    const posted = [];
+    const postedReviews = [];
     const reviewed = new Set();
     let mineHits = 0;
-    await ctx.route('**/api/**', async (route) => {
+    await browserContext.route('**/api/**', async (route) => {
       const url = route.request().url();
       if (url.includes('/account/me') || url.includes('/account/session')) {
         return route.fulfill({ json: { status: 'ok', account: { id: 7, name: 'Anna', email: 'a@e.com' } } });
       }
       if (url.includes('/bookings/mine')) {
         mineHits += 1;
-        const history = MINE.history.map((t) => ({
-          ...t,
-          review_items: t.review_items.filter((svc) => !reviewed.has(`${t.ref}::${svc}`)),
+        const historyTrips = MINE.history.map((trip) => ({
+          ...trip,
+          review_items: trip.review_items.filter((svc) => !reviewed.has(`${trip.ref}::${svc}`)),
         }));
-        return route.fulfill({ json: { ...MINE, history } });
+        return route.fulfill({ json: { ...MINE, history: historyTrips } });
       }
       if (url.includes('/reviews') && route.request().method() === 'POST') {
         const body = JSON.parse(route.request().postData() || '{}');
-        posted.push(body.service);
-        const refuse = mode === 'partial' && body.booking_ref === 'CUE-103';
-        if (!refuse) reviewed.add(`${body.booking_ref}::${body.service}`);
+        postedReviews.push(body.service);
+        const shouldRefuse = mode === 'partial' && body.booking_ref === 'CUE-103';
+        if (!shouldRefuse) reviewed.add(`${body.booking_ref}::${body.service}`);
         return route.fulfill({
-          json: refuse
+          json: shouldRefuse
             ? { ok: false, reason: "This booking isn't confirmed yet, so there's nothing to review." }
             : { ok: true },
         });
@@ -89,16 +89,16 @@ for (const w of [390, 1280]) {
 
     await page.goto(`${BASE}/my-trips.html`, { waitUntil: 'networkidle' });
 
-    if (w < 1024) {
+    if (width < 1024) {
       const back = page.locator('button:visible', { hasText: /^(Back|My trips)$/i }).first();
       if (await back.count()) await back.click().catch(() => {});
     }
     const pastTab = page.locator('button:visible', { hasText: 'Past' }).first();
     if (await pastTab.count()) await pastTab.click();
     const trigger = page.locator('button:visible', { hasText: /Write review|Leave a Review/i }).first();
-    ok((await trigger.count()) > 0, `${w}/${mode}: no review trigger on Past trips`);
+    recordCheck((await trigger.count()) > 0, `${width}/${mode}: no review trigger on Past trips`);
     if (!(await trigger.count())) {
-      await ctx.close();
+      await browserContext.close();
       continue;
     }
     await trigger.click();
@@ -107,7 +107,7 @@ for (const w of [390, 1280]) {
     await page.locator('[data-step="write"]').waitFor({ timeout: 10000 });
 
     const boxes = page.locator('[data-step="write"] input[type=checkbox]');
-    ok((await boxes.count()) === 2, `${w}/${mode}: expected 2 trips ticked, got ${await boxes.count()}`);
+    recordCheck((await boxes.count()) === 2, `${width}/${mode}: expected 2 trips ticked, got ${await boxes.count()}`);
 
     await page.locator('[data-step="write"] button[aria-label="5 stars"]').click();
     await page.fill('#rvm-message', 'Driver was early and the day ran exactly as described.');
@@ -121,22 +121,25 @@ for (const w of [390, 1280]) {
 
     const shell = page.locator('div.fixed.inset-0').filter({ hasText: 'Leave a Review' }).last();
     const txt = await shell.innerText();
-    ok(/Leave a Review/.test(txt), `${w}/${mode}: HARNESS READ THE WRONG BOX`);
-    ok(posted.length === 2, `${w}/${mode}: ${posted.length} of 2 reviews were attempted`);
+    recordCheck(/Leave a Review/.test(txt), `${width}/${mode}: HARNESS READ THE WRONG BOX`);
+    recordCheck(postedReviews.length === 2, `${width}/${mode}: ${postedReviews.length} of 2 reviews were attempted`);
 
     if (mode === 'all-ok') {
-      ok(/Thank you/.test(txt), `${w}/${mode}: no thank-you after a clean submit`);
-      ok(/live on the site/.test(txt), `${w}/${mode}: success text does not say the review is live`);
-      ok(!/once approved/.test(txt), `${w}/${mode}: STALE COPY - still promises approval that never comes`);
-      ok(!/could not be included/.test(txt), `${w}/${mode}: a clean submit reported a failure`);
+      recordCheck(/Thank you/.test(txt), `${width}/${mode}: no thank-you after a clean submit`);
+      recordCheck(/live on the site/.test(txt), `${width}/${mode}: success text does not say the review is live`);
+      recordCheck(
+        !/once approved/.test(txt),
+        `${width}/${mode}: STALE COPY - still promises approval that never comes`,
+      );
+      recordCheck(!/could not be included/.test(txt), `${width}/${mode}: a clean submit reported a failure`);
     } else {
-      ok(/Thank you/.test(txt), `${w}/${mode}: the review that WAS published is hidden behind an error`);
-      ok(/could not be included/.test(txt), `${w}/${mode}: the refused trip is not mentioned at all`);
-      ok(/Kecak Dance/.test(txt), `${w}/${mode}: the refused trip is not named`);
-      ok(/isn't confirmed yet/.test(txt), `${w}/${mode}: the server's reason is not passed on`);
-      ok(
+      recordCheck(/Thank you/.test(txt), `${width}/${mode}: the review that WAS published is hidden behind an error`);
+      recordCheck(/could not be included/.test(txt), `${width}/${mode}: the refused trip is not mentioned at all`);
+      recordCheck(/Kecak Dance/.test(txt), `${width}/${mode}: the refused trip is not named`);
+      recordCheck(/isn't confirmed yet/.test(txt), `${width}/${mode}: the server's reason is not passed on`);
+      recordCheck(
         !/Ubud Tour/.test(txt.split('could not be included')[1] || ''),
-        `${w}/${mode}: the trip that SUCCEEDED is listed as a failure`,
+        `${width}/${mode}: the trip that SUCCEEDED is listed as a failure`,
       );
     }
 
@@ -144,38 +147,41 @@ for (const w of [390, 1280]) {
     await shell.locator('button', { hasText: 'Done' }).click();
     await page.waitForFunction(() => !document.querySelector('[data-step="write"]'), { timeout: 5000 }).catch(() => {});
     await page.waitForTimeout(600);
-    ok(mineHits > hitsBefore, `${w}/${mode}: closing the popup did not re-read My Trips`);
+    recordCheck(mineHits > hitsBefore, `${width}/${mode}: closing the popup did not re-read My Trips`);
     const again = page.locator('button:visible', { hasText: /Write review|Leave a Review/i }).first();
     if (mode === 'all-ok') {
-      ok((await again.count()) === 0, `${w}/${mode}: every trip is reviewed but the review button is still there`);
+      recordCheck(
+        (await again.count()) === 0,
+        `${width}/${mode}: every trip is reviewed but the review button is still there`,
+      );
     } else {
-      ok((await again.count()) > 0, `${w}/${mode}: the trip that was NOT reviewed lost its button`);
+      recordCheck((await again.count()) > 0, `${width}/${mode}: the trip that was NOT reviewed lost its button`);
       if (await again.count()) {
         await again.click();
         await page.locator('[data-step="write"]').waitFor({ timeout: 10000 });
-        const n = posted.length;
+        const postedCount = postedReviews.length;
         await page.locator('[data-step="write"] button[aria-label="5 stars"]').click();
         await page.fill('#rvm-message', 'Second try for the one that was left.');
         await page.locator('[data-step="write"] button', { hasText: /Submit review/ }).click();
         await page.waitForTimeout(800);
-        const sentNow = posted.slice(n);
-        ok(!sentNow.includes('Ubud Tour'), `${w}/${mode}: THE TRIP JUST REVIEWED WAS SENT AGAIN`);
-        ok(
-          sentNow.length === 1 && sentNow[0] === 'Kecak Dance',
-          `${w}/${mode}: second submit sent ${JSON.stringify(sentNow)}`,
+        const sentReviews = postedReviews.slice(postedCount);
+        recordCheck(!sentReviews.includes('Ubud Tour'), `${width}/${mode}: THE TRIP JUST REVIEWED WAS SENT AGAIN`);
+        recordCheck(
+          sentReviews.length === 1 && sentReviews[0] === 'Kecak Dance',
+          `${width}/${mode}: second submit sent ${JSON.stringify(sentReviews)}`,
         );
       }
     }
 
     const over = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
-    ok(over <= 0, `${w}/${mode}: page overflows by ${over}px`);
-    ok(errs.length === 0, `${w}/${mode}: page errors ${errs.join(' | ')}`);
+    recordCheck(over <= 0, `${width}/${mode}: page overflows by ${over}px`);
+    recordCheck(errs.length === 0, `${width}/${mode}: page errors ${errs.join(' | ')}`);
 
-    await page.screenshot({ path: `shots/rv-${mode}-${w}.png` });
-    await ctx.close();
+    await page.screenshot({ path: `shots/rv-${mode}-${width}.png` });
+    await browserContext.close();
   }
 }
 
-await b.close();
+await browser.close();
 console.log(`${pass}/${pass + fail}`);
 process.exit(fail ? 1 : 0);

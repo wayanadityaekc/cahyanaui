@@ -1,16 +1,21 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { CreditCard, X } from 'lucide-react';
+import { CreditCard, X as CloseIcon } from 'lucide-react';
 import { BrandIcon, Button, Field, Input, PayOptions } from '@cahyana/ui';
 import SheetPresence from '@/components/ui/SheetPresence';
 import DokuCheckout from '@/components/booking/DokuCheckout';
 import PayPalCheckout from '@/components/booking/PayPalCheckout';
 import { useAccount } from '@/components/providers/AccountProvider';
 import { useCurrency } from '@/components/providers/CurrencyProvider';
-import { bookingBody, bookingLines } from '@/lib/bookingPayload';
+import { buildBookingBody, buildBookingLines } from '@/lib/bookingPayload';
 import { API_BASE, TOKEN_KEY } from '@/lib/constants';
-import { DEFAULT_RAIL, RAIL_CHOICES, noteFor, railFor } from '@/lib/rails';
+import { DEFAULT_RAIL, RAIL_CHOICES, buildRailNote, chooseRail } from '@/lib/rails';
+
+const ICON_STROKE_WIDTH_REGULAR = 1.7;
+const MIN_PHONE_DIGITS = 7;
+const ICON_STROKE_WIDTH_MEDIUM = 1.8;
+const CHECKOUT_STEP_COUNT = 3;
 
 const PAY_COPY = {
   secure: 'Card details go straight to PayPal from a secure field. They never reach our site or our server.',
@@ -26,7 +31,7 @@ const RAILS = RAIL_CHOICES.map(({ id, label }) => ({
     id === 'paypal' ? (
       <BrandIcon name="PayPal" className={ICON} />
     ) : (
-      <CreditCard className={`${ICON} text-gold`} strokeWidth={1.7} aria-hidden="true" />
+      <CreditCard className={`${ICON} text-gold`} strokeWidth={ICON_STROKE_WIDTH_REGULAR} aria-hidden="true" />
     ),
 }));
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[a-z]{2,}$/i;
@@ -44,11 +49,11 @@ function writeToken(token) {
   } catch (e) {}
 }
 
-function guestProblems({ name, email, phone }) {
+function collectGuestProblems({ name, email, phone }) {
   const problems = {};
   if (!name.trim()) problems.name = 'Please enter your name.';
   if (!EMAIL_RE.test(email.trim())) problems.email = 'Please enter a valid email, like you@gmail.com.';
-  if (phone.replace(/\D/g, '').length < 7)
+  if (phone.replace(/\D/g, '').length < MIN_PHONE_DIGITS)
     problems.phone = 'Please enter a phone or WhatsApp number with the country code.';
   return problems;
 }
@@ -63,7 +68,7 @@ export default function CheckoutSheet({ open = false, onClose = () => {}, cart =
   const [prepaid, setPrepaid] = useState(null);
   const [rail, setRail] = useState(DEFAULT_RAIL);
   const [option, setOption] = useState('');
-  const [busy, setBusy] = useState(false);
+  const [isBusy, setIsBusy] = useState(false);
   const [message, setMessage] = useState('');
   const [bookingRef, setBookingRef] = useState('');
 
@@ -85,7 +90,7 @@ export default function CheckoutSheet({ open = false, onClose = () => {}, cart =
         const response = await fetch(`${API_BASE}/pricing/quote`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ currency, lines: bookingLines(cart), payment: true }),
+          body: JSON.stringify({ currency, lines: buildBookingLines(cart), payment: true }),
         });
         const data = await response.json().catch(() => null);
         if (!alive) return;
@@ -95,9 +100,14 @@ export default function CheckoutSheet({ open = false, onClose = () => {}, cart =
             : [];
         setPrepaid(data && data.payment ? data.payment.prepaid : null);
         setQuote(options.length ? options : 'error');
-        setOption((current) =>
-          options.some((row) => row.id === current) ? current : options.length ? options[0].id : '',
-        );
+        setOption((current) => {
+          function pickValidPaymentOption() {
+            if (options.some((row) => row.id === current)) return current;
+            if (options.length) return options[0].id;
+            return '';
+          }
+          return pickValidPaymentOption();
+        });
       } catch (e) {
         if (alive) setQuote('error');
       }
@@ -112,26 +122,26 @@ export default function CheckoutSheet({ open = false, onClose = () => {}, cart =
     return (event) => setGuest((current) => ({ ...current, [key]: event.target.value }));
   }
 
-  function toPayment() {
-    const problems = guestProblems(guest);
+  function handlePaymentOpen() {
+    const problems = collectGuestProblems(guest);
     setErrors(problems);
     if (!Object.keys(problems).length) setStep('pay');
   }
 
-  async function book() {
-    setBusy(true);
+  async function handleBook() {
+    setIsBusy(true);
     setMessage('');
     try {
       const token = readToken();
       const response = await fetch(`${API_BASE}/inquiry`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', ...(token ? { Authorization: `Bearer ${token}` } : {}) },
-        body: JSON.stringify(bookingBody({ cart, guest, currency, payOption: option })),
+        body: JSON.stringify(buildBookingBody({ cart, guest, currency, payOption: option })),
       });
       const data = await response.json().catch(() => ({}));
       if (!response.ok || data.status !== 'saved') {
         setMessage(data.detail || 'We could not save your booking. Please try again, or message us on WhatsApp.');
-        setBusy(false);
+        setIsBusy(false);
         return;
       }
       if (data.token) writeToken(data.token);
@@ -140,7 +150,7 @@ export default function CheckoutSheet({ open = false, onClose = () => {}, cart =
     } catch (e) {
       setMessage('We could not reach our booking server. Please check your connection and try again.');
     }
-    setBusy(false);
+    setIsBusy(false);
   }
 
   const chosen = Array.isArray(quote) ? quote.find((row) => row.id === option) : null;
@@ -155,12 +165,24 @@ export default function CheckoutSheet({ open = false, onClose = () => {}, cart =
         amount: formatAmount(row.amount.display),
       }))
     : [];
-  const title = step === 'details' ? 'Your details' : step === 'pay' ? 'How to pay' : 'Payment';
+  function pickStepTitle() {
+    if (step === 'details') return 'Your details';
+    if (step === 'pay') return 'How to pay';
+    return 'Payment';
+  }
+
+  const title = pickStepTitle();
+
+  function pickStepNumber() {
+    if (step === 'details') return 1;
+    if (step === 'pay') return 2;
+    return CHECKOUT_STEP_COUNT;
+  }
 
   return (
     <SheetPresence
       open={open}
-      onClose={busy ? () => {} : onClose}
+      onClose={isBusy ? () => {} : onClose}
       label={title}
       shell="fixed inset-0 z-[130] flex items-center justify-center p-3 bg-[rgba(0,0,0,0.55)]"
       box="relative w-full max-w-[460px] max-h-[calc(100dvh-24px)] overflow-y-auto p-6 rounded-md bg-white"
@@ -171,10 +193,14 @@ export default function CheckoutSheet({ open = false, onClose = () => {}, cart =
         aria-label="Close"
         className="absolute top-3 right-4 text-green bg-transparent border-none cursor-pointer"
       >
-        <X className="w-[var(--icon-md)] h-[var(--icon-md)]" strokeWidth={1.8} aria-hidden="true" />
+        <CloseIcon
+          className="w-[var(--icon-md)] h-[var(--icon-md)]"
+          strokeWidth={ICON_STROKE_WIDTH_MEDIUM}
+          aria-hidden="true"
+        />
       </button>
       <p className="m-0 mb-1 text-label font-medium tracking-[0.08em] uppercase text-muted">
-        Step {step === 'details' ? 1 : step === 'pay' ? 2 : 3} of 3
+        Step {pickStepNumber()} of 3
       </p>
       <h3 className="m-0 mb-5 font-body text-h3 font-semibold text-gold">{title}</h3>
 
@@ -204,7 +230,7 @@ export default function CheckoutSheet({ open = false, onClose = () => {}, cart =
               invalid={!!errors.phone}
             />
           </Field>
-          <Button full onClick={toPayment}>
+          <Button full onClick={handlePaymentOpen}>
             Continue
           </Button>
         </div>
@@ -226,7 +252,7 @@ export default function CheckoutSheet({ open = false, onClose = () => {}, cart =
               options={optionRows}
               value={option}
               onChange={setOption}
-              note={noteFor(currency, railFor(rail)) || ''}
+              note={buildRailNote(currency, chooseRail(rail)) || ''}
             />
           )}
           {message && (
@@ -234,8 +260,8 @@ export default function CheckoutSheet({ open = false, onClose = () => {}, cart =
               {message}
             </p>
           )}
-          <Button full onClick={book} disabled={busy || !chosen}>
-            {busy ? 'Booking...' : 'Book now'}
+          <Button full onClick={handleBook} disabled={isBusy || !chosen}>
+            {isBusy ? 'Booking...' : 'Book now'}
           </Button>
           <button
             type="button"
@@ -255,7 +281,7 @@ export default function CheckoutSheet({ open = false, onClose = () => {}, cart =
           <p className="m-0 mb-3 text-body text-green">
             Booking <b>{bookingRef}</b> is saved. Pay {formatAmount(chosen.amount.display)} to confirm it.
           </p>
-          {railFor(rail) === 'paypal' ? (
+          {chooseRail(rail) === 'paypal' ? (
             <PayPalCheckout
               bookingRef={bookingRef}
               option={option}

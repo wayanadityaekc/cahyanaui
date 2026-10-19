@@ -1,6 +1,9 @@
 import { cn } from '../lib/cn.js';
 
-export default function ModalLogo({ src = '', alt = '', width = 1005, height = 324, className }) {
+const LOGO_WIDTH_PX = 1005;
+const LOGO_HEIGHT_PX = 324;
+
+export default function ModalLogo({ src = '', alt = '', width = LOGO_WIDTH_PX, height = LOGO_HEIGHT_PX, className }) {
   if (!src) return null;
   return (
     <img

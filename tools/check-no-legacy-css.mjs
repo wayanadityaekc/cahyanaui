@@ -31,52 +31,52 @@ const RETIRED = [
 ];
 const KEPT = ['prose-copy', 'hs-locked', 'stickybar'];
 
-function walk(d, out = []) {
-  for (const e of fs.readdirSync(d, { withFileTypes: true })) {
-    const p = path.join(d, e.name);
-    if (e.isDirectory()) walk(p, out);
-    else out.push(p);
+function walk(directoryPath, out = []) {
+  for (const entry of fs.readdirSync(directoryPath, { withFileTypes: true })) {
+    const entryPath = path.join(directoryPath, entry.name);
+    if (entry.isDirectory()) walk(entryPath, out);
+    else out.push(entryPath);
   }
   return out;
 }
 const files = walk(OUT);
 let pass = 0,
   fail = 0;
-function say(c, m) {
-  if (c) pass++;
+function recordCheck(isPassing, message) {
+  if (isPassing) pass++;
   else {
     fail++;
-    console.log('  FAIL', m);
+    console.log('  FAIL', message);
   }
 }
 
 const css = files
-  .filter((f) => f.endsWith('.css'))
-  .map((f) => fs.readFileSync(f, 'utf8'))
+  .filter((file) => file.endsWith('.css'))
+  .map((cssFile) => fs.readFileSync(cssFile, 'utf8'))
   .join('\n');
-for (const c of RETIRED) {
-  const re = new RegExp(`\\.${c.replace(/[-]/g, '\\-')}(?![\\w-])\\s*[,{:]`);
-  say(!re.test(css), `stylesheet still defines .${c}`);
+for (const retiredClass of RETIRED) {
+  const pattern = new RegExp(`\\.${retiredClass.replace(/[-]/g, '\\-')}(?![\\w-])\\s*[,{:]`);
+  recordCheck(!pattern.test(css), `stylesheet still defines .${retiredClass}`);
 }
-for (const c of KEPT) {
-  const re = new RegExp(`\\.${c}(?![\\w-])`);
-  say(re.test(css), `.${c} should still be present and is not`);
+for (const keptClass of KEPT) {
+  const pattern = new RegExp(`\\.${keptClass}(?![\\w-])`);
+  recordCheck(pattern.test(css), `.${keptClass} should still be present and is not`);
 }
 
-const html = files.filter((f) => f.endsWith('.html'));
-for (const c of RETIRED) {
+const htmlFiles = files.filter((file) => file.endsWith('.html'));
+for (const retiredClass of RETIRED) {
   const hits = [];
-  for (const f of html) {
-    const s = fs.readFileSync(f, 'utf8');
-    for (const m of s.matchAll(/class="([^"]*)"/g)) {
-      if (m[1].split(/\s+/).includes(c)) {
-        hits.push(path.relative(OUT, f));
+  for (const htmlFile of htmlFiles) {
+    const htmlSource = fs.readFileSync(htmlFile, 'utf8');
+    for (const classMatch of htmlSource.matchAll(/class="([^"]*)"/g)) {
+      if (classMatch[1].split(/\s+/).includes(retiredClass)) {
+        hits.push(path.relative(OUT, htmlFile));
         break;
       }
     }
   }
-  say(hits.length === 0, `class "${c}" still in markup: ${hits.slice(0, 3).join(', ')}`);
+  recordCheck(hits.length === 0, `class "${retiredClass}" still in markup: ${hits.slice(0, 3).join(', ')}`);
 }
 
-console.log(`\n${pass}/${pass + fail} | ${html.length} pages, ${(css.length / 1024).toFixed(0)}KB css`);
+console.log(`\n${pass}/${pass + fail} | ${htmlFiles.length} pages, ${(css.length / 1024).toFixed(0)}KB css`);
 process.exit(fail ? 1 : 0);

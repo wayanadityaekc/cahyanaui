@@ -4,7 +4,7 @@ export const CONTACT_EMAIL = 'hello@ubudprivatevillas.com';
 export const CUE_LINK = 'https://cahyanaubudexperience.com';
 export const UBUD_GUIDE_LINK = 'https://cahyanaubudexperience.com/guide/ubud.html';
 
-export function whatsappLink(message) {
+export function buildWhatsappLink(message) {
   return `${WHATSAPP_LINK}?text=${encodeURIComponent(message)}`;
 }
 

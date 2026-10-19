@@ -5,11 +5,14 @@ const ROOT = path.join(__dirname, '..');
 
 const routes = fs.readFileSync(path.join(ROOT, 'lib/routes.js'), 'utf8');
 function list(name) {
-  const m = routes.match(new RegExp(`export const ${name} = \\[([\\s\\S]*?)\\];`));
-  return m ? [...m[1].matchAll(/'([^']+)'/g)].map((x) => x[1]) : [];
+  const match = routes.match(new RegExp(`export const ${name} = \\[([\\s\\S]*?)\\];`));
+  return match ? [...match[1].matchAll(/'([^']+)'/g)].map((quotedMatch) => quotedMatch[1]) : [];
 }
 
-const pages = [...list('TOURS').map((s) => `${s}.html`), ...list('ATTRACTIONS').map((s) => `attractions/${s}.html`)];
+const pages = [
+  ...list('TOURS').map((slug) => `${slug}.html`),
+  ...list('ATTRACTIONS').map((slug) => `attractions/${slug}.html`),
+];
 
 const MUST_HAVE = [
   ['booksidebar', 'booking sidebar card'],
@@ -28,13 +31,13 @@ let sliders = 0;
 let related = 0;
 
 pages.forEach((page) => {
-  const f = path.join(ROOT, 'out', page);
-  if (!fs.existsSync(f)) {
+  const filePath = path.join(ROOT, 'out', page);
+  if (!fs.existsSync(filePath)) {
     console.error(`  MISSING BUILD  ${page}`);
     bad++;
     return;
   }
-  const html = fs.readFileSync(f, 'utf8');
+  const html = fs.readFileSync(filePath, 'utf8');
   const problems = [];
   MUST_HAVE.forEach(([needle, label]) => {
     if (!html.includes(needle)) problems.push(`missing ${label}`);
@@ -44,10 +47,9 @@ pages.forEach((page) => {
   });
   if (html.includes('hero-slider__dots')) sliders++;
   if (html.includes('related__title')) related++;
-  if (problems.length) {
-    console.error(`  ${page}: ${problems.join(', ')}`);
-    bad++;
-  }
+  if (!problems.length) return;
+  console.error(`  ${page}: ${problems.join(', ')}`);
+  bad++;
 });
 
 console.log(`Detail pages checked : ${pages.length}`);

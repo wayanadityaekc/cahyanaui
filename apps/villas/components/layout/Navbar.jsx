@@ -13,7 +13,11 @@ import ChatLauncher from '@/components/chat/ChatLauncher';
 import { PopMenu } from '@/components/ui/Reveal';
 import TripPrefsFields from './TripPrefsFields';
 
-const ICON = { strokeWidth: 1.7, 'aria-hidden': 'true' };
+const ICON_STROKE_WIDTH_REGULAR = 1.7;
+const ICON_STROKE_WIDTH_THIN = 1.6;
+const ICON_STROKE_WIDTH_BOLD = 1.8;
+
+const ICON = { strokeWidth: ICON_STROKE_WIDTH_REGULAR, 'aria-hidden': 'true' };
 
 const LINKS = [
   { href: '/', label: 'Home', icon: <House {...ICON} /> },
@@ -43,8 +47,8 @@ const ACCOUNT_ROWS = [{ href: '/settings', label: 'Settings', icon: <Settings {.
 
 export default function Navbar() {
   const pathname = usePathname();
-  const { account, hydrated, logout } = useAccount();
-  const [authOpen, setAuthOpen] = useState(false);
+  const { account, hydrated, logout: handleLogout } = useAccount();
+  const [isAuthOpen, setIsAuthOpen] = useState(false);
   const { count } = useCart();
 
   function isActive(href) {
@@ -76,7 +80,7 @@ export default function Navbar() {
             <ChatLauncher className={NAV_ICON} />
 
             <Link href="/my-booking" className={`relative ${NAV_ICON}`} aria-label="My Booking">
-              <ShoppingBag className="w-5 h-5" strokeWidth={1.6} aria-hidden="true" />
+              <ShoppingBag className="w-5 h-5" strokeWidth={ICON_STROKE_WIDTH_THIN} aria-hidden="true" />
               <span className={NAV_BADGE} hidden={!count}>
                 {count}
               </span>
@@ -87,7 +91,7 @@ export default function Navbar() {
         fields={<TripPrefsFields idPrefix="acct" />}
         drawerFoot={(close) => (
           <Button as="a" full href={WHATSAPP_LINK} target="_blank" rel="noopener" onClick={close}>
-            <MessageCircle className="w-4 h-4 flex-none" strokeWidth={1.8} aria-hidden="true" />
+            <MessageCircle className="w-4 h-4 flex-none" strokeWidth={ICON_STROKE_WIDTH_BOLD} aria-hidden="true" />
             WhatsApp
           </Button>
         )}
@@ -97,8 +101,8 @@ export default function Navbar() {
             account={account}
             hydrated={hydrated}
             linkAs={Link}
-            onLogin={() => setAuthOpen(true)}
-            onLogout={logout}
+            onLogin={() => setIsAuthOpen(true)}
+            onLogout={handleLogout}
             loginTitle="Plan your stay"
             loginNote="Sign in with your email. No password needed."
             prefs={<TripPrefsFields idPrefix="menu" />}
@@ -106,7 +110,7 @@ export default function Navbar() {
           />
         }
       />
-      <AuthSheet open={authOpen} onClose={() => setAuthOpen(false)} />
+      <AuthSheet open={isAuthOpen} onClose={() => setIsAuthOpen(false)} />
     </>
   );
 }

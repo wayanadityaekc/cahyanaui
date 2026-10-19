@@ -3,6 +3,8 @@
 import { ShoppingBag, UserRound } from 'lucide-react';
 import { cn } from '../lib/cn.js';
 
+const ICON_STROKE_WIDTH_THIN = 1.6;
+
 const PILL =
   'relative inline-flex items-center gap-2 h-8 px-[0.6rem] rounded-md [border:1px_solid_var(--line)] bg-surface-raised ' +
   'text-gold no-underline cursor-pointer [transition:border-color_var(--dur)_var(--ease)] ' +
@@ -16,9 +18,9 @@ const DOT =
 export default function MyCahyanaPill({ href, label = 'My Cahyana', seen = true, onTap = () => {}, className }) {
   return (
     <a href={href} className={cn(PILL, className)} aria-label={label} onClick={onTap} data-my-pill>
-      <UserRound className={ICON} strokeWidth={1.6} aria-hidden="true" />
+      <UserRound className={ICON} strokeWidth={ICON_STROKE_WIDTH_THIN} aria-hidden="true" />
       <span className={SPLIT} aria-hidden="true" />
-      <ShoppingBag className={ICON} strokeWidth={1.6} aria-hidden="true" />
+      <ShoppingBag className={ICON} strokeWidth={ICON_STROKE_WIDTH_THIN} aria-hidden="true" />
       {seen ? null : <span className={DOT} aria-hidden="true" data-my-pill-dot />}
     </a>
   );

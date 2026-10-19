@@ -3,7 +3,7 @@ export const CARD_WRAP = 'max-w-[1000px] mt-5 mx-auto max-[560px]:mt-4';
 export const STRIP =
   'sticky top-[var(--header-h,52.8px)] min-[769px]:top-[var(--header-h,57.6px)] z-20 pt-[10px] bg-surface-raised';
 export const TRACK = 'mb-6 flex w-full gap-1 p-1 rounded-pill bg-[rgba(34,32,28,0.08)]';
-export function segment(on) {
+export function buildSegmentClasses(on) {
   return `flex-1 text-center whitespace-nowrap font-body text-small font-semibold border-none rounded-pill py-[0.55rem] px-2 cursor-pointer transition-[background-color,color,scale] duration-[var(--dur-fast)] ease-[ease] ${on ? 'bg-gold text-white' : 'bg-transparent text-muted hover:text-green'}`;
 }
 export const SEC =

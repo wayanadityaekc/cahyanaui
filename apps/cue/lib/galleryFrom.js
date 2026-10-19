@@ -1,44 +1,51 @@
-function FILE(s) {
-  return String(s || '')
+function FILE(imagePath) {
+  return String(imagePath || '')
     .replace(/^\/?assets\/images\//, '')
     .replace(/^images\//, '')
     .trim();
 }
 
-export function galleryFrom(data) {
+export function buildGallery(data) {
   if (!data) return [];
   if (Array.isArray(data.gallery) && data.gallery.length) return data.gallery;
 
   const sections = [
-    ...(Array.isArray(data.items) ? data.items.filter((i) => i && i.type === 'stop') : []),
+    ...(Array.isArray(data.items) ? data.items.filter((item) => item && item.type === 'stop') : []),
     ...(Array.isArray(data.stops) ? data.stops : []),
   ];
 
   const meta = new Map();
-  sections.forEach((s) => {
-    const f = FILE(s.img);
-    if (f && !meta.has(f)) meta.set(f, { alt: s.alt, title: s.name, w: s.w, hgt: s.hgt });
+  sections.forEach((section) => {
+    const fileName = FILE(section.img);
+    if (fileName && !meta.has(fileName))
+      meta.set(fileName, { alt: section.alt, title: section.name, w: section.w, hgt: section.hgt });
   });
-  (data.heroSlides || []).forEach((s) => {
-    const f = FILE(s.src || s.img || s);
-    if (!f) return;
-    const existing = meta.get(f) || {};
-    meta.set(f, { ...existing, title: existing.title || s.title, alt: existing.alt || s.title });
+  (data.heroSlides || []).forEach((slide) => {
+    const fileName = FILE(slide.src || slide.img || slide);
+    if (!fileName) return;
+    const existing = meta.get(fileName) || {};
+    meta.set(fileName, { ...existing, title: existing.title || slide.title, alt: existing.alt || slide.title });
   });
 
-  const order = [
+  const orderedFiles = [
     FILE(data.heroBg),
-    ...(data.heroSlides || []).map((s) => FILE(s.src || s.img || s)),
-    ...sections.map((s) => FILE(s.img)),
+    ...(data.heroSlides || []).map((slide) => FILE(slide.src || slide.img || slide)),
+    ...sections.map((section) => FILE(section.img)),
   ];
 
   const seen = new Set();
-  const out = [];
-  order.forEach((f) => {
-    if (!f || seen.has(f)) return;
-    seen.add(f);
-    const m = meta.get(f) || {};
-    out.push({ src: `/assets/images/${f}`, alt: m.alt || m.title || '', title: m.title || '', w: m.w, hgt: m.hgt });
+  const galleryFiles = [];
+  orderedFiles.forEach((fileName) => {
+    if (!fileName || seen.has(fileName)) return;
+    seen.add(fileName);
+    const fileMeta = meta.get(fileName) || {};
+    galleryFiles.push({
+      src: `/assets/images/${fileName}`,
+      alt: fileMeta.alt || fileMeta.title || '',
+      title: fileMeta.title || '',
+      w: fileMeta.w,
+      hgt: fileMeta.hgt,
+    });
   });
-  return out;
+  return galleryFiles;
 }

@@ -3,6 +3,10 @@ import { LISTINGS } from '@/content/shared/listings';
 import { CHARTER } from '@/content/shared/charter';
 import { TOPICS, HUMAN_WORDS, GREETINGS, THANKS, CHAT_COPY } from '@/content/shared/chat';
 
+const MAX_ANSWER_MATCHES = 4;
+const STRONG_MATCH_MIN_WORD_LENGTH = 7;
+const KEYWORD_MATCH_SCORE = 3;
+
 function stripTags(html) {
   return String(html)
     .replace(/<[^>]+>/g, ' ')
@@ -12,34 +16,34 @@ function stripTags(html) {
     .trim();
 }
 
-function faqAnswer(question) {
-  const hit = FAQ.find((f) => f.q === question);
+function findFaqAnswer(question) {
+  const hit = FAQ.find((faq) => faq.q === question);
   if (!hit) throw new Error(`chat: no FAQ entry titled "${question}"`);
   return stripTags(hit.a);
 }
 
 let INDEX = null;
-export function itemIndex() {
+export function buildItemIndex() {
   if (INDEX) return INDEX;
-  const out = [];
+  const indexEntries = [];
   Object.keys(LISTINGS).forEach((section) => {
     (LISTINGS[section].cats || []).forEach((cat) => {
-      (cat.cards || []).forEach((c) => {
-        if (!c.name || !c.href) return;
-        out.push({
-          name: c.name,
-          href: c.href,
-          meta: c.meta || '',
-          priceName: c.priceName || '',
-          fallback: c.priceFallback || '',
-          stops: c.stops || 0,
+      (cat.cards || []).forEach((card) => {
+        if (!card.name || !card.href) return;
+        indexEntries.push({
+          name: card.name,
+          href: card.href,
+          meta: card.meta || '',
+          priceName: card.priceName || '',
+          fallback: card.priceFallback || '',
+          stops: card.stops || 0,
           section,
         });
       });
     });
   });
-  INDEX = out;
-  return out;
+  INDEX = indexEntries;
+  return indexEntries;
 }
 
 const STOP = new Set([
@@ -96,29 +100,29 @@ const STOP = new Set([
   'all',
 ]);
 
-function norm(s) {
-  return String(s || '')
+function normalizeText(text) {
+  return String(text || '')
     .toLowerCase()
     .replace(/[^a-z0-9\s]/g, ' ')
     .replace(/\s+/g, ' ')
     .trim();
 }
-function words(s) {
-  return norm(s)
+function extractWords(text) {
+  return normalizeText(text)
     .split(' ')
-    .filter((w) => w.length > 2 && !STOP.has(w));
+    .filter((word) => word.length > 2 && !STOP.has(word));
 }
 
-function priceOf({ priceName, fallback }, ctx) {
-  const live = priceName && ctx.lookup ? ctx.lookup(priceName) : null;
+function priceOf({ priceName, fallback }, context) {
+  const live = priceName && context.lookup ? context.lookup(priceName) : null;
   return (live && live.standard && live.standard.display) || fallback || '';
 }
 
-function tourPrices(ctx) {
-  const picks = itemIndex()
-    .filter((i) => i.section === 'tour')
-    .slice(0, 4)
-    .map((i) => ({ label: i.name, note: i.meta, price: priceOf(i, ctx), href: i.href }));
+function buildTourPrices(context) {
+  const picks = buildItemIndex()
+    .filter((item) => item.section === 'tour')
+    .slice(0, MAX_ANSWER_MATCHES)
+    .map((item) => ({ label: item.name, note: item.meta, price: priceOf(item, context), href: item.href }));
   return {
     text: 'Day tours are priced per car for up to 5 people, so a bigger group pays less each. A few of ours:',
     rows: picks,
@@ -126,9 +130,11 @@ function tourPrices(ctx) {
   };
 }
 
-function airportPrice({ catalog }) {
-  const t = catalog ? (catalog.transfers || []).find((x) => /airport/i.test(x.route)) : null;
-  const price = t ? t.display : '';
+function findAirportPrice({ catalog }) {
+  const airportTransfer = catalog
+    ? (catalog.transfers || []).find((transfer) => /airport/i.test(transfer.route))
+    : null;
+  const price = airportTransfer ? airportTransfer.display : '';
   return {
     text: price
       ? `Airport pickup to Ubud is ${price} per car, up to 5 people with luggage. Your driver meets you at arrivals, and we ask for your flight number so the timing follows your actual landing.`
@@ -137,13 +143,20 @@ function airportPrice({ catalog }) {
   };
 }
 
-function charterPrices({ catalog }) {
+function buildCharterPrices({ catalog }) {
   const rows = (CHARTER.durations || [])
-    .map((d) => {
-      const c = catalog ? (catalog.charters || []).find((x) => x.duration === d.dur) : null;
-      return { label: d.name, note: d.sub, price: (c && c.display) || '', href: '/charter.html' };
+    .map((duration) => {
+      const charter = catalog
+        ? (catalog.charters || []).find((candidate) => candidate.duration === duration.dur)
+        : null;
+      return {
+        label: duration.name,
+        note: duration.sub,
+        price: (charter && charter.display) || '',
+        href: '/charter.html',
+      };
     })
-    .filter((r) => r.price);
+    .filter((row) => row.price);
   return {
     text: rows.length
       ? 'You can take the car and driver for the day and decide the route as you go:'
@@ -160,76 +173,84 @@ function startTimes() {
   };
 }
 
-const BUILDERS = { tourPrices, airportPrice, charterPrices, startTimes };
+const BUILDERS = {
+  tourPrices: buildTourPrices,
+  airportPrice: findAirportPrice,
+  charterPrices: buildCharterPrices,
+  startTimes,
+};
 
 function matchItem(question) {
-  const questionWords = words(question);
+  const questionWords = extractWords(question);
   if (!questionWords.length) return null;
   let best = null;
-  itemIndex().forEach((item) => {
-    const iw = words(item.name);
+  buildItemIndex().forEach((item) => {
+    const iw = extractWords(item.name);
     if (!iw.length) return;
     let hits = 0;
-    iw.forEach((w) => {
-      if (questionWords.includes(w)) hits += 1;
+    iw.forEach((word) => {
+      if (questionWords.includes(word)) hits += 1;
     });
-    const strong = iw.some((w) => w.length >= 7 && questionWords.includes(w));
-    if (hits >= 2 || (hits === 1 && strong)) {
-      const score = hits + (strong ? 1 : 0);
-      if (!best || score > best.score) best = { item, score };
-    }
+    const hasStrongMatch = iw.some(
+      (word) => word.length >= STRONG_MATCH_MIN_WORD_LENGTH && questionWords.includes(word),
+    );
+    const hasEnoughHits = hits >= 2 || (hits === 1 && hasStrongMatch);
+    if (!hasEnoughHits) return;
+    const score = hits + (hasStrongMatch ? 1 : 0);
+    if (!best || score > best.score) best = { item, score };
   });
   return best ? best.item : null;
 }
 
 function matchTopic(question) {
-  const n = norm(question);
-  const questionWords = words(question);
+  const normalizedQuestion = normalizeText(question);
+  const questionWords = extractWords(question);
   let best = null;
-  TOPICS.forEach((t) => {
+  TOPICS.forEach((topic) => {
     let score = 0;
     let strong = false;
-    t.words.forEach((w) => {
-      if (w.includes(' ')) {
-        if (n.includes(w)) score += 3;
-      } else if (questionWords.includes(w)) score += 1;
+    topic.words.forEach((word) => {
+      if (word.includes(' ')) {
+        if (normalizedQuestion.includes(word)) score += KEYWORD_MATCH_SCORE;
+      } else if (questionWords.includes(word)) score += 1;
     });
-    (t.strong || []).forEach((w) => {
-      if (w.includes(' ') ? n.includes(w) : questionWords.includes(w)) {
-        strong = true;
-        score += 3;
-      }
+    (topic.strong || []).forEach((word) => {
+      if (!(word.includes(' ') ? normalizedQuestion.includes(word) : questionWords.includes(word))) return;
+      strong = true;
+      score += KEYWORD_MATCH_SCORE;
     });
     if (!score) return;
     const better = !best || (strong && !best.strong) || (strong === best.strong && score > best.score);
-    if (better) best = { topic: t, score, strong };
+    if (better) best = { topic: topic, score, strong };
   });
   return best && best.score >= 2 ? best.topic : null;
 }
 
-function answerTopic(topic, ctx) {
-  if (topic.faq) return { text: faqAnswer(topic.faq) };
+function answerTopic(topic, context) {
+  if (topic.faq) return { text: findFaqAnswer(topic.faq) };
   const build = BUILDERS[topic.build];
   if (!build) throw new Error(`chat: topic ${topic.id} names no builder`);
-  return build(ctx);
+  return build(context);
 }
 
-export function answerFor(question, ctx = {}) {
+export function answerFor(question, context = {}) {
   const text = String(question || '').trim();
   if (!text) return { kind: 'answer', text: CHAT_COPY.greeting };
 
-  const bare = norm(text);
+  const bare = normalizeText(text);
   if (GREETINGS.includes(bare)) return { kind: 'answer', text: CHAT_COPY.hello };
   if (THANKS.includes(bare)) return { kind: 'answer', text: CHAT_COPY.thanks };
 
-  const n = norm(text);
-  const qw0 = words(text);
-  const human = HUMAN_WORDS.some((w) => (w.includes(' ') ? n.includes(w) : qw0.includes(w)));
-  if (human) return { kind: 'handoff', text: CHAT_COPY.handoff };
+  const normalizedText = normalizeText(text);
+  const qw0 = extractWords(text);
+  const isAskingForHuman = HUMAN_WORDS.some((word) =>
+    word.includes(' ') ? normalizedText.includes(word) : qw0.includes(word),
+  );
+  if (isAskingForHuman) return { kind: 'handoff', text: CHAT_COPY.handoff };
 
   const item = matchItem(text);
   if (item) {
-    const price = priceOf(item, ctx);
+    const price = priceOf(item, context);
     const bits = [item.meta, item.stops ? `${item.stops} stops` : ''].filter(Boolean).join(' · ');
     return {
       kind: 'answer',
@@ -241,7 +262,7 @@ export function answerFor(question, ctx = {}) {
   }
 
   const topic = matchTopic(text);
-  if (topic) return { kind: 'answer', ...answerTopic(topic, ctx) };
+  if (topic) return { kind: 'answer', ...answerTopic(topic, context) };
 
   return { kind: 'handoff', text: CHAT_COPY.handoff };
 }

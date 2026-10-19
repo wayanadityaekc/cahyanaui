@@ -2,24 +2,24 @@ import JsonLd from '@/components/JsonLd';
 import GuideCatNav from '@/components/sections/GuideCatNav';
 import RailLayout from '@/components/ui/RailLayout';
 import Breadcrumb from '@/components/ui/Breadcrumb';
-import { guideCrumbs } from '@/lib/crumbs';
+import { buildGuideCrumbs } from '@/lib/crumbs';
 import { RAIL_PAGE_BOX, RAIL_FRAME_CARD, RAIL_MAIN_CARD, RAIL_READ } from '@/components/ui/railClasses';
 import GuideMore from '@/components/sections/GuideMore';
 import Prose from '@/components/prose/Prose';
 import DetailHero from '@/components/sections/DetailHero';
-import { guideCard, readMinutes, guideCategory } from '@/lib/guideMeta';
+import { findGuideCard, readMinutes, findGuideCategory } from '@/lib/guideMeta';
 
 const BOX = `${RAIL_PAGE_BOX} pt-[2.85rem] max-[560px]:pt-[2.6rem]`;
 
 export default function GuideArticle({ data }) {
-  const crumbs = guideCrumbs(data.tabs, data.title);
+  const crumbs = buildGuideCrumbs(data.tabs, data.title);
   const slug = (data.__page || '').replace(/^guide\//, '');
-  const card = guideCard(slug) || {};
+  const card = findGuideCard(slug) || {};
   const hooks = [
-    { label: 'Category', value: guideCategory(data.tabs) },
+    { label: 'Category', value: findGuideCategory(data.tabs) },
     { label: 'Topic', value: card.tag },
     { label: 'Read', value: `~${readMinutes(data.body)} min` },
-  ].filter((h) => h.value);
+  ].filter((detail) => detail.value);
 
   return (
     <div className="guide-article-page">
@@ -37,23 +37,23 @@ export default function GuideArticle({ data }) {
       <div className={BOX}>
         <RailLayout
           label="Bali Guide"
-          items={data.tabs.map((t) => ({ id: t.href, href: t.href, label: t.label }))}
-          active={(data.tabs.find((t) => t.active) || data.tabs[0] || {}).href}
+          items={data.tabs.map((tab) => ({ id: tab.href, href: tab.href, label: tab.label }))}
+          active={(data.tabs.find((tab) => tab.active) || data.tabs[0] || {}).href}
           frameClass={RAIL_FRAME_CARD}
           mainClass={RAIL_MAIN_CARD}
           mobileNav={<GuideCatNav tabs={data.tabs} />}
         >
           <div className={RAIL_READ}>
-            <Prose blocks={data.body.filter((b) => b.type !== 'crumb')} headingVariant="guide" />
+            <Prose blocks={data.body.filter((block) => block.type !== 'crumb')} headingVariant="guide" />
           </div>
         </RailLayout>
       </div>
 
-      {data.more.map((m, i) =>
-        m.kind ? (
-          <GuideMore block={m} key={i} />
+      {data.more.map((moreBlock, index) =>
+        moreBlock.kind ? (
+          <GuideMore block={moreBlock} key={index} />
         ) : (
-          <section className={m.cls} key={i} dangerouslySetInnerHTML={{ __html: m.html }} />
+          <section className={moreBlock.cls} key={index} dangerouslySetInnerHTML={{ __html: moreBlock.html }} />
         ),
       )}
     </div>

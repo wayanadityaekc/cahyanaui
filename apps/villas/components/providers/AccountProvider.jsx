@@ -25,7 +25,7 @@ function drop() {
 
 export function AccountProvider({ children }) {
   const [account, setAccount] = useState(null);
-  const [hydrated, setHydrated] = useState(false);
+  const [isHydrated, setIsHydrated] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -41,7 +41,7 @@ export function AccountProvider({ children }) {
 
     const token = read();
     if (!token) {
-      setHydrated(true);
+      setIsHydrated(true);
       return undefined;
     }
 
@@ -54,7 +54,7 @@ export function AccountProvider({ children }) {
         else drop();
       } catch (e) {
       } finally {
-        if (!cancelled) setHydrated(true);
+        if (!cancelled) setIsHydrated(true);
       }
     }
     load();
@@ -85,7 +85,8 @@ export function AccountProvider({ children }) {
         body: JSON.stringify({ email, code }),
       });
       const data = await response.json().catch(() => ({}));
-      if (response.ok && data.status === 'ok' && data.token) {
+      const isTokenReceived = response.ok && data.status === 'ok' && data.token;
+      if (isTokenReceived) {
         write(data.token);
         setAccount(data.account || null);
         return { ok: true };
@@ -159,7 +160,16 @@ export function AccountProvider({ children }) {
 
   return (
     <AccountContext.Provider
-      value={{ account, hydrated, requestLogin, verifyCode, createAccount, updateAccount, deleteAccount, logout }}
+      value={{
+        account,
+        hydrated: isHydrated,
+        requestLogin,
+        verifyCode,
+        createAccount,
+        updateAccount,
+        deleteAccount,
+        logout,
+      }}
     >
       {children}
     </AccountContext.Provider>
@@ -167,7 +177,7 @@ export function AccountProvider({ children }) {
 }
 
 export function useAccount() {
-  const ctx = useContext(AccountContext);
-  if (!ctx) throw new Error('useAccount must be used within AccountProvider');
-  return ctx;
+  const context = useContext(AccountContext);
+  if (!context) throw new Error('useAccount must be used within AccountProvider');
+  return context;
 }

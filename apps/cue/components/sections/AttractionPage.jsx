@@ -3,7 +3,7 @@ import JsonLd from '@/components/JsonLd';
 import { STOPS, STOP, STOP_IMAGE } from '@/components/ui/stopClasses';
 import AttractionOverview from '@/components/sections/AttractionOverview';
 import BookNowRow from '@/components/booking/BookNowRow';
-import { galleryFrom } from '@/lib/galleryFrom';
+import { buildGallery } from '@/lib/galleryFrom';
 import { TOUR_LAYOUT_BOOK, TOUR_LAYOUT_MAIN, TOUR_LAYOUT_SIDE } from '@/components/ui/tourLayoutClasses';
 import BookCta from '@/components/booking/BookCta';
 import BookSidebar from '@/components/booking/BookSidebar';
@@ -14,22 +14,22 @@ import ReviewCtaBand from '@/components/reviews/ReviewCtaBand';
 import DetailTabs from '@/components/sections/DetailTabs';
 import { STOP_NUM, STOP_NAME, STOP_DESC, CRUMB_FOOT } from '@/components/sections/TourPage';
 import { isHiddenTour } from '@/lib/routes';
-import Breadcrumb, { itemsFromLegacy } from '@/components/ui/Breadcrumb';
+import Breadcrumb, { buildItemsFromLegacy } from '@/components/ui/Breadcrumb';
 import TourComparisonBox from '@/components/booking/TourComparisonBox';
-import { toursContaining, priceFallbackFor } from '@/lib/tourIndex';
+import { findToursContaining, priceFallbackFor } from '@/lib/tourIndex';
 
 export default function AttractionPage({ data }) {
   const bookType = data.bookDefault || 'tour';
-  const perPerson = bookType === 'experience' || bookType === 'performance';
+  const isPricedPerPerson = bookType === 'experience' || bookType === 'performance';
   const slug = (data.__page || '').replace('attractions/', '');
-  const onTours = toursContaining(slug);
-  const gallery = galleryFrom(data);
-  const crumb = (data.crumb || []).map((p, i, a) =>
-    i === a.length - 1 && p.type === 'text' ? { ...p, text: data.title } : p,
+  const onTours = findToursContaining(slug);
+  const gallery = buildGallery(data);
+  const crumbLinks = (data.crumb || []).map((crumbPart, index, crumbParts) =>
+    index === crumbParts.length - 1 && crumbPart.type === 'text' ? { ...crumbPart, text: data.title } : crumbPart,
   );
   return (
     <>
-      <JsonLd page={data.__page} crumbs={itemsFromLegacy(crumb)} />
+      <JsonLd page={data.__page} crumbs={buildItemsFromLegacy(crumbLinks)} />
       <DetailHero
         heroBg={data.heroBg}
         heroSlides={data.heroSlides}
@@ -39,11 +39,15 @@ export default function AttractionPage({ data }) {
         hooks={data.hooks}
         cta={data.cta}
         ctaHref={data.ctaHref}
-        crumb={gallery.length ? crumb : undefined}
+        crumb={gallery.length ? crumbLinks : undefined}
         ratingName={data.bookItem}
         belowChips={
           gallery.length && data.bookItem ? (
-            <BookNowRow item={data.bookItem} priceFallback={priceFallbackFor(data.bookItem)} perPerson={perPerson} />
+            <BookNowRow
+              item={data.bookItem}
+              priceFallback={priceFallbackFor(data.bookItem)}
+              perPerson={isPricedPerPerson}
+            />
           ) : null
         }
       />
@@ -56,17 +60,17 @@ export default function AttractionPage({ data }) {
                 <AttractionOverview stops={data.stops} id={data.stopsId} />
               ) : (
                 <div className={STOPS} id={data.stopsId}>
-                  {data.stops.map((s, i) => (
-                    <article className={STOP} key={i}>
-                      {s.img && (
+                  {data.stops.map((stop, index) => (
+                    <article className={STOP} key={index}>
+                      {stop.img && (
                         <div className={STOP_IMAGE}>
-                          <Img src={`/assets/images/${s.img}`} alt={s.alt} width={s.w} height={s.hgt} />
+                          <Img src={`/assets/images/${stop.img}`} alt={stop.alt} width={stop.w} height={stop.hgt} />
                         </div>
                       )}
                       <div>
-                        {s.num && <span className={STOP_NUM}>{s.num}</span>}
-                        <h3 className={STOP_NAME}>{s.name}</h3>
-                        <p className={STOP_DESC} dangerouslySetInnerHTML={{ __html: s.descHtml }} />
+                        {stop.num && <span className={STOP_NUM}>{stop.num}</span>}
+                        <h3 className={STOP_NAME}>{stop.name}</h3>
+                        <p className={STOP_DESC} dangerouslySetInnerHTML={{ __html: stop.descHtml }} />
                       </div>
                     </article>
                   ))}
@@ -85,7 +89,7 @@ export default function AttractionPage({ data }) {
             <BookSidebar
               item={data.bookItem}
               presetType={bookType}
-              perPerson={perPerson}
+              perPerson={isPricedPerPerson}
               facts={data.facts}
               belowPrice={<TourComparisonBox tours={onTours} />}
             />
@@ -93,11 +97,11 @@ export default function AttractionPage({ data }) {
         )}
       </div>
       <BookCta item={data.bookItem} />
-      <BookBar item={data.bookItem} priceFallback={priceFallbackFor(data.bookItem)} perPerson={perPerson} />
+      <BookBar item={data.bookItem} priceFallback={priceFallbackFor(data.bookItem)} perPerson={isPricedPerPerson} />
       <Related href={data.__href} />
       {data.bookItem && <ReviewCtaBand />}
 
-      {data.crumb && !gallery.length && <Breadcrumb items={itemsFromLegacy(data.crumb)} className={CRUMB_FOOT} />}
+      {data.crumb && !gallery.length && <Breadcrumb items={buildItemsFromLegacy(data.crumb)} className={CRUMB_FOOT} />}
     </>
   );
 }

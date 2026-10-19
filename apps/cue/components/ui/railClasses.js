@@ -44,7 +44,7 @@ export const RAIL_STICK_COLLAPSED =
 export const RAIL_LABEL =
   'font-body text-label font-medium tracking-[0.14em] uppercase text-muted m-0 mb-[var(--space-2)] px-[0.75rem]';
 
-export function railItem(active, collapsed = false) {
+export function buildRailItemClass(active, collapsed = false) {
   return (
     `flex items-center ${collapsed ? 'justify-center w-9 h-9 p-0' : 'w-full text-left p-[0.55rem_0.75rem] gap-[0.65rem]'} ` +
     `rounded-[var(--r-md)] bg-transparent border-none cursor-pointer font-body text-body leading-[1.35] ` +
@@ -88,7 +88,7 @@ export const MENU_ROW_BOX =
   'flex items-center gap-[0.65rem] w-full text-left p-[0.7rem_0.75rem] rounded-[var(--r-md)] ' +
   '[&>svg]:w-[var(--icon-sm)] [&>svg]:h-[var(--icon-sm)] [&>svg]:shrink-0';
 
-export function railMobileItem(active) {
+export function buildRailMobileItemClass(active) {
   return (
     `${MENU_ROW_BOX} ` +
     `bg-transparent border-none cursor-pointer font-body text-body leading-[1.35] ${

@@ -24,26 +24,26 @@ const MIME = {
 };
 function serve(root, port) {
   return new Promise((result) => {
-    const s = http.createServer((q, r) => {
-      let p = decodeURIComponent(q.url.split('?')[0]);
-      if (p.endsWith('/')) p += 'index.html';
-      let f = path.join(root, p);
-      if (!fs.existsSync(f) && !path.extname(f)) f = path.join(root, `${p}.html`);
-      if (!fs.existsSync(f)) {
-        r.writeHead(404);
-        r.end();
+    const httpServer = http.createServer((request, response) => {
+      let pathname = decodeURIComponent(request.url.split('?')[0]);
+      if (pathname.endsWith('/')) pathname += 'index.html';
+      let filePath = path.join(root, pathname);
+      if (!fs.existsSync(filePath) && !path.extname(filePath)) filePath = path.join(root, `${pathname}.html`);
+      if (!fs.existsSync(filePath)) {
+        response.writeHead(404);
+        response.end();
         return;
       }
-      r.writeHead(200, { 'content-type': MIME[path.extname(f)] || 'text/html' });
-      r.end(fs.readFileSync(f));
+      response.writeHead(200, { 'content-type': MIME[path.extname(filePath)] || 'text/html' });
+      response.end(fs.readFileSync(filePath));
     });
-    s.listen(port, () => result(s));
+    httpServer.listen(port, () => result(httpServer));
   });
 }
 
 const port = 8000 + Math.floor(Math.random() * 1500);
-const s = await serve(ROOT, port);
-const b = await chromium.launch({ executablePath: EXE });
+const server = await serve(ROOT, port);
+const browser = await chromium.launch({ executablePath: EXE });
 let pass = 0,
   fail = 0;
 function check(label, cond) {
@@ -66,7 +66,7 @@ function lockState(pg) {
 }
 
 {
-  const pg = await b.newPage({ viewport: { width: 390, height: 844 } });
+  const pg = await browser.newPage({ viewport: { width: 390, height: 844 } });
   await pg.goto(`http://localhost:${port}/my-trips.html`, { waitUntil: 'networkidle' });
   await pg.waitForTimeout(400);
   await pg.click('button:has-text("Add a program")');
@@ -84,7 +84,7 @@ function lockState(pg) {
 }
 
 {
-  const pg = await b.newPage({ viewport: { width: 390, height: 844 } });
+  const pg = await browser.newPage({ viewport: { width: 390, height: 844 } });
   await pg.goto(`http://localhost:${port}/index.html`, { waitUntil: 'networkidle' });
   await pg.waitForTimeout(500);
   const planBtn = await pg.$('button:has-text("Plan your trip")');
@@ -99,7 +99,7 @@ function lockState(pg) {
   await pg.close();
 }
 {
-  const pg = await b.newPage({ viewport: { width: 390, height: 844 } });
+  const pg = await browser.newPage({ viewport: { width: 390, height: 844 } });
   await pg.goto(`http://localhost:${port}/index.html`, { waitUntil: 'networkidle' });
   await pg.waitForTimeout(400);
   const hb = await pg.$('button[aria-label="Open menu"]');
@@ -114,7 +114,7 @@ function lockState(pg) {
   await pg.close();
 }
 
-await b.close();
-s.close();
+await browser.close();
+server.close();
 console.log(`\n${pass} passed, ${fail} failed`);
 process.exit(fail ? 1 : 0);

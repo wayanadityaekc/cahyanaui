@@ -2,7 +2,7 @@
 
 import { useCallback, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { AnimatePresence, LazyMotion, domAnimation, m, useReducedMotion } from 'motion/react';
+import { AnimatePresence, LazyMotion, domAnimation, m as motionElement, useReducedMotion } from 'motion/react';
 import { MessageCircle } from 'lucide-react';
 import { CHAT_FRAME, CHAT_SCRIM, ChatPanel, useBodyLock, useChat, useDialog, useMobile } from '@cahyana/ui';
 import AuthSheet from '@/components/account/AuthSheet';
@@ -10,7 +10,10 @@ import { useAccount } from '@/components/providers/AccountProvider';
 import { useCurrency } from '@/components/providers/CurrencyProvider';
 import { answerFor } from '@/lib/chatAnswers';
 import { API_BASE, WHATSAPP_LINK } from '@/lib/constants';
-import { CHAT_COPY, SUGGESTIONS, wayanIsAround } from '@/content/chat';
+import { CHAT_COPY, SUGGESTIONS, isWayanAround } from '@/content/chat';
+
+const CHAT_PANEL_DURATION_SECONDS = 0.3;
+const ICON_STROKE_WIDTH_BOLD = 1.8;
 
 const THREAD_KEY = 'upv_chat_thread_v1';
 const EASE_OUT = [0.16, 1, 0.3, 1];
@@ -19,18 +22,18 @@ const DRAWER_OFF = { x: '100%', y: 0, opacity: 0 };
 const SHEET_OFF = { x: 0, y: '100%', opacity: 0 };
 const ON = { x: 0, y: 0, opacity: 1 };
 
-function pageLabel() {
+function buildPageLabel() {
   return `ubudprivatevillas.com${window.location.pathname}`;
 }
 
 export default function ChatWindow({ open = false, onClose = () => {} }) {
   const { account, hydrated } = useAccount();
   const { format } = useCurrency();
-  const [authOpen, setAuthOpen] = useState(false);
+  const [isAuthOpen, setIsAuthOpen] = useState(false);
   const reduced = useReducedMotion();
   const phoneAfterMount = useMobile(PHONE);
   const isMobile = typeof window === 'undefined' ? phoneAfterMount : window.matchMedia(PHONE).matches;
-  useBodyLock(open && !authOpen);
+  useBodyLock(open && !isAuthOpen);
   const dialogRef = useDialog({ shown: open, onClose });
 
   const answer = useCallback((question) => answerFor(question, { format }), [format]);
@@ -41,19 +44,19 @@ export default function ChatWindow({ open = false, onClose = () => {} }) {
     answerFor: answer,
     copy: CHAT_COPY,
     suggestions: SUGGESTIONS,
-    page: pageLabel,
+    page: buildPageLabel,
     account,
-    isAround: wayanIsAround,
+    isAround: isWayanAround,
   });
 
   const off = isMobile ? SHEET_OFF : DRAWER_OFF;
-  const duration = reduced ? 0 : 0.3;
+  const duration = reduced ? 0 : CHAT_PANEL_DURATION_SECONDS;
 
   return createPortal(
     <LazyMotion features={domAnimation}>
       <AnimatePresence>
         {open && (
-          <m.div
+          <motionElement.div
             key="scrim"
             className={CHAT_SCRIM}
             aria-hidden="true"
@@ -65,7 +68,7 @@ export default function ChatWindow({ open = false, onClose = () => {} }) {
           />
         )}
         {open && (
-          <m.div
+          <motionElement.div
             key="panel"
             ref={dialogRef}
             className={CHAT_FRAME}
@@ -83,18 +86,18 @@ export default function ChatWindow({ open = false, onClose = () => {} }) {
               chat={chat}
               copy={CHAT_COPY}
               onClose={onClose}
-              onSignIn={hydrated && !account ? () => setAuthOpen(true) : null}
+              onSignIn={hydrated && !account ? () => setIsAuthOpen(true) : null}
               altLink={{
                 href: WHATSAPP_LINK,
                 label: CHAT_COPY.whatsappLabel,
                 note: CHAT_COPY.whatsappNote,
-                icon: <MessageCircle strokeWidth={1.8} aria-hidden="true" />,
+                icon: <MessageCircle strokeWidth={ICON_STROKE_WIDTH_BOLD} aria-hidden="true" />,
               }}
             />
-          </m.div>
+          </motionElement.div>
         )}
       </AnimatePresence>
-      <AuthSheet open={authOpen} onClose={() => setAuthOpen(false)} />
+      <AuthSheet open={isAuthOpen} onClose={() => setIsAuthOpen(false)} />
     </LazyMotion>,
     document.body,
   );

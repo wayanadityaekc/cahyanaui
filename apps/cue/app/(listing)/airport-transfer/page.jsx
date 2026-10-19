@@ -3,7 +3,7 @@ import { AIRPORT_ROUTE } from '@/content/shared/timeSlots';
 import AirportTransferForm from '@/components/sections/AirportTransferForm';
 import JsonLd from '@/components/JsonLd';
 import Prose from '@/components/prose/Prose';
-import { detailBlocks } from '@/lib/detailBlocks';
+import { buildDetailBlocks } from '@/lib/detailBlocks';
 import { AIRPORT } from '@/content/shared/airport';
 import FormHero from '@/components/sections/FormHero';
 
@@ -28,7 +28,7 @@ export default function Page() {
         half
         details={
           <Prose
-            blocks={detailBlocks('Airport Transfer Details', AIRPORT.tinfo, AIRPORT.info)}
+            blocks={buildDetailBlocks('Airport Transfer Details', AIRPORT.tinfo, AIRPORT.info)}
             headingVariant="company"
           />
         }

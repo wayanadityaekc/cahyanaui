@@ -1,11 +1,15 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { X } from 'lucide-react';
+import { X as CloseIcon } from 'lucide-react';
 import { Button, Field, Input, OtpFields } from '@cahyana/ui';
 import SheetPresence from '@/components/ui/SheetPresence';
 import { useAccount } from '@/components/providers/AccountProvider';
 import { createAccountSchema, signInSchema } from '@/lib/schemas';
+
+const COOLDOWN_TICK_MS = 1000;
+const ICON_STROKE_WIDTH_MEDIUM = 1.8;
+const OTP_CODE_LENGTH = 6;
 
 const RESEND_SECONDS = 30;
 const EMPTY_FORM = { name: '', email: '', phone: '' };
@@ -20,30 +24,30 @@ export default function AuthSheet({ open = false, onClose = () => {} }) {
   const [codeEmail, setCodeEmail] = useState('');
   const [code, setCode] = useState('');
   const [errors, setErrors] = useState({});
-  const [busy, setBusy] = useState(false);
-  const [msg, setMsg] = useState('');
+  const [isBusy, setIsBusy] = useState(false);
+  const [message, setMessage] = useState('');
   const [note, setNote] = useState('');
   const [cooldown, setCooldown] = useState(0);
 
   useEffect(() => {
     if (cooldown <= 0) return undefined;
-    const timer = setInterval(() => setCooldown((seconds) => Math.max(0, seconds - 1)), 1000);
+    const timer = setInterval(() => setCooldown((seconds) => Math.max(0, seconds - 1)), COOLDOWN_TICK_MS);
     return () => clearInterval(timer);
   }, [cooldown]);
 
   function set(field) {
-    return (e) => {
-      const { value } = e.target;
+    return (event) => {
+      const { value } = event.target;
       setForm((prev) => ({ ...prev, [field]: value }));
       setErrors((prev) => (prev[field] ? { ...prev, [field]: undefined } : prev));
     };
   }
   function reset() {
     setErrors({});
-    setMsg('');
+    setMessage('');
     setNote('');
   }
-  function close() {
+  function handleClose() {
     reset();
     setForm(EMPTY_FORM);
     setStage('email');
@@ -71,33 +75,33 @@ export default function AuthSheet({ open = false, onClose = () => {} }) {
   }
 
   async function sendCode(email) {
-    setBusy(true);
+    setIsBusy(true);
     const sent = await requestLogin(email);
-    setBusy(false);
+    setIsBusy(false);
     if (!sent) {
-      setMsg('Sorry, we could not send the code. Please try again, or reach us on WhatsApp.');
+      setMessage('Sorry, we could not send the code. Please try again, or reach us on WhatsApp.');
       return;
     }
     reset();
     toCodeStage(email);
   }
 
-  async function doSignIn() {
+  async function handleSignInSubmit() {
     reset();
     const data = check(signInSchema);
     if (!data) return;
     await sendCode(data.email);
   }
 
-  async function doCreate() {
+  async function handleCreateAccountSubmit() {
     reset();
     const data = check(createAccountSchema);
     if (!data) return;
-    setBusy(true);
+    setIsBusy(true);
     const result = await createAccount(data);
-    setBusy(false);
+    setIsBusy(false);
     if (result.ok) {
-      close();
+      handleClose();
       return;
     }
     if (result.signin) {
@@ -105,28 +109,28 @@ export default function AuthSheet({ open = false, onClose = () => {} }) {
       setNote(`You already have an account as ${result.email}.`);
       return;
     }
-    setMsg(result.error || 'Sorry, we could not create your account. Please try again.');
+    setMessage(result.error || 'Sorry, we could not create your account. Please try again.');
   }
 
-  async function doVerify(fullCode) {
+  async function handleCodeComplete(fullCode) {
     reset();
-    setBusy(true);
+    setIsBusy(true);
     const result = await verifyCode(codeEmail, fullCode);
-    setBusy(false);
+    setIsBusy(false);
     if (result.ok) {
-      close();
+      handleClose();
       return;
     }
     setCode('');
-    setMsg(result.error || 'Sorry, something went wrong. Please try again.');
+    setMessage(result.error || 'Sorry, something went wrong. Please try again.');
   }
 
-  async function resend() {
-    if (cooldown > 0 || busy) return;
+  async function handleCodeResend() {
+    if (cooldown > 0 || isBusy) return;
     await sendCode(codeEmail);
   }
 
-  function backToEmail() {
+  function handleEmailReturn() {
     setStage('email');
     setCode('');
     reset();
@@ -144,18 +148,22 @@ export default function AuthSheet({ open = false, onClose = () => {} }) {
   return (
     <SheetPresence
       open={open}
-      onClose={close}
+      onClose={handleClose}
       label={title}
       shell="fixed inset-0 z-[130] flex items-center justify-center p-6 bg-[rgba(0,0,0,0.55)]"
       box="relative w-full max-w-[420px] max-h-[90vh] overflow-y-auto p-8 rounded-md bg-white"
     >
       <button
         type="button"
-        onClick={close}
+        onClick={handleClose}
         aria-label="Close"
         className="absolute top-3 right-4 text-green bg-transparent border-none cursor-pointer"
       >
-        <X className="w-[var(--icon-md)] h-[var(--icon-md)]" strokeWidth={1.8} aria-hidden="true" />
+        <CloseIcon
+          className="w-[var(--icon-md)] h-[var(--icon-md)]"
+          strokeWidth={ICON_STROKE_WIDTH_MEDIUM}
+          aria-hidden="true"
+        />
       </button>
       <h3 className="mb-5 font-body text-h3 text-center font-semibold tracking-normal text-gold">{title}</h3>
 
@@ -166,10 +174,17 @@ export default function AuthSheet({ open = false, onClose = () => {} }) {
               We sent a 6-digit code to <b className="text-green">{codeEmail}</b>. Enter it below - it expires in 10
               minutes.
             </p>
-            <OtpFields value={code} onChange={setCode} onComplete={doVerify} error={!!msg} disabled={busy} autoFocus />
-            {msg && (
+            <OtpFields
+              value={code}
+              onChange={setCode}
+              onComplete={handleCodeComplete}
+              error={!!message}
+              disabled={isBusy}
+              autoFocus
+            />
+            {message && (
               <p role="alert" className="text-label text-err text-center">
-                {msg}
+                {message}
               </p>
             )}
             {note && (
@@ -177,19 +192,19 @@ export default function AuthSheet({ open = false, onClose = () => {} }) {
                 {note}
               </p>
             )}
-            <Button full onClick={() => doVerify(code)} disabled={busy || code.length < 6}>
-              {busy ? 'Checking...' : 'Verify'}
+            <Button full onClick={() => handleCodeComplete(code)} disabled={isBusy || code.length < OTP_CODE_LENGTH}>
+              {isBusy ? 'Checking...' : 'Verify'}
             </Button>
             <p className="text-center text-small text-muted">
               {cooldown > 0 ? (
                 `Resend code in ${cooldown}s`
               ) : (
-                <button type="button" className={LINK_BUTTON} onClick={resend}>
+                <button type="button" className={LINK_BUTTON} onClick={handleCodeResend}>
                   Resend code
                 </button>
               )}
               {' · '}
-              <button type="button" className={LINK_BUTTON} onClick={backToEmail}>
+              <button type="button" className={LINK_BUTTON} onClick={handleEmailReturn}>
                 Change email
               </button>
             </p>
@@ -212,13 +227,13 @@ export default function AuthSheet({ open = false, onClose = () => {} }) {
                 invalid={!!errors.email}
               />
             </Field>
-            {msg && (
+            {message && (
               <p role="alert" className="text-label text-err">
-                {msg}
+                {message}
               </p>
             )}
-            <Button full onClick={doSignIn} disabled={busy}>
-              {busy ? 'Sending...' : 'Send code'}
+            <Button full onClick={handleSignInSubmit} disabled={isBusy}>
+              {isBusy ? 'Sending...' : 'Send code'}
             </Button>
             <p className="text-center text-small text-muted">
               New here?{' '}
@@ -267,13 +282,13 @@ export default function AuthSheet({ open = false, onClose = () => {} }) {
                 invalid={!!errors.phone}
               />
             </Field>
-            {msg && (
+            {message && (
               <p role="alert" className="text-label text-err">
-                {msg}
+                {message}
               </p>
             )}
-            <Button full onClick={doCreate} disabled={busy}>
-              {busy ? 'Creating...' : 'Create account'}
+            <Button full onClick={handleCreateAccountSubmit} disabled={isBusy}>
+              {isBusy ? 'Creating...' : 'Create account'}
             </Button>
             <p className="text-center text-small text-muted">
               Already have an account?{' '}

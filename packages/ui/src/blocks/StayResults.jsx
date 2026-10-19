@@ -31,13 +31,17 @@ export default function StayResults({ items = [], linkAs = 'a', className }) {
     <ul className={cn('grid gap-5 sm:grid-cols-2', className)}>
       {items.map(
         ({ key, image, alt = '', name, meta, status, price, priceNote, note, detailsHref, onReserve, help }) => {
-          const dim = status === 'taken' || status === 'small';
+          const isDimmed = status === 'taken' || status === 'small';
           const line = status === 'small' ? note : STATUS_LINE[status];
           return (
             <li key={key} className="flex flex-col" data-stay={key} data-status={status}>
-              <img src={image} alt={alt} className={cn('w-full aspect-[16/10] object-cover', dim && 'opacity-55')} />
+              <img
+                src={image}
+                alt={alt}
+                className={cn('w-full aspect-[16/10] object-cover', isDimmed && 'opacity-55')}
+              />
               <div className="mt-3 flex items-center justify-between gap-3">
-                <h3 className={cn('text-h3 font-semibold text-gold', dim && 'text-muted')}>{name}</h3>
+                <h3 className={cn('text-h3 font-semibold text-gold', isDimmed && 'text-muted')}>{name}</h3>
                 <StatusTag status={status} />
               </div>
               <p className="text-small text-muted">{meta}</p>

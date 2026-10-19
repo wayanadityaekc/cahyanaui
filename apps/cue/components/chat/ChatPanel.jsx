@@ -7,7 +7,7 @@ import { useAccount } from '@/state/AccountProvider';
 import AuthModal from '@/components/account/AuthModal';
 import { FIELD_INPUT } from '@/components/ui/formClasses';
 import { PANEL_CLOSE } from '@/components/ui/hsClasses';
-import { SUGGESTIONS, CHAT_COPY, wayanIsAround } from '@/content/shared/chat';
+import { SUGGESTIONS, CHAT_COPY, checkIsWayanAround } from '@/content/shared/chat';
 import { readThread, startThread, sendToThread, pollThread, setContact } from '@/lib/chatThread';
 import { openChatSocket } from '@/lib/chatSocket';
 import { answerFor } from '@/lib/chatAnswers';
@@ -49,43 +49,56 @@ import {
   SIGNIN_BTN,
 } from './chatClasses';
 
+const CHAT_POLL_INTERVAL_MS = 5000;
+const INPUT_FOCUS_DELAY_MS = 60;
+const TYPING_NOTIFY_THROTTLE_MS = 2000;
+const ICON_STROKE_WIDTH_LIGHT = 1.6;
+const CHAT_EMAIL_MAX_LENGTH = 200;
+const CHAT_MESSAGE_MAX_LENGTH = 300;
+const ICON_STROKE_WIDTH_MEDIUM = 1.8;
+
 const THINK_MS = 400;
 
 let seq = 0;
-function uid() {
+function createMessageId() {
   return `m${(seq += 1)}`;
 }
 
 export default function ChatPanel({ open, onClose }) {
   const pricing = usePricing();
   const { account, hydrated } = useAccount();
-  const [log, setLog] = useState(() => [{ id: uid(), from: 'bot', text: CHAT_COPY.greeting, chips: SUGGESTIONS }]);
+  const [log, setLog] = useState(() => [
+    { id: createMessageId(), from: 'bot', text: CHAT_COPY.greeting, chips: SUGGESTIONS },
+  ]);
   const [draft, setDraft] = useState('');
-  const [thinking, setThinking] = useState(false);
+  const [isThinking, setIsThinking] = useState(false);
   const bodyRef = useRef(null);
   const inputRef = useRef(null);
 
-  const [authOpen, setAuthOpen] = useState(false);
+  const [isAuthOpen, setIsAuthOpen] = useState(false);
   const greeted = useRef(false);
 
   const [thread, setThread] = useState(null);
-  const [sending, setSending] = useState(false);
+  const [isSending, setIsSending] = useState(false);
   const [mail, setMail] = useState('idle');
   const [mailDraft, setMailDraft] = useState('');
   const [mailErr, setMailErr] = useState('');
-  const [quiet, setQuiet] = useState(false);
+  const [isQuiet, setIsQuiet] = useState(false);
   const lastSeen = useRef(0);
   const heard = useRef(false);
 
-  const [live, setLive] = useState(false);
-  const [ownerHere, setOwnerHere] = useState(false);
+  const [isLive, setIsLive] = useState(false);
+  const [isOwnerPresent, setIsOwnerPresent] = useState(false);
   const [typingUntil, setTypingUntil] = useState(0);
   const sock = useRef(null);
   const seenIds = useRef(new Set());
   const ownerHereRef = useRef(false);
   const lastTyped = useRef(0);
 
-  const ctx = useMemo(() => ({ catalog: pricing && pricing.catalog, lookup: pricing && pricing.lookup }), [pricing]);
+  const pricingContext = useMemo(
+    () => ({ catalog: pricing && pricing.catalog, lookup: pricing && pricing.lookup }),
+    [pricing],
+  );
 
   useEffect(() => {
     const name =
@@ -95,7 +108,12 @@ export default function ChatPanel({ open, onClose }) {
         .split(/\s+/)[0];
     if (!name || greeted.current) return;
     greeted.current = true;
-    const line = { id: uid(), from: 'bot', text: CHAT_COPY.hello.replace('{name}', name), chips: SUGGESTIONS };
+    const line = {
+      id: createMessageId(),
+      from: 'bot',
+      text: CHAT_COPY.hello.replace('{name}', name),
+      chips: SUGGESTIONS,
+    };
     setLog((prev) => (prev.length === 1 && prev[0].from === 'bot' ? [line] : [...prev, line]));
   }, [account]);
 
@@ -105,16 +123,19 @@ export default function ChatPanel({ open, onClose }) {
   }, []);
 
   const takeOwner = useCallback((list) => {
-    const fresh = [];
-    list.forEach((m) => {
-      if (m.id > lastSeen.current) lastSeen.current = m.id;
-      if (m.sender !== 'owner' || seenIds.current.has(m.id)) return;
-      seenIds.current.add(m.id);
-      fresh.push(m);
+    const freshMessages = [];
+    list.forEach((message) => {
+      if (message.id > lastSeen.current) lastSeen.current = message.id;
+      if (message.sender !== 'owner' || seenIds.current.has(message.id)) return;
+      seenIds.current.add(message.id);
+      freshMessages.push(message);
     });
-    if (!fresh.length) return;
+    if (!freshMessages.length) return;
     heard.current = true;
-    setLog((prev) => [...prev, ...fresh.map((m) => ({ id: uid(), from: 'wayan', text: m.body }))]);
+    setLog((prev) => [
+      ...prev,
+      ...freshMessages.map((message) => ({ id: createMessageId(), from: 'wayan', text: message.body })),
+    ]);
   }, []);
 
   const catchUp = useCallback(async () => {
@@ -122,7 +143,10 @@ export default function ChatPanel({ open, onClose }) {
       const { gone, messages } = await pollThread(thread, lastSeen.current);
       if (gone) {
         setThread(null);
-        setLog((prev) => [...prev, { id: uid(), from: 'bot', text: CHAT_COPY.threadGone, chips: SUGGESTIONS }]);
+        setLog((prev) => [
+          ...prev,
+          { id: createMessageId(), from: 'bot', text: CHAT_COPY.threadGone, chips: SUGGESTIONS },
+        ]);
         return;
       }
       takeOwner(messages);
@@ -131,69 +155,70 @@ export default function ChatPanel({ open, onClose }) {
 
   useEffect(() => {
     if (!open || !thread) return undefined;
-    const s = openChatSocket(thread, {
+    const chatSocket = openChatSocket(thread, {
       onOpen: catchUp,
-      onLive: setLive,
-      onPresence: (v) => {
-        ownerHereRef.current = v;
-        setOwnerHere(v);
+      onLive: setIsLive,
+      onPresence: (isPresent) => {
+        ownerHereRef.current = isPresent;
+        setIsOwnerPresent(isPresent);
       },
       onTyping: (durationMs) => setTypingUntil(Date.now() + durationMs),
-      onMessage: (m) => takeOwner([m]),
+      onMessage: (message) => takeOwner([message]),
     });
-    sock.current = s;
+    sock.current = chatSocket;
     return () => {
       sock.current = null;
-      s.close();
+      chatSocket.close();
     };
   }, [open, thread, catchUp, takeOwner]);
 
   useEffect(() => {
-    if (!open || !thread || live) return undefined;
+    const shouldSkipLiveSync = !open || !thread || isLive;
+    if (shouldSkipLiveSync) return undefined;
     catchUp();
-    const t = setInterval(catchUp, 5000);
-    return () => clearInterval(t);
-  }, [open, thread, live, catchUp]);
+    const pollTimer = setInterval(catchUp, CHAT_POLL_INTERVAL_MS);
+    return () => clearInterval(pollTimer);
+  }, [open, thread, isLive, catchUp]);
 
   useEffect(() => {
     if (!open || !thread) return undefined;
-    function onShow() {
+    function handleVisibilityShow() {
       if (document.visibilityState === 'visible') catchUp();
     }
-    document.addEventListener('visibilitychange', onShow);
-    return () => document.removeEventListener('visibilitychange', onShow);
+    document.addEventListener('visibilitychange', handleVisibilityShow);
+    return () => document.removeEventListener('visibilitychange', handleVisibilityShow);
   }, [open, thread, catchUp]);
 
-  const wayanTyping = typingUntil > Date.now();
+  const isWayanTyping = typingUntil > Date.now();
   useEffect(() => {
     const remainingMs = typingUntil - Date.now();
     if (remainingMs <= 0) return undefined;
-    const t = setTimeout(() => setTypingUntil(0), remainingMs);
-    return () => clearTimeout(t);
+    const typingTimer = setTimeout(() => setTypingUntil(0), remainingMs);
+    return () => clearTimeout(typingTimer);
   }, [typingUntil]);
 
   useEffect(() => {
     const body = bodyRef.current;
     if (body) body.scrollTop = body.scrollHeight;
-  }, [log, thinking]);
+  }, [log, isThinking]);
 
   useEffect(() => {
     if (!open) return undefined;
-    const t = setTimeout(() => inputRef.current && inputRef.current.focus(), 60);
-    function onKey(e) {
-      if (e.key === 'Escape' && !authOpen) onClose();
+    const focusTimer = setTimeout(() => inputRef.current && inputRef.current.focus(), INPUT_FOCUS_DELAY_MS);
+    function handleKeyDown(event) {
+      if (event.key === 'Escape' && !isAuthOpen) onClose();
     }
-    document.addEventListener('keydown', onKey);
+    document.addEventListener('keydown', handleKeyDown);
     return () => {
-      clearTimeout(t);
-      document.removeEventListener('keydown', onKey);
+      clearTimeout(focusTimer);
+      document.removeEventListener('keydown', handleKeyDown);
     };
-  }, [open, onClose, authOpen]);
+  }, [open, onClose, isAuthOpen]);
 
   const connect = useCallback(
     async (question) => {
-      if (sending) return;
-      setSending(true);
+      if (isSending) return;
+      setIsSending(true);
       try {
         const id = await startThread({
           question,
@@ -202,52 +227,64 @@ export default function ChatPanel({ open, onClose }) {
           page: typeof window !== 'undefined' ? window.location.pathname : '',
         });
         setThread(id);
+        setLog((prev) => {
+          function pickHoursText() {
+            if (ownerHereRef.current) return CHAT_COPY.hoursHere;
+            if (checkIsWayanAround()) return CHAT_COPY.hoursOpen;
+            return CHAT_COPY.hoursClosed;
+          }
+          return [
+            ...prev,
+            {
+              id: createMessageId(),
+              from: 'bot',
+              text: `${CHAT_COPY.connected} ${pickHoursText()}`,
+            },
+          ];
+        });
+      } catch (e) {
         setLog((prev) => [
           ...prev,
-          {
-            id: uid(),
-            from: 'bot',
-            text: `${CHAT_COPY.connected} ${
-              ownerHereRef.current ? CHAT_COPY.hoursHere : wayanIsAround() ? CHAT_COPY.hoursOpen : CHAT_COPY.hoursClosed
-            }`,
-          },
+          { id: createMessageId(), from: 'bot', text: e.message || 'Could not reach Wayan just now.' },
         ]);
-      } catch (e) {
-        setLog((prev) => [...prev, { id: uid(), from: 'bot', text: e.message || 'Could not reach Wayan just now.' }]);
       }
-      setSending(false);
+      setIsSending(false);
     },
-    [sending, account],
+    [isSending, account],
   );
 
-  const ask = useCallback(
+  const handleQuestionAsk = useCallback(
     (question) => {
       const text = String(question || '').trim();
-      if (!text || thinking || sending) return;
+      const isSendBlocked = !text || isThinking || isSending;
+      if (isSendBlocked) return;
       setDraft('');
-      setLog((prev) => [...prev, { id: uid(), from: 'me', text: text }]);
+      setLog((prev) => [...prev, { id: createMessageId(), from: 'me', text: text }]);
 
       if (thread) {
         sendToThread(thread, text).catch(() => {
-          setLog((prev) => [...prev, { id: uid(), from: 'bot', text: 'That did not send. Try again in a moment.' }]);
+          setLog((prev) => [
+            ...prev,
+            { id: createMessageId(), from: 'bot', text: 'That did not send. Try again in a moment.' },
+          ]);
         });
         return;
       }
 
-      setThinking(true);
+      setIsThinking(true);
 
       setTimeout(() => {
-        const result = answerFor(text, ctx);
-        const msg = { id: uid(), from: 'bot', text: result.text, rows: result.rows, link: result.link };
+        const result = answerFor(text, pricingContext);
+        const message = { id: createMessageId(), from: 'bot', text: result.text, rows: result.rows, link: result.link };
         if (result.kind === 'handoff') {
-          msg.text = CHAT_COPY.connecting;
+          message.text = CHAT_COPY.connecting;
           connect(text);
         }
-        setLog((prev) => [...prev, msg]);
-        setThinking(false);
+        setLog((prev) => [...prev, message]);
+        setIsThinking(false);
       }, THINK_MS);
     },
-    [ctx, thinking, sending, thread, connect],
+    [pricingContext, isThinking, isSending, thread, connect],
   );
 
   useEffect(() => {
@@ -256,36 +293,37 @@ export default function ChatPanel({ open, onClose }) {
       setMail('skip');
       return undefined;
     }
-    if (!wayanIsAround()) {
+    if (!checkIsWayanAround()) {
       setMail('ask');
       return undefined;
     }
-    const t = setTimeout(() => setQuiet(true), CHAT_COPY.quietMs);
-    return () => clearTimeout(t);
+    const quietTimer = setTimeout(() => setIsQuiet(true), CHAT_COPY.quietMs);
+    return () => clearTimeout(quietTimer);
   }, [thread, mail, account]);
 
   useEffect(() => {
-    if (quiet && mail === 'idle' && !heard.current) setMail('ask');
-  }, [quiet, mail]);
+    const shouldAskForEmail = isQuiet && mail === 'idle' && !heard.current;
+    if (shouldAskForEmail) setMail('ask');
+  }, [isQuiet, mail]);
 
-  function onDraft(v) {
-    setDraft(v);
+  function handleDraftChange(draftText) {
+    setDraft(draftText);
     if (!thread || !sock.current) return;
-    const t = Date.now();
-    if (t - lastTyped.current < 2000) return;
-    lastTyped.current = t;
+    const now = Date.now();
+    if (now - lastTyped.current < TYPING_NOTIFY_THROTTLE_MS) return;
+    lastTyped.current = now;
     sock.current.typing();
   }
 
-  async function saveEmail(e) {
-    e.preventDefault();
-    const v = mailDraft.trim();
-    if (!v || !thread) return;
+  async function handleEmailSave(event) {
+    event.preventDefault();
+    const emailAddress = mailDraft.trim();
+    if (!emailAddress || !thread) return;
     setMailErr('');
     try {
-      await setContact(thread, v);
+      await setContact(thread, emailAddress);
       setMail('done');
-      setLog((prev) => [...prev, { id: uid(), from: 'bot', text: CHAT_COPY.emailDone }]);
+      setLog((prev) => [...prev, { id: createMessageId(), from: 'bot', text: CHAT_COPY.emailDone }]);
     } catch (e) {
       setMailErr(e.message || CHAT_COPY.emailBad);
     }
@@ -293,19 +331,19 @@ export default function ChatPanel({ open, onClose }) {
 
   return (
     <>
-      <AuthModal open={authOpen} onClose={() => setAuthOpen(false)} />
+      <AuthModal open={isAuthOpen} onClose={() => setIsAuthOpen(false)} />
       <div className={SCRIM(open)} onClick={onClose} aria-hidden="true" />
       <div
         className={PANEL(open)}
         role="dialog"
-        data-live={live ? '1' : '0'}
+        data-live={isLive ? '1' : '0'}
         aria-label={CHAT_COPY.title}
         aria-modal="false"
         {...(open ? {} : { inert: '' })}
       >
         <div className={HEAD}>
           <span className={HEAD_AVATAR} aria-hidden="true">
-            <MessageCircle strokeWidth={1.6} />
+            <MessageCircle strokeWidth={ICON_STROKE_WIDTH_LIGHT} />
           </span>
           <span className={HEAD_STACK}>
             <span className={HEAD_TITLE}>{CHAT_COPY.title}</span>
@@ -320,42 +358,42 @@ export default function ChatPanel({ open, onClose }) {
           {hydrated && !account && (
             <p className={SIGNIN_BAR}>
               <span className={SIGNIN_TEXT}>{CHAT_COPY.signedOut}</span>
-              <button type="button" className={SIGNIN_BTN} data-cta data-signin onClick={() => setAuthOpen(true)}>
+              <button type="button" className={SIGNIN_BTN} data-cta data-signin onClick={() => setIsAuthOpen(true)}>
                 {CHAT_COPY.signIn}
               </button>
             </p>
           )}
 
-          {log.map((m) => {
-            if (m.from === 'me')
+          {log.map((entry) => {
+            if (entry.from === 'me')
               return (
-                <p key={m.id} className={BUBBLE_ME}>
-                  {m.text}
+                <p key={entry.id} className={BUBBLE_ME}>
+                  {entry.text}
                 </p>
               );
-            if (m.from === 'wayan') {
+            if (entry.from === 'wayan') {
               return (
-                <p key={m.id} className={BUBBLE_WAYAN}>
+                <p key={entry.id} className={BUBBLE_WAYAN}>
                   <small className={WHO}>Wayan</small>
-                  {m.text}
+                  {entry.text}
                 </p>
               );
             }
-            return <BotReply key={m.id} m={m} onAsk={ask} />;
+            return <BotReply key={entry.id} m={entry} onAsk={handleQuestionAsk} />;
           })}
 
           {mail === 'ask' && (
-            <form className={HANDOFF_FORM} onSubmit={saveEmail}>
+            <form className={HANDOFF_FORM} onSubmit={handleEmailSave}>
               <p className={NOTE}>{CHAT_COPY.emailAsk}</p>
               <span className={HANDOFF_ROW}>
                 <input
                   className={FIELD_INPUT}
                   type="email"
                   value={mailDraft}
-                  onChange={(e) => setMailDraft(e.target.value)}
+                  onChange={(event) => setMailDraft(event.target.value)}
                   placeholder={CHAT_COPY.emailField}
                   aria-label={CHAT_COPY.emailField}
-                  maxLength={200}
+                  maxLength={CHAT_EMAIL_MAX_LENGTH}
                 />
               </span>
               {mailErr && <p className={NOTE}>{mailErr}</p>}
@@ -370,7 +408,7 @@ export default function ChatPanel({ open, onClose }) {
             </form>
           )}
 
-          {thinking && (
+          {isThinking && (
             <span className={DOTS} aria-label="Typing">
               <i className={DOT} />
               <i className={DOT} />
@@ -378,7 +416,7 @@ export default function ChatPanel({ open, onClose }) {
             </span>
           )}
 
-          {wayanTyping && (
+          {isWayanTyping && (
             <span className={TYPING_ROW} data-typing aria-live="polite">
               <small className={TYPING_WHO}>{CHAT_COPY.typing}</small>
               <i className={DOT_LIVE(0)} />
@@ -391,34 +429,34 @@ export default function ChatPanel({ open, onClose }) {
         {thread && (
           <p className={CONNECTED}>
             <MessageCircle strokeWidth={2} aria-hidden="true" />
-            {ownerHere ? CHAT_COPY.ownerHere : CHAT_COPY.connectedStrip}
+            {isOwnerPresent ? CHAT_COPY.ownerHere : CHAT_COPY.connectedStrip}
           </p>
         )}
 
         <form
           className={FOOT}
-          onSubmit={(e) => {
-            e.preventDefault();
-            ask(draft);
+          onSubmit={(event) => {
+            event.preventDefault();
+            handleQuestionAsk(draft);
           }}
         >
           <input
             ref={inputRef}
             className={`${FIELD_INPUT} flex-1`}
             value={draft}
-            onChange={(e) => onDraft(e.target.value)}
+            onChange={(event) => handleDraftChange(event.target.value)}
             placeholder={thread ? 'Write to Wayan...' : CHAT_COPY.placeholder}
             aria-label="Your question"
-            maxLength={300}
+            maxLength={CHAT_MESSAGE_MAX_LENGTH}
           />
           <button
             type="submit"
             className={SEND}
             data-cta
-            disabled={!draft.trim() || thinking || sending}
+            disabled={!draft.trim() || isThinking || isSending}
             aria-label="Send"
           >
-            <Send strokeWidth={1.8} aria-hidden="true" />
+            <Send strokeWidth={ICON_STROKE_WIDTH_MEDIUM} aria-hidden="true" />
           </button>
         </form>
       </div>
@@ -426,13 +464,13 @@ export default function ChatPanel({ open, onClose }) {
   );
 }
 
-function BotReply({ m, onAsk }) {
+function BotReply({ m: reply, onAsk }) {
   return (
     <>
-      <p className={BUBBLE_BOT}>{m.text}</p>
+      <p className={BUBBLE_BOT}>{reply.text}</p>
 
-      {m.rows &&
-        m.rows.map((row) => (
+      {reply.rows &&
+        reply.rows.map((row) => (
           <a key={row.label} className={ROW} data-pricerow href={row.href}>
             <span className={ROW_NAME}>
               {row.label}
@@ -442,17 +480,17 @@ function BotReply({ m, onAsk }) {
           </a>
         ))}
 
-      {m.link && (
-        <a className={LINK} data-cta href={m.link.href}>
-          {m.link.label}
+      {reply.link && (
+        <a className={LINK} data-cta href={reply.link.href}>
+          {reply.link.label}
         </a>
       )}
 
-      {m.nudge && <p className={BUBBLE_BOT}>{m.nudge}</p>}
+      {reply.nudge && <p className={BUBBLE_BOT}>{reply.nudge}</p>}
 
-      {m.chips && (
+      {reply.chips && (
         <span className={CHIPS}>
-          {m.chips.map((chip) => (
+          {reply.chips.map((chip) => (
             <button key={chip} type="button" className={CHIP_Q} data-chip onClick={() => onAsk(chip)}>
               {chip}
             </button>

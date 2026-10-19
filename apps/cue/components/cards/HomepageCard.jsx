@@ -2,16 +2,20 @@ import { Clock, Landmark, Leaf, MapPin, Mountain, UserRound, VenetianMask } from
 import Price from '@/components/Price';
 import Rating from '@/components/Rating';
 
+const ICON_STROKE_WIDTH_REGULAR = 1.7;
+const DEFAULT_IMAGE_WIDTH_PX = 600;
+const DEFAULT_IMAGE_HEIGHT_PX = 600;
+
 const PLACEHOLDER_GRADIENT = 'linear-gradient(135deg, rgba(31, 61, 43, 0.92), rgba(46, 90, 64, 0.86))';
 
 function ClockIcon() {
-  return <Clock strokeWidth={1.7} />;
+  return <Clock strokeWidth={ICON_STROKE_WIDTH_REGULAR} />;
 }
 function PinIcon() {
-  return <MapPin strokeWidth={1.7} />;
+  return <MapPin strokeWidth={ICON_STROKE_WIDTH_REGULAR} />;
 }
 function UserIcon() {
-  return <UserRound strokeWidth={1.7} />;
+  return <UserRound strokeWidth={ICON_STROKE_WIDTH_REGULAR} />;
 }
 function LeafIcon() {
   return <Leaf fill="currentColor" aria-hidden="true" />;
@@ -64,7 +68,7 @@ const PRICE_WRAP = 'flex-[0_0_auto] text-right leading-[1.05] whitespace-nowrap 
 export default function HomepageCard({
   href,
   name,
-  img,
+  img: image,
   alt,
   meta,
   metaIcon = 'clock',
@@ -73,20 +77,20 @@ export default function HomepageCard({
   priceMode = 'standard',
   zone,
   cat,
-  width = 600,
-  height = 600,
+  width = DEFAULT_IMAGE_WIDTH_PX,
+  height = DEFAULT_IMAGE_HEIGHT_PX,
 }) {
-  const c = (cat && CATS[cat]) || null;
-  const tone = c ? c.tone : 'gold';
+  const category = (cat && CATS[cat]) || null;
+  const tone = category ? category.tone : 'gold';
   const isTour = metaIcon !== 'pin';
   const catTone = tone === 'green' ? 'bg-[rgba(61,92,70,0.84)]' : 'bg-[rgba(176,141,67,0.86)]';
   const accentTone = tone === 'green' ? 'bg-cta' : 'bg-amber';
   return (
     <a className={FRAME} href={href} data-zone={zone}>
-      {img ? (
+      {image ? (
         <img
           className={IMG}
-          src={`/assets/images/${img}`}
+          src={`/assets/images/${image}`}
           alt={alt || name}
           width={width}
           height={height}
@@ -95,9 +99,9 @@ export default function HomepageCard({
       ) : (
         <div className="absolute inset-0" style={{ backgroundImage: PLACEHOLDER_GRADIENT }} />
       )}
-      {c && (
+      {category && (
         <span className={`${CAT_BASE} ${catTone}`}>
-          <c.Icon />
+          <category.Icon />
           {cat}
         </span>
       )}

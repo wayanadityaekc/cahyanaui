@@ -36,6 +36,6 @@ export const SERVICES = [
   { id: 'scooter-rental', label: 'Scooter Rental', href: '/services/scooter-rental' },
 ];
 
-export function serviceById(id) {
+export function findServiceById(id) {
   return SERVICES.find((service) => service.id === id) || null;
 }

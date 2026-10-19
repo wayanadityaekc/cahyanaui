@@ -1,3 +1,8 @@
+const MILLISECONDS_PER_SECOND = 1000;
+const SECONDS_PER_MINUTE = 60;
+const MINUTES_PER_HOUR = 60;
+const HOURS_PER_DAY = 24;
+
 export const VILLAS = {
   'cahyana-house': {
     slug: 'cahyana-house',
@@ -339,18 +344,20 @@ export const VILLAS = {
 
 export const VILLA_LIST = Object.values(VILLAS);
 
-export function nightsBetween(checkIn, checkOut) {
+export function countNightsBetween(checkIn, checkOut) {
   if (!checkIn || !checkOut) return 0;
   const inDate = new Date(checkIn);
   const outDate = new Date(checkOut);
-  const diff = Math.round((outDate - inDate) / (1000 * 60 * 60 * 24));
+  const diff = Math.round(
+    (outDate - inDate) / (MILLISECONDS_PER_SECOND * SECONDS_PER_MINUTE * MINUTES_PER_HOUR * HOURS_PER_DAY),
+  );
   return diff > 0 ? diff : 0;
 }
 
 export function priceBreakdown(slug, checkIn, checkOut) {
   const villa = VILLAS[slug];
   if (!villa) return null;
-  const nights = nightsBetween(checkIn, checkOut);
+  const nights = countNightsBetween(checkIn, checkOut);
   const nightlyIdr = villa.nightlyRateIdr;
   const subtotalIdr = nightlyIdr * nights;
   return { villa, nights, nightlyIdr, subtotalIdr, totalIdr: subtotalIdr };

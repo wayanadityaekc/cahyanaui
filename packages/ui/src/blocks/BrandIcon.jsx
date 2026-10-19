@@ -1,3 +1,5 @@
+const ICON_STROKE_WIDTH_BOLD = 1.8;
+
 const BRAND_COLOR = { Airbnb: '#FF5A5F', PayPal: '#003087', Booking: '#003580' };
 
 const PATHS = {
@@ -55,7 +57,7 @@ export default function BrandIcon({ name, className = 'block w-[13px] h-[13px]' 
       viewBox="0 0 24 24"
       fill={color || 'none'}
       stroke={color ? 'none' : 'currentColor'}
-      strokeWidth={1.8}
+      strokeWidth={ICON_STROKE_WIDTH_BOLD}
       strokeLinecap="round"
       strokeLinejoin="round"
       aria-hidden="true"

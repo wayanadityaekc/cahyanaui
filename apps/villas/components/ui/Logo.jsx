@@ -1,4 +1,6 @@
-export default function Logo({ size = 30 }) {
+const DEFAULT_LOGO_SIZE_PX = 30;
+
+export default function Logo({ size = DEFAULT_LOGO_SIZE_PX }) {
   return (
     <img
       src="/images/logo.webp"

@@ -14,6 +14,9 @@ import DateTimeField from '@/components/ui/DateTimeField';
 import { FIELD_INPUT } from '@/components/ui/formClasses';
 import { withSymbol } from '@/components/Price';
 
+const MAX_GUESTS_PER_CAR = 5;
+const DATE_STRING_LENGTH = 10;
+
 const GUESTS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 const ROUTE = AIRPORT_ROUTE;
 const DIRECTIONS = [
@@ -37,17 +40,17 @@ export default function AirportTransferForm() {
   const [flightTime, setFlightTime] = useState('');
 
   const catalog = pricing && pricing.catalog;
-  const entry = catalog ? catalog.transfers.find((t) => t.route === ROUTE) : null;
+  const entry = catalog ? catalog.transfers.find((transfer) => transfer.route === ROUTE) : null;
   const symbol = (catalog && catalog.symbol) || '$';
-  const cars = displayGuests > 5 ? 2 : 1;
+  const cars = displayGuests > MAX_GUESTS_PER_CAR ? 2 : 1;
   const total = entry ? entry.display * cars : null;
   const totalText = total == null ? '-' : symbol + total.toLocaleString(currency === 'IDR' ? 'id-ID' : 'en-US');
 
-  const date = flightTime.slice(0, 10);
-  const ready = !!(date && address && flightNumber);
+  const date = flightTime.slice(0, DATE_STRING_LENGTH);
+  const isReady = !!(date && address && flightNumber);
 
-  function book() {
-    if (!ready) return;
+  function handleBook() {
+    if (!isReady) return;
     save({
       ...state,
       transfers: [
@@ -88,7 +91,7 @@ export default function AirportTransferForm() {
           label="Guests"
           value={displayGuests}
           onChange={setGuests}
-          options={GUESTS.map((n) => ({ value: String(n), label: String(n) }))}
+          options={GUESTS.map((guestCount) => ({ value: String(guestCount), label: String(guestCount) }))}
         />
       </div>
 
@@ -102,7 +105,7 @@ export default function AirportTransferForm() {
           id="at-address"
           placeholder="Hotel / villa name and area"
           value={address}
-          onChange={(e) => setAddress(e.target.value)}
+          onChange={(event) => setAddress(event.target.value)}
         />
       </div>
 
@@ -116,7 +119,7 @@ export default function AirportTransferForm() {
           id="at-flight-number"
           placeholder="e.g. QZ7501"
           value={flightNumber}
-          onChange={(e) => setFlightNumber(e.target.value)}
+          onChange={(event) => setFlightNumber(event.target.value)}
         />
       </div>
 
@@ -139,7 +142,7 @@ export default function AirportTransferForm() {
         </span>
       </div>
 
-      <button className={BTN_BOOK} id="at-book" disabled={!ready} onClick={book}>
+      <button className={BTN_BOOK} id="at-book" disabled={!isReady} onClick={handleBook}>
         Book transfer
       </button>
     </div>

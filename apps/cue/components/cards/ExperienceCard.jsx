@@ -5,6 +5,10 @@ import Rating from '@/components/Rating';
 import { PRICE_FROM } from '@/components/ui/priceClasses';
 import { BADGE_POPULAR, CARD_FRAME, CARD_IMG } from '@/components/ui/cardClasses';
 
+const DEFAULT_IMAGE_WIDTH_PX = 600;
+const DEFAULT_IMAGE_HEIGHT_PX = 600;
+const ICON_STROKE_WIDTH_REGULAR = 1.7;
+
 const PLACEHOLDER_GRADIENT = 'linear-gradient(135deg, rgba(31, 61, 43, 0.92), rgba(46, 90, 64, 0.86))';
 
 const IMG_WRAP =
@@ -31,7 +35,7 @@ const INCL =
 export default function ExperienceCard({
   href,
   name,
-  img,
+  img: image,
   alt,
   meta,
   metaIcon = 'clock',
@@ -43,29 +47,33 @@ export default function ExperienceCard({
   program,
   variant = 'link',
   inclText,
-  width = 600,
-  height = 600,
+  width = DEFAULT_IMAGE_WIDTH_PX,
+  height = DEFAULT_IMAGE_HEIGHT_PX,
   children,
 }) {
-  const incl = variant === 'incl';
+  const isIncluded = variant === 'incl';
   const body = (
     <>
-      <div className={IMG_WRAP} style={img ? undefined : { backgroundImage: PLACEHOLDER_GRADIENT }}>
-        {img && (
-          <Img className={CARD_IMG} src={`/assets/images/${img}`} alt={alt || name} width={width} height={height} />
+      <div className={IMG_WRAP} style={image ? undefined : { backgroundImage: PLACEHOLDER_GRADIENT }}>
+        {image && (
+          <Img className={CARD_IMG} src={`/assets/images/${image}`} alt={alt || name} width={width} height={height} />
         )}
         {badge && <span className={BADGE_POPULAR}>{badge}</span>}
       </div>
-      <div className={incl ? BODY_INCL : BODY}>
+      <div className={isIncluded ? BODY_INCL : BODY}>
         <h3 className={NAME}>{name}</h3>
-        {!incl && priceName && <Rating name={priceName} className={RATING} />}
+        {!isIncluded && priceName && <Rating name={priceName} className={RATING} />}
         {meta && (
           <div className={META}>
-            {metaIcon === 'pin' ? <MapPin strokeWidth={1.7} /> : <Clock strokeWidth={1.7} />}
+            {metaIcon === 'pin' ? (
+              <MapPin strokeWidth={ICON_STROKE_WIDTH_REGULAR} />
+            ) : (
+              <Clock strokeWidth={ICON_STROKE_WIDTH_REGULAR} />
+            )}
             <span>{meta}</span>
           </div>
         )}
-        {incl && inclText && (
+        {isIncluded && inclText && (
           <div className={INCL}>
             {inclText.split('|')[0]}
             <strong>{inclText.split('|')[1]}</strong>

@@ -28,9 +28,14 @@ import {
   CHEV,
 } from './controlClasses.js';
 
+const MILLISECONDS_PER_DAY = 86400000;
+const MAX_DAYS_AHEAD = 365;
+const DAYS_PER_WEEK = 7;
+const ICON_STROKE_WIDTH_BOLD = 1.8;
+
 const DOW = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
-function panelRange(open) {
+function buildRangePanelClasses(open) {
   return `fixed z-[340] flex flex-col overflow-hidden bg-surface-raised [overscroll-behavior:contain] inset-x-[2%] top-1/2 max-h-[80%] rounded-xl [border:1px_solid_var(--line)] [box-shadow:var(--shadow-xl)] [transition:opacity_0.24s_var(--ease),transform_0.24s_var(--ease),visibility_0.24s] min-[769px]:inset-auto min-[769px]:max-h-none min-[769px]:top-1/2 min-[769px]:left-1/2 min-[769px]:w-[min(1040px,94vw)] min-[769px]:h-[min(92vh,860px)] min-[769px]:rounded-xl min-[769px]:[border:1px_solid_var(--line)] min-[769px]:[box-shadow:var(--shadow-xl)] ${
     open
       ? 'opacity-100 visible pointer-events-auto [transform:translateY(-50%)] min-[769px]:[transform:translate(-50%,-50%)]'
@@ -44,18 +49,16 @@ const RANGE_TITLE = 'm-0 font-body font-semibold text-[1.15rem] text-gold';
 const RANGE_ARROW =
   'w-9 h-9 inline-flex items-center justify-center rounded-base [border:1px_solid_var(--line)] bg-surface-raised text-gold cursor-pointer hover:bg-cream';
 const RANGE_DOW = 'font-body font-medium text-small text-muted text-center py-2';
-function rangeDay(off, state, faded) {
-  return `aspect-square flex items-center justify-center font-body text-[1rem] border-none ${
-    state === 'start' || state === 'end'
-      ? 'rounded-base bg-gold text-white font-semibold cursor-pointer'
-      : state === 'in'
-        ? 'rounded-base bg-cream text-ink cursor-pointer'
-        : faded
-          ? 'rounded-base bg-transparent text-[#d9d6ce] cursor-default'
-          : off
-            ? 'rounded-base bg-transparent text-[#cfccc4] cursor-default'
-            : 'rounded-base bg-transparent text-ink cursor-pointer hover:bg-cream'
-  }`;
+function buildRangeDayClasses(off, state, faded) {
+  function pickDayClasses() {
+    if (state === 'start' || state === 'end') return 'rounded-base bg-gold text-white font-semibold cursor-pointer';
+    if (state === 'in') return 'rounded-base bg-cream text-ink cursor-pointer';
+    if (faded) return 'rounded-base bg-transparent text-[#d9d6ce] cursor-default';
+    if (off) return 'rounded-base bg-transparent text-[#cfccc4] cursor-default';
+    return 'rounded-base bg-transparent text-ink cursor-pointer hover:bg-cream';
+  }
+
+  return `aspect-square flex items-center justify-center font-body text-[1rem] border-none ${pickDayClasses()}`;
 }
 const MONTHS = [
   'January',
@@ -72,19 +75,19 @@ const MONTHS = [
   'December',
 ];
 
-function iso(d) {
-  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+function formatIsoDate(date) {
+  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
 }
 
-function fmt(v) {
-  if (!v) return '';
-  const [y, m, d] = v.split('-').map(Number);
-  return new Date(y, m - 1, d).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
+function formatDateLabel(isoDate) {
+  if (!isoDate) return '';
+  const [year, month, day] = isoDate.split('-').map(Number);
+  return new Date(year, month - 1, day).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
 }
 
-function nightsBetween(a, b) {
-  if (!a || !b) return 0;
-  return Math.round((new Date(b) - new Date(a)) / 86400000);
+function countNightsBetween(startDate, endDate) {
+  if (!startDate || !endDate) return 0;
+  return Math.round((new Date(endDate) - new Date(startDate)) / MILLISECONDS_PER_DAY);
 }
 
 export default function DateRangeField({
@@ -100,105 +103,120 @@ export default function DateRangeField({
   icon = null,
   busy = [],
   minNights = 1,
-  maxDaysAhead = 365,
+  maxDaysAhead = MAX_DAYS_AHEAD,
 }) {
   const { checkIn = '', checkOut = '' } = value || {};
-  const [open, setOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
   const [editing, setEditing] = useState('start');
-  const [mounted, setMounted] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
   const [cursor, setCursor] = useState(() => {
     const base = checkIn ? new Date(checkIn) : new Date();
     return new Date(base.getFullYear(), base.getMonth(), 1);
   });
 
-  useEffect(() => setMounted(true), []);
+  useEffect(() => setIsMounted(true), []);
   useEffect(() => {
-    if (!open) return undefined;
-    function onKey(e) {
-      return e.key === 'Escape' && setOpen(false);
+    if (!isOpen) return undefined;
+    function handleEscapeKeyDown(event) {
+      return event.key === 'Escape' && setIsOpen(false);
     }
-    document.addEventListener('keydown', onKey);
-    return () => document.removeEventListener('keydown', onKey);
-  }, [open]);
+    document.addEventListener('keydown', handleEscapeKeyDown);
+    return () => document.removeEventListener('keydown', handleEscapeKeyDown);
+  }, [isOpen]);
 
-  const minDate = min || iso(new Date());
+  const minDate = min || formatIsoDate(new Date());
   const limits = stayLimits({ today: minDate, minNights, maxDaysAhead });
-  const choosingEnd = editing === 'end' && !!checkIn;
-  const nights = nightsBetween(checkIn, checkOut);
-  const single = !!(hint || icon);
-  const rangeLabel = !checkIn
-    ? placeholders.start
-    : !checkOut
-      ? `${fmt(checkIn)} - add check-out`
-      : `${fmt(checkIn)} - ${fmt(checkOut)} · ${nights} ${nights === 1 ? 'night' : 'nights'}`;
+  const isChoosingEnd = editing === 'end' && !!checkIn;
+  const nights = countNightsBetween(checkIn, checkOut);
+  const hasIconOrHint = !!(hint || icon);
+  function buildDateRangeLabel() {
+    if (!checkIn) return placeholders.start;
+    if (!checkOut) return `${formatDateLabel(checkIn)} - add check-out`;
+    return `${formatDateLabel(checkIn)} - ${formatDateLabel(checkOut)} · ${nights} ${nights === 1 ? 'night' : 'nights'}`;
+  }
 
-  function monthCells(base) {
+  const rangeLabel = buildDateRangeLabel();
+
+  function buildMonthCells(base) {
     const first = new Date(base.getFullYear(), base.getMonth(), 1);
     const days = new Date(base.getFullYear(), base.getMonth() + 1, 0).getDate();
     const lead = first.getDay();
-    const out = [];
-    for (let i = lead; i > 0; i--)
-      out.push({ date: new Date(base.getFullYear(), base.getMonth(), 1 - i), faded: true });
-    for (let d = 1; d <= days; d++) out.push({ date: new Date(base.getFullYear(), base.getMonth(), d), faded: false });
-    while (out.length % 7)
-      out.push({
-        date: new Date(base.getFullYear(), base.getMonth(), days + (out.length - lead - days + 1)),
+    const cells = [
+      ...Array.from({ length: lead }, (_, blankIndex) => ({
+        date: new Date(base.getFullYear(), base.getMonth(), 1 - (lead - blankIndex)),
+        faded: true,
+      })),
+      ...Array.from({ length: days }, (_, dayIndex) => ({
+        date: new Date(base.getFullYear(), base.getMonth(), dayIndex + 1),
+        faded: false,
+      })),
+    ];
+    while (cells.length % DAYS_PER_WEEK)
+      cells.push({
+        date: new Date(base.getFullYear(), base.getMonth(), days + (cells.length - lead - days + 1)),
         faded: true,
       });
-    return out;
+    return cells;
   }
   const months = [cursor, new Date(cursor.getFullYear(), cursor.getMonth() + 1, 1)];
 
-  function stateOf(v) {
-    if (checkIn && v === checkIn) return 'start';
-    if (checkOut && v === checkOut) return 'end';
-    if (checkIn && checkOut && v > checkIn && v < checkOut) return 'in';
+  function findDayState(isoDate) {
+    if (checkIn && isoDate === checkIn) return 'start';
+    if (checkOut && isoDate === checkOut) return 'end';
+    const isDateInsideRange = checkIn && checkOut && isoDate > checkIn && isoDate < checkOut;
+    if (isDateInsideRange) return 'in';
     return null;
   }
 
-  function selectable(v) {
-    if (choosingEnd) return v > checkIn ? canCheckOut(v, checkIn, { busy, limits }) : canCheckIn(v, { busy, limits });
-    return canCheckIn(v, { busy, limits });
+  function isDaySelectable(isoDate) {
+    if (isChoosingEnd)
+      return isoDate > checkIn
+        ? canCheckOut(isoDate, checkIn, { busy, limits })
+        : canCheckIn(isoDate, { busy, limits });
+    return canCheckIn(isoDate, { busy, limits });
   }
 
-  function pick(v) {
-    if (choosingEnd && canCheckOut(v, checkIn, { busy, limits })) {
-      onChange({ checkIn, checkOut: v });
+  function pick(isoDate) {
+    if (isChoosingEnd && canCheckOut(isoDate, checkIn, { busy, limits })) {
+      onChange({ checkIn, checkOut: isoDate });
       setEditing('start');
-      setOpen(false);
+      setIsOpen(false);
       return;
     }
-    if ((choosingEnd && v > checkIn) || !canCheckIn(v, { busy, limits })) return;
-    onChange({ checkIn: v, checkOut: '' });
+    const isDateUnavailable = (isChoosingEnd && isoDate > checkIn) || !canCheckIn(isoDate, { busy, limits });
+    if (isDateUnavailable) return;
+    onChange({ checkIn: isoDate, checkOut: '' });
     setEditing('end');
   }
 
   function openAt(which) {
     setEditing(which);
-    setOpen(true);
+    setIsOpen(true);
   }
 
-  function trigger(which, label, val, placeholder) {
+  function trigger(which, label, dateValue, placeholder) {
     return (
       <button
         type="button"
         className={CONTROL}
         aria-haspopup="dialog"
-        aria-expanded={open && editing === which}
+        aria-expanded={isOpen && editing === which}
         aria-label={label}
         onClick={() => openAt(which)}
       >
-        <span className={val ? CONTROL_VAL : CONTROL_VAL_PLACEHOLDER}>{val ? fmt(val) : placeholder}</span>
-        <Calendar className={CHEV_CAL} strokeWidth={1.8} aria-hidden="true" />
+        <span className={dateValue ? CONTROL_VAL : CONTROL_VAL_PLACEHOLDER}>
+          {dateValue ? formatDateLabel(dateValue) : placeholder}
+        </span>
+        <Calendar className={CHEV_CAL} strokeWidth={ICON_STROKE_WIDTH_BOLD} aria-hidden="true" />
       </button>
     );
   }
 
   const panel = (
-    <div className={panelRange(open)}>
+    <div className={buildRangePanelClasses(isOpen)}>
       <div className={PANEL_HEAD_RANGE}>
         <h3 className={PANEL_HEAD_H3}>{editing === 'end' && checkIn ? labels.end : labels.start}</h3>
-        <button type="button" className={PANEL_CLOSE} aria-label="Close" onClick={() => setOpen(false)}>
+        <button type="button" className={PANEL_CLOSE} aria-label="Close" onClick={() => setIsOpen(false)}>
           &times;
         </button>
       </div>
@@ -238,25 +256,25 @@ export default function DateRangeField({
                       {day}
                     </span>
                   ))}
-                  {monthCells(base).map(({ date, faded }) => {
-                    const v = iso(date);
+                  {buildMonthCells(base).map(({ date, faded }) => {
+                    const isoDate = formatIsoDate(date);
                     if (faded)
                       return (
-                        <span className={rangeDay(true, null, true)} key={`f${v}`}>
+                        <span className={buildRangeDayClasses(true, null, true)} key={`f${isoDate}`}>
                           {date.getDate()}
                         </span>
                       );
-                    const st = stateOf(v);
-                    const disabled = !st && !selectable(v);
-                    const booked = disabled && isBookedNight(busy, v);
+                    const st = findDayState(isoDate);
+                    const isDisabled = !st && !isDaySelectable(isoDate);
+                    const booked = isDisabled && isBookedNight(busy, isoDate);
                     return (
                       <button
                         type="button"
-                        key={v}
-                        className={`${rangeDay(disabled, st, false)}${booked ? ' line-through' : ''}`}
+                        key={isoDate}
+                        className={`${buildRangeDayClasses(isDisabled, st, false)}${booked ? ' line-through' : ''}`}
                         aria-pressed={st === 'start' || st === 'end'}
-                        disabled={disabled}
-                        onClick={() => pick(v)}
+                        disabled={isDisabled}
+                        onClick={() => pick(isoDate)}
                       >
                         {date.getDate()}
                       </button>
@@ -272,7 +290,7 @@ export default function DateRangeField({
         <span className="text-small text-muted">
           {nights > 0 ? `${nights} ${nights === 1 ? 'night' : 'nights'}` : 'Pick your dates'}
         </span>
-        <Button variant="ghost" onClick={() => setOpen(false)}>
+        <Button variant="ghost" onClick={() => setIsOpen(false)}>
           Done
         </Button>
       </div>
@@ -288,7 +306,7 @@ export default function DateRangeField({
         id={id}
         value={checkIn}
         min={minDate}
-        onChange={(e) => onChange({ checkIn: e.target.value, checkOut })}
+        onChange={(event) => onChange({ checkIn: event.target.value, checkOut })}
         tabIndex={-1}
         aria-hidden="true"
       />
@@ -298,17 +316,17 @@ export default function DateRangeField({
         name={name && `${name}-out`}
         value={checkOut}
         min={checkIn || minDate}
-        onChange={(e) => onChange({ checkIn, checkOut: e.target.value })}
+        onChange={(event) => onChange({ checkIn, checkOut: event.target.value })}
         tabIndex={-1}
         aria-hidden="true"
       />
 
-      {single ? (
+      {hasIconOrHint ? (
         <button
           type="button"
           className={CONTROL_RICH}
           aria-haspopup="dialog"
-          aria-expanded={open}
+          aria-expanded={isOpen}
           aria-label={hint || panelLabel}
           onClick={() => openAt(checkIn && !checkOut ? 'end' : 'start')}
         >
@@ -321,7 +339,7 @@ export default function DateRangeField({
             {hint ? <span className={CONTROL_HINT}>{hint}</span> : null}
             <span className={checkIn ? CONTROL_VAL_RICH : CONTROL_VAL_RICH_PLACEHOLDER}>{rangeLabel}</span>
           </span>
-          <Calendar className={CHEV} strokeWidth={1.8} aria-hidden="true" />
+          <Calendar className={CHEV} strokeWidth={ICON_STROKE_WIDTH_BOLD} aria-hidden="true" />
         </button>
       ) : (
         <div className={RANGE_ROW}>
@@ -330,8 +348,8 @@ export default function DateRangeField({
         </div>
       )}
 
-      {mounted && createPortal(panel, document.body)}
-      {mounted && <Overlay open={open} onClose={() => setOpen(false)} />}
+      {isMounted && createPortal(panel, document.body)}
+      {isMounted && <Overlay open={isOpen} onClose={() => setIsOpen(false)} />}
     </div>
   );
 }

@@ -5,24 +5,24 @@ import { ChevronDown } from 'lucide-react';
 import { useTripPrefs } from '@/state/TripPrefsProvider';
 import { CURRENCIES } from '@/lib/constants';
 
-function wrap(v) {
-  return `relative${v === 'navbar' ? ' ml-auto flex-none' : ''}`;
+function wrap(variant) {
+  return `relative${variant === 'navbar' ? ' ml-auto flex-none' : ''}`;
 }
 const CURBTN_BASE = 'flex items-center gap-[0.45rem] w-full bg-white font-body text-field text-green cursor-pointer';
-function curbtn(v) {
-  return v === 'hero'
+function buildCurrencyButtonClass(variant) {
+  return variant === 'hero'
     ? `${CURBTN_BASE} py-0 px-3 h-[var(--field-h)] rounded-md font-normal [border:1px_solid_var(--line)] hover:[border-color:var(--color-gold)]`
     : `${CURBTN_BASE} py-0 px-3 h-[var(--field-h)] rounded-md font-semibold [border:1px_solid_var(--line)]`;
 }
 const CURCODE = 'flex-[1_1_auto] text-left';
 const CURCARET =
   'w-[14px] h-[14px] text-muted flex-none [transition:transform_var(--dur-fast)_ease] [[aria-expanded=true]_&]:[transform:rotate(180deg)]';
-function curlist(v, open) {
+function buildCurrencyListClass(variant, open) {
   return (
     `absolute left-0 right-0 mt-1 mx-0 mb-0 p-1 list-none bg-white [border:1px_solid_var(--line)] z-10 max-h-[15rem] overflow-y-auto overscroll-contain ` +
     `transition-[opacity,transform] duration-[var(--dur)] ease-[var(--ease-out)] motion-reduce:transition-none ` +
     `${open ? 'opacity-100 visible pointer-events-auto [transform:translateY(0)]' : 'opacity-0 invisible pointer-events-none [transform:translateY(-4px)]'} ` +
-    `${v === 'hero' ? 'rounded-md' : 'rounded-sm'}`
+    `${variant === 'hero' ? 'rounded-md' : 'rounded-sm'}`
   );
 }
 const CUROPT =
@@ -42,46 +42,46 @@ function Flag({ code }) {
 
 export default function CurrencyPicker({ variant = 'default', id = 'acct-cur' }) {
   const { currency, setCurrency } = useTripPrefs();
-  const [open, setOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
   const ref = useRef(null);
 
   useEffect(() => {
-    if (!open) return;
-    function onDoc(e) {
-      if (ref.current && !ref.current.contains(e.target)) setOpen(false);
+    if (!isOpen) return;
+    function handleDocumentClick(event) {
+      if (ref.current && !ref.current.contains(event.target)) setIsOpen(false);
     }
-    document.addEventListener('click', onDoc);
-    return () => document.removeEventListener('click', onDoc);
-  }, [open]);
+    document.addEventListener('click', handleDocumentClick);
+    return () => document.removeEventListener('click', handleDocumentClick);
+  }, [isOpen]);
 
   return (
     <div className={wrap(variant)} data-cur ref={ref}>
       <button
         type="button"
-        className={curbtn(variant)}
+        className={buildCurrencyButtonClass(variant)}
         id={id}
         aria-haspopup="listbox"
-        aria-expanded={open}
-        onClick={() => setOpen((v) => !v)}
+        aria-expanded={isOpen}
+        onClick={() => setIsOpen((wasOpen) => !wasOpen)}
       >
         <Flag code={currency} />
         <span className={CURCODE}>{currency}</span>
         <ChevronDown className={CURCARET} aria-hidden="true" />
       </button>
-      <ul className={curlist(variant, open)} role="listbox" aria-label="Currency">
-        {CURRENCIES.map((c) => (
+      <ul className={buildCurrencyListClass(variant, isOpen)} role="listbox" aria-label="Currency">
+        {CURRENCIES.map((currencyItem) => (
           <li
-            key={c}
+            key={currencyItem}
             className={CUROPT}
             role="option"
-            aria-selected={c === currency}
+            aria-selected={currencyItem === currency}
             onClick={() => {
-              setCurrency(c);
-              setOpen(false);
+              setCurrency(currencyItem);
+              setIsOpen(false);
             }}
           >
-            <Flag code={c} />
-            {c}
+            <Flag code={currencyItem} />
+            {currencyItem}
           </li>
         ))}
       </ul>

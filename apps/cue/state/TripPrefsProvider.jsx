@@ -4,6 +4,8 @@ import { createContext, useContext, useEffect, useState } from 'react';
 import { readLocal, writeLocal, removeLocal } from '@/lib/storage';
 import { KEY, CURRENCIES, DISPLAY_GUESTS, DEFAULT_CURRENCY } from '@/lib/constants';
 
+const RADIX_DECIMAL = 10;
+
 const TripPrefsContext = createContext(null);
 
 export function TripPrefsProvider({ children }) {
@@ -12,28 +14,28 @@ export function TripPrefsProvider({ children }) {
   const [stay, setStayState] = useState('');
   const [dateFrom, setDateFromState] = useState('');
   const [dateTo, setDateToState] = useState('');
-  const [hydrated, setHydrated] = useState(false);
+  const [isHydrated, setIsHydrated] = useState(false);
 
   useEffect(() => {
-    const cur = readLocal(KEY.currency, DEFAULT_CURRENCY);
-    setCurrencyState(CURRENCIES.includes(cur) ? cur : DEFAULT_CURRENCY);
-    setGuestsState(parseInt(readLocal(KEY.guests, '0'), 10) || 0);
+    const current = readLocal(KEY.currency, DEFAULT_CURRENCY);
+    setCurrencyState(CURRENCIES.includes(current) ? current : DEFAULT_CURRENCY);
+    setGuestsState(parseInt(readLocal(KEY.guests, '0'), RADIX_DECIMAL) || 0);
     setStayState(readLocal(KEY.stay, '') || '');
     setDateFromState(readLocal(KEY.dateFrom, '') || '');
     setDateToState(readLocal(KEY.dateTo, '') || '');
-    setHydrated(true);
+    setIsHydrated(true);
   }, []);
 
-  function setCurrency(cur) {
-    if (!CURRENCIES.includes(cur)) return;
-    setCurrencyState(cur);
-    writeLocal(KEY.currency, cur);
+  function setCurrency(current) {
+    if (!CURRENCIES.includes(current)) return;
+    setCurrencyState(current);
+    writeLocal(KEY.currency, current);
   }
 
-  function setGuests(n) {
-    const v = parseInt(n, 10) || 0;
-    setGuestsState(v);
-    if (v) writeLocal(KEY.guests, String(v));
+  function setGuests(guestCount) {
+    const parsedGuests = parseInt(guestCount, RADIX_DECIMAL) || 0;
+    setGuestsState(parsedGuests);
+    if (parsedGuests) writeLocal(KEY.guests, String(parsedGuests));
     else removeLocal(KEY.guests);
   }
 
@@ -43,9 +45,9 @@ export function TripPrefsProvider({ children }) {
   }
 
   function setStay(pk) {
-    const v = pk && pk !== 'ubud' ? pk : '';
-    setStayState(v);
-    if (v) writeLocal(KEY.stay, v);
+    const pickupArea = pk && pk !== 'ubud' ? pk : '';
+    setStayState(pickupArea);
+    if (pickupArea) writeLocal(KEY.stay, pickupArea);
     else removeLocal(KEY.stay);
   }
 
@@ -72,7 +74,7 @@ export function TripPrefsProvider({ children }) {
         dateFrom,
         dateTo,
         setDateRange,
-        hydrated,
+        hydrated: isHydrated,
       }}
     >
       {children}
@@ -81,7 +83,7 @@ export function TripPrefsProvider({ children }) {
 }
 
 export function useTripPrefs() {
-  const ctx = useContext(TripPrefsContext);
-  if (!ctx) throw new Error('useTripPrefs must be used inside TripPrefsProvider');
-  return ctx;
+  const tripPrefsContext = useContext(TripPrefsContext);
+  if (!tripPrefsContext) throw new Error('useTripPrefs must be used inside TripPrefsProvider');
+  return tripPrefsContext;
 }

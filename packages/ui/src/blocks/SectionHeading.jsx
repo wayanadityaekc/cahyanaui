@@ -37,19 +37,21 @@ export default function SectionHeading({
 }) {
   const isSection = size === 'section';
   const centered = align ? align === 'center' : isSection;
-  const t = (isSection ? SECTION_TONES : TONES)[tone] || TONES.light;
+  const toneClasses = (isSection ? SECTION_TONES : TONES)[tone] || TONES.light;
   return (
     <div className={cn(centered && 'text-center', className)} {...rest}>
       {eyebrow ? (
-        <p className={cn(upper ? EYEBROW_UPPER : EYEBROW_LINE, isSection && '!mb-2', t.eyebrow)}>{eyebrow}</p>
+        <p className={cn(upper ? EYEBROW_UPPER : EYEBROW_LINE, isSection && '!mb-2', toneClasses.eyebrow)}>{eyebrow}</p>
       ) : null}
-      <Tag className={cn(SIZES[size] || SIZES.h2, 'leading-[var(--lh-heading)]', t.title, titleClassName)}>{title}</Tag>
+      <Tag className={cn(SIZES[size] || SIZES.h2, 'leading-[var(--lh-heading)]', toneClasses.title, titleClassName)}>
+        {title}
+      </Tag>
       {lede ? (
         <p
           className={cn(
             isSection ? 'mt-3 max-w-[60ch] text-strong leading-[1.6]' : 'mt-2 text-small leading-[1.45]',
             isSection && centered && 'mx-auto',
-            t.lede,
+            toneClasses.lede,
             ledeClassName,
           )}
         >

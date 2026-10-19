@@ -1,5 +1,5 @@
 import { SECTION_TITLE, SECTION_TITLE_SUB, ST_LEFT } from '@/components/ui/sectionTitle';
-import { infoList } from '@/components/ui/infoClasses';
+import { pickInfoListClasses } from '@/components/ui/infoClasses';
 import InfoBoxes, { InfoBox, InfoBoxList } from '@/components/ui/InfoBoxes';
 import LoadFallback from '@/components/ui/LoadFallback';
 
@@ -11,19 +11,19 @@ const SUB_VARIANT = {
 
 export default function Prose({ blocks = [], headingVariant = 'legal' }) {
   if (!blocks.length) return <LoadFallback />;
-  return blocks.map((block, i) => {
+  return blocks.map((block, index) => {
     if (block.type === 'crumb') {
       return (
         <p
           className="text-label text-muted mb-[1.25rem] [&_a]:text-gold [&_a]:no-underline [&_a]:font-medium"
-          key={i}
+          key={index}
           dangerouslySetInnerHTML={{ __html: String(block.html) }}
         />
       );
     }
     if (block.type === 'lead') {
       return (
-        <figure className="mb-6" key={i}>
+        <figure className="mb-6" key={index}>
           <img
             className="block w-full h-auto aspect-[4/3] object-cover"
             src={block.src}
@@ -41,32 +41,32 @@ export default function Prose({ blocks = [], headingVariant = 'legal' }) {
     }
     if (block.type === 'heading') {
       return block.sub === false ? (
-        <h2 className={SECTION_TITLE} key={i} dangerouslySetInnerHTML={{ __html: String(block.html) }} />
+        <h2 className={SECTION_TITLE} key={index} dangerouslySetInnerHTML={{ __html: String(block.html) }} />
       ) : (
         <h2
           className={SUB_VARIANT[headingVariant] || SUB_VARIANT.legal}
-          key={i}
+          key={index}
           dangerouslySetInnerHTML={{ __html: String(block.html) }}
         />
       );
     }
     if (block.type === 'para') {
-      return <p key={i} dangerouslySetInnerHTML={{ __html: String(block.html) }} />;
+      return <p key={index} dangerouslySetInnerHTML={{ __html: String(block.html) }} />;
     }
     if (block.type === 'list') {
       return (
-        <ul className={infoList(block.variant)} key={i}>
-          {block.items.map((item, j) => (
-            <li key={j} dangerouslySetInnerHTML={{ __html: String(item) }} />
+        <ul className={pickInfoListClasses(block.variant)} key={index}>
+          {block.items.map((item, itemIndex) => (
+            <li key={itemIndex} dangerouslySetInnerHTML={{ __html: String(item) }} />
           ))}
         </ul>
       );
     }
     if (block.type === 'boxes') {
       return (
-        <InfoBoxes key={i}>
-          {block.items.map((box, k) => (
-            <InfoBox key={k} title={box.title} variant={box.variant}>
+        <InfoBoxes key={index}>
+          {block.items.map((box, boxIndex) => (
+            <InfoBox key={boxIndex} title={box.title} variant={box.variant}>
               {(box.paras || []).map((html, paraIndex) => (
                 <p key={paraIndex} dangerouslySetInnerHTML={{ __html: String(html) }} />
               ))}
@@ -87,7 +87,7 @@ export default function Prose({ blocks = [], headingVariant = 'legal' }) {
         <p
           style={{ marginTop: '2rem' }}
           className="[&_a]:text-gold [&_a]:no-underline [&_a]:font-medium"
-          key={i}
+          key={index}
           dangerouslySetInnerHTML={{ __html: String(block.html) }}
         />
       );

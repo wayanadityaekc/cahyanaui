@@ -3,9 +3,12 @@
 import { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { Button } from '@cahyana/ui';
-import { API_BASE, TOKEN_KEY, whatsappLink } from '@/lib/constants';
+import { API_BASE, TOKEN_KEY, buildWhatsappLink } from '@/lib/constants';
 import { VILLA_LIST } from '@/lib/villas';
 import useBodyLock from '@/components/ui/useBodyLock';
+
+const HTTP_STATUS_UNAUTHORIZED = 401;
+const HTTP_STATUS_NOT_FOUND = 404;
 
 const POLL_MS = 4000;
 const GIVE_UP_MS = 120000;
@@ -59,11 +62,11 @@ function readToken() {
 export default function PayWaiting({ bookingRef = '', onClose = () => {}, onConfirmed = null }) {
   const [phase, setPhase] = useState('waiting');
   const [slide, setSlide] = useState(0);
-  const [mounted, setMounted] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
   const timer = useRef(null);
   const photos = VILLA_LIST.map((villa) => ({ src: villa.cardImg, alt: villa.name }));
 
-  useEffect(() => setMounted(true), []);
+  useEffect(() => setIsMounted(true), []);
   useBodyLock(true);
 
   useEffect(() => {
@@ -87,7 +90,7 @@ export default function PayWaiting({ bookingRef = '', onClose = () => {}, onConf
           headers: { Authorization: `Bearer ${token}` },
         });
         if (stop) return;
-        if (response.status === 401 || response.status === 404) {
+        if (response.status === HTTP_STATUS_UNAUTHORIZED || response.status === HTTP_STATUS_NOT_FOUND) {
           setPhase('blind');
           return;
         }
@@ -117,8 +120,8 @@ export default function PayWaiting({ bookingRef = '', onClose = () => {}, onConf
     };
   }, [bookingRef, onConfirmed]);
 
-  if (!mounted) return null;
-  const waiting = phase === 'waiting';
+  if (!isMounted) return null;
+  const isWaiting = phase === 'waiting';
   const copy = COPY[phase];
 
   return createPortal(
@@ -141,7 +144,7 @@ export default function PayWaiting({ bookingRef = '', onClose = () => {}, onConf
       ))}
       <div className="absolute inset-0 bg-[rgba(20,19,16,0.62)]" />
       <div className="relative z-10 flex flex-col items-center justify-center h-full px-[var(--container-x)] text-center">
-        {waiting && (
+        {isWaiting && (
           <span
             className="w-[26px] h-[26px] mb-5 rounded-[50%] border-[3px] border-solid border-[rgba(255,255,255,0.28)] border-t-white animate-[spin_0.7s_linear_infinite]"
             aria-hidden="true"
@@ -160,7 +163,7 @@ export default function PayWaiting({ bookingRef = '', onClose = () => {}, onConf
             Booking {bookingRef}
           </p>
         )}
-        {!waiting && (
+        {!isWaiting && (
           <div className="w-full max-w-[320px] mt-6 flex flex-col gap-2">
             <Button full onClick={onClose}>
               Done
@@ -170,7 +173,7 @@ export default function PayWaiting({ bookingRef = '', onClose = () => {}, onConf
                 as="a"
                 full
                 variant="onDark"
-                href={whatsappLink(
+                href={buildWhatsappLink(
                   `Hello, I just paid for booking ${bookingRef} and I'd like to check it came through.`,
                 )}
                 target="_blank"

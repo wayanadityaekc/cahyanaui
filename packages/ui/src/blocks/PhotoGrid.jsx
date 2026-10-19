@@ -5,6 +5,8 @@ import { cn } from '../lib/cn.js';
 import useBodyLock from '../lib/useBodyLock.js';
 import useDialog from '../lib/useDialog.js';
 
+const EAGER_IMAGE_COUNT = 3;
+
 export default function PhotoGrid({ images = [], open, onClose, startAt = 0, label = 'Photos' }) {
   const scroller = useRef(null);
   const pushed = useRef(false);
@@ -21,11 +23,11 @@ export default function PhotoGrid({ images = [], open, onClose, startAt = 0, lab
 
   useEffect(() => {
     if (!open) return undefined;
-    function onKey(e) {
-      if (e.key === 'Escape') onClose();
+    function handleEscapeKeyDown(event) {
+      if (event.key === 'Escape') onClose();
     }
-    document.addEventListener('keydown', onKey);
-    return () => document.removeEventListener('keydown', onKey);
+    document.addEventListener('keydown', handleEscapeKeyDown);
+    return () => document.removeEventListener('keydown', handleEscapeKeyDown);
   }, [open, onClose]);
 
   useEffect(() => {
@@ -38,12 +40,12 @@ export default function PhotoGrid({ images = [], open, onClose, startAt = 0, lab
     }
     history.pushState({ photoGrid: true }, '');
     pushed.current = true;
-    function onPop() {
+    function handlePopState() {
       pushed.current = false;
       onClose();
     }
-    window.addEventListener('popstate', onPop);
-    return () => window.removeEventListener('popstate', onPop);
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
   }, [open, onClose]);
 
   return (
@@ -84,12 +86,12 @@ export default function PhotoGrid({ images = [], open, onClose, startAt = 0, lab
         className="h-full overflow-y-auto overscroll-contain [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
       >
         <div className="grid grid-cols-1 min-[768px]:grid-cols-2 gap-2 p-2 pb-16">
-          {images.map((img, i) => (
-            <figure key={img.src + i} data-photo={i} className="m-0 scroll-mt-1">
+          {images.map((image, index) => (
+            <figure key={image.src + index} data-photo={index} className="m-0 scroll-mt-1">
               <img
-                src={img.src}
-                alt={img.alt || ''}
-                loading={i < 3 ? undefined : 'lazy'}
+                src={image.src}
+                alt={image.alt || ''}
+                loading={index < EAGER_IMAGE_COUNT ? undefined : 'lazy'}
                 className="block w-full h-auto object-cover rounded-base bg-cream"
               />
             </figure>

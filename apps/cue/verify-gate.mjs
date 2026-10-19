@@ -3,10 +3,10 @@ import { chromium } from '/home/user/CUE/node_modules/playwright-core/index.mjs'
 const BASE = 'http://127.0.0.1:4000';
 let pass = 0,
   fail = 0;
-function ok(c, m) {
-  c ? pass++ : (fail++, console.log('  FAIL:', m));
+function checkAssertion(isPassing, message) {
+  isPassing ? pass++ : (fail++, console.log('  FAIL:', message));
 }
-const b = await chromium.launch({
+const browser = await chromium.launch({
   executablePath: '/opt/pw-browsers/chromium_headless_shell-1194/chrome-linux/headless_shell',
 });
 const DAY = new Date(Date.now() + 40 * 86400000).toISOString().slice(0, 10);
@@ -17,10 +17,10 @@ const CART = JSON.stringify({
 });
 const ACC = { id: 9, name: 'Wayan Aditya', email: 'wayan@example.com', phone: '+6281' };
 
-async function setup(w, { signedIn = false, marker = null } = {}) {
-  const ctx = await b.newContext({ viewport: { width: w, height: 900 } });
+async function setupContext(viewportWidth, { signedIn = false, marker = null } = {}) {
+  const browserContext = await browser.newContext({ viewport: { width: viewportWidth, height: 900 } });
   let session = signedIn;
-  await ctx.route('**/api/**', (route) => {
+  await browserContext.route('**/api/**', (route) => {
     const url = route.request().url();
     const body = route.request().postDataJSON ? route.request().postDataJSON() || {} : {};
     if (url.includes('/account/session'))
@@ -44,92 +44,109 @@ async function setup(w, { signedIn = false, marker = null } = {}) {
     if (url.includes('/pricing/catalog')) return route.fulfill({ json: { currency: 'USD', symbol: '$', catalog: {} } });
     return route.fulfill({ json: {} });
   });
-  await ctx.addInitScript(
+  await browserContext.addInitScript(
     ([cart, tok, mk]) => {
-      if (!sessionStorage.getItem('seeded')) {
-        sessionStorage.setItem('seeded', '1');
-        localStorage.setItem('cue_itinerary_v1', cart);
-        if (tok) localStorage.setItem('cue_token', tok);
-        if (mk) localStorage.setItem('cue_resume_book', JSON.stringify(mk));
-      }
+      if (sessionStorage.getItem('seeded')) return;
+      sessionStorage.setItem('seeded', '1');
+      localStorage.setItem('cue_itinerary_v1', cart);
+      if (tok) localStorage.setItem('cue_token', tok);
+      if (mk) localStorage.setItem('cue_resume_book', JSON.stringify(mk));
     },
     [CART, signedIn ? 'tok-old' : '', marker],
   );
-  const page = await ctx.newPage();
+  const page = await browserContext.newPage();
   const errs = [];
-  page.on('pageerror', (e) => errs.push(String(e)));
-  return { ctx, page, errs };
+  page.on('pageerror', (error) => errs.push(String(error)));
+  return { ctx: browserContext, page, errs };
 }
-function payNow(p) {
-  return p
+function payNow(targetPage) {
+  return targetPage
     .locator('button:visible', { hasText: /^\s*Pay now\s*$/ })
     .first()
     .click();
 }
-function gateOpen(p) {
-  return p.locator('text=Sign in to book').isVisible();
+function checkIsGateOpen(targetPage) {
+  return targetPage.locator('text=Sign in to book').isVisible();
 }
-function codeOpen(p) {
-  return p.locator('text=Enter your code').isVisible();
+function checkIsCodeOpen(targetPage) {
+  return targetPage.locator('text=Enter your code').isVisible();
 }
-function formOpen(p) {
-  return p.locator('text=Booking Confirmation').isVisible();
+function checkIsFormOpen(targetPage) {
+  return targetPage.locator('text=Booking Confirmation').isVisible();
 }
-function marker(p) {
-  return p.evaluate(() => localStorage.getItem('cue_resume_book'));
+function readMarker(targetPage) {
+  return targetPage.evaluate(() => localStorage.getItem('cue_resume_book'));
 }
-function cartLen(p) {
-  return p.evaluate(() => (JSON.parse(localStorage.getItem('cue_itinerary_v1') || '{}').days || []).length);
+function countCartLength(targetPage) {
+  return targetPage.evaluate(() => (JSON.parse(localStorage.getItem('cue_itinerary_v1') || '{}').days || []).length);
 }
-async function typeCode(p, digits) {
-  await p.locator('input[inputmode="numeric"]:visible').first().click();
-  await p.keyboard.type(digits, { delay: 20 });
+async function typeCode(targetPage, digits) {
+  await targetPage.locator('input[inputmode="numeric"]:visible').first().click();
+  await targetPage.keyboard.type(digits, { delay: 20 });
 }
 
-for (const w of [390, 1280]) {
+for (const width of [390, 1280]) {
   {
-    const { ctx, page, errs } = await setup(w);
+    const { ctx: browserContext, page, errs } = await setupContext(width);
     await page.goto(`${BASE}/my-trips.html`, { waitUntil: 'networkidle' });
     await payNow(page);
     await page.waitForTimeout(500);
-    ok(await gateOpen(page), `${w}/A: Pay now logged out did not show "Sign in to book"`);
-    ok(!(await formOpen(page)), `${w}/A: THE BOOKING FORM OPENED WITHOUT AN ACCOUNT`);
-    ok(
-      JSON.parse((await marker(page)) || '{}').path === '/my-trips.html',
-      `${w}/A: no resume marker for /my-trips.html (${await marker(page)})`,
+    checkAssertion(await checkIsGateOpen(page), `${width}/A: Pay now logged out did not show "Sign in to book"`);
+    checkAssertion(!(await checkIsFormOpen(page)), `${width}/A: THE BOOKING FORM OPENED WITHOUT AN ACCOUNT`);
+    checkAssertion(
+      JSON.parse((await readMarker(page)) || '{}').path === '/my-trips.html',
+      `${width}/A: no resume marker for /my-trips.html (${await readMarker(page)})`,
     );
-    ok((await cartLen(page)) === 1, `${w}/A: cart changed`);
-    await page.screenshot({ path: `shots/gate-${w}.png` });
+    checkAssertion((await countCartLength(page)) === 1, `${width}/A: cart changed`);
+    await page.screenshot({ path: `shots/gate-${width}.png` });
     await page.fill('#auth-email:visible', 'wayan@example.com');
     await page.locator('button:visible', { hasText: 'Send code' }).click();
     await page.waitForTimeout(500);
-    ok(await codeOpen(page), `${w}/C: no code-entry stage after "Send code"`);
-    ok(
+    checkAssertion(await checkIsCodeOpen(page), `${width}/C: no code-entry stage after "Send code"`);
+    checkAssertion(
       /wayan@example\.com/.test(await page.locator('body').innerText()),
-      `${w}/C: the code-sent message does not say which address`,
+      `${width}/C: the code-sent message does not say which address`,
     );
-    await page.screenshot({ path: `shots/gate-code-${w}.png` });
+    await page.screenshot({ path: `shots/gate-code-${width}.png` });
 
     await typeCode(page, '000000');
     await page.waitForTimeout(500);
-    ok(!(await formOpen(page)), `${w}/C: A WRONG CODE OPENED THE BOOKING FORM`);
-    ok(await codeOpen(page), `${w}/C: a wrong code left the code stage instead of showing an error there`);
-    ok(/incorrect|expired/i.test(await page.locator('body').innerText()), `${w}/C: no error shown for a wrong code`);
+    checkAssertion(!(await checkIsFormOpen(page)), `${width}/C: A WRONG CODE OPENED THE BOOKING FORM`);
+    checkAssertion(
+      await checkIsCodeOpen(page),
+      `${width}/C: a wrong code left the code stage instead of showing an error there`,
+    );
+    checkAssertion(
+      /incorrect|expired/i.test(await page.locator('body').innerText()),
+      `${width}/C: no error shown for a wrong code`,
+    );
 
     await typeCode(page, '135791');
     await page.waitForTimeout(700);
-    ok(await formOpen(page), `${w}/C: booking form did not open after a correct code, in the same tab`);
-    ok(!(await gateOpen(page)) && !(await codeOpen(page)), `${w}/C: sign-in popup still showing after a correct code`);
-    ok(!(await marker(page)), `${w}/C: marker not cleared`);
-    ok((await cartLen(page)) === 1, `${w}/C: cart lost across sign-in`);
-    ok((await page.evaluate(() => localStorage.getItem('cue_token'))) === 'tok-verified', `${w}/C: token not stored`);
-    ok(new URL(page.url()).pathname === '/my-trips.html', `${w}/C: the guest was navigated away (${page.url()})`);
-    await page.screenshot({ path: `shots/gate-resumed-${w}.png` });
-    ok(errs.length === 0, `${w}/A+C: page errors ${errs.join(' | ')}`);
-    await ctx.close();
+    checkAssertion(
+      await checkIsFormOpen(page),
+      `${width}/C: booking form did not open after a correct code, in the same tab`,
+    );
+    checkAssertion(
+      !(await checkIsGateOpen(page)) && !(await checkIsCodeOpen(page)),
+      `${width}/C: sign-in popup still showing after a correct code`,
+    );
+    checkAssertion(!(await readMarker(page)), `${width}/C: marker not cleared`);
+    checkAssertion((await countCartLength(page)) === 1, `${width}/C: cart lost across sign-in`);
+    checkAssertion(
+      (await page.evaluate(() => localStorage.getItem('cue_token'))) === 'tok-verified',
+      `${width}/C: token not stored`,
+    );
+    checkAssertion(
+      new URL(page.url()).pathname === '/my-trips.html',
+      `${width}/C: the guest was navigated away (${page.url()})`,
+    );
+    await page.screenshot({ path: `shots/gate-resumed-${width}.png` });
+    checkAssertion(errs.length === 0, `${width}/A+C: page errors ${errs.join(' | ')}`);
+    await browserContext.close();
   }
   {
-    const { ctx, page, errs } = await setup(w);
+    const { ctx: browserContext, page, errs } = await setupContext(width);
     await page.goto(`${BASE}/my-trips.html`, { waitUntil: 'networkidle' });
     await payNow(page);
     await page.waitForTimeout(400);
@@ -139,20 +156,20 @@ for (const w of [390, 1280]) {
     await page.fill('#auth-phone:visible', '+6281234');
     await page.locator('button:visible', { hasText: 'Create Account' }).click();
     await page.waitForTimeout(700);
-    ok(await codeOpen(page), `${w}/B: duplicate-email create did not land on the code stage`);
-    ok(
+    checkAssertion(await checkIsCodeOpen(page), `${width}/B: duplicate-email create did not land on the code stage`);
+    checkAssertion(
       !((await page.locator('#auth-cemail:visible').count()) > 0),
-      `${w}/B: sign-up form still showing under the code stage`,
+      `${width}/B: sign-up form still showing under the code stage`,
     );
     await typeCode(page, '246810');
     await page.waitForTimeout(700);
-    ok(await formOpen(page), `${w}/B: booking form did not open after verifying`);
-    ok(!(await marker(page)), `${w}/B: marker not cleared`);
-    ok(errs.length === 0, `${w}/B: page errors ${errs.join(' | ')}`);
-    await ctx.close();
+    checkAssertion(await checkIsFormOpen(page), `${width}/B: booking form did not open after verifying`);
+    checkAssertion(!(await readMarker(page)), `${width}/B: marker not cleared`);
+    checkAssertion(errs.length === 0, `${width}/B: page errors ${errs.join(' | ')}`);
+    await browserContext.close();
   }
   {
-    const { ctx, page, errs } = await setup(w);
+    const { ctx: browserContext, page, errs } = await setupContext(width);
     await page.goto(`${BASE}/my-trips.html`, { waitUntil: 'networkidle' });
     await payNow(page);
     await page.waitForTimeout(400);
@@ -162,43 +179,53 @@ for (const w of [390, 1280]) {
     await page.fill('#auth-phone:visible', '+6281234');
     await page.locator('button:visible', { hasText: 'Create Account' }).click();
     await page.waitForTimeout(700);
-    ok(await formOpen(page), `${w}/G: booking form did not open right after a new account was created`);
-    ok(!(await codeOpen(page)), `${w}/G: a brand-new account was asked for a code it was never sent`);
-    ok(errs.length === 0, `${w}/G: page errors ${errs.join(' | ')}`);
-    await ctx.close();
+    checkAssertion(
+      await checkIsFormOpen(page),
+      `${width}/G: booking form did not open right after a new account was created`,
+    );
+    checkAssertion(
+      !(await checkIsCodeOpen(page)),
+      `${width}/G: a brand-new account was asked for a code it was never sent`,
+    );
+    checkAssertion(errs.length === 0, `${width}/G: page errors ${errs.join(' | ')}`);
+    await browserContext.close();
   }
   {
-    const { ctx, page, errs } = await setup(w, { signedIn: true });
+    const { ctx: browserContext, page, errs } = await setupContext(width, { signedIn: true });
     await page.goto(`${BASE}/my-trips.html`, { waitUntil: 'networkidle' });
     await payNow(page);
     await page.waitForTimeout(500);
-    ok(await formOpen(page), `${w}/D: signed-in Pay now did not open the form`);
-    ok(!(await gateOpen(page)), `${w}/D: signed-in guest was asked to sign in`);
-    ok(errs.length === 0, `${w}/D: page errors ${errs.join(' | ')}`);
-    await ctx.close();
+    checkAssertion(await checkIsFormOpen(page), `${width}/D: signed-in Pay now did not open the form`);
+    checkAssertion(!(await checkIsGateOpen(page)), `${width}/D: signed-in guest was asked to sign in`);
+    checkAssertion(errs.length === 0, `${width}/D: page errors ${errs.join(' | ')}`);
+    await browserContext.close();
   }
   {
-    const { ctx, page, errs } = await setup(w);
+    const { ctx: browserContext, page, errs } = await setupContext(width);
     await page.goto(`${BASE}/my-trips.html`, { waitUntil: 'networkidle' });
     await payNow(page);
     await page.waitForTimeout(400);
     await page.keyboard.press('Escape');
     await page.waitForTimeout(500);
-    ok(!(await gateOpen(page)), `${w}/E: Escape did not close the popup`);
-    ok(!(await formOpen(page)), `${w}/E: form opened after dismissing`);
-    ok((await cartLen(page)) === 1, `${w}/E: cart changed`);
-    ok(errs.length === 0, `${w}/E: page errors ${errs.join(' | ')}`);
-    await ctx.close();
+    checkAssertion(!(await checkIsGateOpen(page)), `${width}/E: Escape did not close the popup`);
+    checkAssertion(!(await checkIsFormOpen(page)), `${width}/E: form opened after dismissing`);
+    checkAssertion((await countCartLength(page)) === 1, `${width}/E: cart changed`);
+    checkAssertion(errs.length === 0, `${width}/E: page errors ${errs.join(' | ')}`);
+    await browserContext.close();
   }
   {
-    const { ctx, page, errs } = await setup(w, { marker: { path: '/my-trips.html', at: Date.now() - 2 * 3600000 } });
+    const {
+      ctx: browserContext,
+      page,
+      errs,
+    } = await setupContext(width, { marker: { path: '/my-trips.html', at: Date.now() - 2 * 3600000 } });
     await page.goto(`${BASE}/?token=tok-link`, { waitUntil: 'networkidle' });
     await page.waitForTimeout(1200);
-    ok(new URL(page.url()).pathname === '/', `${w}/F: stale marker still redirected (${page.url()})`);
-    ok(errs.length === 0, `${w}/F: page errors ${errs.join(' | ')}`);
-    await ctx.close();
+    checkAssertion(new URL(page.url()).pathname === '/', `${width}/F: stale marker still redirected (${page.url()})`);
+    checkAssertion(errs.length === 0, `${width}/F: page errors ${errs.join(' | ')}`);
+    await browserContext.close();
   }
 }
-await b.close();
+await browser.close();
 console.log(`${pass}/${pass + fail}`);
 process.exit(fail ? 1 : 0);

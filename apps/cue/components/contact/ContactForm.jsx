@@ -10,37 +10,40 @@ import { FIELD_LABEL } from '@/components/ui/formClasses';
 import { BTN_CTA } from '@/components/ui/btnClasses';
 
 export default function ContactForm({ company = false }) {
-  const [f, setF] = useState({ name: '', email: '', message: '' });
-  const [busy, setBusy] = useState(false);
-  const [sent, setSent] = useState(false);
+  const [form, setForm] = useState({ name: '', email: '', message: '' });
+  const [isBusy, setIsBusy] = useState(false);
+  const [isSent, setIsSent] = useState(false);
   const [errors, setErrors] = useState({});
   const [error, setError] = useState('');
 
-  function set(k) {
-    return (e) => {
-      const { value } = e.target;
-      setF((v) => ({ ...v, [k]: value }));
-      setErrors((v) => (v[k] ? { ...v, [k]: undefined } : v));
+  function set(fieldName) {
+    return (event) => {
+      const { value } = event.target;
+      setForm((previousForm) => ({ ...previousForm, [fieldName]: value }));
+      setErrors((previousErrors) =>
+        previousErrors[fieldName] ? { ...previousErrors, [fieldName]: undefined } : previousErrors,
+      );
     };
   }
 
-  async function send() {
-    const { ok, errors: fieldErrors, data } = validateWith(contactSchema, f);
+  async function handleMessageSend() {
+    const { ok, errors: fieldErrors, data } = validateWith(contactSchema, form);
     setErrors(fieldErrors);
     if (!ok) {
       setError('');
       return;
     }
     setError('');
-    setBusy(true);
+    setIsBusy(true);
     try {
-      const d = await submitContact(data);
-      if (!d || d.status !== 'saved') throw new Error((d && d.detail) || '');
-      setSent(true);
+      const contactResult = await submitContact(data);
+      if (!contactResult || contactResult.status !== 'saved')
+        throw new Error((contactResult && contactResult.detail) || '');
+      setIsSent(true);
     } catch (e) {
       setError(e.message || 'Sorry, your message could not be sent. Please try again, or reach us on WhatsApp.');
     } finally {
-      setBusy(false);
+      setIsBusy(false);
     }
   }
 
@@ -49,7 +52,7 @@ export default function ContactForm({ company = false }) {
       <div
         className="p-8 text-center rounded-md text-green bg-white"
         id="contact-success"
-        style={{ display: sent ? 'block' : 'none' }}
+        style={{ display: isSent ? 'block' : 'none' }}
       >
         <div className="flex items-center justify-center w-14 h-14 mx-auto mb-4 rounded-[50%] text-[1.6rem] text-white bg-[#25d366]">
           &#10003;
@@ -62,7 +65,7 @@ export default function ContactForm({ company = false }) {
         <p>Thanks for reaching out. We&apos;ll get back to you by email shortly.</p>
       </div>
 
-      <div className="p-8 rounded-md bg-white" id="contact-form" style={{ display: sent ? 'none' : undefined }}>
+      <div className="p-8 rounded-md bg-white" id="contact-form" style={{ display: isSent ? 'none' : undefined }}>
         <div className={CONTACT_GROUP}>
           <label className={FIELD_LABEL} htmlFor="c-name">
             Your Name
@@ -72,7 +75,7 @@ export default function ContactForm({ company = false }) {
             type="text"
             id="c-name"
             placeholder="Enter your name"
-            value={f.name}
+            value={form.name}
             onChange={set('name')}
             aria-invalid={!!errors.name}
           />
@@ -91,7 +94,7 @@ export default function ContactForm({ company = false }) {
             type="email"
             id="c-email"
             placeholder="you@email.com"
-            value={f.email}
+            value={form.email}
             onChange={set('email')}
             aria-invalid={!!errors.email}
           />
@@ -109,7 +112,7 @@ export default function ContactForm({ company = false }) {
             className={CONTACT_TEXTAREA}
             id="c-message"
             placeholder="Tell us what you need - dates, group size, custom requests..."
-            value={f.message}
+            value={form.message}
             onChange={set('message')}
             aria-invalid={!!errors.message}
           />
@@ -124,8 +127,8 @@ export default function ContactForm({ company = false }) {
             {error}
           </small>
         )}
-        <button className={`flex w-full ${BTN_CTA}`} id="c-send" onClick={send} disabled={busy}>
-          {busy ? 'Sending...' : 'Send Message'}
+        <button className={`flex w-full ${BTN_CTA}`} id="c-send" onClick={handleMessageSend} disabled={isBusy}>
+          {isBusy ? 'Sending...' : 'Send Message'}
         </button>
       </div>
     </>

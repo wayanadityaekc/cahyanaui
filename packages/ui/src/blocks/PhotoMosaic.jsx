@@ -3,6 +3,10 @@
 import { cn } from '../lib/cn.js';
 import { BLEED_MOBILE } from './gridClasses.js';
 
+const DEFAULT_IMAGE_WIDTH_PX = 1200;
+const DEFAULT_IMAGE_HEIGHT_PX = 900;
+const MOSAIC_GROUP_SIZE = 3;
+
 const TILE =
   'relative block w-full h-full overflow-hidden p-0 bg-cream border-none cursor-pointer ' +
   '[&>img]:absolute [&>img]:inset-0 [&>img]:w-full [&>img]:h-full [&>img]:object-cover [&>img]:object-center';
@@ -29,50 +33,59 @@ const MORE_BTN =
 export default function PhotoMosaic({ images = [], onOpen, moreLabel = null, bleed = true, className }) {
   if (!images.length) return null;
 
-  function tile(i, cls) {
-    const p = images[i];
+  function renderTile(imageIndex, cls) {
+    const image = images[imageIndex];
     return (
       <button
         type="button"
-        key={(p.src || '') + i}
-        data-mosaic-tile={i}
+        key={(image.src || '') + imageIndex}
+        data-mosaic-tile={imageIndex}
         className={cls}
-        onClick={() => onOpen && onOpen(i)}
-        aria-label={`Open photo ${i + 1} of ${images.length}${p.title ? `: ${p.title}` : ''}`}
+        onClick={() => onOpen && onOpen(imageIndex)}
+        aria-label={`Open photo ${imageIndex + 1} of ${images.length}${image.title ? `: ${image.title}` : ''}`}
       >
         <img
-          src={p.src}
-          alt={p.alt || ''}
-          width={p.w || 1200}
-          height={p.h || 900}
-          loading={i === 0 ? undefined : 'lazy'}
+          src={image.src}
+          alt={image.alt || ''}
+          width={image.w || DEFAULT_IMAGE_WIDTH_PX}
+          height={image.h || DEFAULT_IMAGE_HEIGHT_PX}
+          loading={imageIndex === 0 ? undefined : 'lazy'}
         />
       </button>
     );
   }
 
-  const children = [];
-  for (let i = 0; i < images.length; i += 3) {
-    children.push(tile(i, BIG));
-    const pair = [i + 1, i + 2].filter((n) => n < images.length);
+  const tileGroups = [];
+  const groupStarts = Array.from(
+    { length: Math.ceil(images.length / MOSAIC_GROUP_SIZE) },
+    (_, groupIndex) => groupIndex * MOSAIC_GROUP_SIZE,
+  );
+  groupStarts.forEach((startIndex) => {
+    tileGroups.push(renderTile(startIndex, BIG));
+    const pair = [startIndex + 1, startIndex + 2].filter((imageIndex) => imageIndex < images.length);
     if (pair.length) {
-      children.push(
-        <div className={PAIR} key={`pair-${i}`}>
-          {pair.map((n) => tile(n, TILE))}
+      tileGroups.push(
+        <div className={PAIR} key={`pair-${startIndex}`}>
+          {pair.map((imageIndex) => renderTile(imageIndex, TILE))}
         </div>,
       );
     }
+  });
+
+  function renderPhotoMosaic() {
+    if (images.length === 1) return <div className={cn(STATIC_1, bleed && BLEED_MOBILE)}>{renderTile(0, TILE)}</div>;
+    if (images.length === 2)
+      return (
+        <div className={cn(STATIC_2, bleed && BLEED_MOBILE)}>
+          {images.map((image, index) => renderTile(index, TILE))}
+        </div>
+      );
+    return <div className={cn(TRACK, bleed && BLEED_MOBILE)}>{tileGroups}</div>;
   }
 
   return (
     <div className={cn('relative', className)} data-mosaic={images.length}>
-      {images.length === 1 ? (
-        <div className={cn(STATIC_1, bleed && BLEED_MOBILE)}>{tile(0, TILE)}</div>
-      ) : images.length === 2 ? (
-        <div className={cn(STATIC_2, bleed && BLEED_MOBILE)}>{images.map((image, i) => tile(i, TILE))}</div>
-      ) : (
-        <div className={cn(TRACK, bleed && BLEED_MOBILE)}>{children}</div>
-      )}
+      {renderPhotoMosaic()}
 
       {moreLabel && onOpen ? (
         <button type="button" className={MORE_BTN} onClick={() => onOpen(0)}>

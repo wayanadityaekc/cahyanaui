@@ -25,17 +25,19 @@ export default function ReviewsStrip({
 
   useEffect(() => {
     let cancelled = false;
-    const query = group
-      ? `?group=${encodeURIComponent(group)}`
-      : service
-        ? `?service=${encodeURIComponent(service)}`
-        : '';
+    function buildGroupQuery() {
+      if (group) return `?group=${encodeURIComponent(group)}`;
+      if (service) return `?service=${encodeURIComponent(service)}`;
+      return '';
+    }
+
+    const query = buildGroupQuery();
     const url = `${API_BASE}/reviews${query}`;
     async function load() {
       try {
         const response = await fetch(url);
-        const d = response.ok ? await response.json() : [];
-        if (!cancelled) setRows(Array.isArray(d) ? d : []);
+        const reviews = response.ok ? await response.json() : [];
+        if (!cancelled) setRows(Array.isArray(reviews) ? reviews : []);
       } catch (e) {
         if (!cancelled) setRows([]);
       }
@@ -47,9 +49,9 @@ export default function ReviewsStrip({
   }, [service, group]);
 
   const all = service ? rows || [] : groupReviews(rows || []);
-  const list = limit ? all.slice(0, limit) : all;
+  const visibleReviews = limit ? all.slice(0, limit) : all;
 
-  if (list.length === 0) {
+  if (visibleReviews.length === 0) {
     if (!showEmpty) return null;
     return (
       <div className={GRID}>
@@ -61,7 +63,9 @@ export default function ReviewsStrip({
     );
   }
 
-  const cards = list.map((r, i) => <ReviewCard key={i} {...r} onClick={() => setSelected(r)} />);
+  const cards = visibleReviews.map((review, index) => (
+    <ReviewCard key={index} {...review} onClick={() => setSelected(review)} />
+  ));
 
   return (
     <>

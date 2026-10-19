@@ -1,6 +1,8 @@
 import OtpFields from '@/components/account/OtpFields';
 import { REFMSG_ERR } from '@/components/ui/modalClasses';
 
+const OTP_CODE_LENGTH = 6;
+
 export default function SigninNote({
   otpVerified,
   signinEmail,
@@ -25,7 +27,7 @@ export default function SigninNote({
             inbox to sign in.
           </p>
           <OtpFields
-            length={6}
+            length={OTP_CODE_LENGTH}
             value={otpCode}
             onChange={setOtpCode}
             onComplete={doOtpVerify}

@@ -36,8 +36,8 @@ import { useTripPrefs } from '@/components/providers/TripPrefsProvider';
 import BookingTerms from '@/components/booking/BookingTerms';
 import { CUE_TOURS } from '@/content/crossSell';
 import { SERVICES } from '@/lib/bookingCart';
-import { WHATSAPP_LINK, CUE_LINK, whatsappLink } from '@/lib/constants';
-import { STAY_RULES, baliToday } from '@/lib/availability';
+import { WHATSAPP_LINK, CUE_LINK, buildWhatsappLink } from '@/lib/constants';
+import { STAY_RULES, formatBaliToday } from '@/lib/availability';
 
 function scrollToCalendar() {
   const target = document.getElementById('availability');
@@ -52,15 +52,15 @@ export default function VillaDetail({ villa }) {
   const [checkIn, setCheckIn] = useState('');
   const [checkOut, setCheckOut] = useState('');
   const [guests, setGuests] = useState(Math.min(preferredGuests || 2, villa.guests));
-  const [checkoutOpen, setCheckoutOpen] = useState(false);
+  const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
   const [today, setToday] = useState('');
-  useEffect(() => setToday(baliToday()), []);
+  useEffect(() => setToday(formatBaliToday()), []);
   const availability = useVillaAvailability(villa.slug);
   const calendar = today ? availability : { status: 'loading', busy: [] };
 
   const limits = stayLimits({ today: today || '0000-00-00', ...STAY_RULES });
   const range = { checkIn, checkOut };
-  const unknown = calendar.status === 'unknown';
+  const isUnknown = calendar.status === 'unknown';
   const ready = calendar.status === 'ready' && stayIsOpen(range, { busy: calendar.busy, limits });
   const stay = ready ? { villaSlug: villa.slug, checkIn, checkOut, guests } : null;
   const askMessage = `Hi! I'd like to book ${villa.name}${checkIn && checkOut ? ` from ${checkIn} to ${checkOut}` : ''} for ${guests} guest${guests > 1 ? 's' : ''}. Your online calendar wasn't loading - could you check these dates for me?`;
@@ -70,16 +70,16 @@ export default function VillaDetail({ villa }) {
     setCheckOut(next.checkOut || '');
   }
 
-  function bookNow() {
+  function handleBookNow() {
     if (!stay) {
       scrollToCalendar();
       return;
     }
     setStay(stay);
-    setCheckoutOpen(true);
+    setIsCheckoutOpen(true);
   }
 
-  function addExtrasFirst() {
+  function handleExtrasAddFirst() {
     if (!stay) return;
     setStay(stay);
     router.push('/my-booking/');
@@ -130,8 +130,8 @@ export default function VillaDetail({ villa }) {
             </div>
 
             <h2 className="text-h2 font-medium mt-10 mb-3 text-gold">About the villa</h2>
-            {villa.about.map((para, i) => (
-              <p key={i}>{para}</p>
+            {villa.about.map((para, index) => (
+              <p key={index}>{para}</p>
             ))}
 
             <h2 className="text-h2 font-medium mt-10 mb-3 text-gold">The space</h2>
@@ -205,7 +205,7 @@ export default function VillaDetail({ villa }) {
                   label="Guests"
                   value={String(guests)}
                   onChange={(value) => setGuests(Number(value))}
-                  options={Array.from({ length: villa.guests }, (_, index) => index + 1).map((count) => ({
+                  options={Array.from({ length: villa.guests }, (unusedValue, index) => index + 1).map((count) => ({
                     value: String(count),
                     label: `${count} guest${count > 1 ? 's' : ''}`,
                   }))}
@@ -214,18 +214,18 @@ export default function VillaDetail({ villa }) {
               </div>
             }
             cta={
-              unknown ? (
+              isUnknown ? (
                 <div className="flex flex-col gap-2">
                   <p role="status" className="m-0 text-small text-green" data-availability="unknown">
                     We can&apos;t load the live calendar right now, so our team will confirm your dates by hand.
                   </p>
-                  <Button as="a" full href={whatsappLink(askMessage)} target="_blank" rel="noopener">
+                  <Button as="a" full href={buildWhatsappLink(askMessage)} target="_blank" rel="noopener">
                     Ask on WhatsApp
                   </Button>
                 </div>
               ) : (
                 <div className="flex flex-col gap-2">
-                  <Button full onClick={bookNow} disabled={calendar.status === 'loading'} data-book-now>
+                  <Button full onClick={handleBookNow} disabled={calendar.status === 'loading'} data-book-now>
                     Book now
                   </Button>
                   {!ready && (
@@ -241,7 +241,7 @@ export default function VillaDetail({ villa }) {
             secondary={
               <>
                 {ready && (
-                  <button type="button" onClick={addExtrasFirst} className={SECONDARY_BTN}>
+                  <button type="button" onClick={handleExtrasAddFirst} className={SECONDARY_BTN}>
                     Add tours or a transfer first
                   </button>
                 )}
@@ -282,7 +282,7 @@ export default function VillaDetail({ villa }) {
         <h2 className="text-h2 font-medium text-white">{villa.name}, your dates</h2>
         <p className="mt-2 text-small text-white/75">See if the villa is free when you are.</p>
         <div className="flex justify-center mt-6">
-          <Button variant="onDark" onClick={ready ? bookNow : scrollToCalendar}>
+          <Button variant="onDark" onClick={ready ? handleBookNow : scrollToCalendar}>
             {ready ? 'Book now' : 'See availability'}
           </Button>
         </div>
@@ -290,11 +290,11 @@ export default function VillaDetail({ villa }) {
 
       <StickyBar variant="flush" show={showBookBar}>
         <PriceBlock tight amount={format(villa.nightlyRateIdr)} unit="/ night" size="sm" />
-        <Button className="flex-shrink-0" onClick={ready ? bookNow : scrollToCalendar}>
+        <Button className="flex-shrink-0" onClick={ready ? handleBookNow : scrollToCalendar}>
           {ready ? 'Book now' : 'Pick dates'}
         </Button>
       </StickyBar>
-      <StayCheckout stay={stay} open={checkoutOpen} onClose={() => setCheckoutOpen(false)} />
+      <StayCheckout stay={stay} open={isCheckoutOpen} onClose={() => setIsCheckoutOpen(false)} />
     </>
   );
 }

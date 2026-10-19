@@ -1,147 +1,176 @@
 import { chromium } from 'playwright-core';
-const B = 'http://127.0.0.1:4000';
+const baseUrl = 'http://127.0.0.1:4000';
 let pass = 0,
   fail = 0;
-function ok(c, m) {
-  c ? pass++ : fail++;
-  console.log(`${c ? 'ok  ' : 'FAIL'} ${m}`);
+function checkAssertion(isPassing, message) {
+  isPassing ? pass++ : fail++;
+  console.log(`${isPassing ? 'ok  ' : 'FAIL'} ${message}`);
 }
-function near(a, b) {
-  return Math.abs(a - b) < 0.5;
+function checkIsNear(firstValue, secondValue) {
+  return Math.abs(firstValue - secondValue) < 0.5;
 }
 
 const br = await chromium.launch({
   executablePath: '/opt/pw-browsers/chromium_headless_shell-1194/chrome-linux/headless_shell',
 });
 
-function tokens(p) {
-  return p.evaluate(() => {
-    const d = document.createElement('div');
-    d.style.cssText =
+function readTokens(targetPage) {
+  return targetPage.evaluate(() => {
+    const probe = document.createElement('div');
+    probe.style.cssText =
       'position:absolute;height:var(--btn-h);font-size:var(--fs-small);border-radius:var(--r-sm);color:var(--color-cta)';
-    document.body.appendChild(d);
-    const c = getComputedStyle(d);
-    const t = { h: parseFloat(c.height), font: c.fontSize, radius: c.borderTopLeftRadius, cta: c.color };
-    d.remove();
-    return t;
+    document.body.appendChild(probe);
+    const computedStyle = getComputedStyle(probe);
+    const tokenValues = {
+      h: parseFloat(computedStyle.height),
+      font: computedStyle.fontSize,
+      radius: computedStyle.borderTopLeftRadius,
+      cta: computedStyle.color,
+    };
+    probe.remove();
+    return tokenValues;
   });
 }
 
-function shot(element) {
-  return element.evaluate((n) => {
-    const c = getComputedStyle(n),
-      r = n.getBoundingClientRect();
+function measureElement(element) {
+  return element.evaluate((node) => {
+    const computedStyle = getComputedStyle(node),
+      box = node.getBoundingClientRect();
     return {
-      h: Math.round(r.height * 10) / 10,
-      bg: c.backgroundColor,
-      color: c.color,
-      radius: c.borderTopLeftRadius,
-      font: c.fontSize,
-      family: c.fontFamily.split(',')[0].replace(/["']/g, ''),
-      weight: c.fontWeight,
-      display: c.display,
-      align: c.alignItems,
-      justify: c.justifyContent,
-      textAlign: c.textAlign,
-      padTop: c.paddingTop,
-      padBottom: c.paddingBottom,
-      oneLine: n.scrollWidth <= n.clientWidth + 1,
+      h: Math.round(box.height * 10) / 10,
+      bg: computedStyle.backgroundColor,
+      color: computedStyle.color,
+      radius: computedStyle.borderTopLeftRadius,
+      font: computedStyle.fontSize,
+      family: computedStyle.fontFamily.split(',')[0].replace(/["']/g, ''),
+      weight: computedStyle.fontWeight,
+      display: computedStyle.display,
+      align: computedStyle.alignItems,
+      justify: computedStyle.justifyContent,
+      textAlign: computedStyle.textAlign,
+      padTop: computedStyle.paddingTop,
+      padBottom: computedStyle.paddingBottom,
+      oneLine: node.scrollWidth <= node.clientWidth + 1,
     };
   });
 }
 
-const acc = { name: 'Wayan', email: 'w@example.com', phone: '' };
-function json(body) {
+const account = { name: 'Wayan', email: 'w@example.com', phone: '' };
+function buildJsonResponse(body) {
   return { status: 200, contentType: 'application/json', body: JSON.stringify(body) };
 }
-function api(r) {
-  const u = r.request().url();
-  if (u.includes('/account/session')) return r.fulfill(json({ account: acc }));
-  if (u.includes('/bookings/mine')) return r.fulfill(json({ bookings: [] }));
-  return r.fulfill(json({}));
+function handleApiRoute(route) {
+  const requestUrl = route.request().url();
+  if (requestUrl.includes('/account/session')) return route.fulfill(buildJsonResponse({ account: account }));
+  if (requestUrl.includes('/bookings/mine')) return route.fulfill(buildJsonResponse({ bookings: [] }));
+  return route.fulfill(buildJsonResponse({}));
 }
 
-for (const w of [320, 390, 768, 1280]) {
-  const ctx = await br.newContext({ viewport: { width: w, height: 880 } });
-  await ctx.addInitScript(() => localStorage.setItem('cue_token', 'stub-token'));
-  const page = await ctx.newPage();
+for (const width of [320, 390, 768, 1280]) {
+  const browserContext = await br.newContext({ viewport: { width: width, height: 880 } });
+  await browserContext.addInitScript(() => localStorage.setItem('cue_token', 'stub-token'));
+  const page = await browserContext.newPage();
   const errs = [];
-  page.on('pageerror', (e) => errs.push(String(e)));
-  await page.route('**/api/**', api);
+  page.on('pageerror', (error) => errs.push(String(error)));
+  await page.route('**/api/**', handleApiRoute);
 
-  await page.goto(`${B}/settings.html`, { waitUntil: 'load' });
+  await page.goto(`${baseUrl}/settings.html`, { waitUntil: 'load' });
   await page.waitForSelector('[data-settings] button', { timeout: 15000 });
-  const T = await tokens(page);
+  const pageTokens = await readTokens(page);
 
   const acts = page.locator('[data-settings] button:not([aria-haspopup])');
-  const n = await acts.count();
-  ok(n === 3, `${w}: settings punya 3 tombol aksi (dapet ${n})`);
+  const actionCount = await acts.count();
+  checkAssertion(actionCount === 3, `${width}: settings punya 3 tombol aksi (dapet ${actionCount})`);
 
   const save = acts.filter({ hasText: 'Save changes' });
   const out = acts.filter({ hasText: 'Sign out' });
   const del = acts.filter({ hasText: 'Delete account' });
-  ok((await save.count()) === 1, `${w}: ketemu tepat 1 tombol Save changes`);
-  ok((await out.count()) === 1, `${w}: ketemu tepat 1 tombol Sign out`);
-  ok((await del.count()) === 1, `${w}: ketemu tepat 1 tombol Delete account`);
+  checkAssertion((await save.count()) === 1, `${width}: ketemu tepat 1 tombol Save changes`);
+  checkAssertion((await out.count()) === 1, `${width}: ketemu tepat 1 tombol Sign out`);
+  checkAssertion((await del.count()) === 1, `${width}: ketemu tepat 1 tombol Delete account`);
 
-  const s = await shot(save),
-    o = await shot(out);
-  console.log(`     save=${JSON.stringify(s)}`);
-  console.log(`     out =${JSON.stringify(o)}`);
+  const saveShot = await measureElement(save),
+    outShot = await measureElement(out);
+  console.log(`     save=${JSON.stringify(saveShot)}`);
+  console.log(`     out =${JSON.stringify(outShot)}`);
 
-  ok(near(s.h, T.h), `${w}: Save tingginya --btn-h (${T.h}, dapet ${s.h})`);
-  ok(s.font === T.font, `${w}: Save font --fs-small (${T.font})`);
-  ok(s.radius === T.radius, `${w}: Save radius --r-sm (${T.radius}, dapet ${s.radius})`);
-  ok(s.bg === T.cta, `${w}: Save bg --color-cta (${T.cta}, dapet ${s.bg})`);
-  ok(s.color === 'rgb(255, 255, 255)', `${w}: Save teksnya putih (dapet ${s.color})`);
-  ok(s.weight === '600', `${w}: Save bobot 600 (dapet ${s.weight})`);
-  ok(s.family === 'Inter', `${w}: Save font Inter, bukan font browser (dapet ${s.family})`);
-  ok(
-    s.align === 'center' && s.justify === 'center' && s.textAlign === 'center',
-    `${w}: Save ke-center dua arah (${s.align}/${s.justify}/${s.textAlign})`,
+  checkAssertion(
+    checkIsNear(saveShot.h, pageTokens.h),
+    `${width}: Save tingginya --btn-h (${pageTokens.h}, dapet ${saveShot.h})`,
   );
-  ok(s.padTop === '0px' && s.padBottom === '0px', `${w}: Save py-0`);
-  ok(s.display.includes('flex'), `${w}: Save display flex (dapet ${s.display})`);
-  ok(s.oneLine, `${w}: label Save 1 baris`);
-
-  ok(near(s.h, o.h), `${w}: Save & Sign out tingginya SAMA (${s.h} vs ${o.h})`);
-  ok(s.radius === o.radius, `${w}: radius sama (${s.radius})`);
-  ok(s.font === o.font, `${w}: ukuran teks sama (${s.font})`);
-  ok(s.family === o.family, `${w}: font family sama (${s.family} vs ${o.family})`);
-  ok(s.weight === o.weight, `${w}: bobot sama (${s.weight})`);
-  ok(s.bg !== o.bg, `${w}: warna primary != secondary (${s.bg} vs ${o.bg})`);
-
-  const d = await shot(del);
-  console.log(`     del =${JSON.stringify(d)}`);
-  ok(near(d.h, T.h), `${w}: Delete tingginya --btn-h (${T.h}, dapet ${d.h})`);
-  ok(d.font === T.font, `${w}: Delete font --fs-small (${T.font})`);
-  ok(d.family === 'Inter', `${w}: Delete font Inter, bukan font browser (dapet ${d.family})`);
-  ok(d.weight === '600', `${w}: Delete bobot 600 (dapet ${d.weight})`);
-  ok(
-    d.align === 'center' && d.justify === 'center' && d.textAlign === 'center',
-    `${w}: Delete ke-center dua arah (${d.align}/${d.justify}/${d.textAlign})`,
+  checkAssertion(saveShot.font === pageTokens.font, `${width}: Save font --fs-small (${pageTokens.font})`);
+  checkAssertion(
+    saveShot.radius === pageTokens.radius,
+    `${width}: Save radius --r-sm (${pageTokens.radius}, dapet ${saveShot.radius})`,
   );
-  ok(d.oneLine, `${w}: label Delete 1 baris`);
-  ok(d.bg !== s.bg, `${w}: warna latar Delete != Save (${d.bg})`);
-  ok(d.color !== o.color, `${w}: warna teks Delete != Sign out (${d.color})`);
+  checkAssertion(
+    saveShot.bg === pageTokens.cta,
+    `${width}: Save bg --color-cta (${pageTokens.cta}, dapet ${saveShot.bg})`,
+  );
+  checkAssertion(saveShot.color === 'rgb(255, 255, 255)', `${width}: Save teksnya putih (dapet ${saveShot.color})`);
+  checkAssertion(saveShot.weight === '600', `${width}: Save bobot 600 (dapet ${saveShot.weight})`);
+  checkAssertion(
+    saveShot.family === 'Inter',
+    `${width}: Save font Inter, bukan font browser (dapet ${saveShot.family})`,
+  );
+  checkAssertion(
+    saveShot.align === 'center' && saveShot.justify === 'center' && saveShot.textAlign === 'center',
+    `${width}: Save ke-center dua arah (${saveShot.align}/${saveShot.justify}/${saveShot.textAlign})`,
+  );
+  checkAssertion(saveShot.padTop === '0px' && saveShot.padBottom === '0px', `${width}: Save py-0`);
+  checkAssertion(saveShot.display.includes('flex'), `${width}: Save display flex (dapet ${saveShot.display})`);
+  checkAssertion(saveShot.oneLine, `${width}: label Save 1 baris`);
+
+  checkAssertion(
+    checkIsNear(saveShot.h, outShot.h),
+    `${width}: Save & Sign out tingginya SAMA (${saveShot.h} vs ${outShot.h})`,
+  );
+  checkAssertion(saveShot.radius === outShot.radius, `${width}: radius sama (${saveShot.radius})`);
+  checkAssertion(saveShot.font === outShot.font, `${width}: ukuran teks sama (${saveShot.font})`);
+  checkAssertion(
+    saveShot.family === outShot.family,
+    `${width}: font family sama (${saveShot.family} vs ${outShot.family})`,
+  );
+  checkAssertion(saveShot.weight === outShot.weight, `${width}: bobot sama (${saveShot.weight})`);
+  checkAssertion(saveShot.bg !== outShot.bg, `${width}: warna primary != secondary (${saveShot.bg} vs ${outShot.bg})`);
+
+  const deleteShot = await measureElement(del);
+  console.log(`     del =${JSON.stringify(deleteShot)}`);
+  checkAssertion(
+    checkIsNear(deleteShot.h, pageTokens.h),
+    `${width}: Delete tingginya --btn-h (${pageTokens.h}, dapet ${deleteShot.h})`,
+  );
+  checkAssertion(deleteShot.font === pageTokens.font, `${width}: Delete font --fs-small (${pageTokens.font})`);
+  checkAssertion(
+    deleteShot.family === 'Inter',
+    `${width}: Delete font Inter, bukan font browser (dapet ${deleteShot.family})`,
+  );
+  checkAssertion(deleteShot.weight === '600', `${width}: Delete bobot 600 (dapet ${deleteShot.weight})`);
+  checkAssertion(
+    deleteShot.align === 'center' && deleteShot.justify === 'center' && deleteShot.textAlign === 'center',
+    `${width}: Delete ke-center dua arah (${deleteShot.align}/${deleteShot.justify}/${deleteShot.textAlign})`,
+  );
+  checkAssertion(deleteShot.oneLine, `${width}: label Delete 1 baris`);
+  checkAssertion(deleteShot.bg !== saveShot.bg, `${width}: warna latar Delete != Save (${deleteShot.bg})`);
+  checkAssertion(deleteShot.color !== outShot.color, `${width}: warna teks Delete != Sign out (${deleteShot.color})`);
 
   const bs = await save.boundingBox(),
     bo = await out.boundingBox();
-  ok(bo.x >= bs.x + bs.width - 0.5 || bo.y >= bs.y + bs.height - 0.5, `${w}: dua tombol gak ketumpuk`);
-  ok(
+  checkAssertion(bo.x >= bs.x + bs.width - 0.5 || bo.y >= bs.y + bs.height - 0.5, `${width}: dua tombol gak ketumpuk`);
+  checkAssertion(
     (await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth)) <= 0,
-    `${w}: /settings gak melar`,
+    `${width}: /settings gak melar`,
   );
-  ok(errs.length === 0, `${w}: /settings nol page error${errs[0] ? ` :: ${errs[0]}` : ''}`);
-  await ctx.close();
+  checkAssertion(errs.length === 0, `${width}: /settings nol page error${errs[0] ? ` :: ${errs[0]}` : ''}`);
+  await browserContext.close();
 }
 
 {
-  const ctx = await br.newContext({ viewport: { width: 1280, height: 900 } });
-  const page = await ctx.newPage();
+  const browserContext = await br.newContext({ viewport: { width: 1280, height: 900 } });
+  const page = await browserContext.newPage();
   const errs = [];
-  page.on('pageerror', (e) => errs.push(String(e)));
-  await page.route('**/api/**', api);
+  page.on('pageerror', (error) => errs.push(String(error)));
+  await page.route('**/api/**', handleApiRoute);
   const pages = [
     '/',
     '/index.html',
@@ -158,50 +187,53 @@ for (const w of [320, 390, 768, 1280]) {
     '/destinations.html',
   ];
   let seen = 0;
-  const odd = [];
-  for (const p of pages) {
-    const r = await page.goto(B + p, { waitUntil: 'load' });
-    ok(r.status() === 200, `sweep ${p}: HTTP 200`);
+  const oddButtons = [];
+  for (const pagePath of pages) {
+    const response = await page.goto(baseUrl + pagePath, { waitUntil: 'load' });
+    checkAssertion(response.status() === 200, `sweep ${pagePath}: HTTP 200`);
     await page.waitForTimeout(500);
     const rows = await page.evaluate(() => {
-      const out = [];
-      document.querySelectorAll('button, a').forEach((b) => {
-        const bb = b.getBoundingClientRect();
+      const buttonRows = [];
+      document.querySelectorAll('button, a').forEach((button) => {
+        const bb = button.getBoundingClientRect();
         if (bb.width < 40 || bb.height < 20) return;
-        const c = getComputedStyle(b);
-        if (c.visibility === 'hidden' || c.display === 'none') return;
-        if (Math.round(parseFloat(c.height)) !== 34 || c.fontWeight !== '600') return;
-        out.push({
-          fam: c.fontFamily.split(',')[0].replace(/["']/g, ''),
-          t: (b.textContent || '').trim().slice(0, 24),
+        const computedStyle = getComputedStyle(button);
+        if (computedStyle.visibility === 'hidden' || computedStyle.display === 'none') return;
+        if (Math.round(parseFloat(computedStyle.height)) !== 34 || computedStyle.fontWeight !== '600') return;
+        buttonRows.push({
+          fam: computedStyle.fontFamily.split(',')[0].replace(/["']/g, ''),
+          t: (button.textContent || '').trim().slice(0, 24),
         });
       });
-      return out;
+      return buttonRows;
     });
     seen += rows.length;
-    rows.forEach((x) => {
-      if (x.fam !== 'Inter') odd.push(`${p} "${x.t}" -> ${x.fam}`);
+    rows.forEach((row) => {
+      if (row.fam !== 'Inter') oddButtons.push(`${pagePath} "${row.t}" -> ${row.fam}`);
     });
   }
-  ok(seen > 40, `sweep: ada tombol aksi yang ke-ukur (${seen})`);
-  ok(odd.length === 0, `sweep: nol tombol aksi pakai font browser${odd.length ? ` :: ${odd.join(' | ')}` : ''}`);
-  ok(errs.length === 0, `sweep: nol page error${errs[0] ? ` :: ${errs[0]}` : ''}`);
+  checkAssertion(seen > 40, `sweep: ada tombol aksi yang ke-ukur (${seen})`);
+  checkAssertion(
+    oddButtons.length === 0,
+    `sweep: nol tombol aksi pakai font browser${oddButtons.length ? ` :: ${oddButtons.join(' | ')}` : ''}`,
+  );
+  checkAssertion(errs.length === 0, `sweep: nol page error${errs[0] ? ` :: ${errs[0]}` : ''}`);
 
-  await page.goto(`${B}/index.html`, { waitUntil: 'load' });
+  await page.goto(`${baseUrl}/index.html`, { waitUntil: 'load' });
   const cta = page.locator('#explore a').last();
   const href = await cta.getAttribute('href');
   const label = (await cta.textContent()).trim();
   console.log(`     CTA #explore: "${label}" -> ${href}`);
-  ok(href === '/tour.html', `CTA #explore nunjuk /tour.html (dapet ${href})`);
-  ok(label.split(/\s+/).length <= 2, `label CTA <=2 kata ("${label}")`);
-  const tr = await page.goto(`${B}/tour.html`, { waitUntil: 'load' });
-  ok(tr.status() === 200, 'target CTA HTTP 200');
+  checkAssertion(href === '/tour.html', `CTA #explore nunjuk /tour.html (dapet ${href})`);
+  checkAssertion(label.split(/\s+/).length <= 2, `label CTA <=2 kata ("${label}")`);
+  const tr = await page.goto(`${baseUrl}/tour.html`, { waitUntil: 'load' });
+  checkAssertion(tr.status() === 200, 'target CTA HTTP 200');
   const robots = await page.evaluate(() => {
-    const m = document.querySelector('meta[name="robots"]');
-    return m ? m.getAttribute('content') : '';
+    const robotsMeta = document.querySelector('meta[name="robots"]');
+    return robotsMeta ? robotsMeta.getAttribute('content') : '';
   });
-  ok(!/noindex/.test(robots || ''), `target CTA indexable (robots="${robots}")`);
-  await ctx.close();
+  checkAssertion(!/noindex/.test(robots || ''), `target CTA indexable (robots="${robots}")`);
+  await browserContext.close();
 }
 
 await br.close();

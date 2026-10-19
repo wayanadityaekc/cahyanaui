@@ -6,13 +6,13 @@ import { useAccount } from '@/state/AccountProvider';
 import { useTripPrefs } from '@/state/TripPrefsProvider';
 import { readLocal } from '@/lib/storage';
 import { KEY, API_BASE } from '@/lib/constants';
-import { crumbsFor } from '@/lib/crumbs';
+import { buildCrumbs } from '@/lib/crumbs';
 import Select from '@/components/ui/Select';
 import { REFMSG } from '@/components/ui/modalClasses';
 import { BTN_PILL, BTN_CTA, BTN_SM } from '@/components/ui/btnClasses';
 import { CONTACT_GROUP, CONTACT_INPUT } from '@/components/ui/contactFieldClasses';
 import { FIELD_LABEL } from '@/components/ui/formClasses';
-import { initialsOf } from '@/components/layout/AccountMenu';
+import { buildInitials } from '@/components/layout/AccountMenu';
 import Separator from '@/components/ui/Separator';
 import RailLayout from '@/components/ui/RailLayout';
 import { RAIL_READ } from '@/components/ui/railClasses';
@@ -34,7 +34,7 @@ function SettingsShell({ children }) {
       onSelect={() => {}}
       mobileNav={true}
       collapsible
-      breadcrumb={crumbsFor('settings')}
+      breadcrumb={buildCrumbs('settings')}
       scrollContent
     >
       <div className={RAIL_READ}>
@@ -49,25 +49,25 @@ function SettingsShell({ children }) {
 }
 
 export default function AccountSettings() {
-  const { account, setAccount, logout, deleteAccount } = useAccount();
+  const { account, setAccount, logout: handleLogout, deleteAccount } = useAccount();
   const { guests, setGuests, stay, setStay } = useTripPrefs();
   const [form, setForm] = useState({ name: '', email: '', phone: '' });
-  const [msg, setMsg] = useState('');
-  const [busy, setBusy] = useState(false);
-  const [deleteOpen, setDeleteOpen] = useState(false);
-  const [deleted, setDeleted] = useState(false);
+  const [message, setMessage] = useState('');
+  const [isBusy, setIsBusy] = useState(false);
+  const [isDeleteOpen, setIsDeleteOpen] = useState(false);
+  const [isDeleted, setIsDeleted] = useState(false);
 
   useEffect(() => {
     if (account) setForm({ name: account.name || '', email: account.email || '', phone: account.phone || '' });
   }, [account]);
 
-  async function confirmDelete() {
+  async function handleDeleteConfirm() {
     const result = await deleteAccount();
-    if (result.ok) setDeleted(true);
+    if (result.ok) setIsDeleted(true);
     return result;
   }
 
-  if (deleted) {
+  if (isDeleted) {
     return (
       <SettingsShell>
         <div id="settings-root" data-settings>
@@ -96,9 +96,9 @@ export default function AccountSettings() {
     );
   }
 
-  async function save() {
-    setBusy(true);
-    setMsg('');
+  async function handleSave() {
+    setIsBusy(true);
+    setMessage('');
     try {
       const response = await fetch(`${API_BASE}/account`, {
         method: 'PATCH',
@@ -108,19 +108,19 @@ export default function AccountSettings() {
       const data = await response.json();
       if (data && data.account) {
         setAccount(data.account);
-        setMsg('Saved.');
+        setMessage('Saved.');
       } else {
-        setMsg((data && data.detail) || 'Could not save. Please try again.');
+        setMessage((data && data.detail) || 'Could not save. Please try again.');
       }
     } catch (e) {
-      setMsg('Could not save. Please try again.');
+      setMessage('Could not save. Please try again.');
     } finally {
-      setBusy(false);
+      setIsBusy(false);
     }
   }
 
-  function set(k) {
-    return (e) => setForm((v) => ({ ...v, [k]: e.target.value }));
+  function set(fieldName) {
+    return (event) => setForm((previousForm) => ({ ...previousForm, [fieldName]: event.target.value }));
   }
 
   return (
@@ -131,7 +131,7 @@ export default function AccountSettings() {
             className="w-[72px] h-[72px] shrink-0 rounded-[50%] bg-gold text-white grid place-items-center text-h2 font-semibold tracking-[0.02em]"
             aria-hidden="true"
           >
-            {initialsOf(account.name, account.email)}
+            {buildInitials(account.name, account.email)}
           </span>
           <div className="min-w-0">
             <div className="font-semibold text-h3 text-green overflow-hidden text-ellipsis whitespace-nowrap">
@@ -168,7 +168,10 @@ export default function AccountSettings() {
             label="Guests"
             value={guests || ''}
             onChange={setGuests}
-            options={[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((n) => ({ value: String(n), label: String(n) }))}
+            options={[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((guestCount) => ({
+              value: String(guestCount),
+              label: String(guestCount),
+            }))}
             placeholder="Not set"
           />
         </div>
@@ -181,19 +184,19 @@ export default function AccountSettings() {
             type="text"
             id="st-stay"
             value={stay}
-            onChange={(e) => setStay(e.target.value)}
+            onChange={(event) => setStay(event.target.value)}
             placeholder="Ubud & nearby"
           />
         </div>
-        {msg && (
+        {message && (
           <small role="status" className={REFMSG}>
-            {msg}
+            {message}
           </small>
         )}
-        <button className={`inline-flex ${BTN_CTA}`} onClick={save} disabled={busy}>
-          {busy ? 'Saving...' : 'Save changes'}
+        <button className={`inline-flex ${BTN_CTA}`} onClick={handleSave} disabled={isBusy}>
+          {isBusy ? 'Saving...' : 'Save changes'}
         </button>
-        <button className={BTN_PILL} onClick={logout}>
+        <button className={BTN_PILL} onClick={handleLogout}>
           Sign out
         </button>
 
@@ -206,10 +209,14 @@ export default function AccountSettings() {
         <p className="text-body text-muted m-0 mb-3">
           Delete your account. Your bookings and any reviews you&apos;ve written stay on record.
         </p>
-        <button type="button" className={BTN_DANGER_GHOST} onClick={() => setDeleteOpen(true)}>
+        <button type="button" className={BTN_DANGER_GHOST} onClick={() => setIsDeleteOpen(true)}>
           Delete account
         </button>
-        <DeleteAccountModal open={deleteOpen} onClose={() => setDeleteOpen(false)} onConfirm={confirmDelete} />
+        <DeleteAccountModal
+          open={isDeleteOpen}
+          onClose={() => setIsDeleteOpen(false)}
+          onConfirm={handleDeleteConfirm}
+        />
       </div>
     </SettingsShell>
   );

@@ -1,3 +1,7 @@
+const MILLISECONDS_PER_DAY = 86400000;
+const MAX_STAY_NIGHTS = 30;
+const MAX_DAYS_AHEAD = 365;
+
 function toDate(value) {
   const [year, month, day] = value.split('-').map(Number);
   return new Date(Date.UTC(year, month - 1, day));
@@ -15,30 +19,30 @@ export function addDays(value, count) {
 
 export function nightsBetween(checkIn, checkOut) {
   if (!checkIn || !checkOut) return 0;
-  return Math.round((toDate(checkOut) - toDate(checkIn)) / 86400000);
+  return Math.round((toDate(checkOut) - toDate(checkIn)) / MILLISECONDS_PER_DAY);
 }
 
 export function isBookedNight(busy = [], night) {
   return busy.some((range) => night >= range.from && night <= range.to);
 }
 
-function nightsOpen(busy, checkIn, checkOut) {
+function areNightsOpen(busy, checkIn, checkOut) {
   return !busy.some((range) => range.from < checkOut && range.to >= checkIn);
 }
 
-export function stayLimits({ today, minNights = 1, maxNights = 30, maxDaysAhead = 365 }) {
+export function stayLimits({ today, minNights = 1, maxNights = MAX_STAY_NIGHTS, maxDaysAhead = MAX_DAYS_AHEAD }) {
   return { today, minNights, maxNights, lastCheckIn: addDays(today, maxDaysAhead) };
 }
 
 export function canCheckIn(day, { busy = [], limits }) {
   if (day < limits.today || day > limits.lastCheckIn) return false;
-  return nightsOpen(busy, day, addDays(day, limits.minNights));
+  return areNightsOpen(busy, day, addDays(day, limits.minNights));
 }
 
 export function canCheckOut(day, checkIn, { busy = [], limits }) {
   const nights = nightsBetween(checkIn, day);
   if (nights < limits.minNights || nights > limits.maxNights) return false;
-  return nightsOpen(busy, checkIn, day);
+  return areNightsOpen(busy, checkIn, day);
 }
 
 export function stayIsOpen({ checkIn, checkOut }, { busy = [], limits }) {

@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { X } from 'lucide-react';
+import { X as CloseIcon } from 'lucide-react';
 import { cn } from '../lib/cn.js';
 import useBodyLock from '../lib/useBodyLock.js';
 import Collapse from './Collapse.jsx';
@@ -23,6 +23,8 @@ import {
   navLink,
 } from './navbarClasses.js';
 
+const SCROLLED_PAST_TOP_THRESHOLD_PX = 40;
+
 export default function NavbarShell({
   logo,
   actions = null,
@@ -41,13 +43,13 @@ export default function NavbarShell({
   className,
 }) {
   const Link = linkAs;
-  const [menuOpen, setMenuOpen] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [openSub, setOpenSub] = useState(null);
   const navRef = useRef(null);
   const burgerRef = useRef(null);
   const headerRef = useRef(null);
   const barRef = useRef(null);
-  const [atTop, setAtTop] = useState(true);
+  const [isAtTop, setIsAtTop] = useState(true);
 
   useEffect(() => {
     const header = headerRef.current;
@@ -59,62 +61,64 @@ export default function NavbarShell({
       const bar = barRef.current ? barRef.current.offsetHeight : 0;
       root.style.setProperty('--header-h', `${height - bar}px`);
       root.style.setProperty('--tripbar-h', `${bar}px`);
-      if (height > max) {
-        max = height;
-        root.style.setProperty('--header-h-max', `${height}px`);
-      }
+      if (!(height > max)) return;
+      max = height;
+      root.style.setProperty('--header-h-max', `${height}px`);
     }
-    function onResize() {
+    function handleWindowResize() {
       max = 0;
       set();
     }
     set();
     const resizeObserver = new ResizeObserver(set);
     resizeObserver.observe(header);
-    window.addEventListener('resize', onResize);
+    window.addEventListener('resize', handleWindowResize);
     return () => {
       resizeObserver.disconnect();
-      window.removeEventListener('resize', onResize);
+      window.removeEventListener('resize', handleWindowResize);
     };
   }, []);
 
   useEffect(() => {
     if (!overlay) return undefined;
-    function onScroll() {
+    function handleWindowScroll() {
       const hero = document.querySelector('main > section');
       const barHeight = headerRef.current ? headerRef.current.offsetHeight : 0;
-      setAtTop(hero ? hero.getBoundingClientRect().bottom > barHeight : window.scrollY < 40);
+      setIsAtTop(
+        hero ? hero.getBoundingClientRect().bottom > barHeight : window.scrollY < SCROLLED_PAST_TOP_THRESHOLD_PX,
+      );
     }
-    onScroll();
-    window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
+    handleWindowScroll();
+    window.addEventListener('scroll', handleWindowScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleWindowScroll);
   }, [overlay]);
 
   useEffect(() => {
-    if (!menuOpen) return undefined;
-    function onDoc(e) {
-      const inNav = navRef.current && navRef.current.contains(e.target);
-      const onBurger = burgerRef.current && burgerRef.current.contains(e.target);
-      const inPopup = e.target.closest && e.target.closest('[data-portal]');
-      if (!inNav && !onBurger && !inPopup) setMenuOpen(false);
+    if (!isMenuOpen) return undefined;
+    function handleDocumentPointerDown(event) {
+      const inNav = navRef.current && navRef.current.contains(event.target);
+      const onBurger = burgerRef.current && burgerRef.current.contains(event.target);
+      const inPopup = event.target.closest && event.target.closest('[data-portal]');
+      const isClickOutsideTargets = !inNav && !onBurger && !inPopup;
+      if (isClickOutsideTargets) setIsMenuOpen(false);
     }
-    function onKey(e) {
-      if (e.key !== 'Escape') return;
+    function handleEscapeKeyDown(event) {
+      if (event.key !== 'Escape') return;
       if (document.querySelector('[data-portal="select"][data-open]')) return;
-      setMenuOpen(false);
+      setIsMenuOpen(false);
     }
-    document.addEventListener('click', onDoc);
-    document.addEventListener('keydown', onKey);
+    document.addEventListener('click', handleDocumentPointerDown);
+    document.addEventListener('keydown', handleEscapeKeyDown);
     return () => {
-      document.removeEventListener('click', onDoc);
-      document.removeEventListener('keydown', onKey);
+      document.removeEventListener('click', handleDocumentPointerDown);
+      document.removeEventListener('keydown', handleEscapeKeyDown);
     };
-  }, [menuOpen]);
+  }, [isMenuOpen]);
 
-  useBodyLock(menuOpen);
+  useBodyLock(isMenuOpen);
 
-  function close() {
-    setMenuOpen(false);
+  function handleClose() {
+    setIsMenuOpen(false);
   }
 
   return (
@@ -122,7 +126,7 @@ export default function NavbarShell({
       ref={headerRef}
       className={cn(NAV_HEADER, className)}
       data-overlay={overlay || undefined}
-      data-clear={overlay && atTop && !menuOpen ? '' : undefined}
+      data-clear={overlay && isAtTop && !isMenuOpen ? '' : undefined}
     >
       {topBar ? <div ref={barRef}>{topBar}</div> : null}
       <div className={NAV_ROW}>
@@ -131,14 +135,14 @@ export default function NavbarShell({
           id="hamburger"
           ref={burgerRef}
           className={NAV_BURGER}
-          aria-label={menuOpen ? 'Close menu' : 'Open menu'}
-          aria-expanded={menuOpen}
+          aria-label={isMenuOpen ? 'Close menu' : 'Open menu'}
+          aria-expanded={isMenuOpen}
           aria-controls={drawerId}
-          onClick={() => setMenuOpen((wasOpen) => !wasOpen)}
+          onClick={() => setIsMenuOpen((wasOpen) => !wasOpen)}
         >
-          <span className={cn(NAV_BURGER_BAR, menuOpen && 'translate-y-[6px] rotate-45')} />
-          <span className={cn(NAV_BURGER_BAR, menuOpen ? 'opacity-0' : 'opacity-100')} />
-          <span className={cn(NAV_BURGER_BAR, menuOpen && '-translate-y-[6px] -rotate-45')} />
+          <span className={cn(NAV_BURGER_BAR, isMenuOpen && 'translate-y-[6px] rotate-45')} />
+          <span className={cn(NAV_BURGER_BAR, isMenuOpen ? 'opacity-0' : 'opacity-100')} />
+          <span className={cn(NAV_BURGER_BAR, isMenuOpen && '-translate-y-[6px] -rotate-45')} />
         </button>
 
         {logo}
@@ -151,13 +155,13 @@ export default function NavbarShell({
             id={drawerId}
             className={cn(
               NAV_DRAWER,
-              menuOpen ? 'translate-x-0 pointer-events-auto' : '-translate-x-full pointer-events-none',
+              isMenuOpen ? 'translate-x-0 pointer-events-auto' : '-translate-x-full pointer-events-none',
             )}
           >
             <li className={NAV_DRAWER_HEAD}>
               <b className="text-strong font-semibold text-gold">{drawerTitle}</b>
-              <button type="button" className={NAV_CLOSE} aria-label="Close menu" onClick={close}>
-                <X strokeWidth={2} aria-hidden="true" />
+              <button type="button" className={NAV_CLOSE} aria-label="Close menu" onClick={handleClose}>
+                <CloseIcon strokeWidth={2} aria-hidden="true" />
               </button>
             </li>
 
@@ -165,12 +169,16 @@ export default function NavbarShell({
 
             {links.map((link) => {
               if (link.items) {
-                const open = openSub === link.label;
+                const isOpen = openSub === link.label;
                 return (
                   <li key={link.label} className={cn('relative', NAV_LI)}>
                     {link.href ? (
                       <div className="flex items-center">
-                        <Link href={link.href} onClick={close} className={cn(navLink(isActive(link.href)), 'flex-1')}>
+                        <Link
+                          href={link.href}
+                          onClick={handleClose}
+                          className={cn(navLink(isActive(link.href)), 'flex-1')}
+                        >
                           {link.icon}
                           {link.label}
                         </Link>
@@ -178,14 +186,14 @@ export default function NavbarShell({
                           type="button"
                           data-submenu
                           className="grid place-items-center w-10 h-10 p-0 border-0 bg-transparent text-gold text-strong cursor-pointer"
-                          aria-expanded={open}
+                          aria-expanded={isOpen}
                           aria-label={`${link.label} list`}
-                          onClick={() => setOpenSub(open ? null : link.label)}
+                          onClick={() => setOpenSub(isOpen ? null : link.label)}
                         >
                           <span
                             className={cn(
                               'inline-block transition-[rotate] duration-200 ease-[ease]',
-                              open && 'rotate-90',
+                              isOpen && 'rotate-90',
                             )}
                           >
                             &rsaquo;
@@ -197,8 +205,8 @@ export default function NavbarShell({
                         type="button"
                         data-submenu
                         className={NAV_SUBTRIGGER}
-                        aria-expanded={open}
-                        onClick={() => setOpenSub(open ? null : link.label)}
+                        aria-expanded={isOpen}
+                        onClick={() => setOpenSub(isOpen ? null : link.label)}
                       >
                         {link.icon}
                         {link.label}
@@ -206,18 +214,18 @@ export default function NavbarShell({
                           className={cn(
                             NAV_ROW_END,
                             'inline-block transition-[rotate] duration-200 ease-[ease]',
-                            open && 'rotate-90',
+                            isOpen && 'rotate-90',
                           )}
                         >
                           &rsaquo;
                         </span>
                       </button>
                     )}
-                    <Collapse open={open}>
+                    <Collapse open={isOpen}>
                       <ul className={NAV_SUBLIST}>
                         {link.items.map((item) => (
                           <li key={item.href} className="py-[0.4rem]">
-                            <Link href={item.href} onClick={close} className={NAV_SUBLINK}>
+                            <Link href={item.href} onClick={handleClose} className={NAV_SUBLINK}>
                               {item.label}
                             </Link>
                           </li>
@@ -229,7 +237,7 @@ export default function NavbarShell({
               }
               return (
                 <li key={link.href} className={NAV_LI}>
-                  <Link href={link.href} onClick={close} className={navLink(isActive(link.href))}>
+                  <Link href={link.href} onClick={handleClose} className={navLink(isActive(link.href))}>
                     {link.icon}
                     {link.label}
                     {link.end}
@@ -239,7 +247,9 @@ export default function NavbarShell({
             })}
 
             {drawerFoot ? (
-              <li className="mt-auto pt-4">{typeof drawerFoot === 'function' ? drawerFoot(close) : drawerFoot}</li>
+              <li className="mt-auto pt-4">
+                {typeof drawerFoot === 'function' ? drawerFoot(handleClose) : drawerFoot}
+              </li>
             ) : null}
           </ul>
         </nav>
@@ -247,7 +257,10 @@ export default function NavbarShell({
         {account}
       </div>
 
-      <div className={cn(NAV_SCRIM, menuOpen ? 'opacity-100 visible' : 'opacity-0 invisible')} onClick={close} />
+      <div
+        className={cn(NAV_SCRIM, isMenuOpen ? 'opacity-100 visible' : 'opacity-0 invisible')}
+        onClick={handleClose}
+      />
     </header>
   );
 }

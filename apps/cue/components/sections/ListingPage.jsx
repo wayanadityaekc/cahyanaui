@@ -1,9 +1,9 @@
 'use client';
 import { BTN_SM } from '@/components/ui/btnClasses';
 import Breadcrumb from '@/components/ui/Breadcrumb';
-import { crumbsFor } from '@/lib/crumbs';
+import { buildCrumbs } from '@/lib/crumbs';
 
-import { Car, Check, MapPin, Search, UserRound, X } from 'lucide-react';
+import { Car, Check, MapPin, Search, UserRound, X as XIcon } from 'lucide-react';
 import { INFO_SECTION_DETAIL, INFO_CARD } from '@/components/ui/infoClasses';
 import InfoFacts from '@/components/ui/InfoFacts';
 import InfoBoxes, { InfoBox, InfoBoxList } from '@/components/ui/InfoBoxes';
@@ -16,23 +16,26 @@ import { CATSEC, LROW_LIST } from '@/components/ui/listingClasses';
 import { isHiddenTour } from '@/lib/routes';
 import { SECTION_TITLE, ST_LEFT } from '@/components/ui/sectionTitle';
 
+const ICON_STROKE_WIDTH_MEDIUM = 1.8;
+const ICON_STROKE_WIDTH_REGULAR = 1.7;
+
 function SearchIcon() {
-  return <Search strokeWidth={1.8} aria-hidden="true" />;
+  return <Search strokeWidth={ICON_STROKE_WIDTH_MEDIUM} aria-hidden="true" />;
 }
 function CloseIcon() {
-  return <X aria-hidden="true" />;
+  return <XIcon aria-hidden="true" />;
 }
 function CarIcon() {
-  return <Car strokeWidth={1.7} aria-hidden="true" />;
+  return <Car strokeWidth={ICON_STROKE_WIDTH_REGULAR} aria-hidden="true" />;
 }
 function UserIcon() {
-  return <UserRound strokeWidth={1.7} aria-hidden="true" />;
+  return <UserRound strokeWidth={ICON_STROKE_WIDTH_REGULAR} aria-hidden="true" />;
 }
 function CheckIcon() {
   return <Check aria-hidden="true" />;
 }
 function PinIcon() {
-  return <MapPin strokeWidth={1.7} aria-hidden="true" />;
+  return <MapPin strokeWidth={ICON_STROKE_WIDTH_REGULAR} aria-hidden="true" />;
 }
 
 const NOUN = { tours: 'tours', activities: 'experiences', destinations: 'destinations' };
@@ -47,25 +50,25 @@ export default function ListingPage({ data, page }) {
 
   const allCards = [];
   cats.forEach((cat) => {
-    const shown = cat.cards.filter((card) => !isHiddenTour(card.href));
-    shown.forEach((card, i) => allCards.push({ card, catId: cat.id, anchor: i === 0 ? cat.id : null }));
+    const visibleCards = cat.cards.filter((card) => !isHiddenTour(card.href));
+    visibleCards.forEach((card, index) => allCards.push({ card, catId: cat.id, anchor: index === 0 ? cat.id : null }));
   });
-  const shownCards = term ? allCards.filter((x) => x.card.name.toLowerCase().includes(term)) : allCards;
+  const shownCards = term ? allCards.filter((allCard) => allCard.card.name.toLowerCase().includes(term)) : allCards;
   const tabs = [{ id: 'all', label: listTitle }, ...chips];
 
   const browseRef = useRef(null);
-  const [heroInView, setHeroInView] = useState(true);
+  const [isHeroInView, setIsHeroInView] = useState(true);
   useEffect(() => {
     const browse = browseRef.current;
     if (!browse) {
-      setHeroInView(true);
+      setIsHeroInView(true);
       return undefined;
     }
-    const observer = new IntersectionObserver(([e]) => setHeroInView(e.isIntersecting));
+    const observer = new IntersectionObserver(([event]) => setIsHeroInView(event.isIntersecting));
     observer.observe(browse);
     return () => observer.disconnect();
   }, [term]);
-  const showStickyNav = !term && !heroInView;
+  const shouldShowStickyNav = !term && !isHeroInView;
 
   return (
     <div className="tourprog pb-20">
@@ -79,7 +82,7 @@ export default function ListingPage({ data, page }) {
           min-[769px]:mt-0 min-[769px]:pt-12 min-[769px]:pr-12 min-[769px]:pb-12 min-[769px]:pl-[max(var(--container-x),calc(50vw_-_var(--container)/2_+_var(--container-x)))]
           min-[769px]:bg-transparent min-[769px]:rounded-none min-[769px]:justify-center"
         >
-          {!term && <Breadcrumb items={crumbsFor(page)} className="mb-2 self-start" />}
+          {!term && <Breadcrumb items={buildCrumbs(page)} className="mb-2 self-start" />}
           {!term && <h1 className={`${SUBHERO_TITLE} mb-3`}>{title}</h1>}
           {!term && <p className="max-w-[460px] m-0 text-[#3d3d3d]">{sub}</p>}
           <div className="flex items-center gap-[6px] w-full max-w-[430px] mt-6 h-[2.9rem] pl-[18px] pr-[6px] bg-white [border:1px_solid_var(--line)] rounded-md max-[768px]:absolute max-[768px]:left-[1.2rem] max-[768px]:right-[1.2rem] max-[768px]:top-[-3.9rem] max-[768px]:w-auto max-[768px]:z-[4] max-[768px]:mt-0 max-[768px]:max-w-none">
@@ -88,7 +91,7 @@ export default function ListingPage({ data, page }) {
               className="flex-1 min-w-0 [border:0] bg-transparent outline-none [font-family:inherit] text-field text-ink placeholder:text-muted [&::-webkit-search-cancel-button]:appearance-none [&::-webkit-search-cancel-button]:hidden [&::-webkit-search-decoration]:appearance-none [&::-webkit-search-decoration]:hidden"
               placeholder={`Search ${noun}`}
               value={query}
-              onChange={(e) => setQuery(e.target.value)}
+              onChange={(event) => setQuery(event.target.value)}
               aria-label={`Search ${noun}`}
             />
             <button
@@ -137,37 +140,37 @@ export default function ListingPage({ data, page }) {
           <h2 className={`${SECTION_TITLE} ${ST_LEFT} !text-[1.5rem] max-[768px]:hidden`}>{listTitle}</h2>
         </div>
 
-        {showStickyNav && (
+        {shouldShowStickyNav && (
           <div
             className="fixed left-1/2 [transform:translateX(-50%)] bottom-[1.3rem] z-50 flex items-center gap-[4px] p-[6px] max-w-[calc(100vw-2rem)] bg-white [border:1px_solid_var(--line)] rounded-md overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden max-[768px]:hidden"
             role="tablist"
             aria-label="Filter by area"
           >
-            {tabs.map((t) => (
+            {tabs.map((tab) => (
               <button
-                key={t.id}
+                key={tab.id}
                 type="button"
-                className={`[font-family:inherit] text-[0.78rem] font-semibold rounded-sm py-2 px-4 [border:0] cursor-pointer whitespace-nowrap [transition:color_var(--dur)_ease,background-color_var(--dur)_ease] ${zone === t.id ? 'bg-cta text-white' : 'bg-transparent text-muted hover:text-ink hover:bg-cream'}`}
-                aria-pressed={zone === t.id}
-                onClick={() => setZone(t.id)}
+                className={`[font-family:inherit] text-[0.78rem] font-semibold rounded-sm py-2 px-4 [border:0] cursor-pointer whitespace-nowrap [transition:color_var(--dur)_ease,background-color_var(--dur)_ease] ${zone === tab.id ? 'bg-cta text-white' : 'bg-transparent text-muted hover:text-ink hover:bg-cream'}`}
+                aria-pressed={zone === tab.id}
+                onClick={() => setZone(tab.id)}
               >
-                {t.label}
+                {tab.label}
               </button>
             ))}
           </div>
         )}
-        {showStickyNav && <SectionSwitcher zones={chips} />}
+        {shouldShowStickyNav && <SectionSwitcher zones={chips} />}
 
         <section className={CATSEC}>
           <div className={LROW_LIST}>
             {shownCards.map(({ card, catId, anchor }) => {
-              const dim = !term && zone !== 'all' && catId !== zone;
+              const isDimmed = !term && zone !== 'all' && catId !== zone;
               return (
                 <ListingRow
                   key={card.href + card.name}
                   {...card}
                   anchorId={anchor || undefined}
-                  dim={dim}
+                  dim={isDimmed}
                   onReset={() => setZone('all')}
                 />
               );

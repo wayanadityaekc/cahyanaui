@@ -19,12 +19,12 @@ import {
   CONTROL_HINT,
   CONTROL_VAL_RICH,
   CONTROL_VAL_RICH_PLACEHOLDER,
-  panelPopup,
+  buildPanelPopupClass,
   PANEL_HEAD,
   PANEL_HEAD_H3,
   PANEL_CLOSE,
   PANEL_BODY,
-  opt,
+  buildOptionClass,
   CSEL_GROUP,
   BK_NATIVE,
   HS_OPT_FLAG,
@@ -48,68 +48,74 @@ export default function Select({
   icon = null,
   hint = '',
 }) {
-  const rich = !!(icon || hint);
-  const [open, setOpen] = useState(false);
-  const [mounted, setMounted] = useState(false);
+  const hasIconOrHint = !!(icon || hint);
+  const [isOpen, setIsOpen] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
   const isMobile = useMobile();
   const groupRef = useRef(null);
   const autoId = useId();
   const fieldId = id || `sel-${autoId}`;
   const asPortal = isMobile || popup;
 
-  useEffect(() => setMounted(true), []);
+  useEffect(() => setIsMounted(true), []);
 
   useEffect(() => {
-    if (!open || asPortal) return;
-    function onDoc(e) {
-      if (groupRef.current && !groupRef.current.contains(e.target)) setOpen(false);
+    if (!isOpen || asPortal) return;
+    function handleDocumentClick(event) {
+      if (groupRef.current && !groupRef.current.contains(event.target)) setIsOpen(false);
     }
-    document.addEventListener('click', onDoc);
-    return () => document.removeEventListener('click', onDoc);
-  }, [open, asPortal]);
+    document.addEventListener('click', handleDocumentClick);
+    return () => document.removeEventListener('click', handleDocumentClick);
+  }, [isOpen, asPortal]);
 
   useEffect(() => {
-    if (!open) return;
-    function onKey(e) {
-      return e.key === 'Escape' && setOpen(false);
+    if (!isOpen) return;
+    function handleKeyDown(event) {
+      return event.key === 'Escape' && setIsOpen(false);
     }
-    document.addEventListener('keydown', onKey);
-    return () => document.removeEventListener('keydown', onKey);
-  }, [open]);
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen]);
 
-  const selected = options.find((o) => String(o.value) === String(value));
+  const selected = options.find((option) => String(option.value) === String(value));
 
   const panel = (
-    <div className={panelPopup(open)} data-portal="select" data-open={open ? '' : undefined}>
+    <div className={buildPanelPopupClass(isOpen)} data-portal="select" data-open={isOpen ? '' : undefined}>
       <div className={PANEL_HEAD}>
         <h3 className={PANEL_HEAD_H3}>{label}</h3>
-        <button type="button" className={PANEL_CLOSE} aria-label="Close" onClick={() => setOpen(false)}>
+        <button type="button" className={PANEL_CLOSE} aria-label="Close" onClick={() => setIsOpen(false)}>
           &times;
         </button>
       </div>
       <div className={PANEL_BODY} role="listbox" aria-label={label}>
-        {options.map((o) => (
+        {options.map((option) => (
           <button
-            key={String(o.value)}
+            key={String(option.value)}
             type="button"
             role="option"
-            aria-selected={String(o.value) === String(value)}
-            aria-disabled={o.disabled || undefined}
-            className={opt(String(o.value) === String(value), o.disabled)}
-            disabled={!!o.disabled}
+            aria-selected={String(option.value) === String(value)}
+            aria-disabled={option.disabled || undefined}
+            className={buildOptionClass(String(option.value) === String(value), option.disabled)}
+            disabled={!!option.disabled}
             onClick={() => {
-              if (o.disabled) return;
-              onChange(o.value);
-              setOpen(false);
+              if (option.disabled) return;
+              onChange(option.value);
+              setIsOpen(false);
             }}
           >
-            {o.flag && <img className={HS_OPT_FLAG} src={`/assets/flags/${o.flag}.svg`} alt="" />}
-            <span className={HS_OPT_NM}>{o.label}</span>
+            {option.flag && <img className={HS_OPT_FLAG} src={`/assets/flags/${option.flag}.svg`} alt="" />}
+            <span className={HS_OPT_NM}>{option.label}</span>
           </button>
         ))}
       </div>
     </div>
   );
+
+  function pickControlClasses() {
+    if (!selected) return CONTROL_VAL_PLACEHOLDER;
+    if (selected.flag) return `${CONTROL_VAL} ${CONTROL_VAL_FLAG}`;
+    return CONTROL_VAL;
+  }
 
   return (
     <div className={clsx(CSEL_GROUP, className)} ref={groupRef}>
@@ -118,31 +124,31 @@ export default function Select({
         id={fieldId}
         className={BK_NATIVE}
         value={value ?? ''}
-        onChange={(e) => onChange(e.target.value)}
+        onChange={(event) => onChange(event.target.value)}
         tabIndex={-1}
         aria-hidden="true"
       >
         {placeholder && <option value="">{placeholder}</option>}
-        {options.map((o) => (
-          <option key={String(o.value)} value={o.value} disabled={o.disabled}>
-            {o.label}
+        {options.map((option) => (
+          <option key={String(option.value)} value={option.value} disabled={option.disabled}>
+            {option.label}
           </option>
         ))}
       </select>
 
       <button
         type="button"
-        className={rich ? CONTROL_RICH : CONTROL}
+        className={hasIconOrHint ? CONTROL_RICH : CONTROL}
         aria-haspopup="listbox"
-        aria-expanded={open}
-        onClick={() => setOpen((v) => !v)}
+        aria-expanded={isOpen}
+        onClick={() => setIsOpen((wasOpen) => !wasOpen)}
       >
         {icon && (
           <span className={CONTROL_IC} aria-hidden="true">
             {icon}
           </span>
         )}
-        {rich ? (
+        {hasIconOrHint ? (
           <span className={CONTROL_STACK}>
             {hint && <span className={CONTROL_HINT}>{hint}</span>}
             <span className={!selected ? CONTROL_VAL_RICH_PLACEHOLDER : CONTROL_VAL_RICH}>
@@ -150,11 +156,7 @@ export default function Select({
             </span>
           </span>
         ) : (
-          <span
-            className={
-              !selected ? CONTROL_VAL_PLACEHOLDER : selected.flag ? `${CONTROL_VAL} ${CONTROL_VAL_FLAG}` : CONTROL_VAL
-            }
-          >
+          <span className={pickControlClasses()}>
             {selected && selected.flag && (
               <img className={HS_OPT_FLAG} src={`/assets/flags/${selected.flag}.svg`} alt="" />
             )}
@@ -166,9 +168,9 @@ export default function Select({
         <Chevron />
       </button>
 
-      {mounted && asPortal && createPortal(panel, document.body)}
-      {mounted && asPortal && <Overlay open={open} elevated={popup} onClose={() => setOpen(false)} />}
-      {(!asPortal || !mounted) && panel}
+      {isMounted && asPortal && createPortal(panel, document.body)}
+      {isMounted && asPortal && <Overlay open={isOpen} elevated={popup} onClose={() => setIsOpen(false)} />}
+      {(!asPortal || !isMounted) && panel}
     </div>
   );
 }

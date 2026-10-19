@@ -10,54 +10,62 @@ import { FIELD_LABEL } from '@/components/ui/formClasses';
 import { useAccount } from '@/state/AccountProvider';
 import OtpFields from './OtpFields';
 
+const COOLDOWN_TICK_MS = 1000;
+const OTP_CODE_LENGTH = 6;
+
 const RESEND_SECONDS = 30;
 
 export default function AuthModal({ open, onClose, reason, onSignedIn }) {
-  const forBook = reason === 'book';
+  const isForBooking = reason === 'book';
   const { requestLogin, verifyCode, createAccount } = useAccount();
   const [view, setView] = useState('signin');
   const [stage, setStage] = useState('email');
-  const [f, setF] = useState({ name: '', email: '', phone: '' });
+  const [form, setForm] = useState({ name: '', email: '', phone: '' });
   const [codeEmail, setCodeEmail] = useState('');
   const [code, setCode] = useState('');
-  const [busy, setBusy] = useState(false);
+  const [isBusy, setIsBusy] = useState(false);
   const [errors, setErrors] = useState({});
-  const [msg, setMsg] = useState('');
+  const [message, setMessage] = useState('');
   const [ok, setOk] = useState('');
   const [cooldown, setCooldown] = useState(0);
 
   useEffect(() => {
     if (cooldown <= 0) return undefined;
-    const t = setInterval(() => setCooldown((s) => Math.max(0, s - 1)), 1000);
-    return () => clearInterval(t);
+    const cooldownTimer = setInterval(
+      () => setCooldown((secondsLeft) => Math.max(0, secondsLeft - 1)),
+      COOLDOWN_TICK_MS,
+    );
+    return () => clearInterval(cooldownTimer);
   }, [cooldown]);
 
-  function set(k) {
-    return (e) => {
-      const { value } = e.target;
-      setF((v) => ({ ...v, [k]: value }));
-      setErrors((v) => (v[k] ? { ...v, [k]: undefined } : v));
+  function set(fieldName) {
+    return (event) => {
+      const { value } = event.target;
+      setForm((previousForm) => ({ ...previousForm, [fieldName]: value }));
+      setErrors((previousErrors) =>
+        previousErrors[fieldName] ? { ...previousErrors, [fieldName]: undefined } : previousErrors,
+      );
     };
   }
   function reset() {
-    setMsg('');
+    setMessage('');
     setOk('');
     setErrors({});
   }
-  function close() {
+  function handleClose() {
     reset();
-    setF({ name: '', email: '', phone: '' });
+    setForm({ name: '', email: '', phone: '' });
     setStage('email');
     setCode('');
     onClose();
   }
 
   async function sendCode(email) {
-    setBusy(true);
+    setIsBusy(true);
     const sent = await requestLogin(email);
-    setBusy(false);
+    setIsBusy(false);
     if (!sent) {
-      setMsg('Sorry, we could not send the code. Please try again, or reach us on WhatsApp.');
+      setMessage('Sorry, we could not send the code. Please try again, or reach us on WhatsApp.');
       return;
     }
     setCodeEmail(email);
@@ -67,25 +75,25 @@ export default function AuthModal({ open, onClose, reason, onSignedIn }) {
     reset();
   }
 
-  async function doSignIn() {
+  async function handleSignIn() {
     reset();
-    const { ok: valid, errors: fieldErrors, data } = validateWith(signInSchema, f);
+    const { ok: valid, errors: fieldErrors, data } = validateWith(signInSchema, form);
     setErrors(fieldErrors);
     if (!valid) return;
     await sendCode(data.email);
   }
 
-  async function doCreate() {
+  async function handleAccountCreate() {
     reset();
-    const { ok: valid, errors: fieldErrors, data } = validateWith(createAccountSchema, f);
+    const { ok: valid, errors: fieldErrors, data } = validateWith(createAccountSchema, form);
     setErrors(fieldErrors);
     if (!valid) return;
-    setBusy(true);
+    setIsBusy(true);
     const result = await createAccount({ name: data.name, email: data.email, phone: data.phone });
-    setBusy(false);
+    setIsBusy(false);
     if (result.ok) {
       reset();
-      setF({ name: '', email: '', phone: '' });
+      setForm({ name: '', email: '', phone: '' });
       (onSignedIn || onClose)();
       return;
     }
@@ -97,64 +105,73 @@ export default function AuthModal({ open, onClose, reason, onSignedIn }) {
       setOk(`You already have an account as ${result.email}.`);
       return;
     }
-    setMsg(result.error || 'Sorry, we could not create your account. Please try again.');
+    setMessage(result.error || 'Sorry, we could not create your account. Please try again.');
   }
 
-  async function doVerify(fullCode) {
+  async function handleCodeVerify(fullCode) {
     reset();
-    setBusy(true);
+    setIsBusy(true);
     const result = await verifyCode(codeEmail, fullCode);
-    setBusy(false);
+    setIsBusy(false);
     if (result.ok) {
       reset();
-      setF({ name: '', email: '', phone: '' });
+      setForm({ name: '', email: '', phone: '' });
       setStage('email');
       setCode('');
       (onSignedIn || onClose)();
       return;
     }
     setCode('');
-    setMsg(result.error || 'Sorry, something went wrong. Please try again.');
+    setMessage(result.error || 'Sorry, something went wrong. Please try again.');
   }
 
-  async function resend() {
-    if (cooldown > 0 || busy) return;
+  async function handleCodeResend() {
+    if (cooldown > 0 || isBusy) return;
     await sendCode(codeEmail);
   }
 
-  function backToEmail() {
+  function handleEmailReturn() {
     setStage('email');
     setCode('');
     reset();
   }
-  function swap(v) {
-    setView(v);
+  function swap(nextView) {
+    setView(nextView);
     setStage('email');
     setCode('');
     reset();
   }
 
-  const title =
-    stage === 'code'
-      ? 'Enter your code'
-      : view === 'signin'
-        ? forBook
-          ? 'Sign in to book'
-          : 'Sign in'
-        : 'Create your account';
+  function pickAuthTitle() {
+    if (stage === 'code') return 'Enter your code';
+    if (view === 'signin') {
+      if (isForBooking) return 'Sign in to book';
+      return 'Sign in';
+    }
+    return 'Create your account';
+  }
 
-  return (
-    <Modal open={open} onClose={close} title={title}>
-      {stage === 'code' ? (
+  const title = pickAuthTitle();
+
+  function renderAuthStage() {
+    if (stage === 'code')
+      return (
         <>
           <p className="m-0 mb-[1.1rem] text-muted text-small leading-[1.5] text-center">
             We sent a 6-digit code to <b className="text-green">{codeEmail}</b>. Enter it below - it expires in 10
             minutes.
           </p>
-          <OtpFields value={code} onChange={setCode} onComplete={doVerify} error={!!msg} disabled={busy} autoFocus />
-          {msg && (
+          <OtpFields
+            value={code}
+            onChange={setCode}
+            onComplete={handleCodeVerify}
+            error={!!message}
+            disabled={isBusy}
+            autoFocus
+          />
+          {message && (
             <small role="alert" className={`${REFMSG_ERR} block text-center mt-3`}>
-              {msg}
+              {message}
             </small>
           )}
           {ok && (
@@ -165,10 +182,10 @@ export default function AuthModal({ open, onClose, reason, onSignedIn }) {
           <button
             type="button"
             className={`${BTN} mt-4`}
-            onClick={() => doVerify(code)}
-            disabled={busy || code.length < 6}
+            onClick={() => handleCodeVerify(code)}
+            disabled={isBusy || code.length < OTP_CODE_LENGTH}
           >
-            {busy ? 'Checking...' : 'Verify'}
+            {isBusy ? 'Checking...' : 'Verify'}
           </button>
           <p className="mt-4 text-center text-small text-muted">
             {cooldown > 0 ? (
@@ -177,7 +194,7 @@ export default function AuthModal({ open, onClose, reason, onSignedIn }) {
               <button
                 type="button"
                 className="bg-transparent border-none p-0 cursor-pointer font-body text-small text-gold font-semibold underline hover:text-gold-d"
-                onClick={resend}
+                onClick={handleCodeResend}
               >
                 Resend code
               </button>
@@ -186,16 +203,18 @@ export default function AuthModal({ open, onClose, reason, onSignedIn }) {
             <button
               type="button"
               className="bg-transparent border-none p-0 cursor-pointer font-body text-small text-gold font-semibold underline hover:text-gold-d"
-              onClick={backToEmail}
+              onClick={handleEmailReturn}
             >
               Change email
             </button>
           </p>
         </>
-      ) : view === 'signin' ? (
+      );
+    if (view === 'signin')
+      return (
         <>
           <p className="m-0 mb-[1.1rem] text-muted text-small leading-[1.5]">
-            {forBook ? (
+            {isForBooking ? (
               <>
                 Your trip is saved. Enter your email and we&apos;ll send a 6-digit code to sign in - no password needed.
               </>
@@ -212,7 +231,7 @@ export default function AuthModal({ open, onClose, reason, onSignedIn }) {
               type="email"
               id="auth-email"
               placeholder="you@email.com"
-              value={f.email}
+              value={form.email}
               onChange={set('email')}
               autoComplete="email"
               aria-invalid={!!errors.email}
@@ -223,13 +242,13 @@ export default function AuthModal({ open, onClose, reason, onSignedIn }) {
               </small>
             )}
           </div>
-          {msg && (
+          {message && (
             <small role="alert" className={REFMSG_ERR}>
-              {msg}
+              {message}
             </small>
           )}
-          <button type="button" className={BTN} onClick={doSignIn} disabled={busy}>
-            {busy ? 'Sending...' : 'Send code'}
+          <button type="button" className={BTN} onClick={handleSignIn} disabled={isBusy}>
+            {isBusy ? 'Sending...' : 'Send code'}
           </button>
           <p className="mt-4 text-center text-small text-muted">
             New here?{' '}
@@ -242,91 +261,97 @@ export default function AuthModal({ open, onClose, reason, onSignedIn }) {
             </button>
           </p>
         </>
-      ) : (
-        <>
-          <p className="m-0 mb-[1.1rem] text-muted text-small leading-[1.5]">
-            No password - we&apos;ll recognise you by email &amp; phone.
-          </p>
-          <div className={CONTACT_GROUP}>
-            <label className={FIELD_LABEL} htmlFor="auth-name">
-              Your Name
-            </label>
-            <input
-              className={CONTACT_INPUT}
-              type="text"
-              id="auth-name"
-              placeholder="Enter your name"
-              value={f.name}
-              onChange={set('name')}
-              autoComplete="name"
-              aria-invalid={!!errors.name}
-            />
-            {errors.name && (
-              <small role="alert" className={FIELD_ERR}>
-                {errors.name}
-              </small>
-            )}
-          </div>
-          <div className={CONTACT_GROUP}>
-            <label className={FIELD_LABEL} htmlFor="auth-cemail">
-              Email
-            </label>
-            <input
-              className={CONTACT_INPUT}
-              type="email"
-              id="auth-cemail"
-              placeholder="you@email.com"
-              value={f.email}
-              onChange={set('email')}
-              autoComplete="email"
-              aria-invalid={!!errors.email}
-            />
-            {errors.email && (
-              <small role="alert" className={FIELD_ERR}>
-                {errors.email}
-              </small>
-            )}
-          </div>
-          <div className={CONTACT_GROUP}>
-            <label className={FIELD_LABEL} htmlFor="auth-phone">
-              Phone / WhatsApp
-            </label>
-            <input
-              className={CONTACT_INPUT}
-              type="tel"
-              id="auth-phone"
-              placeholder="+62 ..."
-              value={f.phone}
-              onChange={set('phone')}
-              autoComplete="tel"
-              aria-invalid={!!errors.phone}
-            />
-            {errors.phone && (
-              <small role="alert" className={FIELD_ERR}>
-                {errors.phone}
-              </small>
-            )}
-          </div>
-          {msg && (
-            <small role="alert" className={REFMSG_ERR}>
-              {msg}
+      );
+    return (
+      <>
+        <p className="m-0 mb-[1.1rem] text-muted text-small leading-[1.5]">
+          No password - we&apos;ll recognise you by email &amp; phone.
+        </p>
+        <div className={CONTACT_GROUP}>
+          <label className={FIELD_LABEL} htmlFor="auth-name">
+            Your Name
+          </label>
+          <input
+            className={CONTACT_INPUT}
+            type="text"
+            id="auth-name"
+            placeholder="Enter your name"
+            value={form.name}
+            onChange={set('name')}
+            autoComplete="name"
+            aria-invalid={!!errors.name}
+          />
+          {errors.name && (
+            <small role="alert" className={FIELD_ERR}>
+              {errors.name}
             </small>
           )}
-          <button type="button" className={BTN} onClick={doCreate} disabled={busy}>
-            {busy ? 'Creating...' : 'Create Account'}
+        </div>
+        <div className={CONTACT_GROUP}>
+          <label className={FIELD_LABEL} htmlFor="auth-cemail">
+            Email
+          </label>
+          <input
+            className={CONTACT_INPUT}
+            type="email"
+            id="auth-cemail"
+            placeholder="you@email.com"
+            value={form.email}
+            onChange={set('email')}
+            autoComplete="email"
+            aria-invalid={!!errors.email}
+          />
+          {errors.email && (
+            <small role="alert" className={FIELD_ERR}>
+              {errors.email}
+            </small>
+          )}
+        </div>
+        <div className={CONTACT_GROUP}>
+          <label className={FIELD_LABEL} htmlFor="auth-phone">
+            Phone / WhatsApp
+          </label>
+          <input
+            className={CONTACT_INPUT}
+            type="tel"
+            id="auth-phone"
+            placeholder="+62 ..."
+            value={form.phone}
+            onChange={set('phone')}
+            autoComplete="tel"
+            aria-invalid={!!errors.phone}
+          />
+          {errors.phone && (
+            <small role="alert" className={FIELD_ERR}>
+              {errors.phone}
+            </small>
+          )}
+        </div>
+        {message && (
+          <small role="alert" className={REFMSG_ERR}>
+            {message}
+          </small>
+        )}
+        <button type="button" className={BTN} onClick={handleAccountCreate} disabled={isBusy}>
+          {isBusy ? 'Creating...' : 'Create Account'}
+        </button>
+        <p className="mt-4 text-center text-small text-muted">
+          Already have an account?{' '}
+          <button
+            type="button"
+            className="bg-transparent border-none p-0 cursor-pointer font-body text-small text-gold font-semibold underline hover:text-gold-d"
+            onClick={() => swap('signin')}
+          >
+            Sign in
           </button>
-          <p className="mt-4 text-center text-small text-muted">
-            Already have an account?{' '}
-            <button
-              type="button"
-              className="bg-transparent border-none p-0 cursor-pointer font-body text-small text-gold font-semibold underline hover:text-gold-d"
-              onClick={() => swap('signin')}
-            >
-              Sign in
-            </button>
-          </p>
-        </>
-      )}
+        </p>
+      </>
+    );
+  }
+
+  return (
+    <Modal open={open} onClose={handleClose} title={title}>
+      {renderAuthStage()}
     </Modal>
   );
 }

@@ -31,6 +31,11 @@ import {
   CHAT_SIGNIN_BTN,
 } from './chatClasses.js';
 
+const ICON_STROKE_WIDTH_THIN = 1.6;
+const MAX_EMAIL_LENGTH = 200;
+const MAX_QUESTION_LENGTH = 300;
+const ICON_STROKE_WIDTH_BOLD = 1.8;
+
 const FALLBACK = 'Sorry, we could not load this information. Please try again.';
 
 export default function ChatPanel({
@@ -55,7 +60,7 @@ export default function ChatPanel({
   const {
     draft,
     onDraft,
-    ask,
+    ask: handleQuestionAsk,
     sending,
     thread,
     ownerHere,
@@ -64,15 +69,15 @@ export default function ChatPanel({
     mailDraft,
     setMailDraft,
     mailErr,
-    saveEmail,
-    skipMail,
+    saveEmail: handleEmailSave,
+    skipMail: handleMailSkip,
   } = chat;
 
   return (
     <>
       <div className={CHAT_HEAD}>
         <span className={CHAT_HEAD_AVATAR} aria-hidden="true">
-          <MessageCircle strokeWidth={1.6} />
+          <MessageCircle strokeWidth={ICON_STROKE_WIDTH_THIN} />
         </span>
         <span className={CHAT_HEAD_STACK}>
           <span className={CHAT_HEAD_TITLE}>{copy.title}</span>
@@ -93,18 +98,24 @@ export default function ChatPanel({
           </p>
         )}
 
-        <ChatMessages log={log} ownerName={copy.ownerName} onAsk={ask} onNavigate={onClose} linkAs={linkAs} />
+        <ChatMessages
+          log={log}
+          ownerName={copy.ownerName}
+          onAsk={handleQuestionAsk}
+          onNavigate={onClose}
+          linkAs={linkAs}
+        />
 
         {mail === 'ask' && (
-          <form className={CHAT_MAIL_FORM} onSubmit={saveEmail} data-mail-ask>
+          <form className={CHAT_MAIL_FORM} onSubmit={handleEmailSave} data-mail-ask>
             <p className={CHAT_NOTE}>{copy.emailAsk}</p>
             <Input
               type="email"
               value={mailDraft}
-              onChange={(e) => setMailDraft(e.target.value)}
+              onChange={(event) => setMailDraft(event.target.value)}
               placeholder={copy.emailField}
               aria-label={copy.emailField}
-              maxLength={200}
+              maxLength={MAX_EMAIL_LENGTH}
             />
             {mailErr && (
               <p className={CHAT_NOTE} role="alert">
@@ -115,7 +126,7 @@ export default function ChatPanel({
               <button type="submit" className={CHAT_CTA} data-mailsend disabled={!mailDraft.trim()}>
                 {copy.emailSend}
               </button>
-              <button type="button" className={CHAT_TEXT_BTN} onClick={skipMail}>
+              <button type="button" className={CHAT_TEXT_BTN} onClick={handleMailSkip}>
                 {copy.emailSkip}
               </button>
             </span>
@@ -149,21 +160,21 @@ export default function ChatPanel({
 
       <form
         className={CHAT_FOOT}
-        onSubmit={(e) => {
-          e.preventDefault();
-          ask(draft);
+        onSubmit={(event) => {
+          event.preventDefault();
+          handleQuestionAsk(draft);
         }}
       >
         <Input
           className="flex-1 min-w-0"
           value={draft}
-          onChange={(e) => onDraft(e.target.value)}
+          onChange={(event) => onDraft(event.target.value)}
           placeholder={thread ? copy.placeholderLive : copy.placeholder}
           aria-label="Your question"
-          maxLength={300}
+          maxLength={MAX_QUESTION_LENGTH}
         />
         <button type="submit" className={CHAT_SEND} disabled={!draft.trim() || thinking || sending} aria-label="Send">
-          <Send strokeWidth={1.8} aria-hidden="true" />
+          <Send strokeWidth={ICON_STROKE_WIDTH_BOLD} aria-hidden="true" />
         </button>
       </form>
 

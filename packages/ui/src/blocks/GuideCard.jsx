@@ -1,14 +1,17 @@
 import { cn } from '../lib/cn.js';
 
+const DEFAULT_IMAGE_WIDTH_PX = 600;
+const DEFAULT_IMAGE_HEIGHT_PX = 600;
+
 export default function GuideCard({
   href,
-  img,
+  img: image,
   alt = '',
   title,
   tag,
   cat,
-  w = 600,
-  hgt = 600,
+  w: viewportWidth = DEFAULT_IMAGE_WIDTH_PX,
+  hgt = DEFAULT_IMAGE_HEIGHT_PX,
   overlayTag = false,
   linkAs: LinkAs = 'a',
   className,
@@ -33,12 +36,12 @@ export default function GuideCard({
           scrim,
         )}
       >
-        {img ? (
+        {image ? (
           <img
             className="absolute inset-0 w-full h-full object-cover object-center"
-            src={img}
+            src={image}
             alt={alt || title}
-            width={w}
+            width={viewportWidth}
             height={hgt}
             loading="lazy"
           />

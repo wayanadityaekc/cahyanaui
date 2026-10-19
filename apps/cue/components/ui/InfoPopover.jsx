@@ -3,8 +3,8 @@
 import { useEffect, useRef, useState } from 'react';
 import { Info } from 'lucide-react';
 
-function wrap(v) {
-  return `inline-flex align-middle ${v === 'default' ? 'relative' : 'static'}`;
+function wrap(value) {
+  return `inline-flex align-middle ${value === 'default' ? 'relative' : 'static'}`;
 }
 const BTN =
   'inline-flex items-center justify-center w-[18px] h-[18px] p-0 border-none border-current bg-none text-gold cursor-pointer rounded-[50%] ' +
@@ -26,42 +26,42 @@ const POP_OPEN = 'opacity-100 visible pointer-events-auto';
 const POP_CLOSED = 'opacity-0 invisible pointer-events-none';
 
 export default function InfoPopover({ children, label = 'How to use this form', variant = 'default' }) {
-  const [open, setOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
   const ref = useRef(null);
 
   useEffect(() => {
-    if (!open) return;
-    function onDoc(e) {
-      if (ref.current && !ref.current.contains(e.target)) setOpen(false);
+    if (!isOpen) return;
+    function handleDocumentClick(event) {
+      if (ref.current && !ref.current.contains(event.target)) setIsOpen(false);
     }
-    function onKey(e) {
-      return e.key === 'Escape' && setOpen(false);
+    function handleKeyDown(event) {
+      return event.key === 'Escape' && setIsOpen(false);
     }
-    document.addEventListener('click', onDoc);
-    document.addEventListener('keydown', onKey);
+    document.addEventListener('click', handleDocumentClick);
+    document.addEventListener('keydown', handleKeyDown);
     return () => {
-      document.removeEventListener('click', onDoc);
-      document.removeEventListener('keydown', onKey);
+      document.removeEventListener('click', handleDocumentClick);
+      document.removeEventListener('keydown', handleKeyDown);
     };
-  }, [open]);
+  }, [isOpen]);
 
   return (
     <span className={wrap(variant)} ref={ref}>
       <button
         type="button"
         className={BTN}
-        aria-expanded={open}
+        aria-expanded={isOpen}
         aria-label={label}
-        onClick={(e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          setOpen((v) => !v);
+        onClick={(event) => {
+          event.preventDefault();
+          event.stopPropagation();
+          setIsOpen((wasOpen) => !wasOpen);
         }}
       >
         <Info />
       </button>
       <div
-        className={`${POP_BASE} ${POP_POS[variant] || POP_POS.default} ${open ? POP_OPEN : POP_CLOSED}`}
+        className={`${POP_BASE} ${POP_POS[variant] || POP_POS.default} ${isOpen ? POP_OPEN : POP_CLOSED}`}
         role="tooltip"
       >
         {children}

@@ -1,22 +1,29 @@
+const SLOTS_PER_DAY = 48;
+const SLOT_LENGTH_MINUTES = 30;
+const MINUTES_PER_HOUR = 60;
+const HOURS_PER_HALF_DAY = 12;
+
 export const TIME_SLOTS = (() => {
-  const out = [];
-  [...Array(48).keys()]
-    .map((k) => k * 30)
-    .forEach((m) => {
-      out.push(`${String(Math.floor(m / 60)).padStart(2, '0')}:${String(m % 60).padStart(2, '0')}`);
+  const timeSlots = [];
+  [...Array(SLOTS_PER_DAY).keys()]
+    .map((slotIndex) => slotIndex * SLOT_LENGTH_MINUTES)
+    .forEach((minutes) => {
+      timeSlots.push(
+        `${String(Math.floor(minutes / MINUTES_PER_HOUR)).padStart(2, '0')}:${String(minutes % MINUTES_PER_HOUR).padStart(2, '0')}`,
+      );
     });
-  return out;
+  return timeSlots;
 })();
 
-function range(from, to) {
-  return TIME_SLOTS.filter((t) => t >= from && t <= to);
+function filterSlotRange(from, to) {
+  return TIME_SLOTS.filter((slot) => slot >= from && slot <= to);
 }
 
 const PRE_DAWN = ['02:00', '03:00'];
 const MORNING = ['08:00', '08:30', '09:00'];
-const LEMPUYANG = range('03:00', '09:00');
-const DAYLIGHT = range('07:00', '16:00');
-const AFTERNOON = range('12:00', '16:00');
+const LEMPUYANG = filterSlotRange('03:00', '09:00');
+const DAYLIGHT = filterSlotRange('07:00', '16:00');
+const AFTERNOON = filterSlotRange('12:00', '16:00');
 
 const CATEGORY_SLOTS = {
   tour: MORNING,
@@ -42,40 +49,45 @@ export const RESTRICTED_SLOTS = {
 
 const RESTRICTABLE = new Set(['tour', 'experience', 'performance', 'combo', 'place']);
 
-export function fmtTime(t) {
-  if (!t) return '';
-  const [h, m] = t.split(':').map(Number);
-  return `${h % 12 === 0 ? 12 : h % 12}:${String(m).padStart(2, '0')} ${h < 12 ? 'AM' : 'PM'}`;
+export function formatTime(time) {
+  if (!time) return '';
+  const [hours, minutes] = time.split(':').map(Number);
+  return `${hours % HOURS_PER_HALF_DAY === 0 ? HOURS_PER_HALF_DAY : hours % HOURS_PER_HALF_DAY}:${String(minutes).padStart(2, '0')} ${hours < HOURS_PER_HALF_DAY ? 'AM' : 'PM'}`;
 }
 
-export function fmtDate(v) {
-  if (!v) return '';
-  const [y, m, d] = String(v).split('-').map(Number);
-  if (!y || !m || !d) return String(v);
-  return new Date(y, m - 1, d).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+export function formatDate(dateString) {
+  if (!dateString) return '';
+  const [year, month, day] = String(dateString).split('-').map(Number);
+  const isDatePartMissing = !year || !month || !day;
+  if (isDatePartMissing) return String(dateString);
+  return new Date(year, month - 1, day).toLocaleDateString('en-GB', {
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric',
+  });
 }
 
-export function fmtHour(h) {
-  const n = Number(h);
-  return `${n % 12 === 0 ? 12 : n % 12} ${n < 12 ? 'AM' : 'PM'}`;
+export function formatHour(hour) {
+  const hourNumber = Number(hour);
+  return `${hourNumber % HOURS_PER_HALF_DAY === 0 ? HOURS_PER_HALF_DAY : hourNumber % HOURS_PER_HALF_DAY} ${hourNumber < HOURS_PER_HALF_DAY ? 'AM' : 'PM'}`;
 }
 
-export function allowedSlots(category, itemName) {
+export function findAllowedSlots(category, itemName) {
   if (!RESTRICTABLE.has(category)) return null;
   return RESTRICTED_SLOTS[itemName] || CATEGORY_SLOTS[category] || null;
 }
 
 export function timeOptions(category, itemName) {
-  const allowed = allowedSlots(category, itemName);
-  return TIME_SLOTS.map((t) => ({
-    value: t,
-    label: fmtTime(t),
-    disabled: !!allowed && !allowed.includes(t),
+  const allowed = findAllowedSlots(category, itemName);
+  return TIME_SLOTS.map((slot) => ({
+    value: slot,
+    label: formatTime(slot),
+    disabled: !!allowed && !allowed.includes(slot),
   }));
 }
 
-export function defaultSlot(category, itemName) {
-  const allowed = allowedSlots(category, itemName);
+export function findDefaultSlot(category, itemName) {
+  const allowed = findAllowedSlots(category, itemName);
   return allowed ? allowed[0] : '';
 }
 

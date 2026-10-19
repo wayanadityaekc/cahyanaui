@@ -6,6 +6,8 @@ import useDisclosure from '../lib/useDisclosure.js';
 import PopPanel from './PopPanel.jsx';
 import { NAV_CHEVRON, NAV_DESK, NAV_POP_LIST, NAV_POP_WRAP, navDeskLink, navPopLink } from './navbarClasses.js';
 
+const ICON_STROKE_WIDTH_BOLD = 1.8;
+
 function NavDropdown({ label, href = '', items = [], isActive, linkAs: Link, pop = null }) {
   const { open, setOpen, boxRef, triggerRef, panelId } = useDisclosure();
   const active = (href && isActive(href)) || items.some((item) => isActive(item.href));
@@ -26,7 +28,11 @@ function NavDropdown({ label, href = '', items = [], isActive, linkAs: Link, pop
             className="grid place-items-center w-6 h-6 p-0 border-0 bg-transparent text-inherit cursor-pointer"
             onClick={() => setOpen((wasOpen) => !wasOpen)}
           >
-            <ChevronDown className={cn(NAV_CHEVRON, open && 'rotate-180')} strokeWidth={1.8} aria-hidden="true" />
+            <ChevronDown
+              className={cn(NAV_CHEVRON, open && 'rotate-180')}
+              strokeWidth={ICON_STROKE_WIDTH_BOLD}
+              aria-hidden="true"
+            />
           </button>
         </span>
       ) : (
@@ -39,7 +45,11 @@ function NavDropdown({ label, href = '', items = [], isActive, linkAs: Link, pop
           onClick={() => setOpen((wasOpen) => !wasOpen)}
         >
           {label}
-          <ChevronDown className={cn(NAV_CHEVRON, open && 'rotate-180')} strokeWidth={1.8} aria-hidden="true" />
+          <ChevronDown
+            className={cn(NAV_CHEVRON, open && 'rotate-180')}
+            strokeWidth={ICON_STROKE_WIDTH_BOLD}
+            aria-hidden="true"
+          />
         </button>
       )}
       <PopPanel pop={pop} open={open} className={NAV_POP_WRAP}>

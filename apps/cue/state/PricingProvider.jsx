@@ -6,13 +6,13 @@ import { useTripPrefs } from './TripPrefsProvider';
 
 const PricingContext = createContext(null);
 
-function normalizeCatalog(c) {
-  if (!c || !Array.isArray(c.items)) return null;
+function normalizeCatalog(catalog) {
+  if (!catalog || !Array.isArray(catalog.items)) return null;
   return {
-    ...c,
-    items: c.items,
-    transfers: Array.isArray(c.transfers) ? c.transfers : [],
-    charters: Array.isArray(c.charters) ? c.charters : [],
+    ...catalog,
+    items: catalog.items,
+    transfers: Array.isArray(catalog.transfers) ? catalog.transfers : [],
+    charters: Array.isArray(catalog.charters) ? catalog.charters : [],
   };
 }
 
@@ -27,9 +27,9 @@ export function PricingProvider({ children, initialCatalog = null }) {
     async function load() {
       try {
         const response = await fetch(`${API_BASE}/pricing/catalog?${query}`);
-        const d = response.ok ? await response.json() : null;
-        const c = normalizeCatalog(d);
-        if (!cancelled && c) setCatalog(c);
+        const catalogData = response.ok ? await response.json() : null;
+        const normalizedCatalog = normalizeCatalog(catalogData);
+        if (!cancelled && normalizedCatalog) setCatalog(normalizedCatalog);
       } catch (e) {}
     }
     load();
@@ -40,9 +40,9 @@ export function PricingProvider({ children, initialCatalog = null }) {
 
   function lookup(name) {
     if (!catalog) return null;
-    const item = catalog.items.find((i) => i.name === name);
+    const item = catalog.items.find((catalogEntry) => catalogEntry.name === name);
     if (item) return item;
-    const transfer = catalog.transfers.find((t) => t.route === name);
+    const transfer = catalog.transfers.find((transferItem) => transferItem.route === name);
     if (transfer)
       return { name: transfer.route, standard: { display: transfer.display }, exclusive: null, hasExclusive: false };
     return null;

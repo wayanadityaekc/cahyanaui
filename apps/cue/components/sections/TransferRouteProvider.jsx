@@ -4,16 +4,26 @@ import { createContext, useCallback, useContext, useMemo, useRef, useState } fro
 
 const UBUD = 'Ubud';
 
-function facing(v) {
-  return (other) => (!v ? other : v === UBUD ? (other === UBUD ? '' : other) : UBUD);
+function pickFacingRoute(value) {
+  return (other) => {
+    function resolveRouteEnd() {
+      if (!value) return other;
+      if (value === UBUD) {
+        if (other === UBUD) return '';
+        return other;
+      }
+      return UBUD;
+    }
+    return resolveRouteEnd();
+  };
 }
 
 const Ctx = createContext(null);
 
 export function useTransferRoute() {
-  const v = useContext(Ctx);
-  if (!v) throw new Error('useTransferRoute must be used inside <TransferRouteProvider>');
-  return v;
+  const routeContext = useContext(Ctx);
+  if (!routeContext) throw new Error('useTransferRoute must be used inside <TransferRouteProvider>');
+  return routeContext;
 }
 
 export default function TransferRouteProvider({ children }) {
@@ -21,13 +31,13 @@ export default function TransferRouteProvider({ children }) {
   const [to, setTo] = useState(UBUD);
   const pickerRef = useRef(null);
 
-  const pickFrom = useCallback((v) => {
-    setFrom(v);
-    setTo(facing(v));
+  const pickFrom = useCallback((fromRoute) => {
+    setFrom(fromRoute);
+    setTo(pickFacingRoute(fromRoute));
   }, []);
-  const pickTo = useCallback((v) => {
-    setTo(v);
-    setFrom(facing(v));
+  const pickTo = useCallback((toRoute) => {
+    setTo(toRoute);
+    setFrom(pickFacingRoute(toRoute));
   }, []);
 
   const selectRoute = useCallback((area) => {

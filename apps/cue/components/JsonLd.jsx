@@ -1,23 +1,25 @@
 import { PAGE_SCHEMA } from '@/content/shared/schema';
-import { crumbsFor } from '@/lib/crumbs';
+import { buildCrumbs } from '@/lib/crumbs';
 import { SITE } from '@/lib/routes';
-import { catalog } from '@/lib/api';
+import { fetchCatalog } from '@/lib/api';
 
 let catalogPromise = null;
-function livePrices() {
+function fetchLivePrices() {
   if (!catalogPromise) {
     catalogPromise = (async () => {
       try {
-        const d = await catalog({ currency: 'USD', guests: 2, stay: '' });
-        if (!d || !Array.isArray(d.items)) return null;
+        const catalogData = await fetchCatalog({ currency: 'USD', guests: 2, stay: '' });
+        if (!catalogData || !Array.isArray(catalogData.items)) return null;
         const byName = {};
-        d.items.forEach((i) => {
-          byName[i.name] = i.standard.usd;
+        catalogData.items.forEach((item) => {
+          byName[item.name] = item.standard.usd;
         });
-        (d.transfers || []).forEach((t) => {
-          byName[t.route] = t.usd;
+        (catalogData.transfers || []).forEach((transfer) => {
+          byName[transfer.route] = transfer.usd;
         });
-        const transfers = (d.transfers || []).map((t) => t.usd).filter((n) => n > 0);
+        const transfers = (catalogData.transfers || [])
+          .map((transfer) => transfer.usd)
+          .filter((priceUsd) => priceUsd > 0);
         return { byName, transfers };
       } catch (e) {
         return null;
@@ -27,9 +29,10 @@ function livePrices() {
   return catalogPromise;
 }
 
-function withLivePrice({ json, priceGroup, priceKey }, prices) {
+function applyLivePrice({ json, priceGroup, priceKey }, prices) {
   const node = json;
-  if (!prices || !node || node['@type'] !== 'Product' || !node.offers) return node;
+  const hasMissingProductOffer = !prices || !node || node['@type'] !== 'Product' || !node.offers;
+  if (hasMissingProductOffer) return node;
 
   if (priceGroup === 'transfers') {
     const all = prices.transfers;
@@ -50,24 +53,24 @@ function withLivePrice({ json, priceGroup, priceKey }, prices) {
   return { ...node, offers: { ...node.offers, price: String(usd) } };
 }
 
-function isCrumb(n) {
-  return n && n['@type'] === 'BreadcrumbList';
+function isCrumb(schemaNode) {
+  return schemaNode && schemaNode['@type'] === 'BreadcrumbList';
 }
-function stripCrumb(b) {
-  if (Array.isArray(b.json)) {
-    const kept = b.json.filter((n) => !isCrumb(n));
-    return kept.length ? { ...b, json: kept } : null;
+function stripCrumb(block) {
+  if (Array.isArray(block.json)) {
+    const keptNodes = block.json.filter((schemaNode) => !isCrumb(schemaNode));
+    return keptNodes.length ? { ...block, json: keptNodes } : null;
   }
-  return isCrumb(b.json) ? null : b;
+  return isCrumb(block.json) ? null : block;
 }
 
 export default async function JsonLd({ page, crumbs }) {
   const raw = PAGE_SCHEMA[page] || [];
   const given = crumbs && crumbs.length > 1 ? crumbs : null;
   const blocks = given ? raw.map(stripCrumb).filter(Boolean) : raw;
-  const hasCrumb = blocks.some((b) => (Array.isArray(b.json) ? b.json.some(isCrumb) : isCrumb(b.json)));
-  const trail = given || (hasCrumb ? [] : crumbsFor(page));
-  const extra =
+  const hasCrumb = blocks.some((block) => (Array.isArray(block.json) ? block.json.some(isCrumb) : isCrumb(block.json)));
+  const trail = given || (hasCrumb ? [] : buildCrumbs(page));
+  const extraBlocks =
     trail.length > 1
       ? [
           {
@@ -75,28 +78,28 @@ export default async function JsonLd({ page, crumbs }) {
             json: {
               '@context': 'https://schema.org',
               '@type': 'BreadcrumbList',
-              itemListElement: trail.map((t, i) => ({
+              itemListElement: trail.map((crumb, index) => ({
                 '@type': 'ListItem',
-                position: i + 1,
-                name: t.label,
-                item: SITE + (t.href || `/${page}.html`),
+                position: index + 1,
+                name: crumb.label,
+                item: SITE + (crumb.href || `/${page}.html`),
               })),
             },
           },
         ]
       : [];
-  const all = [...(blocks || []), ...extra];
-  if (!all.length) return null;
-  const prices = await livePrices();
+  const allBlocks = [...(blocks || []), ...extraBlocks];
+  if (!allBlocks.length) return null;
+  const prices = await fetchLivePrices();
 
   return (
     <>
-      {all.map((b, i) => (
+      {allBlocks.map((block, index) => (
         <script
-          key={i}
+          key={index}
           type="application/ld+json"
-          id={b.id || undefined}
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(withLivePrice(b, prices)) }}
+          id={block.id || undefined}
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(applyLivePrice(block, prices)) }}
         />
       ))}
     </>

@@ -5,7 +5,7 @@ import HeroSlider from '@/components/sections/HeroSlider';
 import HeroMosaic from '@/components/sections/HeroMosaic';
 import Rating from '@/components/Rating';
 import { isHiddenTour } from '@/lib/routes';
-import Breadcrumb, { itemsFromLegacy } from '@/components/ui/Breadcrumb';
+import Breadcrumb, { buildItemsFromLegacy } from '@/components/ui/Breadcrumb';
 import { CHIP, CHIP_OK } from '@/components/ui/chipClasses';
 
 export const HERO_DESC = 'max-w-[460px] m-0 text-[#3d3d3d]';
@@ -43,15 +43,15 @@ function HeroBody({ title, desc, hooks, cta, ctaHref, crumb }) {
   return (
     <>
       {crumb && (
-        <Breadcrumb items={crumb[0] && crumb[0].type ? itemsFromLegacy(crumb) : crumb} className={HERO_CRUMB} />
+        <Breadcrumb items={crumb[0] && crumb[0].type ? buildItemsFromLegacy(crumb) : crumb} className={HERO_CRUMB} />
       )}
       <h1 className={`${SUBHERO_TITLE} mb-3`}>{title}</h1>
       <p className={HERO_DESC}>{desc}</p>
       <ul className={HOOK_UL}>
-        {hooks.map((h) => (
-          <li key={h.label}>
-            <span className={HOOK_LABEL}>{h.label}</span>
-            <span className={HOOK_VALUE}>{h.value}</span>
+        {hooks.map((hook) => (
+          <li key={hook.label}>
+            <span className={HOOK_LABEL}>{hook.label}</span>
+            <span className={HOOK_VALUE}>{hook.value}</span>
           </li>
         ))}
       </ul>
@@ -80,15 +80,15 @@ export default function DetailHero({
 }) {
   if (gallery && gallery.length) {
     const chips = [];
-    hooks.forEach((h, i) => {
-      chips.push({ key: h.label, icon: CHIP_ICON[h.label] || Info, text: h.value });
-      if (i === 0 && stops > 1) chips.push({ key: 'stops', icon: Route, text: `${stops} stops` });
+    hooks.forEach((hook, index) => {
+      chips.push({ key: hook.label, icon: CHIP_ICON[hook.label] || Info, text: hook.value });
+      if (index === 0 && stops > 1) chips.push({ key: 'stops', icon: Route, text: `${stops} stops` });
     });
     if (!hooks.length && stops > 1) chips.push({ key: 'stops', icon: Route, text: `${stops} stops` });
     chips.push({ key: 'cancel', icon: ShieldCheck, text: 'Free cancellation', ok: true });
     return (
       <section className="pt-[calc(var(--header-h-max,92px)_+_var(--container-x))] min-[769px]:pt-[calc(var(--header-h-max,98px)_+_var(--container-x))] px-[max(var(--container-x),calc((100%_-_1280px)_/_2))]">
-        {crumb && <Breadcrumb items={itemsFromLegacy(crumb)} className={HERO_CRUMB} />}
+        {crumb && <Breadcrumb items={buildItemsFromLegacy(crumb)} className={HERO_CRUMB} />}
         <h1 className={`${SUBHERO_TITLE} mb-2 text-left`}>{title}</h1>
         {ratingName && (
           <div className="mb-[0.9rem]">

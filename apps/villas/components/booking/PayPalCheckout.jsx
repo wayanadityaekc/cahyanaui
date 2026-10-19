@@ -5,16 +5,19 @@ import { API_BASE } from '@/lib/constants';
 import { chargeCurrency } from '@/lib/rails';
 import { CONTROL } from '@cahyana/ui';
 
-function sdkId(cur) {
-  return `paypal-sdk-${cur}`;
+const HTTP_STATUS_PAYMENT_REQUIRED = 402;
+const PAYPAL_BUTTON_HEIGHT_PX = 46;
+
+function buildSdkId(current) {
+  return `paypal-sdk-${current}`;
 }
-function sdkNs(cur) {
-  return `paypal_${cur}`;
+function buildSdkNamespace(current) {
+  return `paypal_${current}`;
 }
 
 function loadSdk({ clientId, currency }) {
-  const id = sdkId(currency);
-  const sdkNamespace = sdkNs(currency);
+  const id = buildSdkId(currency);
+  const sdkNamespace = buildSdkNamespace(currency);
   return new Promise((resolve, reject) => {
     const existing = document.getElementById(id);
     if (existing && window[sdkNamespace]) return resolve(window[sdkNamespace]);
@@ -23,15 +26,15 @@ function loadSdk({ clientId, currency }) {
       existing.addEventListener('error', reject);
       return;
     }
-    const s = document.createElement('script');
-    s.id = id;
-    s.setAttribute('data-namespace', sdkNamespace);
-    s.src =
+    const script = document.createElement('script');
+    script.id = id;
+    script.setAttribute('data-namespace', sdkNamespace);
+    script.src =
       `https://www.paypal.com/sdk/js?client-id=${encodeURIComponent(clientId)}` +
       `&currency=${encodeURIComponent(currency)}&components=buttons,card-fields&intent=capture`;
-    s.onload = () => resolve(window[sdkNamespace]);
-    s.onerror = () => reject(new Error('Could not load PayPal.'));
-    document.head.appendChild(s);
+    script.onload = () => resolve(window[sdkNamespace]);
+    script.onerror = () => reject(new Error('Could not load PayPal.'));
+    document.head.appendChild(script);
   });
 }
 
@@ -41,8 +44,8 @@ const NOTE = 'mt-[0.6rem] text-small leading-[var(--lh-body)]';
 
 export default function PayPalCheckout({ bookingRef, option, copy, currency = 'USD', onPaid, onError }) {
   const [state, setState] = useState('loading');
-  const [msg, setMsg] = useState('');
-  const [cardsOn, setCardsOn] = useState(false);
+  const [message, setMessage] = useState('');
+  const [isCardFormShown, setIsCardFormShown] = useState(false);
   const buttonsRef = useRef(null);
   const cardRef = useRef(null);
   const mounted = useRef(true);
@@ -64,9 +67,12 @@ export default function PayPalCheckout({ bookingRef, option, copy, currency = 'U
         body: JSON.stringify({ booking_ref: bookingRef, option }),
       });
       const data = await response.json().catch(() => null);
-      if (!response.ok || !data || !data.id) throw new Error((data && data.detail) || 'Could not start the payment.');
+      const isOrderIdMissing = !response.ok || !data || !data.id;
+      if (isOrderIdMissing) throw new Error((data && data.detail) || 'Could not start the payment.');
       if (data.converted && !cancelled) {
-        setMsg(`PayPal cannot charge ${data.converted.from}, so this is billed as ${data.currency} ${data.amount}.`);
+        setMessage(
+          `PayPal cannot charge ${data.converted.from}, so this is billed as ${data.currency} ${data.amount}.`,
+        );
       }
       return data.id;
     }
@@ -78,53 +84,54 @@ export default function PayPalCheckout({ bookingRef, option, copy, currency = 'U
         body: JSON.stringify({ order_id: orderId }),
       });
       const data = await response.json().catch(() => null);
-      if (response.status === 402) throw Object.assign(new Error(copy.declined), { soft: true });
-      if (!response.ok || !data || data.status !== 'ok') {
+      if (response.status === HTTP_STATUS_PAYMENT_REQUIRED)
+        throw Object.assign(new Error(copy.declined), { soft: true });
+      const isCaptureFailed = !response.ok || !data || data.status !== 'ok';
+      if (isCaptureFailed) {
         throw Object.assign(new Error((data && data.detail) || copy.failed), { soft: true });
       }
       return data;
     }
 
-    function fail(e) {
+    function fail(error) {
       if (cancelled || !mounted.current) return;
       setState('ready');
-      setMsg(e.message || copy.failed);
-      if (onError) onError(e);
+      setMessage(error.message || copy.failed);
+      if (onError) onError(error);
     }
 
-    function succeed(d) {
+    function completePayment(captureResult) {
       if (cancelled || !mounted.current) return;
       setState('done');
-      setMsg('');
-      if (onPaid) onPaid(d);
+      setMessage('');
+      if (onPaid) onPaid(captureResult);
     }
 
     (async () => {
       try {
-        const cfg = await (await fetch(`${API_BASE}/paypal/config`)).json();
-        if (!cfg.ready) throw new Error(cfg.reason || 'Payments are not available right now.');
+        const config = await (await fetch(`${API_BASE}/paypal/config`)).json();
+        if (!config.ready) throw new Error(config.reason || 'Payments are not available right now.');
         const billCurrency = chargeCurrency(currency, 'paypal');
-        const sdk = await loadSdk({ clientId: cfg.clientId, currency: billCurrency });
+        const sdk = await loadSdk({ clientId: config.clientId, currency: billCurrency });
         if (cancelled) return;
 
         await sdk
           .Buttons({
-            style: { layout: 'vertical', shape: 'pill', height: 46 },
+            style: { layout: 'vertical', shape: 'pill', height: PAYPAL_BUTTON_HEIGHT_PX },
             createOrder,
             onApprove: async (data) => {
               try {
-                succeed(await capture(data.orderID));
+                completePayment(await capture(data.orderID));
               } catch (e) {
                 fail(e);
               }
             },
             onCancel: () => {
-              if (!cancelled) {
-                setState('ready');
-                setMsg(copy.cancelled);
-              }
+              if (cancelled) return;
+              setState('ready');
+              setMessage(copy.cancelled);
             },
-            onError: (e) => fail(e instanceof Error ? e : new Error(copy.failed)),
+            onError: (error) => fail(error instanceof Error ? error : new Error(copy.failed)),
           })
           .render(buttonsRef.current);
 
@@ -133,27 +140,28 @@ export default function PayPalCheckout({ bookingRef, option, copy, currency = 'U
               createOrder,
               onApprove: async (data) => {
                 try {
-                  succeed(await capture(data.orderID));
+                  completePayment(await capture(data.orderID));
                 } catch (e) {
                   fail(e);
                 }
               },
-              onError: (e) => fail(e instanceof Error ? e : new Error(copy.failed)),
+              onError: (error) => fail(error instanceof Error ? error : new Error(copy.failed)),
             })
           : null;
 
-        if (cardFields && cardFields.isEligible() && !cancelled) {
+        const canMountCardFields = cardFields && cardFields.isEligible() && !cancelled;
+        if (canMountCardFields) {
           cardFields.NumberField().render('#pp-card-number');
           cardFields.ExpiryField().render('#pp-card-expiry');
           cardFields.CVVField().render('#pp-card-cvv');
           cardRef.current = cardFields;
-          setCardsOn(true);
+          setIsCardFormShown(true);
         }
         if (!cancelled) setState('ready');
       } catch (e) {
         if (!cancelled) {
           setState('error');
-          setMsg(e.message);
+          setMessage(e.message);
         }
       }
     })();
@@ -163,27 +171,27 @@ export default function PayPalCheckout({ bookingRef, option, copy, currency = 'U
     };
   }, [bookingRef, option, copy, currency, onPaid, onError]);
 
-  async function payByCard() {
+  async function handleCardPay() {
     if (!cardRef.current) return;
     setState('paying');
-    setMsg('');
+    setMessage('');
     try {
       await cardRef.current.submit();
     } catch (e) {
       if (mounted.current) {
         setState('ready');
-        setMsg(copy.declined);
+        setMessage(copy.declined);
       }
     }
   }
 
   if (state === 'error') {
-    return <p className={`${NOTE} text-err`}>{msg}</p>;
+    return <p className={`${NOTE} text-err`}>{message}</p>;
   }
 
   return (
     <div className="mt-4">
-      {cardsOn && (
+      {isCardFormShown && (
         <div className="mb-4">
           <p className={LABEL}>Card details</p>
           <div id="pp-card-number" className={`${FIELD} mb-2`} />
@@ -193,7 +201,7 @@ export default function PayPalCheckout({ bookingRef, option, copy, currency = 'U
           </div>
           <button
             type="button"
-            onClick={payByCard}
+            onClick={handleCardPay}
             disabled={state === 'paying'}
             className="flex w-full mt-3 items-center justify-center text-center leading-none whitespace-nowrap h-[var(--btn-h)] py-0 px-4 rounded-sm text-small font-semibold border-none bg-cta text-white font-body
               text-[1rem] cursor-pointer disabled:opacity-60
@@ -208,7 +216,7 @@ export default function PayPalCheckout({ bookingRef, option, copy, currency = 'U
       <div ref={buttonsRef} />
 
       {state === 'loading' && <p className={`${NOTE} text-muted`}>Loading secure payment...</p>}
-      {msg && <p className={`${NOTE} ${state === 'done' ? 'text-ok' : 'text-err'}`}>{msg}</p>}
+      {message && <p className={`${NOTE} ${state === 'done' ? 'text-ok' : 'text-err'}`}>{message}</p>}
       <p className={`${NOTE} text-muted`}>{copy.secure}</p>
     </div>
   );

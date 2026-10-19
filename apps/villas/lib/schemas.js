@@ -1,20 +1,20 @@
-import { z } from 'zod';
+import { z as zod } from 'zod';
 
 export const EMAIL_RE = /^\S+@\S+\.\S+$/;
 
-function email(msg = 'Please enter a valid email address.') {
-  return z.string().trim().regex(EMAIL_RE, msg);
+function buildEmailSchema(message = 'Please enter a valid email address.') {
+  return zod.string().trim().regex(EMAIL_RE, message);
 }
-function required(msg) {
-  return z.string().trim().min(1, msg);
+function buildRequiredSchema(message) {
+  return zod.string().trim().min(1, message);
 }
 
-export const signInSchema = z.object({
-  email: email(),
+export const signInSchema = zod.object({
+  email: buildEmailSchema(),
 });
 
-export const createAccountSchema = z.object({
-  name: required('Please enter your name.'),
-  email: email(),
-  phone: required('Please enter your phone number.'),
+export const createAccountSchema = zod.object({
+  name: buildRequiredSchema('Please enter your name.'),
+  email: buildEmailSchema(),
+  phone: buildRequiredSchema('Please enter your phone number.'),
 });

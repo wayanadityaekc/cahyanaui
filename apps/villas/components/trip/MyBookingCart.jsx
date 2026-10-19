@@ -5,18 +5,22 @@ import { useEffect, useState } from 'react';
 import { ArrowRight, MessageCircle, Trash2 } from 'lucide-react';
 import { useCart } from '@/components/providers/CartProvider';
 import { useCurrency } from '@/components/providers/CurrencyProvider';
-import { serviceById } from '@/lib/bookingCart';
-import { extraProblem, extrasTotals } from '@/lib/extras';
-import { bookingMessage } from '@/lib/bookingMessage';
+import { findServiceById } from '@/lib/bookingCart';
+import { findExtraProblem, calculateExtrasTotals } from '@/lib/extras';
+import { buildBookingMessage } from '@/lib/bookingMessage';
 import ExtrasSection from '@/components/trip/ExtrasSection';
 import CharterCard from '@/components/sections/CharterCard';
 import useExtrasCatalog from '@/components/trip/useExtrasCatalog';
 import CheckoutSheet from '@/components/booking/CheckoutSheet';
 import PayWaiting from '@/components/booking/PayWaiting';
-import { VILLAS, nightsBetween, priceBreakdown } from '@/lib/villas';
+import { VILLAS, countNightsBetween, priceBreakdown } from '@/lib/villas';
 import { formatRupiah } from '@/lib/currency';
-import { CUE_LINK, whatsappLink } from '@/lib/constants';
+import { CUE_LINK, buildWhatsappLink } from '@/lib/constants';
 import { Button, Container, EYEBROW_LINE } from '@cahyana/ui';
+
+const VILLA_THUMBNAIL_SIZE_PX = 72;
+const ICON_STROKE_WIDTH_THIN = 1.6;
+const ICON_STROKE_WIDTH_BOLD = 1.8;
 
 const CARD = 'bg-surface-raised border border-line [box-shadow:var(--shadow-md)]';
 const ROW_H = 'text-h3 font-semibold text-gold';
@@ -47,11 +51,20 @@ function EmptyState() {
 }
 
 export default function MyBookingCart() {
-  const { cart, ready, clearStay, toggleService, addExtra, removeExtra, updateExtra, clear } = useCart();
+  const {
+    cart,
+    ready,
+    clearStay: handleStayClear,
+    toggleService: handleServiceToggle,
+    addExtra,
+    removeExtra,
+    updateExtra,
+    clear: handleCartClear,
+  } = useCart();
   const { currency, formatAmount, breakdown: convert } = useCurrency();
-  const [sent, setSent] = useState(false);
+  const [isSent, setIsSent] = useState(false);
   const catalog = useExtrasCatalog(currency, cart.stay?.guests || 2);
-  const [checkoutOpen, setCheckoutOpen] = useState(false);
+  const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
   const [waitingRef, setWaitingRef] = useState('');
 
   useEffect(() => {
@@ -66,7 +79,7 @@ export default function MyBookingCart() {
     setWaitingRef(ref);
   }, []);
 
-  function closeWaiting() {
+  function handleWaitingClose() {
     setWaitingRef('');
     window.history.replaceState({}, '', window.location.pathname);
   }
@@ -76,28 +89,28 @@ export default function MyBookingCart() {
   const stay = cart.stay;
   const breakdown = stay ? priceBreakdown(stay.villaSlug, stay.checkIn, stay.checkOut) : null;
   const villa = stay ? VILLAS[stay.villaSlug] : null;
-  const nights = stay ? nightsBetween(stay.checkIn, stay.checkOut) : 0;
+  const nights = stay ? countNightsBetween(stay.checkIn, stay.checkOut) : 0;
   const shown = convert(breakdown);
-  const inRupiah = currency === 'IDR';
-  const chosen = cart.services.map(serviceById).filter(Boolean);
+  const isInRupiah = currency === 'IDR';
+  const chosenServices = cart.services.map(findServiceById).filter(Boolean);
   const extras = stay ? cart.extras : [];
-  const totals = extrasTotals(extras, catalog);
-  const blocked =
-    extras.some((extra) => extraProblem(extra, stay, catalog?.items[extra.key]?.category || null)) ||
+  const totals = calculateExtrasTotals(extras, catalog);
+  const isBlocked =
+    extras.some((extra) => findExtraProblem(extra, stay, catalog?.items[extra.key]?.category || null)) ||
     (extras.length > 0 && !totals);
-  const isEmpty = !stay && chosen.length === 0;
+  const isEmpty = !stay && chosenServices.length === 0;
 
-  const message = bookingMessage({
+  const message = buildBookingMessage({
     stay,
     villa,
     nights,
     shown,
     breakdown,
-    inRupiah,
+    inRupiah: isInRupiah,
     extras,
     totals,
     catalog,
-    services: chosen,
+    services: chosenServices,
     formatAmount,
   });
 
@@ -122,8 +135,8 @@ export default function MyBookingCart() {
                   <img
                     src={villa.cardImg}
                     alt=""
-                    width={72}
-                    height={72}
+                    width={VILLA_THUMBNAIL_SIZE_PX}
+                    height={VILLA_THUMBNAIL_SIZE_PX}
                     className="w-[72px] h-[72px] object-cover shrink-0"
                   />
                   <div className="flex-1 min-w-0">
@@ -138,10 +151,11 @@ export default function MyBookingCart() {
                         href={`/villas/${villa.slug}`}
                         className="inline-flex items-center gap-1.5 text-body text-gold hover:text-cta"
                       >
-                        Change dates <ArrowRight className={ICON} strokeWidth={1.6} aria-hidden="true" />
+                        Change dates{' '}
+                        <ArrowRight className={ICON} strokeWidth={ICON_STROKE_WIDTH_THIN} aria-hidden="true" />
                       </Link>
-                      <button type="button" className={ICON_BTN} onClick={clearStay}>
-                        <Trash2 className={ICON} strokeWidth={1.6} aria-hidden="true" /> Remove
+                      <button type="button" className={ICON_BTN} onClick={handleStayClear}>
+                        <Trash2 className={ICON} strokeWidth={ICON_STROKE_WIDTH_THIN} aria-hidden="true" /> Remove
                       </button>
                     </div>
                   </div>
@@ -161,7 +175,7 @@ export default function MyBookingCart() {
                 services={cart.services}
                 catalog={catalog}
                 formatAmount={formatAmount}
-                onToggleService={toggleService}
+                onToggleService={handleServiceToggle}
                 addExtra={addExtra}
                 removeExtra={removeExtra}
                 updateExtra={updateExtra}
@@ -188,7 +202,7 @@ export default function MyBookingCart() {
                   <span className={LABEL}>Stay total, paid in full</span>
                   <span className="text-h2 font-bold text-amber">{formatAmount(shown.total)}</span>
                 </p>
-                {inRupiah ? null : (
+                {isInRupiah ? null : (
                   <p className="text-label text-muted">
                     Exact price {formatRupiah(breakdown.totalIdr)}; other currencies follow today's rate.
                   </p>
@@ -228,11 +242,11 @@ export default function MyBookingCart() {
               </div>
             )}
 
-            {chosen.length > 0 && (
+            {chosenServices.length > 0 && (
               <div className="mt-5 pt-4 border-t border-line">
                 <p className={LABEL}>At the villa</p>
                 <ul className="list-none mt-2 flex flex-col gap-1.5">
-                  {chosen.map((service) => (
+                  {chosenServices.map((service) => (
                     <li key={service.id} className={LINE}>
                       <span className="text-muted">{service.label}</span>
                       <span className="text-muted">paid at the villa</span>
@@ -244,8 +258,8 @@ export default function MyBookingCart() {
 
             <Button
               full
-              onClick={() => setCheckoutOpen(true)}
-              disabled={blocked || !breakdown || nights < 1}
+              onClick={() => setIsCheckoutOpen(true)}
+              disabled={isBlocked || !breakdown || nights < 1}
               className="mt-6 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               Book now
@@ -254,23 +268,23 @@ export default function MyBookingCart() {
               as="a"
               full
               variant="ghost"
-              href={blocked ? undefined : whatsappLink(message)}
-              aria-disabled={blocked || undefined}
+              href={isBlocked ? undefined : buildWhatsappLink(message)}
+              aria-disabled={isBlocked || undefined}
               target="_blank"
               rel="noopener"
               onClick={(event) => {
-                if (blocked) {
+                if (isBlocked) {
                   event.preventDefault();
                   return;
                 }
-                setSent(true);
+                setIsSent(true);
               }}
-              className={`mt-2 ${blocked ? 'opacity-50 cursor-not-allowed' : ''}`}
+              className={`mt-2 ${isBlocked ? 'opacity-50 cursor-not-allowed' : ''}`}
             >
-              <MessageCircle className={ICON} strokeWidth={1.8} aria-hidden="true" />
+              <MessageCircle className={ICON} strokeWidth={ICON_STROKE_WIDTH_BOLD} aria-hidden="true" />
               Ask on WhatsApp
             </Button>
-            {blocked && (
+            {isBlocked && (
               <p className="mt-3 text-label text-err text-center" role="status">
                 Add a date and time for each extra first.
               </p>
@@ -278,10 +292,10 @@ export default function MyBookingCart() {
             <p className="mt-3 text-label text-muted text-center">
               Book now to pay online and confirm straight away, or ask us first on WhatsApp.
             </p>
-            {sent && (
+            {isSent && (
               <button
                 type="button"
-                onClick={clear}
+                onClick={handleCartClear}
                 className="mt-4 w-full text-body text-muted hover:text-err bg-transparent border-none cursor-pointer"
               >
                 Clear this booking
@@ -291,15 +305,15 @@ export default function MyBookingCart() {
         </div>
       )}
       <CheckoutSheet
-        open={checkoutOpen}
-        onClose={() => setCheckoutOpen(false)}
+        open={isCheckoutOpen}
+        onClose={() => setIsCheckoutOpen(false)}
         cart={cart}
         onPaid={(ref) => {
-          setCheckoutOpen(false);
+          setIsCheckoutOpen(false);
           setWaitingRef(ref);
         }}
       />
-      {waitingRef && <PayWaiting bookingRef={waitingRef} onClose={closeWaiting} onConfirmed={clear} />}
+      {waitingRef && <PayWaiting bookingRef={waitingRef} onClose={handleWaitingClose} onConfirmed={handleCartClear} />}
     </Container>
   );
 }

@@ -4,13 +4,15 @@ import { useState } from 'react';
 import { useItinerary } from '@/state/ItineraryProvider';
 import { usePricing } from '@/state/PricingProvider';
 import DatePopup from './DatePopup';
-import { clashDates } from '@/lib/cart';
+import { findClashDates } from '@/lib/cart';
 import BookingForm from './BookingForm';
 import { SHELL, BOX_SM, CLOSE, TITLE, SUB, BTN, BTN_GHOST } from '@/components/ui/modalClasses';
 import ModalPresence from '@/components/ui/ModalPresence';
 import { CART_TOAST } from '@/components/ui/cartToastClasses';
 import LiveRegion from '@/components/ui/LiveRegion';
 import useBodyLock from '@/components/ui/useBodyLock';
+
+const TOAST_DURATION_MS = 2600;
 
 export default function BookSidebar({ item, presetType = 'tour', perPerson = false, belowPrice }) {
   const [ask, setAsk] = useState(null);
@@ -21,13 +23,15 @@ export default function BookSidebar({ item, presetType = 'tour', perPerson = fal
   const pricing = usePricing();
 
   function isFullDay(name) {
-    const c = pricing && pricing.catalog && pricing.catalog.items.find((i) => i.name === name);
-    return !!c && (c.category === 'tour' || c.category === 'combo');
+    const catalogItem =
+      pricing && pricing.catalog && pricing.catalog.items.find((catalogEntry) => catalogEntry.name === name);
+    return !!catalogItem && (catalogItem.category === 'tour' || catalogItem.category === 'combo');
   }
 
-  function categoryOf(name) {
-    const c = pricing && pricing.catalog && pricing.catalog.items.find((i) => i.name === name);
-    return c ? c.category : null;
+  function findCategory(name) {
+    const catalogItem =
+      pricing && pricing.catalog && pricing.catalog.items.find((catalogEntry) => catalogEntry.name === name);
+    return catalogItem ? catalogItem.category : null;
   }
 
   function addRow(name, date, mode, goto, time) {
@@ -41,13 +45,13 @@ export default function BookSidebar({ item, presetType = 'tour', perPerson = fal
     if (goto) window.location.href = '/my-trips.html';
     else {
       setToast('Added to My Trips');
-      setTimeout(() => setToast(''), 2600);
+      setTimeout(() => setToast(''), TOAST_DURATION_MS);
     }
   }
 
   function commit(name, date, mode, goto, time) {
     const probe = { ...state, days: [...(state.days || []), { items: [name], itemModes: [mode], date }] };
-    if (isFullDay(name) && clashDates(probe, isFullDay).length > 0) {
+    if (isFullDay(name) && findClashDates(probe, isFullDay).length > 0) {
       setConfirm({ name, date, mode, goto, time });
       return;
     }
@@ -85,7 +89,7 @@ export default function BookSidebar({ item, presetType = 'tour', perPerson = fal
           setPending(null);
         }}
         withTime
-        category={pending ? categoryOf(pending.name) : null}
+        category={pending ? findCategory(pending.name) : null}
         itemName={pending ? pending.name : null}
       />
 
@@ -101,9 +105,15 @@ export default function BookSidebar({ item, presetType = 'tour', perPerson = fal
               type="button"
               className={BTN}
               onClick={() => {
-                const c = confirm;
+                const pendingConfirm = confirm;
                 setConfirm(null);
-                addRow(c.name, c.date, c.mode, c.goto, c.time);
+                addRow(
+                  pendingConfirm.name,
+                  pendingConfirm.date,
+                  pendingConfirm.mode,
+                  pendingConfirm.goto,
+                  pendingConfirm.time,
+                );
               }}
             >
               Add anyway

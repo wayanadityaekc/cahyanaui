@@ -9,6 +9,8 @@ import { useTripPrefs } from '@/components/providers/TripPrefsProvider';
 import { useCurrency } from '@/components/providers/CurrencyProvider';
 import { CURRENCIES, CURRENCY_NAMES } from '@/lib/currency';
 
+const ICON_STROKE_WIDTH_REGULAR = 1.7;
+
 const GUEST_OPTIONS = [1, 2, 3, 4, 5, 6];
 
 export default function SearchCard({ layout = 'bar' }) {
@@ -18,9 +20,9 @@ export default function SearchCard({ layout = 'bar' }) {
   const [checkIn, setCheckIn] = useState('');
   const [checkOut, setCheckOut] = useState('');
 
-  const panel = layout === 'panel';
+  const isPanelLayout = layout === 'panel';
   const search = (
-    <Button full={panel} onClick={() => openBooking({ checkIn, checkOut, guests })}>
+    <Button full={isPanelLayout} onClick={() => openBooking({ checkIn, checkOut, guests })}>
       <Search className="w-[var(--icon-sm)] h-[var(--icon-sm)]" aria-hidden="true" />
       Search
     </Button>
@@ -32,7 +34,7 @@ export default function SearchCard({ layout = 'bar' }) {
       <DateRangeField
         id="search-checkin"
         hint="Dates"
-        icon={<CalendarDays className={iconCls} strokeWidth={1.7} aria-hidden="true" />}
+        icon={<CalendarDays className={iconCls} strokeWidth={ICON_STROKE_WIDTH_REGULAR} aria-hidden="true" />}
         placeholders={{ start: 'Select dates', end: 'Add date' }}
         value={{ checkIn, checkOut }}
         onChange={(range) => {
@@ -44,7 +46,7 @@ export default function SearchCard({ layout = 'bar' }) {
         id="search-guests"
         label="Guests"
         hint="Guests"
-        icon={<UserRound className={iconCls} strokeWidth={1.7} aria-hidden="true" />}
+        icon={<UserRound className={iconCls} strokeWidth={ICON_STROKE_WIDTH_REGULAR} aria-hidden="true" />}
         value={String(guests)}
         onChange={(value) => setGuests(Number(value))}
         options={GUEST_OPTIONS.map((count) => ({
@@ -56,7 +58,7 @@ export default function SearchCard({ layout = 'bar' }) {
         id="search-currency"
         label="Currency"
         hint="Currency"
-        icon={<Coins className={iconCls} strokeWidth={1.7} aria-hidden="true" />}
+        icon={<Coins className={iconCls} strokeWidth={ICON_STROKE_WIDTH_REGULAR} aria-hidden="true" />}
         value={currency}
         onChange={setCurrency}
         options={CURRENCIES.map((code) => ({ value: code, label: `${code} - ${CURRENCY_NAMES[code]}` }))}
@@ -66,7 +68,7 @@ export default function SearchCard({ layout = 'bar' }) {
 
   const fields = (
     <>
-      <div className={panel ? 'min-w-0' : 'min-w-0 sm:col-span-2'}>
+      <div className={isPanelLayout ? 'min-w-0' : 'min-w-0 sm:col-span-2'}>
         <label className={SEARCH_LABEL}>Dates</label>
         <DateRangeField
           id="search-checkin"
@@ -96,7 +98,7 @@ export default function SearchCard({ layout = 'bar' }) {
     </>
   );
 
-  if (panel) {
+  if (isPanelLayout) {
     return (
       <div className="w-full bg-surface-raised/92 backdrop-blur-md p-5 sm:p-6 rounded-sm">
         <h2 className="text-h3 font-medium text-gold mb-4">Check your dates</h2>

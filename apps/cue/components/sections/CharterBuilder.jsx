@@ -1,5 +1,5 @@
 'use client';
-import { fmtTime } from '@/content/shared/timeSlots';
+import { formatTime } from '@/content/shared/timeSlots';
 import { FIELD_LABEL } from '@/components/ui/formClasses';
 
 import { useEffect, useState } from 'react';
@@ -15,16 +15,23 @@ import DateField from '@/components/ui/DateField';
 import InfoDot from '@/components/ui/InfoDot';
 import { withSymbol } from '@/components/Price';
 
+const CHARTER_START_SLOT_COUNT = 23;
+const CHARTER_FIRST_START_HOUR = 6;
+const MINUTES_PER_HOUR = 60;
+const SLOT_MINUTES = 30;
+
 const GUESTS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
 const TIMES = (() => {
-  const out = [];
-  [...Array(23).keys()]
-    .map((k) => 6 * 60 + k * 30)
-    .forEach((m) => {
-      out.push(`${String(Math.floor(m / 60)).padStart(2, '0')}:${String(m % 60).padStart(2, '0')}`);
+  const timeOptions = [];
+  [...Array(CHARTER_START_SLOT_COUNT).keys()]
+    .map((slotIndex) => CHARTER_FIRST_START_HOUR * MINUTES_PER_HOUR + slotIndex * SLOT_MINUTES)
+    .forEach((minutesSinceMidnight) => {
+      timeOptions.push(
+        `${String(Math.floor(minutesSinceMidnight / MINUTES_PER_HOUR)).padStart(2, '0')}:${String(minutesSinceMidnight % MINUTES_PER_HOUR).padStart(2, '0')}`,
+      );
     });
-  return out;
+  return timeOptions;
 })();
 
 export default function CharterBuilder() {
@@ -38,25 +45,25 @@ export default function CharterBuilder() {
   const [dur, setDur] = useState(CHARTER.durations[0].dur);
 
   useEffect(() => {
-    const d = readCharterDraft();
-    if (!d) return;
-    if (CHARTER.durations.some((x) => x.dur === d.dur)) setDur(d.dur);
+    const draft = readCharterDraft();
+    if (!draft) return;
+    if (CHARTER.durations.some((duration) => duration.dur === draft.dur)) setDur(draft.dur);
   }, []);
 
-  function pick(d) {
-    setDur(d);
-    saveCharterDraft({ dur: d });
+  function handlePick(charterDraft) {
+    setDur(charterDraft);
+    saveCharterDraft({ dur: charterDraft });
   }
 
-  const { tier, fmt } = useCharterTier({ area });
+  const { tier, fmt: formatTierPrice } = useCharterTier({ area });
   const catalog = usePricing()?.catalog;
 
-  const ready = !!(area && date && time && guests);
+  const isReady = !!(area && date && time && guests);
   const selected = CHARTER.durations.find((duration) => duration.dur === dur) || CHARTER.durations[0];
   const total = tier(dur);
 
-  function book() {
-    if (!ready || total == null) return;
+  function handleBook() {
+    if (!isReady || total == null) return;
     save({
       ...state,
       charters: [
@@ -73,7 +80,9 @@ export default function CharterBuilder() {
     window.location.href = '/my-trips.html';
   }
 
-  const areas = catalog ? ['Ubud', ...catalog.transfers.map((t) => t.route.replace(/\s*–\s*Ubud$/, ''))] : ['Ubud'];
+  const areas = catalog
+    ? ['Ubud', ...catalog.transfers.map((transfer) => transfer.route.replace(/\s*–\s*Ubud$/, ''))]
+    : ['Ubud'];
 
   return (
     <div className="bg-white rounded-xl p-[var(--space-2)] text-left" id={CHARTER.boxId}>
@@ -82,7 +91,7 @@ export default function CharterBuilder() {
       </h2>
 
       <div className="flex flex-col gap-[var(--space-2)] min-[993px]:grid min-[993px]:grid-cols-[1fr_340px] min-[993px]:gap-[var(--space-3)] min-[993px]:items-start">
-        <CharterPlans value={dur} onChange={pick} area={area} heading="How long do you need the car?" />
+        <CharterPlans value={dur} onChange={handlePick} area={area} heading="How long do you need the car?" />
 
         <div>
           <div className="flex items-center gap-[var(--space-1)] mb-[var(--space-1)]">
@@ -101,7 +110,7 @@ export default function CharterBuilder() {
                 label="Pick-up area"
                 value={area}
                 onChange={setArea}
-                options={areas.map((a) => ({ value: a, label: a }))}
+                options={areas.map((areaItem) => ({ value: areaItem, label: areaItem }))}
                 placeholder="Where should we collect you?"
               />
             </div>
@@ -120,7 +129,7 @@ export default function CharterBuilder() {
                 label="Pick-up time"
                 value={time}
                 onChange={setTime}
-                options={TIMES.map((t) => ({ value: t, label: fmtTime(t) }))}
+                options={TIMES.map((timeSlot) => ({ value: timeSlot, label: formatTime(timeSlot) }))}
                 placeholder="Time"
               />
             </div>
@@ -132,11 +141,11 @@ export default function CharterBuilder() {
                 id="ch-guests"
                 label="Guests"
                 value={guests}
-                onChange={(v) => {
-                  setLocalGuests(v);
-                  setGuests(v);
+                onChange={(selectedValue) => {
+                  setLocalGuests(selectedValue);
+                  setGuests(selectedValue);
                 }}
-                options={GUESTS.map((n) => ({ value: String(n), label: String(n) }))}
+                options={GUESTS.map((guestCount) => ({ value: String(guestCount), label: String(guestCount) }))}
                 placeholder="How many of you?"
               />
             </div>
@@ -145,15 +154,15 @@ export default function CharterBuilder() {
           <div className="mt-[var(--space-2)] flex items-baseline justify-between gap-[var(--space-1)] [border-top:1px_solid_var(--line)] pt-[var(--space-1)]">
             <span className="text-small text-muted">{selected.name}</span>
             <span className="text-gold font-semibold text-[1.05rem] whitespace-nowrap">
-              {total == null ? '—' : withSymbol(fmt(total))}
+              {total == null ? '—' : withSymbol(formatTierPrice(total))}
             </span>
           </div>
 
-          <button className={BTN_BOOK} type="button" disabled={!ready || total == null} onClick={book}>
+          <button className={BTN_BOOK} type="button" disabled={!isReady || total == null} onClick={handleBook}>
             Book charter
           </button>
 
-          {!ready && (
+          {!isReady && (
             <p className="mt-[var(--space-1)] mb-0 text-small text-gold leading-[var(--lh-body)]">
               Pick your area, date, time and guests to book.
             </p>

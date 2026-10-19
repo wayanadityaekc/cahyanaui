@@ -3,30 +3,30 @@
 import { useEffect, useId, useRef, useState } from 'react';
 
 export default function useDisclosure() {
-  const [open, setOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
   const boxRef = useRef(null);
   const triggerRef = useRef(null);
   const panelId = useId();
 
   useEffect(() => {
-    if (!open) return undefined;
-    function onDoc(e) {
-      if (e.target.closest && e.target.closest('[data-portal]')) return;
-      if (boxRef.current && !boxRef.current.contains(e.target)) setOpen(false);
+    if (!isOpen) return undefined;
+    function handleOutsidePointerDown(event) {
+      if (event.target.closest && event.target.closest('[data-portal]')) return;
+      if (boxRef.current && !boxRef.current.contains(event.target)) setIsOpen(false);
     }
-    function onKey(e) {
-      if (e.key !== 'Escape') return;
+    function handleEscapeKeyDown(event) {
+      if (event.key !== 'Escape') return;
       if (document.querySelector('[data-portal="select"][data-open]')) return;
-      setOpen(false);
+      setIsOpen(false);
       if (triggerRef.current) triggerRef.current.focus();
     }
-    document.addEventListener('click', onDoc);
-    document.addEventListener('keydown', onKey);
+    document.addEventListener('click', handleOutsidePointerDown);
+    document.addEventListener('keydown', handleEscapeKeyDown);
     return () => {
-      document.removeEventListener('click', onDoc);
-      document.removeEventListener('keydown', onKey);
+      document.removeEventListener('click', handleOutsidePointerDown);
+      document.removeEventListener('keydown', handleEscapeKeyDown);
     };
-  }, [open]);
+  }, [isOpen]);
 
-  return { open, setOpen, boxRef, triggerRef, panelId };
+  return { open: isOpen, setOpen: setIsOpen, boxRef, triggerRef, panelId };
 }

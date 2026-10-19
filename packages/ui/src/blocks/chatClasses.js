@@ -1,5 +1,7 @@
 import { BTN_SM } from '../primitives/btnClasses.js';
 
+const DOT_DELAY_STEP_SECONDS = 0.15;
+
 export const CHAT_FRAME =
   'fixed z-[130] flex flex-col bg-surface-raised overflow-hidden outline-none ' +
   '[@media(min-width:769px)]:top-0 [@media(min-width:769px)]:right-0 [@media(min-width:769px)]:bottom-0 ' +
@@ -76,7 +78,7 @@ export const CHAT_DOT = 'w-[5px] h-[5px] rounded-[50%] bg-muted';
 export const CHAT_TYPING_ROW = `${CHAT_DOTS} items-center gap-[0.45rem]`;
 export const CHAT_TYPING_WHO = 'font-body text-small font-medium text-gold';
 export function chatDotLive(index) {
-  return `${CHAT_DOT} motion-safe:animate-[cahyana-chatdot_1.1s_ease-in-out_infinite] [animation-delay:${index * 0.15}s]`;
+  return `${CHAT_DOT} motion-safe:animate-[cahyana-chatdot_1.1s_ease-in-out_infinite] [animation-delay:${index * DOT_DELAY_STEP_SECONDS}s]`;
 }
 
 export const CHAT_MAIL_FORM =

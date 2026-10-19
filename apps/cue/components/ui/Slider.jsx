@@ -4,6 +4,10 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import clsx from 'clsx';
 import { GRID_SLIDER } from '@/components/ui/gridClasses';
 
+const SCROLL_EDGE_TOLERANCE_PX = 4;
+const CARD_GAP_PX = 16;
+const TRACK_SCROLL_WIDTH_RATIO = 0.8;
+
 const ARROW =
   'absolute top-[calc(50%-0.5rem)] [transform:translateY(-50%)] z-[5] hidden items-center justify-center w-11 h-11 ' +
   'border-none rounded-[50%] text-[1.7rem] leading-none text-green bg-[rgba(255,255,255,0.96)] ' +
@@ -18,9 +22,9 @@ export default function Slider({ children, className = '', gridClassName = GRID_
   const measure = useCallback(() => {
     const track = trackRef.current;
     if (!track) return;
-    const overflowing = track.scrollWidth - track.clientWidth > 4;
-    setCanPrev(overflowing && track.scrollLeft > 4);
-    setCanNext(overflowing && track.scrollLeft + track.clientWidth < track.scrollWidth - 4);
+    const isOverflowing = track.scrollWidth - track.clientWidth > SCROLL_EDGE_TOLERANCE_PX;
+    setCanPrev(isOverflowing && track.scrollLeft > SCROLL_EDGE_TOLERANCE_PX);
+    setCanNext(isOverflowing && track.scrollLeft + track.clientWidth < track.scrollWidth - SCROLL_EDGE_TOLERANCE_PX);
   }, []);
 
   useEffect(() => {
@@ -39,7 +43,7 @@ export default function Slider({ children, className = '', gridClassName = GRID_
     const track = trackRef.current;
     if (!track) return;
     const card = track.querySelector(':scope > *');
-    const by = card ? card.getBoundingClientRect().width + 16 : track.clientWidth * 0.8;
+    const by = card ? card.getBoundingClientRect().width + CARD_GAP_PX : track.clientWidth * TRACK_SCROLL_WIDTH_RATIO;
     track.scrollBy({ left: dir * by, behavior: 'smooth' });
   }
 

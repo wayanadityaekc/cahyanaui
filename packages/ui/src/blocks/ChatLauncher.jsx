@@ -1,5 +1,7 @@
 import { MessageCircle } from 'lucide-react';
 
+const ICON_STROKE_WIDTH_THIN = 1.6;
+
 export default function ChatLauncher({
   open = false,
   onClick = () => {},
@@ -16,12 +18,12 @@ export default function ChatLauncher({
       aria-haspopup="dialog"
       aria-expanded={open}
       data-chat-launcher
-      onClick={(e) => {
-        e.currentTarget.focus();
-        onClick(e);
+      onClick={(event) => {
+        event.currentTarget.focus();
+        onClick(event);
       }}
     >
-      <MessageCircle className={iconClass} strokeWidth={1.6} aria-hidden="true" />
+      <MessageCircle className={iconClass} strokeWidth={ICON_STROKE_WIDTH_THIN} aria-hidden="true" />
       {label}
     </button>
   );

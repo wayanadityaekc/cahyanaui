@@ -1,3 +1,7 @@
+const REPLY_START_HOUR = 8;
+const REPLY_END_HOUR = 21;
+const QUIET_DELAY_MS = 120000;
+
 export const SUGGESTIONS = [
   'How many people can stay?',
   'What does a night cost?',
@@ -242,9 +246,14 @@ export const THANKS = [
   'great thanks',
 ];
 
-export const REPLY_HOURS = { from: 8, to: 21, tz: 'Asia/Makassar', label: '8am and 9pm Bali time' };
+export const REPLY_HOURS = {
+  from: REPLY_START_HOUR,
+  to: REPLY_END_HOUR,
+  tz: 'Asia/Makassar',
+  label: '8am and 9pm Bali time',
+};
 
-export function wayanIsAround(now = new Date()) {
+export function isWayanAround(now = new Date()) {
   const hour = Number(
     new Intl.DateTimeFormat('en-GB', {
       timeZone: REPLY_HOURS.tz,
@@ -283,7 +292,7 @@ export const CHAT_COPY = {
   hoursHere: 'He is at the dashboard right now, so this should be quick.',
   typing: 'Wayan is typing',
   ownerName: 'Wayan',
-  quietMs: 120000,
+  quietMs: QUIET_DELAY_MS,
   threadGone: 'That conversation has expired. Ask again and I will start a new one.',
   sendFailed: 'That did not send. Try again in a moment.',
   reachFailed: 'Could not reach Wayan just now.',

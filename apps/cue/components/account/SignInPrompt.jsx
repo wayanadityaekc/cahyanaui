@@ -8,15 +8,15 @@ const LEAD = 'font-head font-medium tracking-[-0.01em] text-[1rem] text-green m-
 const SUB = 'text-body text-muted max-w-[44ch] mx-auto mt-0 mb-[1.4rem]';
 
 export default function SignInPrompt({ lead, sub, className = '' }) {
-  const [open, setOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
   return (
     <div className={`text-center pt-2 px-0 pb-0 ${className}`}>
       <p className={LEAD}>{lead}</p>
       <p className={SUB}>{sub}</p>
-      <button type="button" className={`inline-flex ${BTN_CTA}`} onClick={() => setOpen(true)}>
+      <button type="button" className={`inline-flex ${BTN_CTA}`} onClick={() => setIsOpen(true)}>
         Sign in
       </button>
-      <AuthModal open={open} onClose={() => setOpen(false)} />
+      <AuthModal open={isOpen} onClose={() => setIsOpen(false)} />
     </div>
   );
 }

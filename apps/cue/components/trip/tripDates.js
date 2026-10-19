@@ -1,11 +1,11 @@
-export function fmtDay(dateStr) {
+export function formatDay(dateStr) {
   if (!dateStr) return 'date TBD';
-  const [y, m, d] = dateStr.split('-').map(Number);
-  return new Date(y, m - 1, d).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
+  const [year, month, day] = dateStr.split('-').map(Number);
+  return new Date(year, month - 1, day).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
 }
 
-export function fmtRange(from, to) {
+export function formatRange(from, to) {
   if (!from) return 'Date TBD';
-  if (to && to !== from) return `${fmtDay(from)} - ${fmtDay(to)}`;
-  return fmtDay(from);
+  if (to && to !== from) return `${formatDay(from)} - ${formatDay(to)}`;
+  return formatDay(from);
 }

@@ -24,10 +24,14 @@ import {
   SplitFeature,
 } from '@cahyana/ui';
 import { EXPLORE_MORE, STAY_ADDONS } from '@/content/crossSell';
-import { pageMeta } from '@/lib/seo';
-import { siteSchema } from '@/lib/schema';
+import { buildPageMeta } from '@/lib/seo';
+import { buildSiteSchema } from '@/lib/schema';
 
-export const metadata = pageMeta({
+const ICON_STROKE_WIDTH_LIGHT = 1.6;
+const ADDON_IMAGE_WIDTH_PX = 700;
+const ADDON_IMAGE_HEIGHT_PX = 525;
+
+export const metadata = buildPageMeta({
   title: 'Private Pool Villas in Ubud, Bali | Ubud Private Villas',
   description:
     'Two private pool villas in north Ubud, Bali: a 3-bedroom family house and a 2-bedroom ricefield villa. Both rated 4.96 on Airbnb, 10 minutes from Ubud Palace.',
@@ -67,7 +71,7 @@ const SERVICES_HOME = [
 export default function HomePage() {
   return (
     <>
-      <JsonLd data={siteSchema(VILLA_LIST)} />
+      <JsonLd data={buildSiteSchema(VILLA_LIST)} />
       <Hero
         size="page"
         image="/images/cahyana-tibuah.webp"
@@ -100,7 +104,11 @@ export default function HomePage() {
             {WHY_STAY.map((item) => (
               <div key={item.title} className="flex items-start gap-4">
                 <span className={ICON_CIRCLE}>
-                  <item.Icon className="w-[var(--icon-md)] h-[var(--icon-md)]" strokeWidth={1.6} aria-hidden="true" />
+                  <item.Icon
+                    className="w-[var(--icon-md)] h-[var(--icon-md)]"
+                    strokeWidth={ICON_STROKE_WIDTH_LIGHT}
+                    aria-hidden="true"
+                  />
                 </span>
                 <div>
                   <h3 className="text-h3 font-semibold text-gold">{item.title}</h3>
@@ -130,11 +138,11 @@ export default function HomePage() {
         }
       />
 
-      {SERVICES_HOME.map((service, i) => (
+      {SERVICES_HOME.map((service, index) => (
         <SplitFeature
           key={service.href}
-          tone={i % 2 === 0 ? 'cream' : 'plain'}
-          reverse={i % 2 === 1}
+          tone={index % 2 === 0 ? 'cream' : 'plain'}
+          reverse={index % 2 === 1}
           image={service.img}
           alt={service.alt}
           eyebrow={service.eyebrow}
@@ -159,8 +167,8 @@ export default function HomePage() {
         </p>
 
         <div className={`${GRID_TRIO} mt-7`}>
-          {REVIEW_CARDS.map((card, i) => (
-            <ReviewCard key={i} card={card} />
+          {REVIEW_CARDS.map((card, index) => (
+            <ReviewCard key={index} card={card} />
           ))}
         </div>
       </Section>
@@ -179,7 +187,13 @@ export default function HomePage() {
               as={addon.external ? 'a' : Link}
               href={addon.href}
               {...(addon.external ? { target: '_blank', rel: 'noopener' } : {})}
-              image={{ src: addon.img, alt: addon.alt, width: 700, height: 525, ratio: 'aspect-[4/3]' }}
+              image={{
+                src: addon.img,
+                alt: addon.alt,
+                width: ADDON_IMAGE_WIDTH_PX,
+                height: ADDON_IMAGE_HEIGHT_PX,
+                ratio: 'aspect-[4/3]',
+              }}
               footer={
                 <span className={`${CAPS} text-cta`}>
                   {addon.cta}

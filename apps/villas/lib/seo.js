@@ -1,7 +1,7 @@
 const SITE_NAME = 'Ubud Private Villas';
 const DEFAULT_IMAGE = '/images/cahyana-house-pool-aerial-garden.jpg';
 
-export function pageMeta({ title, description, path, image = DEFAULT_IMAGE }) {
+export function buildPageMeta({ title, description, path, image = DEFAULT_IMAGE }) {
   return {
     title,
     description,

@@ -12,6 +12,8 @@ import {
 import { CONTACT_EMAIL, CUE_LINK, WHATSAPP_LINK } from '@/lib/constants';
 import { REGISTRATION } from '@/content/registration';
 
+const ICON_STROKE_WIDTH_BOLD = 1.8;
+
 const BRAND = 'Ubud Private Villas';
 
 const COLUMNS = [
@@ -66,15 +68,15 @@ export default function Footer() {
           </Link>
           <div className="mt-[0.9rem] flex flex-col gap-[0.55rem]">
             <a href={WHATSAPP_LINK} target="_blank" rel="noopener" className={FOOT_CONTACT_LINK}>
-              <MessageCircle className={FOOT_CONTACT_SVG} strokeWidth={1.8} aria-hidden="true" />
+              <MessageCircle className={FOOT_CONTACT_SVG} strokeWidth={ICON_STROKE_WIDTH_BOLD} aria-hidden="true" />
               Message us on WhatsApp
             </a>
             <a href={`mailto:${CONTACT_EMAIL}`} className={FOOT_CONTACT_LINK}>
-              <Mail className={FOOT_CONTACT_SVG} strokeWidth={1.8} aria-hidden="true" />
+              <Mail className={FOOT_CONTACT_SVG} strokeWidth={ICON_STROKE_WIDTH_BOLD} aria-hidden="true" />
               {CONTACT_EMAIL}
             </a>
             <span className={FOOT_CONTACT_ITEM}>
-              <MapPin className={FOOT_CONTACT_SVG} strokeWidth={1.8} aria-hidden="true" />
+              <MapPin className={FOOT_CONTACT_SVG} strokeWidth={ICON_STROKE_WIDTH_BOLD} aria-hidden="true" />
               North Ubud, Bali
             </span>
           </div>

@@ -53,8 +53,8 @@ export default function ServiceDetail({
             {sections.map((section) => (
               <div key={section.heading}>
                 <h2 className="text-h2 font-medium mt-9 mb-3 text-gold">{section.heading}</h2>
-                {section.body?.map((para, i) => (
-                  <p key={i}>{para}</p>
+                {section.body?.map((para, index) => (
+                  <p key={index}>{para}</p>
                 ))}
                 {section.list && (
                   <ul className="grid sm:grid-cols-2 gap-x-8">

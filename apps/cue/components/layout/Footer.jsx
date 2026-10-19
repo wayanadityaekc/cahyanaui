@@ -3,13 +3,17 @@
 import { Mail, MapPin, MessageCircle } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import { WHATSAPP_NUMBER } from '@/lib/constants';
-import { REGISTRATION as R } from '@/content/shared/registration';
+import { REGISTRATION as registration } from '@/content/shared/registration';
 import FooterPayChips from './FooterPayChips';
+
+const ICON_STROKE_WIDTH_MEDIUM = 1.8;
 
 const COMPACT_PATHS = ['/settings.html', '/my-trips.html', '/our-company.html'];
 
 function isCompactPath(pathname) {
-  return COMPACT_PATHS.some((p) => pathname === p || pathname === p.replace(/\.html$/, ''));
+  return COMPACT_PATHS.some(
+    (compactPath) => pathname === compactPath || pathname === compactPath.replace(/\.html$/, ''),
+  );
 }
 
 const CONTACT_ITEM = 'flex items-center gap-[0.55rem] text-[0.8rem] text-green opacity-90 no-underline';
@@ -66,11 +70,11 @@ function CompactFooter() {
             aria-label="WhatsApp"
             className={CONTACT_LINK}
           >
-            <MessageCircle className={CONTACT_SVG} strokeWidth={1.8} />
+            <MessageCircle className={CONTACT_SVG} strokeWidth={ICON_STROKE_WIDTH_MEDIUM} />
             <span className="max-[560px]:hidden">WhatsApp</span>
           </a>
           <a href="mailto:cahyanabaliexperience@gmail.com" aria-label="Email" className={CONTACT_LINK}>
-            <Mail className={CONTACT_SVG} strokeWidth={1.8} />
+            <Mail className={CONTACT_SVG} strokeWidth={ICON_STROKE_WIDTH_MEDIUM} />
             <span className="max-[560px]:hidden">Email</span>
           </a>
         </div>
@@ -99,15 +103,15 @@ export default function Footer() {
           </a>
           <div className="mt-[0.9rem] flex flex-col gap-[0.55rem]">
             <a href={`https://wa.me/${WHATSAPP_NUMBER}`} target="_blank" rel="noopener" className={CONTACT_LINK}>
-              <MessageCircle className={CONTACT_SVG} strokeWidth={1.8} />
+              <MessageCircle className={CONTACT_SVG} strokeWidth={ICON_STROKE_WIDTH_MEDIUM} />
               Message us on WhatsApp
             </a>
             <a href="mailto:cahyanabaliexperience@gmail.com" className={CONTACT_LINK}>
-              <Mail className={CONTACT_SVG} strokeWidth={1.8} />
+              <Mail className={CONTACT_SVG} strokeWidth={ICON_STROKE_WIDTH_MEDIUM} />
               cahyanabaliexperience@gmail.com
             </a>
             <span className={CONTACT_ITEM}>
-              <MapPin className={CONTACT_SVG} strokeWidth={1.8} />
+              <MapPin className={CONTACT_SVG} strokeWidth={ICON_STROKE_WIDTH_MEDIUM} />
               Based in Ubud, Bali
             </span>
           </div>
@@ -116,10 +120,10 @@ export default function Footer() {
         <div>
           <h4 className={COL_H}>Explore</h4>
           <ul className="list-none">
-            {EXPLORE.map(([h, t]) => (
-              <li key={h} className={COL_LI}>
-                <a href={h} className={COL_A}>
-                  {t}
+            {EXPLORE.map(([href, label]) => (
+              <li key={href} className={COL_LI}>
+                <a href={href} className={COL_A}>
+                  {label}
                 </a>
               </li>
             ))}
@@ -129,10 +133,10 @@ export default function Footer() {
         <div>
           <h4 className={COL_H}>Company</h4>
           <ul className="list-none">
-            {COMPANY.map(([h, t]) => (
-              <li key={h} className={COL_LI}>
-                <a href={h} className={COL_A}>
-                  {t}
+            {COMPANY.map(([href, label]) => (
+              <li key={href} className={COL_LI}>
+                <a href={href} className={COL_A}>
+                  {label}
                 </a>
               </li>
             ))}
@@ -161,11 +165,11 @@ export default function Footer() {
           </div>
           <h4 className={`${COL_H} mt-6`}>Follow</h4>
           <div className="flex gap-[0.6rem]">
-            {SOCIAL.map(([alt, img]) => (
+            {SOCIAL.map(([alt, image]) => (
               <a key={alt} href="#" aria-label={alt} className={SOCIAL_A}>
                 <img
                   className="w-full h-full rounded-[50%] object-cover"
-                  src={`/assets/images/${img}`}
+                  src={`/assets/images/${image}`}
                   alt={alt}
                   width="256"
                   height="256"
@@ -191,16 +195,16 @@ export default function Footer() {
       >
         <p className="text-small opacity-70">&copy; 2026 Cahyana Ubud Experience. All rights reserved.</p>
         <p className="flex flex-wrap items-center gap-x-[7px] gap-y-1 max-[700px]:justify-center text-[length:0.58rem] font-normal text-muted opacity-40">
-          <span className="whitespace-nowrap">{R.name}</span>
+          <span className="whitespace-nowrap">{registration.name}</span>
           <span aria-hidden="true">·</span>
           <span className="whitespace-nowrap">
             Ministry of Law{' '}
-            <a href={R.verifyUrl} target="_blank" rel="noopener" className="text-inherit underline">
-              {R.decreeShort}
+            <a href={registration.verifyUrl} target="_blank" rel="noopener" className="text-inherit underline">
+              {registration.decreeShort}
             </a>
           </span>
           <span aria-hidden="true">·</span>
-          <span className="whitespace-nowrap">NIB {R.nib}</span>
+          <span className="whitespace-nowrap">NIB {registration.nib}</span>
         </p>
       </div>
     </footer>

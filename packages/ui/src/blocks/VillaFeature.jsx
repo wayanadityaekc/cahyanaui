@@ -15,7 +15,7 @@ export default function VillaFeature({
 }) {
   const [main, ...rest] = photos;
   const tile = 'relative overflow-hidden bg-cream';
-  const img = 'absolute inset-0 w-full h-full object-cover';
+  const image = 'absolute inset-0 w-full h-full object-cover';
   return (
     <div id={id} className={cn('flex flex-col gap-6', className)}>
       <div
@@ -32,7 +32,7 @@ export default function VillaFeature({
               mirrored && 'min-[993px]:col-start-2 min-[993px]:row-start-1',
             )}
           >
-            <img src={main.src} alt={main.alt} loading="lazy" className={img} />
+            <img src={main.src} alt={main.alt} loading="lazy" className={image} />
           </div>
         ) : null}
         <div className="grid grid-cols-2 gap-2 min-[993px]:contents">
@@ -47,7 +47,7 @@ export default function VillaFeature({
                 mirrored && index === 1 && 'min-[993px]:row-start-2',
               )}
             >
-              <img src={photo.src} alt={photo.alt} loading="lazy" className={img} />
+              <img src={photo.src} alt={photo.alt} loading="lazy" className={image} />
             </div>
           ))}
         </div>

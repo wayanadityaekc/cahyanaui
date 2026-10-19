@@ -10,49 +10,49 @@ if (!fs.existsSync(OUT)) {
 }
 
 function walk(dir, test) {
-  const found = [];
-  (function w(d) {
-    fs.readdirSync(d, { withFileTypes: true }).forEach((e) => {
-      if (e.name === '_next') return;
-      const p = path.join(d, e.name);
-      if (e.isDirectory()) w(p);
-      else if (test(e.name)) found.push(p);
+  const foundAssets = [];
+  (function walkDirectory(directory) {
+    fs.readdirSync(directory, { withFileTypes: true }).forEach((event) => {
+      if (event.name === '_next') return;
+      const entryPath = path.join(directory, event.name);
+      if (event.isDirectory()) walkDirectory(entryPath);
+      else if (test(event.name)) foundAssets.push(entryPath);
     });
   })(dir);
-  return found;
+  return foundAssets;
 }
 
-const pages = walk(OUT, (n) => n.endsWith('.html'));
+const pages = walk(OUT, (fileName) => fileName.endsWith('.html'));
 const referenced = new Set();
 const RX = [/(?:src|href)="(\/assets\/[^"?#&]+)/g, /url\((?:&#x27;|')?(\/assets\/[^'")#?&]+)/g];
 pages.forEach((page) => {
-  const s = fs.readFileSync(page, 'utf8');
-  RX.forEach((rx) => {
-    [...s.matchAll(rx)].forEach((m) => {
-      referenced.add(decodeURIComponent(m[1]));
+  const html = fs.readFileSync(page, 'utf8');
+  RX.forEach((pattern) => {
+    [...html.matchAll(pattern)].forEach((match) => {
+      referenced.add(decodeURIComponent(match[1]));
     });
   });
 });
 
-const missing = [];
-referenced.forEach((r) => {
-  if (!fs.existsSync(path.join(OUT, r.replace(/^\//, '')))) missing.push(r);
+const missingAssets = [];
+referenced.forEach((reference) => {
+  if (!fs.existsSync(path.join(OUT, reference.replace(/^\//, '')))) missingAssets.push(reference);
 });
 
 console.log(`Pages scanned        : ${pages.length}`);
 console.log(`Assets referenced    : ${referenced.size}`);
-console.log(`Referenced but absent: ${missing.length}`);
-if (missing.length) {
+console.log(`Referenced but absent: ${missingAssets.length}`);
+if (missingAssets.length) {
   console.error('\nMISSING ASSETS:');
-  missing.slice(0, 30).forEach((m) => console.error(`  ${m}`));
-  if (missing.length > 30) console.error(`  ... and ${missing.length - 30} more`);
+  missingAssets.slice(0, 30).forEach((missingAsset) => console.error(`  ${missingAsset}`));
+  if (missingAssets.length > 30) console.error(`  ... and ${missingAssets.length - 30} more`);
   process.exit(1);
 }
-const noIcon = pages.filter((page) => !/rel="icon"/.test(fs.readFileSync(page, 'utf8')));
-console.log(`Pages without a favicon: ${noIcon.length}`);
-if (noIcon.length) {
+const pagesWithoutIcon = pages.filter((page) => !/rel="icon"/.test(fs.readFileSync(page, 'utf8')));
+console.log(`Pages without a favicon: ${pagesWithoutIcon.length}`);
+if (pagesWithoutIcon.length) {
   console.error('\nPAGES MISSING THE FAVICON LINK:');
-  noIcon.slice(0, 10).forEach((p) => console.error(`  ${p.replace(`${OUT}/`, '')}`));
+  pagesWithoutIcon.slice(0, 10).forEach((iconPath) => console.error(`  ${iconPath.replace(`${OUT}/`, '')}`));
   process.exit(1);
 }
 

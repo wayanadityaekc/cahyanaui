@@ -4,7 +4,7 @@ import { BTN_SM } from '@/components/ui/btnClasses';
 import { useEffect, useRef, useState } from 'react';
 import { usePathname } from 'next/navigation';
 import { normalizePath } from '@/lib/pathname';
-import { Building2, Compass, BookOpen, House, MessageCircle, ShoppingBag, Star, X } from 'lucide-react';
+import { Building2, Compass, BookOpen, House, MessageCircle, ShoppingBag, Star, X as CloseIcon } from 'lucide-react';
 import { useItinerary } from '@/state/ItineraryProvider';
 import ChatLauncher from '@/components/chat/ChatLauncher';
 import { APP_HIDE } from '@/components/ui/pwaClasses';
@@ -19,12 +19,17 @@ import AccountMenu from './AccountMenu';
 import TripPrefsFields from './TripPrefsFields';
 import DesktopNav from './DesktopNav';
 
+const SCROLL_RETURN_THRESHOLD_PX = 8;
+const SCROLL_AWAY_THRESHOLD_PX = 80;
+const ICON_STROKE_WIDTH_LIGHT = 1.6;
+const ICON_STROKE_WIDTH_REGULAR = 1.7;
+
 const BURGER_BAR =
   'w-full h-[2px] bg-gold max-[992px]:w-[20px] ' +
   '[transition:translate_var(--dur)_var(--ease),rotate_var(--dur)_var(--ease),opacity_var(--dur-fast)_var(--ease)] ' +
   'motion-reduce:transition-none';
 
-function navLink(active) {
+function buildNavLinkClass(active) {
   return `${MENU_ROW_BOX} text-strong no-underline ${
     active
       ? 'font-semibold bg-cream text-green max-[992px]:text-gold-d'
@@ -40,9 +45,9 @@ const BADGE_BASE =
 export default function Navbar() {
   const { count } = useItinerary();
 
-  const [menuOpen, setMenuOpen] = useState(false);
-  const [dropOpen, setDropOpen] = useState(false);
-  const [authOpen, setAuthOpen] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isDropOpen, setIsDropOpen] = useState(false);
+  const [isAuthOpen, setIsAuthOpen] = useState(false);
   const navRef = useRef(null);
   const burgerRef = useRef(null);
   const headerRef = useRef(null);
@@ -55,37 +60,38 @@ export default function Navbar() {
     const root = document.documentElement;
     let max = 0;
     function set() {
-      const h = header.offsetHeight;
+      const headerHeight = header.offsetHeight;
       const bar = barRef.current ? barRef.current.offsetHeight : 0;
-      root.style.setProperty('--header-h', `${h - bar}px`);
+      root.style.setProperty('--header-h', `${headerHeight - bar}px`);
       root.style.setProperty('--tripbar-h', `${bar}px`);
-      if (h > max) {
-        max = h;
-        root.style.setProperty('--header-h-max', `${h}px`);
-      }
+      if (!(headerHeight > max)) return;
+      max = headerHeight;
+      root.style.setProperty('--header-h-max', `${headerHeight}px`);
     }
-    function onResize() {
+    function handleResize() {
       max = 0;
       set();
     }
     set();
     const resizeObserver = new ResizeObserver(set);
     resizeObserver.observe(header);
-    window.addEventListener('resize', onResize);
+    window.addEventListener('resize', handleResize);
     return () => {
       resizeObserver.disconnect();
-      window.removeEventListener('resize', onResize);
+      window.removeEventListener('resize', handleResize);
     };
   }, []);
 
-  const [slid, setSlid] = useState(false);
+  const [isScrolledAway, setIsScrolledAway] = useState(false);
   useEffect(() => {
-    function onScroll() {
-      return setSlid((was) => (was ? window.scrollY > 8 : window.scrollY > 80));
+    function handleScroll() {
+      return setIsScrolledAway((was) =>
+        was ? window.scrollY > SCROLL_RETURN_THRESHOLD_PX : window.scrollY > SCROLL_AWAY_THRESHOLD_PX,
+      );
     }
-    onScroll();
-    window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
+    handleScroll();
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   function isActive(href) {
@@ -94,31 +100,32 @@ export default function Navbar() {
   }
 
   useEffect(() => {
-    if (!menuOpen) return undefined;
-    function onDoc(e) {
-      const inNav = navRef.current && navRef.current.contains(e.target);
-      const onBurger = burgerRef.current && burgerRef.current.contains(e.target);
-      const inPopup = e.target.closest && e.target.closest('[data-portal]');
-      if (!inNav && !onBurger && !inPopup) setMenuOpen(false);
+    if (!isMenuOpen) return undefined;
+    function handleDocumentClick(event) {
+      const inNav = navRef.current && navRef.current.contains(event.target);
+      const onBurger = burgerRef.current && burgerRef.current.contains(event.target);
+      const inPopup = event.target.closest && event.target.closest('[data-portal]');
+      const isClickOutsideTargets = !inNav && !onBurger && !inPopup;
+      if (isClickOutsideTargets) setIsMenuOpen(false);
     }
-    function onKey(e) {
-      if (e.key !== 'Escape') return;
+    function handleKeyDown(event) {
+      if (event.key !== 'Escape') return;
       if (document.querySelector('[data-portal="select"][data-open]')) return;
-      setMenuOpen(false);
+      setIsMenuOpen(false);
     }
-    document.addEventListener('click', onDoc);
-    document.addEventListener('keydown', onKey);
+    document.addEventListener('click', handleDocumentClick);
+    document.addEventListener('keydown', handleKeyDown);
     return () => {
-      document.removeEventListener('click', onDoc);
-      document.removeEventListener('keydown', onKey);
+      document.removeEventListener('click', handleDocumentClick);
+      document.removeEventListener('keydown', handleKeyDown);
     };
-  }, [menuOpen]);
+  }, [isMenuOpen]);
 
-  useBodyLock(menuOpen);
+  useBodyLock(isMenuOpen);
 
   return (
     <header
-      className={`fixed left-0 right-0 z-[100] w-full bg-white animate-[navbarIn_0.4s_ease-out] motion-reduce:animate-none [transition:top_var(--dur)_var(--ease)] motion-reduce:transition-none ${slid ? 'top-[calc(-1_*_var(--tripbar-h,0px))]' : 'top-0'}`}
+      className={`fixed left-0 right-0 z-[100] w-full bg-white animate-[navbarIn_0.4s_ease-out] motion-reduce:animate-none [transition:top_var(--dur)_var(--ease)] motion-reduce:transition-none ${isScrolledAway ? 'top-[calc(-1_*_var(--tripbar-h,0px))]' : 'top-0'}`}
       ref={headerRef}
     >
       <div ref={barRef}>
@@ -128,13 +135,13 @@ export default function Navbar() {
         <button
           className="min-[993px]:hidden relative flex flex-col gap-[4px] w-6 bg-transparent border-none cursor-pointer max-[992px]:h-[2.2rem] max-[992px]:mr-2 max-[992px]:items-center max-[992px]:justify-center"
           id="hamburger"
-          aria-label={menuOpen ? 'Close menu' : 'Open menu'}
+          aria-label={isMenuOpen ? 'Close menu' : 'Open menu'}
           ref={burgerRef}
-          onClick={() => setMenuOpen((v) => !v)}
+          onClick={() => setIsMenuOpen((wasOpen) => !wasOpen)}
         >
-          <span className={`${BURGER_BAR} ${menuOpen ? 'translate-y-[6px] rotate-45' : ''}`} />
-          <span className={`${BURGER_BAR} ${menuOpen ? 'opacity-0' : 'opacity-100'}`} />
-          <span className={`${BURGER_BAR} ${menuOpen ? '-translate-y-[6px] -rotate-45' : ''}`} />
+          <span className={`${BURGER_BAR} ${isMenuOpen ? 'translate-y-[6px] rotate-45' : ''}`} />
+          <span className={`${BURGER_BAR} ${isMenuOpen ? 'opacity-0' : 'opacity-100'}`} />
+          <span className={`${BURGER_BAR} ${isMenuOpen ? '-translate-y-[6px] -rotate-45' : ''}`} />
         </button>
 
         <a href="/" className="max-[992px]:mr-auto">
@@ -158,7 +165,7 @@ export default function Navbar() {
           className={`${APP_HIDE} relative inline-flex items-center text-gold mr-[1.3rem] transition-[color] duration-200 ease-[ease] hover:text-gold-d max-[992px]:mr-[0.85rem]`}
           aria-label="My Trips"
         >
-          <ShoppingBag className="w-5 h-5" strokeWidth={1.6} aria-hidden="true" />
+          <ShoppingBag className="w-5 h-5" strokeWidth={ICON_STROKE_WIDTH_LIGHT} aria-hidden="true" />
           <span className={`absolute top-[-7px] right-[-9px] bg-gold ${BADGE_BASE}`} hidden={!count}>
             {count}
           </span>
@@ -168,7 +175,7 @@ export default function Navbar() {
 
         <nav ref={navRef}>
           <ul
-            className={`fixed top-0 left-0 bottom-0 right-auto w-4/5 max-w-[340px] max-[992px]:max-w-[360px] h-[100dvh] bg-white px-[22px] pb-[30px] overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden overscroll-contain transition-[translate] duration-300 ease-[var(--ease)] motion-reduce:transition-none z-[120] flex flex-col items-stretch text-left gap-0 list-none ${menuOpen ? 'translate-x-0 pointer-events-auto' : '-translate-x-full pointer-events-none'}`}
+            className={`fixed top-0 left-0 bottom-0 right-auto w-4/5 max-w-[340px] max-[992px]:max-w-[360px] h-[100dvh] bg-white px-[22px] pb-[30px] overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden overscroll-contain transition-[translate] duration-300 ease-[var(--ease)] motion-reduce:transition-none z-[120] flex flex-col items-stretch text-left gap-0 list-none ${isMenuOpen ? 'translate-x-0 pointer-events-auto' : '-translate-x-full pointer-events-none'}`}
             id="nav-menu"
           >
             <li className="flex items-center gap-[10px] bg-white border-b border-line mx-[-22px] pt-[0.8rem] px-[22px] pb-[0.8rem] min-h-[65px]">
@@ -177,9 +184,9 @@ export default function Navbar() {
                 type="button"
                 className="ml-auto flex-none grid place-items-center w-[34px] h-[34px] rounded-[var(--r-md)] [border:1px_solid_var(--line)] bg-white text-gold cursor-pointer [&>svg]:w-4 [&>svg]:h-4 [transition:background-color_var(--dur)_var(--ease),scale_var(--dur-fast)_var(--ease)] hover:bg-cream"
                 aria-label="Close menu"
-                onClick={() => setMenuOpen(false)}
+                onClick={() => setIsMenuOpen(false)}
               >
-                <X strokeWidth={2} aria-hidden="true" />
+                <CloseIcon strokeWidth={2} aria-hidden="true" />
               </button>
             </li>
 
@@ -188,8 +195,8 @@ export default function Navbar() {
             </li>
 
             <li className={NAV_LI}>
-              <a href="/" className={navLink(isActive('/'))}>
-                <House strokeWidth={1.7} aria-hidden="true" />
+              <a href="/" className={buildNavLinkClass(isActive('/'))}>
+                <House strokeWidth={ICON_STROKE_WIDTH_REGULAR} aria-hidden="true" />
                 Home
               </a>
             </li>
@@ -197,18 +204,18 @@ export default function Navbar() {
               <button
                 type="button"
                 className={`${MENU_ROW_BOX} text-strong font-body font-medium border-none bg-transparent text-gold cursor-pointer hover:bg-cream hover:text-green`}
-                aria-expanded={dropOpen}
-                onClick={() => setDropOpen((v) => !v)}
+                aria-expanded={isDropOpen}
+                onClick={() => setIsDropOpen((wasOpen) => !wasOpen)}
               >
-                <Compass strokeWidth={1.7} aria-hidden="true" />
+                <Compass strokeWidth={ICON_STROKE_WIDTH_REGULAR} aria-hidden="true" />
                 Program
                 <span
-                  className={`ml-auto inline-block transition-[rotate] duration-200 ease-[ease] ${dropOpen ? 'rotate-90' : ''}`}
+                  className={`ml-auto inline-block transition-[rotate] duration-200 ease-[ease] ${isDropOpen ? 'rotate-90' : ''}`}
                 >
                   &rsaquo;
                 </span>
               </button>
-              <Collapse open={dropOpen}>
+              <Collapse open={isDropOpen}>
                 <ul className="list-none mt-[0.1rem] mb-[0.2rem] pt-[0.2rem] pb-[0.5rem] pl-[1.65rem] block">
                   <li className="py-[0.4rem]">
                     <a
@@ -254,20 +261,20 @@ export default function Navbar() {
               </Collapse>
             </li>
             <li className={NAV_LI}>
-              <a href="/bali-guide.html" className={navLink(isActive('/bali-guide.html'))}>
-                <BookOpen strokeWidth={1.7} aria-hidden="true" />
+              <a href="/bali-guide.html" className={buildNavLinkClass(isActive('/bali-guide.html'))}>
+                <BookOpen strokeWidth={ICON_STROKE_WIDTH_REGULAR} aria-hidden="true" />
                 Guide
               </a>
             </li>
             <li className={NAV_LI}>
-              <a href="/all-reviews.html" className={navLink(isActive('/all-reviews.html'))}>
-                <Star strokeWidth={1.7} aria-hidden="true" />
+              <a href="/all-reviews.html" className={buildNavLinkClass(isActive('/all-reviews.html'))}>
+                <Star strokeWidth={ICON_STROKE_WIDTH_REGULAR} aria-hidden="true" />
                 Reviews
               </a>
             </li>
             <li className={NAV_LI}>
-              <a href="/our-company.html" className={navLink(isActive('/our-company.html'))}>
-                <Building2 strokeWidth={1.7} aria-hidden="true" />
+              <a href="/our-company.html" className={buildNavLinkClass(isActive('/our-company.html'))}>
+                <Building2 strokeWidth={ICON_STROKE_WIDTH_REGULAR} aria-hidden="true" />
                 Our Company
               </a>
             </li>
@@ -278,21 +285,25 @@ export default function Navbar() {
                 rel="noopener"
                 className={`flex w-full gap-2 ${BTN_SM} border-0 bg-cta no-underline text-white transition-[background,scale] duration-200 ease-[var(--ease)] hover:bg-cta-d`}
               >
-                <MessageCircle className="w-[18px] h-[18px] flex-none" strokeWidth={1.7} aria-hidden="true" />
+                <MessageCircle
+                  className="w-[18px] h-[18px] flex-none"
+                  strokeWidth={ICON_STROKE_WIDTH_REGULAR}
+                  aria-hidden="true"
+                />
                 WhatsApp
               </a>
             </li>
           </ul>
         </nav>
 
-        <AccountMenu onLogin={() => setAuthOpen(true)} />
+        <AccountMenu onLogin={() => setIsAuthOpen(true)} />
       </div>
 
       <div
-        className={`fixed inset-0 bg-[rgba(26,26,26,0.45)] z-[95] transition-[opacity,visibility] duration-300 ease-[var(--ease)] ${menuOpen ? 'opacity-100 visible' : 'opacity-0 invisible'}`}
-        onClick={() => setMenuOpen(false)}
+        className={`fixed inset-0 bg-[rgba(26,26,26,0.45)] z-[95] transition-[opacity,visibility] duration-300 ease-[var(--ease)] ${isMenuOpen ? 'opacity-100 visible' : 'opacity-0 invisible'}`}
+        onClick={() => setIsMenuOpen(false)}
       />
-      <AuthModal open={authOpen} onClose={() => setAuthOpen(false)} />
+      <AuthModal open={isAuthOpen} onClose={() => setIsAuthOpen(false)} />
     </header>
   );
 }

@@ -1,8 +1,10 @@
 'use client';
 
-import { AnimatePresence, LazyMotion, domAnimation, m, useReducedMotion } from 'motion/react';
+import { AnimatePresence, LazyMotion, domAnimation, m as motionElement, useReducedMotion } from 'motion/react';
 import { useCurrency } from '@/components/providers/CurrencyProvider';
 import { priceBreakdown } from '@/lib/villas';
+
+const ENTER_OFFSET_PX = 6;
 
 export default function StaySummary({ villaSlug = '', checkIn = '', checkOut = '' }) {
   const { formatAmount, breakdown: convert } = useCurrency();
@@ -14,9 +16,9 @@ export default function StaySummary({ villaSlug = '', checkIn = '', checkOut = '
     <LazyMotion features={domAnimation}>
       <AnimatePresence initial={false}>
         {shown && (
-          <m.div
+          <motionElement.div
             key={`${checkIn}-${checkOut}`}
-            initial={{ opacity: 0, y: reduce ? 0 : 6 }}
+            initial={{ opacity: 0, y: reduce ? 0 : ENTER_OFFSET_PX }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0 }}
             transition={{ duration: reduce ? 0 : 0.25, ease: [0.16, 1, 0.3, 1] }}
@@ -35,7 +37,7 @@ export default function StaySummary({ villaSlug = '', checkIn = '', checkOut = '
                 {formatAmount(shown.total)}
               </span>
             </div>
-          </m.div>
+          </motionElement.div>
         )}
       </AnimatePresence>
     </LazyMotion>

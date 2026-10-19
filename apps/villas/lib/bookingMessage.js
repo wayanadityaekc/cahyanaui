@@ -1,21 +1,21 @@
 import { formatRupiah } from '@/lib/currency';
-import { fmtDate, fmtTime } from '@/lib/timeSlots';
-import { priceFor, programByKey, transferById } from '@/lib/extras';
+import { formatDate, formatTime } from '@/lib/timeSlots';
+import { priceFor, findProgramByKey, findTransferById } from '@/lib/extras';
 
-function extraLine(extra, stay, catalog, formatAmount) {
+function buildExtraLine(extra, stay, catalog, formatAmount) {
   const price = priceFor(extra, catalog);
   const amount = price ? formatAmount(price.display) : '-';
   if (extra.kind === 'transfer') {
-    const transfer = transferById(extra.dir);
+    const transfer = findTransferById(extra.dir);
     const date = transfer ? transfer.dateOf(stay) : '';
     const flight = extra.flight ? `, flight ${extra.flight}` : '';
-    return `- ${transfer ? transfer.title : 'Airport transfer'}: ${fmtDate(date)}, ${fmtTime(extra.time)}${flight} - ${amount}`;
+    return `- ${transfer ? transfer.title : 'Airport transfer'}: ${formatDate(date)}, ${formatTime(extra.time)}${flight} - ${amount}`;
   }
-  const program = programByKey(extra.key);
-  return `- ${program ? program.title : extra.key}: ${fmtDate(extra.date)}, ${fmtTime(extra.time)} - ${amount}`;
+  const program = findProgramByKey(extra.key);
+  return `- ${program ? program.title : extra.key}: ${formatDate(extra.date)}, ${formatTime(extra.time)} - ${amount}`;
 }
 
-export function bookingMessage({
+export function buildBookingMessage({
   stay,
   villa,
   nights,
@@ -40,7 +40,7 @@ export function bookingMessage({
   }
   if (extras.length && stay) {
     lines.push('', 'Cahyana Ubud Experience extras:');
-    extras.forEach((extra) => lines.push(extraLine(extra, stay, catalog, formatAmount)));
+    extras.forEach((extra) => lines.push(buildExtraLine(extra, stay, catalog, formatAmount)));
     if (totals) {
       lines.push(
         `Extras total: ${formatAmount(totals.total)} (deposit ${formatAmount(totals.deposit)} now, ${formatAmount(totals.rest)} on the day)`,

@@ -26,32 +26,31 @@ function loadScript(src) {
 }
 
 function adoptShell(before) {
-  const added = [...document.body.children].filter((node) => !before.has(node));
-  added.forEach((node) => {
+  const addedNodes = [...document.body.children].filter((node) => !before.has(node));
+  addedNodes.forEach((node) => {
     if (node.tagName === 'SCRIPT' || node.tagName === 'STYLE') return;
     node.dataset.dokuShell = '1';
     const style = getComputedStyle(node);
-    const wide = node.offsetWidth >= window.innerWidth - 2;
-    if (wide) {
+    const isWide = node.offsetWidth >= window.innerWidth - 2;
+    if (isWide) {
       node.style.background = 'rgba(34,32,28,0.55)';
       node.style.backdropFilter = 'blur(2px)';
     }
     const frame = node.tagName === 'IFRAME' ? node : node.querySelector('iframe');
-    if (frame) {
-      frame.style.borderRadius = 'var(--r-xl)';
-      frame.style.border = '0';
-      if (style.position === 'fixed' || style.position === 'absolute') node.style.borderRadius = 'var(--r-xl)';
-    }
+    if (!frame) return;
+    frame.style.borderRadius = 'var(--r-xl)';
+    frame.style.border = '0';
+    if (style.position === 'fixed' || style.position === 'absolute') node.style.borderRadius = 'var(--r-xl)';
   });
-  return added.length;
+  return addedNodes.length;
 }
 
 export default function DokuCheckout({ bookingRef, option, amountText }) {
-  const [busy, setBusy] = useState(false);
+  const [isBusy, setIsBusy] = useState(false);
   const [error, setErr] = useState('');
 
-  async function startPayment() {
-    setBusy(true);
+  async function handlePaymentStart() {
+    setIsBusy(true);
     setErr('');
     try {
       const response = await fetch(`${API_BASE}/doku/create-payment`, {
@@ -60,13 +59,14 @@ export default function DokuCheckout({ bookingRef, option, amountText }) {
         body: JSON.stringify({ booking_ref: bookingRef, option }),
       });
       const data = await response.json().catch(() => null);
-      if (!response.ok || !data || !data.url) {
+      const isCheckoutUrlMissing = !response.ok || !data || !data.url;
+      if (isCheckoutUrlMissing) {
         setErr(
           data && data.code === 'not_ready'
             ? 'Card payments are not available right now. Please go back and choose PayPal, or contact us.'
             : (data && data.detail) || 'We could not start the payment. Please try again.',
         );
-        setBusy(false);
+        setIsBusy(false);
         return;
       }
 
@@ -78,7 +78,7 @@ export default function DokuCheckout({ bookingRef, option, amountText }) {
             window.loadJokulCheckout(data.url);
             adoptShell(before);
             requestAnimationFrame(() => adoptShell(before));
-            setBusy(false);
+            setIsBusy(false);
             return;
           }
         } catch (e) {}
@@ -86,7 +86,7 @@ export default function DokuCheckout({ bookingRef, option, amountText }) {
       window.location.href = data.url;
     } catch (e) {
       setErr('We could not reach the payment page. Please check your connection and try again.');
-      setBusy(false);
+      setIsBusy(false);
     }
   }
 
@@ -95,10 +95,10 @@ export default function DokuCheckout({ bookingRef, option, amountText }) {
       <button
         type="button"
         className={`flex w-full ${BTN_SM} border-none font-body no-underline text-white bg-cta cursor-pointer transition-[background-color,color,scale] duration-[var(--dur)] ease-[ease] hover:bg-cta-d disabled:opacity-60`}
-        onClick={startPayment}
-        disabled={busy || !bookingRef}
+        onClick={handlePaymentStart}
+        disabled={isBusy || !bookingRef}
       >
-        {busy ? 'Opening...' : `Pay ${amountText || 'now'}`}
+        {isBusy ? 'Opening...' : `Pay ${amountText || 'now'}`}
       </button>
       <p className="mt-2 text-small text-muted">
         DOKU's secure payment opens here - card, QRIS, bank transfer or e-wallet, charged in rupiah.

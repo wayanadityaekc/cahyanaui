@@ -4,7 +4,9 @@ import { useEffect, useRef, useState } from 'react';
 import { usePathname } from 'next/navigation';
 import { normalizePath } from '@/lib/pathname';
 import { Tag, ShieldCheck, CalendarDays, Info, Car } from 'lucide-react';
-import { promoFor } from '@/content/shared/promo';
+import { findPromosForPath } from '@/content/shared/promo';
+
+const ICON_STROKE_WIDTH_REGULAR = 1.7;
 
 const BAR =
   'flex items-center justify-center gap-2 w-full py-[0.5rem] px-5 [border-bottom:1px_solid_var(--line)] bg-cream text-[0.72rem] font-normal leading-[1.3] text-muted no-underline whitespace-nowrap [@media(max-width:560px)]:gap-[0.35rem] [@media(max-width:560px)]:px-[0.9rem]';
@@ -20,22 +22,22 @@ const FADE_MS = 200;
 
 export default function TripBar() {
   const pathname = normalizePath(usePathname());
-  const messages = promoFor(pathname);
-  const [idx, setIdx] = useState(0);
-  const [dim, setDim] = useState(false);
+  const messages = findPromosForPath(pathname);
+  const [index, setIndex] = useState(0);
+  const [isDimmed, setIsDimmed] = useState(false);
   const timers = useRef([]);
 
   const count = messages.length;
   useEffect(() => {
-    setIdx(0);
+    setIndex(0);
     if (count < 2) return undefined;
     const tick = setInterval(() => {
-      setDim(true);
-      const t = setTimeout(() => {
-        setIdx((i) => (i + 1) % count);
-        requestAnimationFrame(() => setDim(false));
+      setIsDimmed(true);
+      const fadeTimer = setTimeout(() => {
+        setIndex((previousIndex) => (previousIndex + 1) % count);
+        requestAnimationFrame(() => setIsDimmed(false));
       }, FADE_MS);
-      timers.current.push(t);
+      timers.current.push(fadeTimer);
     }, ROTATE_MS);
     return () => {
       clearInterval(tick);
@@ -46,18 +48,18 @@ export default function TripBar() {
 
   if (!count) return null;
 
-  const msg = messages[Math.min(idx, count - 1)];
-  const Icon = ICONS[msg.icon] || Tag;
+  const message = messages[Math.min(index, count - 1)];
+  const Icon = ICONS[message.icon] || Tag;
   const inner = (
-    <span className={`${FADE} ${dim ? 'opacity-0' : 'opacity-100'}`}>
-      <Icon className={ICON} strokeWidth={1.7} aria-hidden="true" />
-      <span className="truncate">{msg.text}</span>
-      {msg.cta && <span className={CTA}>{msg.cta}</span>}
+    <span className={`${FADE} ${isDimmed ? 'opacity-0' : 'opacity-100'}`}>
+      <Icon className={ICON} strokeWidth={ICON_STROKE_WIDTH_REGULAR} aria-hidden="true" />
+      <span className="truncate">{message.text}</span>
+      {message.cta && <span className={CTA}>{message.cta}</span>}
     </span>
   );
 
-  return msg.href ? (
-    <a className={`${BAR} cursor-pointer`} id="tripbar" href={msg.href}>
+  return message.href ? (
+    <a className={`${BAR} cursor-pointer`} id="tripbar" href={message.href}>
       {inner}
     </a>
   ) : (

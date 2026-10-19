@@ -33,39 +33,39 @@ export function useCharterTier({ area = '' } = {}) {
   const symbol = (catalog && catalog.symbol) || '$';
   const isIdr = currency === 'IDR';
 
-  function fmt(n) {
-    return symbol + n.toLocaleString(isIdr ? 'id-ID' : 'en-US');
+  function formatAmount(amount) {
+    return symbol + amount.toLocaleString(isIdr ? 'id-ID' : 'en-US');
   }
-  function tier(d) {
+  function findCharterTier(durationKey) {
     if (!catalog) return null;
-    const base = catalog.charters.find((charter) => charter.duration === d);
+    const base = catalog.charters.find((charter) => charter.duration === durationKey);
     if (!base) return null;
     const sur = catalog.charterSurcharge;
     return base.display + (area && area !== 'Ubud' && sur ? sur.display : 0);
   }
-  return { tier, fmt };
+  return { tier: findCharterTier, fmt: formatAmount };
 }
 
 export default function CharterPlans({ value, onChange, area = '', heading }) {
-  const { tier, fmt } = useCharterTier({ area });
+  const { tier, fmt: formatTierPrice } = useCharterTier({ area });
 
   return (
     <div>
       {heading && <h3 className="m-0 mb-[var(--space-1)] text-h3 font-semibold text-gold">{heading}</h3>}
       <div className={ROWS} role="radiogroup" aria-label="Charter length">
         {CHARTER.durations.map((duration) => {
-          const v = tier(duration.dur);
-          const selected = duration.dur === value;
+          const tierPrice = tier(duration.dur);
+          const isSelected = duration.dur === value;
           return (
             <button
               type="button"
               key={duration.dur}
               role="radio"
-              aria-checked={selected}
-              className={`${selected ? PLAN_ROW_PICKED : PLAN_ROW} relative items-start min-[993px]:items-center ${ROW_BTN}`}
+              aria-checked={isSelected}
+              className={`${isSelected ? PLAN_ROW_PICKED : PLAN_ROW} relative items-start min-[993px]:items-center ${ROW_BTN}`}
               onClick={() => onChange(duration.dur)}
             >
-              {selected && (
+              {isSelected && (
                 <span className={FLAG} data-plan-flag>
                   Selected
                 </span>
@@ -77,7 +77,9 @@ export default function CharterPlans({ value, onChange, area = '', heading }) {
                 </span>
                 <span className={PLAN_CELL_PRICE}>
                   {area && <span className={`${PLAN_PRICE_KICK} block mt-[2px] min-[993px]:mt-0`}>Total</span>}
-                  <span className={PLAN_PRICE_LEAD}>{v == null ? '—' : withSymbol(fmt(v))}</span>
+                  <span className={PLAN_PRICE_LEAD}>
+                    {tierPrice == null ? '—' : withSymbol(formatTierPrice(tierPrice))}
+                  </span>
                 </span>
                 <span className={`${PLAN_CELL_SUB} ${PLAN_SUB} mt-[2px] min-[993px]:mt-0`}>{duration.sub}</span>
               </span>

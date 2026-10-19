@@ -12,7 +12,7 @@ import useMobile from '@/components/ui/useMobile';
 import DragSheet from '@/components/ui/DragSheet';
 import Overlay from '@/components/ui/Overlay';
 import CurrencyPicker from '@/components/layout/CurrencyPicker';
-import { refMsgCls } from '@/components/ui/modalClasses';
+import { buildReferralMessageClass } from '@/components/ui/modalClasses';
 import { PAY_COPY } from '@/lib/payment';
 import FlagDefs from '@/components/layout/FlagDefs';
 import InfoPopover from '@/components/ui/InfoPopover';
@@ -23,17 +23,19 @@ import {
   CHEV,
   CONTROL_VAL,
   CONTROL_VAL_PLACEHOLDER,
-  panelMenu,
+  buildPanelMenuClass,
   PANEL_HEAD_MENU,
   PANEL_HEAD_H3,
   PANEL_CLOSE_SHEET,
   PANEL_BODY_MENU,
-  optMenu,
+  buildOptionMenuClass,
   HS_OPT_IC,
   HS_OPT_NM,
   HS_OPT_PR,
 } from '@/components/ui/hsClasses';
 import { EXPLORE_OPTIONS } from '@/content/shared/explore-options';
+
+const ICON_STROKE_WIDTH_LIGHT = 1.6;
 
 const GUESTS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
@@ -43,23 +45,23 @@ export default function HeroSearch({ onClose, sheetOpen = false }) {
   const { apply } = useReferral();
   const isMobile = useMobile();
 
-  const [open, setOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
   const [picked, setPicked] = useState(null);
   const [code, setCode] = useState('');
   const [refMsg, setRefMsg] = useState(null);
-  const [mounted, setMounted] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
   const ddRef = useRef(null);
 
-  useEffect(() => setMounted(true), []);
+  useEffect(() => setIsMounted(true), []);
 
   useEffect(() => {
-    if (!open || isMobile) return;
-    function onDoc(e) {
-      if (ddRef.current && !ddRef.current.contains(e.target)) setOpen(false);
+    if (!isOpen || isMobile) return;
+    function handleDocumentClick(event) {
+      if (ddRef.current && !ddRef.current.contains(event.target)) setIsOpen(false);
     }
-    document.addEventListener('click', onDoc);
-    return () => document.removeEventListener('click', onDoc);
-  }, [open, isMobile]);
+    document.addEventListener('click', handleDocumentClick);
+    return () => document.removeEventListener('click', handleDocumentClick);
+  }, [isOpen, isMobile]);
 
   const catalog = pricing && pricing.catalog;
   const symbol = (catalog && catalog.symbol) || '$';
@@ -69,76 +71,78 @@ export default function HeroSearch({ onClose, sheetOpen = false }) {
     if (!catalog) return out;
     const isIdr = currency === 'IDR';
     const loc = isIdr ? 'id-ID' : 'en-US';
-    function fmt(n) {
-      return withSymbol(symbol + n.toLocaleString(loc));
+    function formatPrice(amount) {
+      return withSymbol(symbol + amount.toLocaleString(loc));
     }
-    function byCat(cats) {
-      return catalog.items.filter((i) => cats.includes(i.category)).map((i) => i.standard.display);
+    function listItemsByCategories(cats) {
+      return catalog.items
+        .filter((item) => cats.includes(item.category))
+        .map((catalogItem) => catalogItem.standard.display);
     }
     const sets = {
-      tour: byCat(['tour', 'combo']),
-      experience: byCat(['experience']),
-      destination: byCat(['place']),
-      transfer: catalog.transfers.map((t) => t.display),
+      tour: listItemsByCategories(['tour', 'combo']),
+      experience: listItemsByCategories(['experience']),
+      destination: listItemsByCategories(['place']),
+      transfer: catalog.transfers.map((transfer) => transfer.display),
       charter: catalog.charters.map((charter) => charter.display),
     };
-    Object.entries(sets).forEach(([cat, arr]) => {
-      if (!arr.length) return;
-      const low = Math.min(...arr);
-      const high = Math.max(...arr);
+    Object.entries(sets).forEach(([cat, displayPrices]) => {
+      if (!displayPrices.length) return;
+      const low = Math.min(...displayPrices);
+      const high = Math.max(...displayPrices);
       const hiText = isIdr ? withDeemphasizedThousands(high.toLocaleString(loc)) : high.toLocaleString(loc);
       out[cat] =
         low === high ? (
-          <>from {fmt(low)}</>
+          <>from {formatPrice(low)}</>
         ) : (
           <>
-            {fmt(low)}–{hiText}
+            {formatPrice(low)}–{hiText}
           </>
         );
     });
     return out;
   }, [catalog, symbol, currency]);
 
-  async function applyCode() {
-    const pct = await apply(code);
-    setRefMsg(pct ? { ok: true, text: PAY_COPY.referralOk } : { ok: false, text: PAY_COPY.referralBad });
+  async function handleCodeApply() {
+    const percent = await apply(code);
+    setRefMsg(percent ? { ok: true, text: PAY_COPY.referralOk } : { ok: false, text: PAY_COPY.referralBad });
   }
 
-  function openPicked() {
+  function handlePickedOpen() {
     if (picked) window.location.href = picked.href;
   }
 
   const panel = (
-    <div className={panelMenu(open)}>
+    <div className={buildPanelMenuClass(isOpen)}>
       <div className={PANEL_HEAD_MENU}>
         <h3 className={PANEL_HEAD_H3}>How to explore</h3>
-        <button type="button" className={PANEL_CLOSE_SHEET} aria-label="Close" onClick={() => setOpen(false)}>
+        <button type="button" className={PANEL_CLOSE_SHEET} aria-label="Close" onClick={() => setIsOpen(false)}>
           &times;
         </button>
       </div>
       <div className={PANEL_BODY_MENU}>
-        {EXPLORE_OPTIONS.map((o) => (
+        {EXPLORE_OPTIONS.map((exploreOption) => (
           <button
             type="button"
-            key={o.href}
-            className={optMenu(picked && picked.href === o.href)}
+            key={exploreOption.href}
+            className={buildOptionMenuClass(picked && picked.href === exploreOption.href)}
             onClick={() => {
-              if (o.all) {
-                window.location.href = o.href;
+              if (exploreOption.all) {
+                window.location.href = exploreOption.href;
                 return;
               }
-              setPicked(o);
-              setOpen(false);
+              setPicked(exploreOption);
+              setIsOpen(false);
             }}
           >
             <span className={HS_OPT_IC}>
-              <o.Icon strokeWidth={1.6} />
+              <exploreOption.Icon strokeWidth={ICON_STROKE_WIDTH_LIGHT} />
             </span>
             <span className={HS_OPT_NM}>
-              {o.name}
-              <small>{o.sub}</small>
+              {exploreOption.name}
+              <small>{exploreOption.sub}</small>
             </span>
-            <span className={HS_OPT_PR}>{ranges[o.cat] || ''}</span>
+            <span className={HS_OPT_PR}>{ranges[exploreOption.cat] || ''}</span>
           </button>
         ))}
       </div>
@@ -192,15 +196,15 @@ export default function HeroSearch({ onClose, sheetOpen = false }) {
           type="button"
           className={CONTROL}
           aria-haspopup="listbox"
-          aria-expanded={open}
-          onClick={() => setOpen((v) => !v)}
+          aria-expanded={isOpen}
+          onClick={() => setIsOpen((wasOpen) => !wasOpen)}
         >
           <span className={picked ? CONTROL_VAL : CONTROL_VAL_PLACEHOLDER}>{picked ? picked.name : 'Choose'}</span>
           <ChevronDown className={CHEV} />
         </button>
-        {mounted && isMobile && createPortal(panel, document.body)}
-        {mounted && isMobile && <Overlay open={open} onClose={() => setOpen(false)} />}
-        {(!isMobile || !mounted) && panel}
+        {isMounted && isMobile && createPortal(panel, document.body)}
+        {isMounted && isMobile && <Overlay open={isOpen} onClose={() => setIsOpen(false)} />}
+        {(!isMobile || !isMounted) && panel}
       </div>
 
       <div className="mb-[0.8rem]">
@@ -220,18 +224,18 @@ export default function HeroSearch({ onClose, sheetOpen = false }) {
             autoComplete="off"
             spellCheck="false"
             value={code}
-            onChange={(e) => setCode(e.target.value)}
+            onChange={(event) => setCode(event.target.value)}
           />
           <button
             type="button"
             className="flex-none inline-flex items-center justify-center text-center leading-none whitespace-nowrap h-[var(--btn-h)] py-0 px-4 rounded-sm text-small font-semibold border-none bg-cta text-white font-body
               text-[1rem] cursor-pointer [transition:background_var(--dur-fast)_ease,scale_var(--dur-fast)_var(--ease)] hover:bg-cta-d"
-            onClick={applyCode}
+            onClick={handleCodeApply}
           >
             Apply
           </button>
         </div>
-        {refMsg && <small className={refMsgCls(refMsg.ok)}>{refMsg.text}</small>}
+        {refMsg && <small className={buildReferralMessageClass(refMsg.ok)}>{refMsg.text}</small>}
       </div>
 
       <div className="grid grid-cols-[1fr_1fr] gap-[0.8rem]">
@@ -244,7 +248,10 @@ export default function HeroSearch({ onClose, sheetOpen = false }) {
             label="Guests"
             value={guests || 2}
             onChange={setGuests}
-            options={GUESTS.map((n) => ({ value: String(n), label: `${n} ${n === 1 ? 'guest' : 'guests'}` }))}
+            options={GUESTS.map((guestCount) => ({
+              value: String(guestCount),
+              label: `${guestCount} ${guestCount === 1 ? 'guest' : 'guests'}`,
+            }))}
           />
         </div>
         <div className="mb-[0.8rem]">
@@ -265,7 +272,7 @@ export default function HeroSearch({ onClose, sheetOpen = false }) {
         type="button"
         className="flex w-full mt-[0.4rem] items-center justify-center text-center leading-none whitespace-nowrap h-[var(--btn-h)] py-0 px-4 rounded-sm text-small bg-cta text-white border-none font-body font-semibold cursor-pointer
           [transition:translate_var(--dur)_var(--ease-out),box-shadow_var(--dur)_var(--ease-out),background-color_var(--dur)_var(--ease-out),scale_var(--dur-fast)_var(--ease)] hover:-translate-y-0.5 hover:bg-cta-d"
-        onClick={openPicked}
+        onClick={handlePickedOpen}
       >
         Explore
       </button>

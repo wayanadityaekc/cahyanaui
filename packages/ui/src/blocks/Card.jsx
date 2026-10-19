@@ -10,7 +10,13 @@ export default function Card({
   children,
   ...rest
 }) {
-  const lift = hover === 'lg' ? CARD_HOVER_LG : hover ? CARD_HOVER_SM : '';
+  function pickHoverClasses() {
+    if (hover === 'lg') return CARD_HOVER_LG;
+    if (hover) return CARD_HOVER_SM;
+    return '';
+  }
+
+  const lift = pickHoverClasses();
   return (
     <Tag
       className={cn(CARD_SHAPES[shape] || CARD_SHAPES.framed, CARD_TONES[tone] ?? CARD_TONES.white, lift, className)}

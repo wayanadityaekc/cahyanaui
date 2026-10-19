@@ -7,9 +7,13 @@ import Prose from '@/components/prose/Prose';
 import { CARD, CARD_WRAP } from '@/components/ui/detailCardClasses';
 import { TOUR_LAYOUT_BOOK, TOUR_LAYOUT_MAIN, TOUR_LAYOUT_SIDE } from '@/components/ui/tourLayoutClasses';
 import { GRID_CARDS } from '@/components/ui/gridClasses';
-import { ARTICLES, CATEGORIES, categoryLabel } from '@/content/articles';
+import { ARTICLES, CATEGORIES, findCategoryLabel } from '@/content/articles';
 import { CAPS, Card, Container, EYEBROW_LINE, Section, Breadcrumb } from '@cahyana/ui';
-import { articleCrumbs } from '@/lib/crumbs';
+import { buildArticleCrumbs } from '@/lib/crumbs';
+
+const MAX_MORE_ARTICLES = 3;
+const ICON_STROKE_WIDTH_REGULAR = 1.7;
+const ICON_STROKE_WIDTH_THIN = 1.6;
 
 const PROSE =
   'max-w-[var(--container-read)] ' +
@@ -21,14 +25,14 @@ const ICON = 'w-[var(--icon-sm)] h-[var(--icon-sm)] shrink-0';
 
 function CatList({ activeId, onPick }) {
   return CATEGORIES.map((category) => {
-    const on = category.id === activeId;
+    const isActive = category.id === activeId;
     return (
       <Link
         key={category.id}
         href={`/guide#${category.id}`}
         onClick={onPick}
-        className={onPick ? CAT_ITEM_TAP(on) : CAT_ITEM(on)}
-        aria-current={on || undefined}
+        className={onPick ? CAT_ITEM_TAP(isActive) : CAT_ITEM(isActive)}
+        aria-current={isActive || undefined}
       >
         {category.label}
       </Link>
@@ -37,19 +41,20 @@ function CatList({ activeId, onPick }) {
 }
 
 export default function ArticlePage({ article }) {
-  const more = ARTICLES.filter((other) => other.slug !== article.slug).slice(0, 3);
+  const moreArticles = ARTICLES.filter((other) => other.slug !== article.slug).slice(0, MAX_MORE_ARTICLES);
 
   return (
     <article>
       <header className="bg-cream border-b border-line">
         <Container className="py-10">
-          <Breadcrumb items={articleCrumbs(article)} linkAs={Link} className="mb-2" />
-          <p className={EYEBROW_LINE}>{categoryLabel(article.cat)}</p>
+          <Breadcrumb items={buildArticleCrumbs(article)} linkAs={Link} className="mb-2" />
+          <p className={EYEBROW_LINE}>{findCategoryLabel(article.cat)}</p>
           <h1 className="text-display font-bold text-gold max-w-3xl">{article.title}</h1>
           <p className="mt-3 max-w-2xl text-body text-muted">{article.sub}</p>
           <p className={`${META} mt-4`}>
             <span className="inline-flex items-center gap-1.5">
-              <Clock className={ICON} strokeWidth={1.7} aria-hidden="true" />~{article.read} min read
+              <Clock className={ICON} strokeWidth={ICON_STROKE_WIDTH_REGULAR} aria-hidden="true" />~{article.read} min
+              read
             </span>
           </p>
         </Container>
@@ -61,7 +66,7 @@ export default function ArticlePage({ article }) {
             <div className={CARD}>
               <CatDropdown
                 className="min-[993px]:hidden w-full pb-[var(--space-1)] mb-5 border-b border-line"
-                label={categoryLabel(article.cat)}
+                label={findCategoryLabel(article.cat)}
                 ariaLabel="Guide categories"
               >
                 {(close) => <CatList activeId={article.cat} onPick={close} />}
@@ -82,17 +87,17 @@ export default function ArticlePage({ article }) {
             <p className={`${CAPS} text-muted`}>Guide</p>
             <CatList activeId={article.cat} />
             <Link href="/guide" className="inline-flex items-center gap-1.5 mt-2 text-body text-gold hover:text-cta">
-              All articles <ArrowRight className={ICON} strokeWidth={1.6} aria-hidden="true" />
+              All articles <ArrowRight className={ICON} strokeWidth={ICON_STROKE_WIDTH_THIN} aria-hidden="true" />
             </Link>
           </nav>
         </div>
       </div>
 
-      {more.length > 0 && (
+      {moreArticles.length > 0 && (
         <Section tone="cream">
           <h2 className="text-h2 font-medium text-gold mb-6">Keep reading</h2>
           <div className={GRID_CARDS}>
-            {more.map((related) => (
+            {moreArticles.map((related) => (
               <Card
                 as={Link}
                 hover
@@ -100,11 +105,11 @@ export default function ArticlePage({ article }) {
                 href={`/guide/${related.slug}`}
                 className="p-5 flex flex-col gap-2 no-underline"
               >
-                <p className={`${EYEBROW_LINE} !mb-0`}>{categoryLabel(related.cat)}</p>
+                <p className={`${EYEBROW_LINE} !mb-0`}>{findCategoryLabel(related.cat)}</p>
                 <h3 className="text-h3 font-semibold text-gold">{related.title}</h3>
                 <p className="text-small text-muted">{related.sub}</p>
                 <span className={`${CAPS} mt-auto pt-3 inline-flex items-center gap-1.5 text-cta`}>
-                  Read <ArrowRight className={ICON} strokeWidth={1.6} aria-hidden="true" />
+                  Read <ArrowRight className={ICON} strokeWidth={ICON_STROKE_WIDTH_THIN} aria-hidden="true" />
                 </span>
               </Card>
             ))}

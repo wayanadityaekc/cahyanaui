@@ -15,13 +15,13 @@ const CTA = `flex-none flex ${BTN_SM} bg-cta text-white no-underline whitespace-
 
 export default function BookBar({ item, priceFallback, perPerson = false }) {
   const { displayGuests } = useTripPrefs();
-  const [hidden, setHidden] = useState(true);
+  const [isHidden, setIsHidden] = useState(true);
 
   useEffect(() => {
     if (!item) return undefined;
     const self = document.querySelector('.bookbar');
-    const stop = observeBookCtas(self, setHidden);
-    if (!stop) setHidden(false);
+    const stop = observeBookCtas(self, setIsHidden);
+    if (!stop) setIsHidden(false);
     return stop;
   }, [item]);
 
@@ -30,9 +30,9 @@ export default function BookBar({ item, priceFallback, perPerson = false }) {
   return (
     <div
       className={`${BAR_SHELL} ${BAR_UPTO_LG} bookbar [transition:translate_var(--dur-slow)_var(--ease),opacity_var(--dur)_var(--ease)] ${
-        hidden ? 'translate-y-[150%] opacity-0 pointer-events-none' : 'translate-y-0 opacity-100'
+        isHidden ? 'translate-y-[150%] opacity-0 pointer-events-none' : 'translate-y-0 opacity-100'
       }`}
-      inert={hidden || undefined}
+      inert={isHidden || undefined}
     >
       <div className="flex-1 min-w-0">
         <span className={KICKER}>From</span>

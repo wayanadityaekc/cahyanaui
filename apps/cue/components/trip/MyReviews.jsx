@@ -4,7 +4,10 @@ import { useEffect } from 'react';
 import { useAccount } from '@/state/AccountProvider';
 import { ROW_RULE } from '@/components/ui/separatorClasses';
 
-function fmtDate(iso) {
+const MAX_RATING_STARS = 5;
+const RADIX_DECIMAL = 10;
+
+function formatDate(iso) {
   if (!iso) return '';
   try {
     return new Date(iso).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
@@ -28,15 +31,15 @@ export default function MyReviews() {
   return (
     <ul className="list-none m-0 p-0" data-my-reviews>
       {myReviews.map((myReview) => {
-        const n = Math.max(1, Math.min(5, parseInt(myReview.rating, 10) || 0));
-        const stars = '★'.repeat(n) + '☆'.repeat(5 - n);
+        const ratingStars = Math.max(1, Math.min(MAX_RATING_STARS, parseInt(myReview.rating, RADIX_DECIMAL) || 0));
+        const stars = '★'.repeat(ratingStars) + '☆'.repeat(MAX_RATING_STARS - ratingStars);
         return (
           <li key={myReview.id} className={`py-3 ${ROW_RULE}`}>
             <div className="flex items-center justify-between gap-3 flex-wrap">
               <span className="font-semibold text-small text-green">{myReview.service}</span>
-              <span className="text-label text-muted">{fmtDate(myReview.created_at)}</span>
+              <span className="text-label text-muted">{formatDate(myReview.created_at)}</span>
             </div>
-            <div className="text-amber tracking-[2px] my-1" aria-label={`${n} out of 5`}>
+            <div className="text-amber tracking-[2px] my-1" aria-label={`${ratingStars} out of 5`}>
               {stars}
             </div>
             <p className="m-0 text-body text-green leading-[var(--lh-body)]">{myReview.message}</p>

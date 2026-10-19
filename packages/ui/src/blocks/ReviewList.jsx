@@ -22,9 +22,9 @@ export default function ReviewList({
   if (!reviews) return null;
 
   const all = group ? groupReviews(reviews) : reviews;
-  const list = limit ? all.slice(0, limit) : all;
+  const visibleReviews = limit ? all.slice(0, limit) : all;
 
-  if (list.length === 0) {
+  if (visibleReviews.length === 0) {
     return (
       <div className={`${REVIEW_GRID} ${className}`.trim()}>
         <div className={REVIEW_EMPTY}>
@@ -35,8 +35,8 @@ export default function ReviewList({
     );
   }
 
-  const cards = list.map((r, i) => (
-    <ReviewCard key={i} {...r} logo={logo} mark={mark} onClick={() => setSelected(r)} />
+  const cards = visibleReviews.map((review, index) => (
+    <ReviewCard key={index} {...review} logo={logo} mark={mark} onClick={() => setSelected(review)} />
   ));
 
   return (

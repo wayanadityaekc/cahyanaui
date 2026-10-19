@@ -5,12 +5,14 @@ import { Building2, Mail, HelpCircle, FileText, Shield, XCircle, MessageCircle, 
 import RailLayout from '@/components/ui/RailLayout';
 import { RAIL_PAGE_SCROLL, RAIL_READ, RAIL_HELP, RAIL_HELP_TEXT, RAIL_HELP_BTN } from '@/components/ui/railClasses';
 import { WHATSAPP_NUMBER } from '@/lib/constants';
-import { crumbsFor } from '@/lib/crumbs';
+import { buildCrumbs } from '@/lib/crumbs';
 import AboutPage from './AboutPage';
 import ContactSection from './ContactSection';
 import { LEGAL } from '@/content/shared/legal';
 import { FAQ } from '@/content/shared/faq';
 import Prose from '@/components/prose/Prose';
+
+const ICON_STROKE_WIDTH_REGULAR = 1.7;
 
 const TABS = [
   { id: 'about', label: 'About Us', Icon: Building2 },
@@ -21,10 +23,10 @@ const TABS = [
   { id: 'cancellation', label: 'Cancellation & Refund', Icon: XCircle },
 ];
 
-function idFromHash() {
+function readIdFromHash() {
   if (typeof window === 'undefined') return null;
   const id = window.location.hash.replace('#', '');
-  return TABS.some((t) => t.id === id) ? id : null;
+  return TABS.some((tab) => tab.id === id) ? id : null;
 }
 
 const BODY_TEXT = '[&_p]:leading-[var(--lh-body)] [&_p]:m-0 [&_p]:mb-4 [&_p]:text-ink [&_p]:text-body';
@@ -33,7 +35,7 @@ function LegalBody({ data }) {
   return (
     <div className={BODY_TEXT}>
       <h1 className="font-head text-h2 font-bold text-gold mb-4">{data.title}</h1>
-      <Prose blocks={data.body.filter((b) => b.type !== 'crumb')} headingVariant="company" />
+      <Prose blocks={data.body.filter((block) => block.type !== 'crumb')} headingVariant="company" />
     </div>
   );
 }
@@ -63,11 +65,11 @@ function FAQBody() {
       {FAQ_CATS.map((cat) => (
         <div className="mb-[var(--space-4)]" key={cat}>
           <h2 className={FAQ_CAT}>{cat}</h2>
-          {FAQ.filter((item) => item.cat === cat).map((item, i) => (
-            <details className={FAQ_ROW} name="faq" key={i}>
+          {FAQ.filter((item) => item.cat === cat).map((item, index) => (
+            <details className={FAQ_ROW} name="faq" key={index}>
               <summary className={FAQ_Q}>
                 {item.q}
-                <ChevronDown className={FAQ_CHEV} strokeWidth={1.7} aria-hidden="true" />
+                <ChevronDown className={FAQ_CHEV} strokeWidth={ICON_STROKE_WIDTH_REGULAR} aria-hidden="true" />
               </summary>
               <div className={FAQ_A} dangerouslySetInnerHTML={{ __html: item.a }} />
             </details>
@@ -83,7 +85,7 @@ function HelpCard({ className = '' }) {
     <div className={`${RAIL_HELP} ${className}`}>
       <p className={RAIL_HELP_TEXT}>Still not sure about something?</p>
       <a className={RAIL_HELP_BTN} href={`https://wa.me/${WHATSAPP_NUMBER}`} target="_blank" rel="noopener">
-        <MessageCircle strokeWidth={1.7} aria-hidden="true" />
+        <MessageCircle strokeWidth={ICON_STROKE_WIDTH_REGULAR} aria-hidden="true" />
         WhatsApp
       </a>
     </div>
@@ -92,29 +94,28 @@ function HelpCard({ className = '' }) {
 
 export default function OurCompany() {
   const [tab, setTab] = useState('about');
-  const [reading, setReading] = useState(false);
+  const [isReading, setIsReading] = useState(false);
 
   useEffect(() => {
     function applyHash() {
-      const id = idFromHash();
-      if (id) {
-        setTab(id);
-        setReading(true);
-      }
+      const id = readIdFromHash();
+      if (!id) return;
+      setTab(id);
+      setIsReading(true);
     }
     applyHash();
     window.addEventListener('hashchange', applyHash);
     return () => window.removeEventListener('hashchange', applyHash);
   }, []);
 
-  function goTo(id) {
+  function handleSectionSelect(id) {
     setTab(id);
-    setReading(true);
+    setIsReading(true);
     window.history.replaceState(null, '', `#${id}`);
   }
 
-  function goBack() {
-    setReading(false);
+  function handleBack() {
+    setIsReading(false);
     window.history.replaceState(null, '', window.location.pathname);
   }
 
@@ -124,12 +125,12 @@ export default function OurCompany() {
         label="Our company"
         items={TABS}
         active={tab}
-        onSelect={goTo}
-        reading={reading}
-        onBack={goBack}
+        onSelect={handleSectionSelect}
+        reading={isReading}
+        onBack={handleBack}
         help={<HelpCard />}
         collapsible
-        breadcrumb={crumbsFor('our-company')}
+        breadcrumb={buildCrumbs('our-company')}
         scrollContent
       >
         <div className={RAIL_READ}>

@@ -25,7 +25,7 @@ function decode(value) {
     .replace(/&quot;/g, '"');
 }
 
-function localFile(raw) {
+function resolveLocalFile(raw) {
   let ref = decode(raw)
     .trim()
     .replace(/^['"]|['"]$/g, '');
@@ -42,37 +42,37 @@ function localFile(raw) {
 
 const pages = walk(OUT);
 const referenced = new Map();
-function note(raw, page) {
-  const file = localFile(raw);
+function recordReference(raw, page) {
+  const file = resolveLocalFile(raw);
   if (file && !referenced.has(file)) referenced.set(file, path.relative(OUT, page));
 }
 
 pages.forEach((page) => {
   const html = fs.readFileSync(page, 'utf8');
   [...html.matchAll(/\s(?:src|href|poster)="([^"]+)"/g)].forEach((match) => {
-    note(match[1], page);
+    recordReference(match[1], page);
   });
   [...html.matchAll(/\s(?:srcset|srcSet|imagesrcset)="([^"]+)"/gi)].forEach((match) => {
     match[1].split(',').forEach((candidate) => {
-      note(candidate.trim().split(/\s+/)[0], page);
+      recordReference(candidate.trim().split(/\s+/)[0], page);
     });
   });
   [...html.matchAll(/url\(([^)]+)\)/g)].forEach((match) => {
-    note(match[1], page);
+    recordReference(match[1], page);
   });
   [...html.matchAll(/<meta[^>]*\scontent="(https:\/\/ubudprivatevillas\.com\/[^"]+)"/g)].forEach((match) => {
-    note(match[1], page);
+    recordReference(match[1], page);
   });
 });
 
-function stylesheets(dir) {
+function listStylesheets(dir) {
   return fs.readdirSync(dir, { withFileTypes: true }).flatMap((entry) => {
     const full = path.join(dir, entry.name);
-    if (entry.isDirectory()) return stylesheets(full);
+    if (entry.isDirectory()) return listStylesheets(full);
     return entry.name.endsWith('.css') ? [full] : [];
   });
 }
-const cssFiles = stylesheets(OUT);
+const cssFiles = listStylesheets(OUT);
 cssFiles.forEach((css) => {
   const text = fs.readFileSync(css, 'utf8');
   [...text.matchAll(/url\(\s*['"]?([^'")]+)['"]?\s*\)/g)].forEach((match) => {
@@ -84,33 +84,33 @@ cssFiles.forEach((css) => {
           .relative(OUT, path.resolve(path.dirname(css), ref.split(/[?#]/)[0]))
           .split(path.sep)
           .join('/')}`;
-    note(absolute, css);
+    recordReference(absolute, css);
   });
 });
 
-const missing = [...referenced].filter(([file]) => !fs.existsSync(path.join(OUT, file.replace(/^\//, ''))));
+const missingAssets = [...referenced].filter(([file]) => !fs.existsSync(path.join(OUT, file.replace(/^\//, ''))));
 
 console.log(`Pages scanned        : ${pages.length} (+ ${cssFiles.length} stylesheets)`);
 console.log(`Assets referenced    : ${referenced.size}`);
-console.log(`Referenced but absent: ${missing.length}`);
+console.log(`Referenced but absent: ${missingAssets.length}`);
 if (!pages.length || !referenced.size) {
   console.error('\nASSET CHECK FAILED - it found nothing to check, so it proved nothing.');
   process.exit(1);
 }
-if (missing.length) {
+if (missingAssets.length) {
   console.error('\nMISSING ASSETS:');
-  missing.slice(0, 30).forEach(([file, page]) => {
+  missingAssets.slice(0, 30).forEach(([file, page]) => {
     console.error(`  ${file}   (first seen on ${page})`);
   });
-  if (missing.length > 30) console.error(`  ... and ${missing.length - 30} more`);
+  if (missingAssets.length > 30) console.error(`  ... and ${missingAssets.length - 30} more`);
   process.exit(1);
 }
 
-const noIcon = pages.filter((page) => !/rel="icon"/.test(fs.readFileSync(page, 'utf8')));
-console.log(`Pages without a favicon: ${noIcon.length}`);
-if (noIcon.length) {
+const pagesWithoutIcon = pages.filter((page) => !/rel="icon"/.test(fs.readFileSync(page, 'utf8')));
+console.log(`Pages without a favicon: ${pagesWithoutIcon.length}`);
+if (pagesWithoutIcon.length) {
   console.error('\nPAGES MISSING THE FAVICON LINK:');
-  noIcon.slice(0, 10).forEach((page) => {
+  pagesWithoutIcon.slice(0, 10).forEach((page) => {
     console.error(`  ${path.relative(OUT, page)}`);
   });
   process.exit(1);

@@ -7,6 +7,8 @@ import { useItinerary } from '@/state/ItineraryProvider';
 import ChatLauncher from '@/components/chat/ChatLauncher';
 import { APP_ONLY } from '@/components/ui/pwaClasses';
 
+const ICON_STROKE_WIDTH_REGULAR = 1.7;
+
 const BAR =
   `${APP_ONLY} [body:has(.bookbar)_&]:hidden max-md:[body:has(.stickybar)_&]:hidden [body:has(.footerbar)_&]:hidden ` +
   'fixed inset-x-0 bottom-0 z-[95] items-stretch ' +
@@ -20,7 +22,7 @@ const CELL =
   'text-[0.62rem] font-medium leading-none text-center ' +
   '[transition:color_var(--dur)_var(--ease),scale_var(--dur-fast)_var(--ease)]';
 
-function cellClass(active) {
+function buildCellClass(active) {
   return `${CELL} ${active ? 'text-gold' : 'text-muted'}`;
 }
 
@@ -33,19 +35,27 @@ export default function AppBottomNav() {
 
   return (
     <nav className={BAR} aria-label="App" data-appnav>
-      <a href="/" className={cellClass(isCurrent('/'))}>
-        <House className="w-[22px] h-[22px]" strokeWidth={isCurrent('/') ? 2 : 1.7} aria-hidden="true" />
+      <a href="/" className={buildCellClass(isCurrent('/'))}>
+        <House
+          className="w-[22px] h-[22px]"
+          strokeWidth={isCurrent('/') ? 2 : ICON_STROKE_WIDTH_REGULAR}
+          aria-hidden="true"
+        />
         Home
       </a>
-      <a href="/tour.html" className={cellClass(isCurrent('/tour.html'))}>
-        <Compass className="w-[22px] h-[22px]" strokeWidth={isCurrent('/tour.html') ? 2 : 1.7} aria-hidden="true" />
+      <a href="/tour.html" className={buildCellClass(isCurrent('/tour.html'))}>
+        <Compass
+          className="w-[22px] h-[22px]"
+          strokeWidth={isCurrent('/tour.html') ? 2 : ICON_STROKE_WIDTH_REGULAR}
+          aria-hidden="true"
+        />
         Program
       </a>
-      <a href="/my-trips.html" className={`relative ${cellClass(isCurrent('/my-trips.html'))}`}>
+      <a href="/my-trips.html" className={`relative ${buildCellClass(isCurrent('/my-trips.html'))}`}>
         <span className="relative">
           <ShoppingBag
             className="w-[22px] h-[22px]"
-            strokeWidth={isCurrent('/my-trips.html') ? 2 : 1.7}
+            strokeWidth={isCurrent('/my-trips.html') ? 2 : ICON_STROKE_WIDTH_REGULAR}
             aria-hidden="true"
           />
           <span
@@ -57,7 +67,7 @@ export default function AppBottomNav() {
         </span>
         My Trip
       </a>
-      <ChatLauncher className={cellClass(false)} label="Chat" iconClass="w-[22px] h-[22px]" />
+      <ChatLauncher className={buildCellClass(false)} label="Chat" iconClass="w-[22px] h-[22px]" />
     </nav>
   );
 }

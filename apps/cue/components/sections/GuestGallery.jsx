@@ -1,4 +1,7 @@
 import { SECTION_TITLE } from '@/components/ui/sectionTitle';
+
+const GALLERY_IMAGE_SIZE_PX = 300;
+
 const GUESTS = [
   { img: 'guest-monkey-forest.jpg', alt: 'A guest at the Sacred Monkey Forest, Ubud' },
   { img: 'guest-jungle-swing.jpg', alt: 'A guest on a jungle swing near Ubud' },
@@ -20,14 +23,14 @@ export default function GuestGallery() {
       <h2 className={`${SECTION_TITLE} px-6 !mb-6`}>Moments With Our Guests</h2>
       <div className="overflow-hidden [-webkit-mask-image:linear-gradient(90deg,transparent,#000_2%,#000_98%,transparent)] [mask-image:linear-gradient(90deg,transparent,#000_2%,#000_98%,transparent)] motion-reduce:overflow-x-auto">
         <div className="grid grid-flow-col grid-rows-[repeat(2,128px)] auto-cols-[128px] gap-[6px] w-max animate-[guestScroll_35s_linear_infinite] motion-reduce:animate-none">
-          {TRACK.map((photo, i) => (
-            <figure className="m-0 rounded-md overflow-hidden border-2 border-gold" key={i}>
+          {TRACK.map((photo, index) => (
+            <figure className="m-0 rounded-md overflow-hidden border-2 border-gold" key={index}>
               <img
                 className="w-[128px] h-full object-cover block"
                 src={`/assets/images/${photo.img}`}
                 alt={photo.alt}
-                width={300}
-                height={300}
+                width={GALLERY_IMAGE_SIZE_PX}
+                height={GALLERY_IMAGE_SIZE_PX}
               />
             </figure>
           ))}

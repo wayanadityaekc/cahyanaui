@@ -1,9 +1,9 @@
 import { notFound } from 'next/navigation';
 import ArticlePage from '@/components/sections/ArticlePage';
-import { ARTICLES, articleBySlug } from '@/content/articles';
+import { ARTICLES, findArticleBySlug } from '@/content/articles';
 import { JsonLd } from '@cahyana/ui';
-import { pageMeta } from '@/lib/seo';
-import { articleCrumbs, articleSchema, breadcrumbList } from '@/lib/schema';
+import { buildPageMeta } from '@/lib/seo';
+import { articleCrumbs, buildArticleSchema, buildBreadcrumbList } from '@/lib/schema';
 
 export function generateStaticParams() {
   return ARTICLES.map((article) => ({ slug: article.slug }));
@@ -11,9 +11,9 @@ export function generateStaticParams() {
 
 export async function generateMetadata({ params }) {
   const { slug } = await params;
-  const article = articleBySlug(slug);
+  const article = findArticleBySlug(slug);
   if (!article) return {};
-  return pageMeta({
+  return buildPageMeta({
     title: article.metaTitle || article.title,
     description: article.metaDesc || article.sub,
     path: `/guide/${slug}/`,
@@ -22,11 +22,11 @@ export async function generateMetadata({ params }) {
 
 export default async function GuideArticleRoute({ params }) {
   const { slug } = await params;
-  const article = articleBySlug(slug);
+  const article = findArticleBySlug(slug);
   if (!article) notFound();
   return (
     <>
-      <JsonLd data={[articleSchema(article), breadcrumbList(articleCrumbs(article))]} />
+      <JsonLd data={[buildArticleSchema(article), buildBreadcrumbList(articleCrumbs(article))]} />
       <ArticlePage article={article} />
     </>
   );

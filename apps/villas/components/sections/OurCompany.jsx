@@ -11,6 +11,8 @@ import { CONTACT_EMAIL, CUE_LINK, WHATSAPP_LINK } from '@/lib/constants';
 import { Button, Card, Breadcrumb } from '@cahyana/ui';
 import { COMPANY_CRUMBS } from '@/lib/crumbs';
 
+const ICON_STROKE_WIDTH_BOLD = 1.8;
+
 const TABS = [
   { id: 'about', label: 'About Us' },
   { id: 'contact', label: 'Contact' },
@@ -20,7 +22,7 @@ const TABS = [
   { id: 'privacy', label: 'Privacy Policy' },
 ];
 
-function idFromHash() {
+function readTabIdFromHash() {
   if (typeof window === 'undefined') return null;
   const id = window.location.hash.replace('#', '');
   return TABS.some((item) => item.id === id) ? id : null;
@@ -43,7 +45,7 @@ function ContactBody() {
       <div className="grid sm:grid-cols-3 gap-5 mt-6">
         <Card className="p-6">
           <h2 className={CONTACT_H}>
-            <MessageCircle className={CONTACT_IC} strokeWidth={1.8} aria-hidden="true" />
+            <MessageCircle className={CONTACT_IC} strokeWidth={ICON_STROKE_WIDTH_BOLD} aria-hidden="true" />
             WhatsApp
           </h2>
           <p className="text-small text-muted my-3">
@@ -55,7 +57,7 @@ function ContactBody() {
         </Card>
         <Card className="p-6">
           <h2 className={CONTACT_H}>
-            <Mail className={CONTACT_IC} strokeWidth={1.8} aria-hidden="true" />
+            <Mail className={CONTACT_IC} strokeWidth={ICON_STROKE_WIDTH_BOLD} aria-hidden="true" />
             Email
           </h2>
           <p className="text-small text-muted my-3">
@@ -67,7 +69,7 @@ function ContactBody() {
         </Card>
         <Card className="p-6">
           <h2 className={CONTACT_H}>
-            <MapPin className={CONTACT_IC} strokeWidth={1.8} aria-hidden="true" />
+            <MapPin className={CONTACT_IC} strokeWidth={ICON_STROKE_WIDTH_BOLD} aria-hidden="true" />
             Where we are
           </h2>
           <p className="text-small text-muted my-3">
@@ -91,8 +93,8 @@ function FAQBody() {
       {FAQ.map((group) => (
         <div className="mb-8" key={group.cat}>
           <h2 className="m-0 mb-3 font-head text-h3 font-medium text-green">{group.cat}</h2>
-          {group.items.map(([question, answer], i) => (
-            <details className={FAQ_CARD} key={i} name="faq">
+          {group.items.map(([question, answer], index) => (
+            <details className={FAQ_CARD} key={index} name="faq">
               <summary className={FAQ_Q}>{question}</summary>
               <div className="mt-2 [&_p]:text-body [&_p]:leading-[var(--lh-body)]">
                 <p>{answer}</p>
@@ -120,7 +122,7 @@ export default function OurCompany() {
 
   useEffect(() => {
     function applyHash() {
-      const id = idFromHash();
+      const id = readTabIdFromHash();
       if (id) setTab(id);
     }
     applyHash();

@@ -2,19 +2,24 @@
 
 import DateField from './DateField';
 import Select from './Select';
-import { fmtHour } from '@/content/shared/timeSlots';
+import { formatHour } from '@/content/shared/timeSlots';
 
-const HOURS = Array.from({ length: 24 }, (_, i) => String(i).padStart(2, '0'));
-const MINUTES = Array.from({ length: 60 }, (_, i) => String(i).padStart(2, '0'));
+const HOURS_PER_DAY = 24;
+const MINUTES_PER_HOUR = 60;
+const TIME_MINUTE_START_INDEX = 3;
+const TIME_MINUTE_END_INDEX = 5;
+
+const HOURS = Array.from({ length: HOURS_PER_DAY }, (unusedValue, index) => String(index).padStart(2, '0'));
+const MINUTES = Array.from({ length: MINUTES_PER_HOUR }, (unusedValue, index) => String(index).padStart(2, '0'));
 
 export default function DateTimeField({ label = 'Date & time', value, onChange, min, id }) {
   const [datePart = '', timePart = ''] = (value || '').split('T');
   const hour = timePart.slice(0, 2);
-  const minute = timePart.slice(3, 5);
+  const minute = timePart.slice(TIME_MINUTE_START_INDEX, TIME_MINUTE_END_INDEX);
 
-  function emit(d, h, m) {
-    if (!d) return onChange('');
-    onChange(`${d}T${h || '00'}:${m || '00'}`);
+  function emit(dateValue, hourValue, minuteValue) {
+    if (!dateValue) return onChange('');
+    onChange(`${dateValue}T${hourValue || '00'}:${minuteValue || '00'}`);
   }
 
   const TIMESEL = 'flex-[1_1_0] min-w-0';
@@ -24,7 +29,7 @@ export default function DateTimeField({ label = 'Date & time', value, onChange, 
         id={id ? `${id}-date` : undefined}
         label={label}
         value={datePart}
-        onChange={(d) => emit(d, hour, minute)}
+        onChange={(selectedDate) => emit(selectedDate, hour, minute)}
         min={min}
         placeholder="Select date"
       />
@@ -33,8 +38,8 @@ export default function DateTimeField({ label = 'Date & time', value, onChange, 
           id={id ? `${id}-hour` : undefined}
           label="Hour"
           value={hour}
-          onChange={(h) => emit(datePart, h, minute)}
-          options={HOURS.map((v) => ({ value: v, label: fmtHour(v) }))}
+          onChange={(selectedHour) => emit(datePart, selectedHour, minute)}
+          options={HOURS.map((hourOption) => ({ value: hourOption, label: formatHour(hourOption) }))}
           placeholder="Hour"
           className={TIMESEL}
         />
@@ -43,8 +48,8 @@ export default function DateTimeField({ label = 'Date & time', value, onChange, 
           id={id ? `${id}-minute` : undefined}
           label="Minute"
           value={minute}
-          onChange={(m) => emit(datePart, hour, m)}
-          options={MINUTES.map((v) => ({ value: v, label: v }))}
+          onChange={(selectedMinute) => emit(datePart, hour, selectedMinute)}
+          options={MINUTES.map((minuteOption) => ({ value: minuteOption, label: minuteOption }))}
           placeholder="MM"
           className={TIMESEL}
         />

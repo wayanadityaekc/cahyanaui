@@ -11,38 +11,41 @@ const BOX =
   'max-h-[calc(100dvh-2rem)] overflow-y-auto bg-surface-raised rounded-md px-6 pt-6 pb-7 font-body ' +
   'focus:outline-none';
 
-function fmtDate(iso) {
+function formatReviewDate(iso) {
   if (!iso) return '';
-  const d = new Date(iso);
-  return Number.isNaN(d.getTime())
+  const reviewDate = new Date(iso);
+  return Number.isNaN(reviewDate.getTime())
     ? ''
-    : d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+    : reviewDate.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
 }
 
 export default function ReviewDetail({ review, onClose, title = 'Guest review' }) {
   const boxRef = useRef(null);
   const closeRef = useRef(onClose);
   closeRef.current = onClose;
-  const open = !!review;
+  const isOpen = !!review;
 
   useEffect(() => {
-    if (!open) return undefined;
+    if (!isOpen) return undefined;
     const opener = document.activeElement;
     if (boxRef.current) boxRef.current.focus();
-    function onKey(e) {
-      if (e.key === 'Escape') closeRef.current();
+    function handleEscapeKeyDown(event) {
+      if (event.key === 'Escape') closeRef.current();
     }
-    document.addEventListener('keydown', onKey);
+    document.addEventListener('keydown', handleEscapeKeyDown);
     return () => {
-      document.removeEventListener('keydown', onKey);
+      document.removeEventListener('keydown', handleEscapeKeyDown);
       if (opener && typeof opener.focus === 'function') opener.focus();
     };
-  }, [open]);
+  }, [isOpen]);
 
-  if (!open || typeof document === 'undefined') return null;
-  const r = review;
-  const { n, stars } = starText(r.rating);
-  const trips = r.services && r.services.length > 1 ? r.services.join(' · ') : r.service;
+  if (!isOpen || typeof document === 'undefined') return null;
+  const currentReview = review;
+  const { n: starCount, stars } = starText(currentReview.rating);
+  const trips =
+    currentReview.services && currentReview.services.length > 1
+      ? currentReview.services.join(' · ')
+      : currentReview.service;
 
   return (
     <>
@@ -59,15 +62,19 @@ export default function ReviewDetail({ review, onClose, title = 'Guest review' }
           </button>
           <p className="m-0 mb-4 text-center font-semibold text-strong text-green">{title}</p>
           <div className="flex items-center justify-between gap-3 mb-1">
-            <span className="font-semibold text-body text-green">{r.name}</span>
-            {r.created_at && <span className="text-label text-muted">{fmtDate(r.created_at)}</span>}
+            <span className="font-semibold text-body text-green">{currentReview.name}</span>
+            {currentReview.created_at && (
+              <span className="text-label text-muted">{formatReviewDate(currentReview.created_at)}</span>
+            )}
           </div>
-          {r.country && <div className="mb-2 text-label text-muted">{r.country}</div>}
+          {currentReview.country && <div className="mb-2 text-label text-muted">{currentReview.country}</div>}
           {trips && <div className="mb-2 text-label text-muted">{trips}</div>}
-          <div className="mb-3 text-amber tracking-[2px]" aria-label={`${n} out of 5`}>
+          <div className="mb-3 text-amber tracking-[2px]" aria-label={`${starCount} out of 5`}>
             {stars}
           </div>
-          <p className="m-0 text-body text-green leading-[var(--lh-body)] whitespace-pre-line">{r.message}</p>
+          <p className="m-0 text-body text-green leading-[var(--lh-body)] whitespace-pre-line">
+            {currentReview.message}
+          </p>
         </div>,
         document.body,
       )}

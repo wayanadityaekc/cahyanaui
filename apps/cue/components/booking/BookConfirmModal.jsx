@@ -8,7 +8,7 @@ import { useReferral } from '@/state/ReferralProvider';
 import { useAccount } from '@/state/AccountProvider';
 import { usePricing } from '@/state/PricingProvider';
 import { quote, submitInquiry } from '@/lib/api';
-import { bookingSchema } from '@/lib/schemas';
+import { buildBookingSchema } from '@/lib/schemas';
 import { validateWith } from '@/lib/validate';
 import { readLocal, writeLocal } from '@/lib/storage';
 import { KEY, WHATSAPP_NUMBER } from '@/lib/constants';
@@ -26,8 +26,8 @@ import {
 import PaymentStep from './PaymentStep';
 import { readPayFlag, PAY_DEFAULT } from '@/lib/payFlag';
 import { DEFAULT_RAIL } from '@/lib/rails';
-import { baseTotal, baseTotalIdr, baseTotalUsd, PAY_COPY } from '@/lib/payment';
-import { bookingPayload, priceText as quotedPrice, whatsappText } from '@/lib/bookingPayload';
+import { calculateBaseTotal, calculateBaseTotalIdr, calculateBaseTotalUsd, PAY_COPY } from '@/lib/payment';
+import { buildBookingPayload, priceText as quotedPrice, buildWhatsappText } from '@/lib/bookingPayload';
 import DetailsStep from './DetailsStep';
 import CheckStep from './CheckStep';
 import BookActions from './BookActions';
@@ -36,6 +36,13 @@ import PaymentScreen from './PaymentScreen';
 import { STEPS, stepBar, STEP_LABEL, BACK_LINK } from './bookingModalClasses';
 import ModalPresence from '@/components/ui/ModalPresence';
 import useBodyLock from '@/components/ui/useBodyLock';
+
+const COOLDOWN_TICK_MS = 1000;
+const DATE_STRING_LENGTH = 10;
+const TIME_START_INDEX = 11;
+const TIME_END_INDEX = 16;
+const STEP_COUNT_WITH_PAYMENT = 3;
+const PAYMENT_STEP_NUMBER = 3;
 
 const EMPTY = {
   name: '',
@@ -51,36 +58,36 @@ const EMPTY = {
 const RESEND_SECONDS = 30;
 
 export default function BookConfirmModal() {
-  const { ctx, closeBooking } = useBooking();
+  const { ctx: bookingContext, closeBooking: handleBookingClose } = useBooking();
   const { currency, stay, displayGuests } = useTripPrefs();
   const { referral, apply } = useReferral();
   const { account, setAccount, requestLogin, verifyCode } = useAccount();
   const pricing = usePricing();
 
-  const [f, setF] = useState(EMPTY);
+  const [form, setForm] = useState(EMPTY);
   const [priced, setPriced] = useState(null);
   const [step, setStep] = useState(1);
   const [lineDT, setLineDT] = useState([]);
   const [dtErr, setDtErr] = useState({});
   const [refMsg, setRefMsg] = useState(null);
-  const [detailsOpen, setDetailsOpen] = useState(false);
+  const [isDetailsOpen, setIsDetailsOpen] = useState(false);
   const [errors, setErrors] = useState({});
   const [error, setError] = useState('');
-  const [busy, setBusy] = useState(false);
-  const [done, setDone] = useState(false);
-  const [mounted, setMounted] = useState(false);
+  const [isBusy, setIsBusy] = useState(false);
+  const [isDone, setIsDone] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
 
-  useEffect(() => setMounted(true), []);
+  useEffect(() => setIsMounted(true), []);
 
   useEffect(() => {
-    if (!ctx) {
-      setF(EMPTY);
+    if (!bookingContext) {
+      setForm(EMPTY);
       setPriced(null);
-      setDone(false);
+      setIsDone(false);
       setSigninEmail('');
       setOtpCode('');
       setOtpMsg('');
-      setOtpVerified(false);
+      setIsOtpVerified(false);
       setOtpCooldown(0);
       setStep(1);
       setLineDT([]);
@@ -90,44 +97,50 @@ export default function BookConfirmModal() {
       setRefMsg(null);
       return;
     }
-    const only = ctx.lines && ctx.lines.length === 1 ? ctx.lines[0] : null;
-    setF((v) => ({
-      ...v,
+    const only = bookingContext.lines && bookingContext.lines.length === 1 ? bookingContext.lines[0] : null;
+    setForm((previousForm) => ({
+      ...previousForm,
       referral: (referral && referral.code) || '',
       flightNumber: (only && only.flight_number) || '',
       flightDatetime: (only && only.flight_datetime) || '',
     }));
-    setLineDT((ctx.lines || []).map((l) => ({ date: l.date || '', time: l.time || '' })));
+    setLineDT((bookingContext.lines || []).map((line) => ({ date: line.date || '', time: line.time || '' })));
     setStep(1);
     setDtErr({});
-  }, [ctx, referral]);
+  }, [bookingContext, referral]);
 
   useEffect(() => {
-    if (!ctx) return undefined;
+    if (!bookingContext) return undefined;
     let cancelled = false;
     async function load() {
       try {
-        const d = await quote({ lines: ctx.lines, currency, stay, referral: (referral && referral.code) || '' });
-        if (!cancelled && d && d.lines) setPriced(d);
+        const quoteResult = await quote({
+          lines: bookingContext.lines,
+          currency,
+          stay,
+          referral: (referral && referral.code) || '',
+        });
+        const hasQuoteLines = !cancelled && quoteResult && quoteResult.lines;
+        if (hasQuoteLines) setPriced(quoteResult);
       } catch (e) {}
     }
     load();
     return () => {
       cancelled = true;
     };
-  }, [ctx, currency, stay, referral]);
+  }, [bookingContext, currency, stay, referral]);
 
   useEffect(() => {
-    if (!ctx) return;
-    setF((v) => ({
-      ...v,
-      name: v.name || (account && account.name) || '',
-      phone: v.phone || (account && account.phone) || '',
-      email: v.email || (account && account.email) || '',
-      pickup: v.pickup || readLocal(KEY.pickup, ''),
-      dropoff: v.dropoff || readLocal(KEY.dropoff, ''),
+    if (!bookingContext) return;
+    setForm((previousForm) => ({
+      ...previousForm,
+      name: previousForm.name || (account && account.name) || '',
+      phone: previousForm.phone || (account && account.phone) || '',
+      email: previousForm.email || (account && account.email) || '',
+      pickup: previousForm.pickup || readLocal(KEY.pickup, ''),
+      dropoff: previousForm.dropoff || readLocal(KEY.dropoff, ''),
     }));
-  }, [ctx, account]);
+  }, [bookingContext, account]);
 
   const [payOption, setPayOption] = useState('deposit');
   const [payRail, setPayRail] = useState(DEFAULT_RAIL);
@@ -135,118 +148,132 @@ export default function BookConfirmModal() {
   const [signinEmail, setSigninEmail] = useState('');
   const [otpCode, setOtpCode] = useState('');
   const [otpMsg, setOtpMsg] = useState('');
-  const [otpBusy, setOtpBusy] = useState(false);
-  const [otpVerified, setOtpVerified] = useState(false);
+  const [isOtpBusy, setIsOtpBusy] = useState(false);
+  const [isOtpVerified, setIsOtpVerified] = useState(false);
   const [otpCooldown, setOtpCooldown] = useState(0);
   useEffect(() => {
     if (otpCooldown <= 0) return undefined;
-    const t = setInterval(() => setOtpCooldown((s) => Math.max(0, s - 1)), 1000);
-    return () => clearInterval(t);
+    const cooldownTimer = setInterval(
+      () => setOtpCooldown((secondsLeft) => Math.max(0, secondsLeft - 1)),
+      COOLDOWN_TICK_MS,
+    );
+    return () => clearInterval(cooldownTimer);
   }, [otpCooldown]);
-  async function doOtpVerify(code) {
+  async function verifyOtpCode(code) {
     setOtpMsg('');
-    setOtpBusy(true);
+    setIsOtpBusy(true);
     const result = await verifyCode(signinEmail, code);
-    setOtpBusy(false);
+    setIsOtpBusy(false);
     if (result.ok) {
-      setOtpVerified(true);
+      setIsOtpVerified(true);
       setOtpCode('');
       return;
     }
     setOtpCode('');
     setOtpMsg(result.error || 'Sorry, something went wrong. Please try again.');
   }
-  async function resendOtp() {
-    if (otpCooldown > 0 || otpBusy) return;
-    setOtpBusy(true);
+  async function resendOtpCode() {
+    if (otpCooldown > 0 || isOtpBusy) return;
+    setIsOtpBusy(true);
     await requestLogin(signinEmail);
-    setOtpBusy(false);
+    setIsOtpBusy(false);
     setOtpCode('');
     setOtpMsg('');
     setOtpCooldown(RESEND_SECONDS);
   }
-  const [paid, setPaid] = useState(false);
+  const [isPaid, setIsPaid] = useState(false);
   const [payOn, setPayOn] = useState(PAY_DEFAULT);
   useEffect(() => {
     setPayOn(readPayFlag());
   }, []);
   const lastCtx = useRef(null);
-  useBodyLock(!!ctx);
+  useBodyLock(!!bookingContext);
 
-  if (ctx) lastCtx.current = ctx;
-  const view = ctx || lastCtx.current;
-  if (!mounted || !view) return null;
+  if (bookingContext) lastCtx.current = bookingContext;
+  const view = bookingContext || lastCtx.current;
+  if (!isMounted || !view) return null;
 
-  function set(k) {
-    return (e) => {
-      const { value } = e.target;
-      setF((v) => ({ ...v, [k]: value }));
-      setErrors((v) => (v[k] ? { ...v, [k]: undefined } : v));
+  function set(fieldName) {
+    return (event) => {
+      const { value } = event.target;
+      setForm((previousForm) => ({ ...previousForm, [fieldName]: value }));
+      setErrors((previousErrors) =>
+        previousErrors[fieldName] ? { ...previousErrors, [fieldName]: undefined } : previousErrors,
+      );
     };
   }
-  function setValue(k) {
+  function setValue(fieldName) {
     return (value) => {
-      setF((v) => ({ ...v, [k]: value }));
-      setErrors((v) => (v[k] ? { ...v, [k]: undefined } : v));
+      setForm((previousForm) => ({ ...previousForm, [fieldName]: value }));
+      setErrors((previousErrors) =>
+        previousErrors[fieldName] ? { ...previousErrors, [fieldName]: undefined } : previousErrors,
+      );
     };
   }
 
   const catalog = pricing && pricing.catalog;
   const lines = view.lines || [];
   const singleLine = lines.length === 1 ? lines[0] : null;
-  function categoryOfLine({ service, type }) {
-    const c = catalog && catalog.items.find((i) => i.name === service);
-    return c ? c.category : type || null;
+  function findLineCategory({ service, type }) {
+    const catalogItem = catalog && catalog.items.find((item) => item.name === service);
+    return catalogItem ? catalogItem.category : type || null;
   }
   function isAirportLine({ service }) {
     return service === AIRPORT_ROUTE;
   }
   const isAirportRoute = !!singleLine && isAirportLine(singleLine);
   const needsFlight = isAirportRoute;
-  function lineDateTime(i) {
-    return lineDT[i] || { date: '', time: '' };
+  function findLineDateTime(lineIndex) {
+    return lineDT[lineIndex] || { date: '', time: '' };
   }
-  function setDT(i, k, v) {
+  function setDT(lineIndex, fieldName, fieldValue) {
     setLineDT((prev) => {
-      const next = prev.length ? [...prev] : lines.map((l) => ({ date: l.date || '', time: l.time || '' }));
-      next[i] = { ...next[i], [k]: v };
-      return next;
+      const nextLineTimes = prev.length
+        ? [...prev]
+        : lines.map((line) => ({ date: line.date || '', time: line.time || '' }));
+      nextLineTimes[lineIndex] = { ...nextLineTimes[lineIndex], [fieldName]: fieldValue };
+      return nextLineTimes;
     });
-    setDtErr((prev) => (prev[i] ? { ...prev, [i]: undefined } : prev));
+    setDtErr((prev) => (prev[lineIndex] ? { ...prev, [lineIndex]: undefined } : prev));
   }
-  function dateOf(l, i) {
-    return isAirportLine(l) && i === 0 && needsFlight ? (f.flightDatetime || '').slice(0, 10) : lineDateTime(i).date;
+  function findLineDate(line, lineIndex) {
+    return isAirportLine(line) && lineIndex === 0 && needsFlight
+      ? (form.flightDatetime || '').slice(0, DATE_STRING_LENGTH)
+      : findLineDateTime(lineIndex).date;
   }
-  function timeOf(l, i) {
-    return isAirportLine(l) && i === 0 && needsFlight ? (f.flightDatetime || '').slice(11, 16) : lineDateTime(i).time;
+  function timeOf(line, lineIndex) {
+    return isAirportLine(line) && lineIndex === 0 && needsFlight
+      ? (form.flightDatetime || '').slice(TIME_START_INDEX, TIME_END_INDEX)
+      : findLineDateTime(lineIndex).time;
   }
-  const flightNumberDisplay = needsFlight ? f.flightNumber || singleLine.flight_number || '' : '';
+  const flightNumberDisplay = needsFlight ? form.flightNumber || singleLine.flight_number || '' : '';
 
   function validate() {
     const { ok, errors: fieldErrors } = validateWith(
-      bookingSchema({
-        pickupOptional: !!ctx.pickupOptional,
-        dropoffRequired: !!ctx.dropoffRequired,
+      buildBookingSchema({
+        pickupOptional: !!bookingContext.pickupOptional,
+        dropoffRequired: !!bookingContext.dropoffRequired,
         needsTime: false,
         needsFlight,
       }),
-      f,
+      form,
     );
     setErrors(fieldErrors);
     const dateErrors = {};
-    (ctx.lines || []).forEach((l, i) => {
-      if (isAirportLine(l) && i === 0 && needsFlight) return;
-      if (!dateOf(l, i)) dateErrors[i] = 'Please pick a date.';
-      else if (!timeOf(l, i)) dateErrors[i] = 'Please pick a start time.';
+    (bookingContext.lines || []).forEach((line, index) => {
+      const isFlightDetailsNeeded = isAirportLine(line) && index === 0 && needsFlight;
+      if (isFlightDetailsNeeded) return;
+      if (!findLineDate(line, index)) dateErrors[index] = 'Please pick a date.';
+      else if (!timeOf(line, index)) dateErrors[index] = 'Please pick a start time.';
     });
     setDtErr(dateErrors);
     return ok && Object.keys(dateErrors).length === 0;
   }
 
-  function payload() {
-    return bookingPayload({
-      ctx,
-      f,
+  function buildBookingPayload() {
+    return buildBookingPayload({
+      ctx: bookingContext,
+      f: form,
       referral,
       payOn,
       payOption,
@@ -256,7 +283,7 @@ export default function BookConfirmModal() {
       displayGuests,
       singleLine,
       needsFlight,
-      dateOf,
+      dateOf: findLineDate,
       timeOf,
     });
   }
@@ -266,41 +293,51 @@ export default function BookConfirmModal() {
       return;
     }
     setError('');
-    setBusy(true);
+    setIsBusy(true);
     try {
-      const d = await submitInquiry(payload());
-      if (!d || d.status !== 'saved') throw new Error((d && d.detail) || '');
-      if (f.pickup) writeLocal(KEY.pickup, f.pickup);
-      if (f.dropoff) writeLocal(KEY.dropoff, f.dropoff);
-      if (d.token && !readLocal(KEY.token, '')) {
-        writeLocal(KEY.token, d.token);
-        if (d.account) setAccount(d.account);
+      const inquiryResult = await submitInquiry(buildBookingPayload());
+      if (!inquiryResult || inquiryResult.status !== 'saved')
+        throw new Error((inquiryResult && inquiryResult.detail) || '');
+      if (form.pickup) writeLocal(KEY.pickup, form.pickup);
+      if (form.dropoff) writeLocal(KEY.dropoff, form.dropoff);
+      if (inquiryResult.token && !readLocal(KEY.token, '')) {
+        writeLocal(KEY.token, inquiryResult.token);
+        if (inquiryResult.account) setAccount(inquiryResult.account);
       }
-      if (!payOn && typeof ctx.onSuccess === 'function') ctx.onSuccess();
-      setBookingRef(d.ref || '');
-      if (d.signin_sent && d.signin_email) {
-        setSigninEmail(d.signin_email);
+      if (!payOn && typeof bookingContext.onSuccess === 'function') bookingContext.onSuccess();
+      setBookingRef(inquiryResult.ref || '');
+      if (inquiryResult.signin_sent && inquiryResult.signin_email) {
+        setSigninEmail(inquiryResult.signin_email);
         setOtpCooldown(RESEND_SECONDS);
       } else setSigninEmail('');
-      setDone(true);
+      setIsDone(true);
     } catch (e) {
       setError(e.message || 'Sorry, we could not send your booking. Please try again, or reach us on WhatsApp.');
     } finally {
-      setBusy(false);
+      setIsBusy(false);
     }
   }
 
-  function waText() {
-    return whatsappText({ ctx, f, displayGuests, singleLine, flightNumberDisplay, dateOf, timeOf, price: priceText() });
+  function buildWhatsappText() {
+    return buildWhatsappText({
+      ctx: bookingContext,
+      f: form,
+      displayGuests,
+      singleLine,
+      flightNumberDisplay,
+      dateOf: findLineDate,
+      timeOf,
+      price: priceText(),
+    });
   }
 
   function priceText() {
     return quotedPrice(priced);
   }
 
-  async function applyRef() {
-    const pct = await apply(f.referral);
-    setRefMsg(pct ? { ok: true, text: PAY_COPY.referralOk } : { ok: false, text: PAY_COPY.referralBad });
+  async function handleReferralApply() {
+    const percent = await apply(form.referral);
+    setRefMsg(percent ? { ok: true, text: PAY_COPY.referralOk } : { ok: false, text: PAY_COPY.referralBad });
   }
 
   function openWhatsApp() {
@@ -309,149 +346,164 @@ export default function BookConfirmModal() {
       setStep(1);
       return;
     }
-    window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(waText())}`, '_blank');
+    window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(buildWhatsappText())}`, '_blank');
   }
 
-  const lastStep = payOn ? 3 : 2;
+  const lastStep = payOn ? STEP_COUNT_WITH_PAYMENT : 2;
   const STEP_NAMES = payOn ? ['Your details', 'Check', 'Payment'] : ['Your details', 'Check & book'];
   const signinNote = signinEmail ? (
     <SigninNote
-      otpVerified={otpVerified}
+      otpVerified={isOtpVerified}
       signinEmail={signinEmail}
       otpCode={otpCode}
       setOtpCode={setOtpCode}
-      doOtpVerify={doOtpVerify}
+      doOtpVerify={verifyOtpCode}
       otpMsg={otpMsg}
-      otpBusy={otpBusy}
+      otpBusy={isOtpBusy}
       otpCooldown={otpCooldown}
-      resendOtp={resendOtp}
+      resendOtp={resendOtpCode}
     />
   ) : null;
-  return createPortal(
-    <ModalPresence
-      open={!!ctx}
-      onClose={paid ? () => {} : closeBooking}
-      label="Booking confirmation"
-      box={BOX_WIDE}
-      shellClass={SHELL_WIDE}
-    >
-      {!paid && (
-        <button className={CLOSE} aria-label="Close" onClick={closeBooking}>
-          &times;
-        </button>
-      )}
-      <img className={LOGO} src="/assets/images/logo.webp" alt="The Cahyana Logo" width="1005" height="324" />
+  function renderBookingContent() {
+    function renderBookingStep() {
+      if (step === 1)
+        return (
+          <DetailsStep
+            f={form}
+            errors={errors}
+            set={set}
+            setValue={setValue}
+            view={view}
+            lines={lines}
+            needsFlight={needsFlight}
+            isAirportLine={isAirportLine}
+            lineDateTime={findLineDateTime}
+            setDT={setDT}
+            categoryOfLine={findLineCategory}
+            dtErr={dtErr}
+            onContinue={() => {
+              if (!validate()) return;
+              setError('');
+              setStep(2);
+            }}
+          />
+        );
+      if (step === 2)
+        return (
+          <CheckStep
+            view={view}
+            singleLine={singleLine}
+            dateOf={findLineDate}
+            timeOf={timeOf}
+            isAirportRoute={isAirportRoute}
+            flightNumberDisplay={flightNumberDisplay}
+            displayGuests={displayGuests}
+            priced={priced}
+            detailsOpen={isDetailsOpen}
+            setDetailsOpen={setIsDetailsOpen}
+            f={form}
+            price={priceText()}
+            payOn={payOn}
+            onContinue={() => {
+              setError('');
+              setStep(PAYMENT_STEP_NUMBER);
+            }}
+            error={error}
+            busy={isBusy}
+            submit={submit}
+            openWhatsApp={openWhatsApp}
+            onEdit={() => setStep(1)}
+          />
+        );
+      return (
+        <>
+          <PaymentStep
+            option={payOption}
+            onOption={setPayOption}
+            rail={payRail}
+            onRail={setPayRail}
+            totalIdr={calculateBaseTotalIdr(priced)}
+            totalUsd={calculateBaseTotalUsd(priced)}
+            total={calculateBaseTotal(priced)}
+            symbol={(priced && priced.symbol) || '$'}
+            currency={currency || 'USD'}
+            stay={stay || ''}
+            hasReferral={!!(priced && priced.referral)}
+            referral={form.referral}
+            onReferral={(referralCode) => setForm((previousForm) => ({ ...previousForm, referral: referralCode }))}
+            onApplyReferral={handleReferralApply}
+            refMsg={refMsg}
+          />
 
-      {!done ? (
+          <BookActions error={error} busy={isBusy} submit={submit} openWhatsApp={openWhatsApp} />
+          <button type="button" className={BACK_LINK} onClick={() => setStep(2)}>
+            &lsaquo; Back
+          </button>
+        </>
+      );
+    }
+
+    if (!isDone)
+      return (
         <div id="modal-form">
           <h3 className={TITLE}>Booking Confirmation</h3>
           <div className={STEPS} aria-hidden="true">
-            {STEP_NAMES.map((n, i) => (
-              <span className={stepBar(step >= i + 1)} key={n} />
+            {STEP_NAMES.map((stepName, index) => (
+              <span className={stepBar(step >= index + 1)} key={stepName} />
             ))}
           </div>
           <p className={STEP_LABEL}>
             Step {step} of {lastStep} &middot; {STEP_NAMES[step - 1]}
           </p>
 
-          {step === 1 ? (
-            <DetailsStep
-              f={f}
-              errors={errors}
-              set={set}
-              setValue={setValue}
-              view={view}
-              lines={lines}
-              needsFlight={needsFlight}
-              isAirportLine={isAirportLine}
-              lineDateTime={lineDateTime}
-              setDT={setDT}
-              categoryOfLine={categoryOfLine}
-              dtErr={dtErr}
-              onContinue={() => {
-                if (validate()) {
-                  setError('');
-                  setStep(2);
-                }
-              }}
-            />
-          ) : step === 2 ? (
-            <CheckStep
-              view={view}
-              singleLine={singleLine}
-              dateOf={dateOf}
-              timeOf={timeOf}
-              isAirportRoute={isAirportRoute}
-              flightNumberDisplay={flightNumberDisplay}
-              displayGuests={displayGuests}
-              priced={priced}
-              detailsOpen={detailsOpen}
-              setDetailsOpen={setDetailsOpen}
-              f={f}
-              price={priceText()}
-              payOn={payOn}
-              onContinue={() => {
-                setError('');
-                setStep(3);
-              }}
-              error={error}
-              busy={busy}
-              submit={submit}
-              openWhatsApp={openWhatsApp}
-              onEdit={() => setStep(1)}
-            />
-          ) : (
-            <>
-              <PaymentStep
-                option={payOption}
-                onOption={setPayOption}
-                rail={payRail}
-                onRail={setPayRail}
-                totalIdr={baseTotalIdr(priced)}
-                totalUsd={baseTotalUsd(priced)}
-                total={baseTotal(priced)}
-                symbol={(priced && priced.symbol) || '$'}
-                currency={currency || 'USD'}
-                stay={stay || ''}
-                hasReferral={!!(priced && priced.referral)}
-                referral={f.referral}
-                onReferral={(v) => setF((x) => ({ ...x, referral: v }))}
-                onApplyReferral={applyRef}
-                refMsg={refMsg}
-              />
-
-              <BookActions error={error} busy={busy} submit={submit} openWhatsApp={openWhatsApp} />
-              <button type="button" className={BACK_LINK} onClick={() => setStep(2)}>
-                &lsaquo; Back
-              </button>
-            </>
-          )}
+          {renderBookingStep()}
         </div>
-      ) : !payOn ? (
+      );
+    if (!payOn)
+      return (
         <div className="text-center">
           <div className={SUCCESS_ICON}>&#10003;</div>
           <h3 className={TITLE}>Booking Received!</h3>
           <p className={SUCCESS_TEXT}>Thank you. We will email you shortly to confirm your booking.</p>
           {signinNote}
-          <button className={BTN} onClick={closeBooking}>
+          <button className={BTN} onClick={handleBookingClose}>
             Done
           </button>
         </div>
-      ) : (
-        <PaymentScreen
-          paid={paid}
-          bookingRef={bookingRef}
-          closeBooking={closeBooking}
-          signinNote={signinNote}
-          payRail={payRail}
-          payOption={payOption}
-          currency={currency}
-          onPaid={() => {
-            setPaid(true);
-            if (ctx && typeof ctx.onSuccess === 'function') ctx.onSuccess();
-          }}
-        />
+      );
+    return (
+      <PaymentScreen
+        paid={isPaid}
+        bookingRef={bookingRef}
+        closeBooking={handleBookingClose}
+        signinNote={signinNote}
+        payRail={payRail}
+        payOption={payOption}
+        currency={currency}
+        onPaid={() => {
+          setIsPaid(true);
+          if (bookingContext && typeof bookingContext.onSuccess === 'function') bookingContext.onSuccess();
+        }}
+      />
+    );
+  }
+
+  return createPortal(
+    <ModalPresence
+      open={!!bookingContext}
+      onClose={isPaid ? () => {} : handleBookingClose}
+      label="Booking confirmation"
+      box={BOX_WIDE}
+      shellClass={SHELL_WIDE}
+    >
+      {!isPaid && (
+        <button className={CLOSE} aria-label="Close" onClick={handleBookingClose}>
+          &times;
+        </button>
       )}
+      <img className={LOGO} src="/assets/images/logo.webp" alt="The Cahyana Logo" width="1005" height="324" />
+
+      {renderBookingContent()}
     </ModalPresence>,
     document.body,
   );

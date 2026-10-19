@@ -1,9 +1,9 @@
 import ServiceDetail from '@/components/sections/ServiceDetail';
 import { JsonLd } from '@cahyana/ui';
-import { pageMeta } from '@/lib/seo';
-import { breadcrumbList, serviceCrumbs } from '@/lib/schema';
+import { buildPageMeta } from '@/lib/seo';
+import { buildBreadcrumbList, serviceCrumbs } from '@/lib/schema';
 
-export const metadata = pageMeta({
+export const metadata = buildPageMeta({
   title: 'Private Chef Live Dinner in Ubud',
   description:
     'A private chef cooks dinner in your Ubud villa: romantic tables for two, Balinese megibung feasts and BBQ nights. Prices upfront.',
@@ -13,7 +13,7 @@ export const metadata = pageMeta({
 export default function LiveDinnerPage() {
   return (
     <>
-      <JsonLd data={breadcrumbList(serviceCrumbs('Live Dinner', 'live-dinner'))} />
+      <JsonLd data={buildBreadcrumbList(serviceCrumbs('Live Dinner', 'live-dinner'))} />
       <ServiceDetail
         serviceId="live-dinner"
         kicker="At Your Villa"

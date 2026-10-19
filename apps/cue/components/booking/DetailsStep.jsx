@@ -4,7 +4,7 @@ import { GROUP, LABEL, INPUT, BTN, FIELD_ERR } from '@/components/ui/modalClasse
 import { HINT } from './bookingModalClasses';
 
 export default function DetailsStep({
-  f,
+  f: form,
   errors,
   set,
   setValue,
@@ -29,7 +29,7 @@ export default function DetailsStep({
           type="text"
           id="booker-name"
           placeholder="Enter your name"
-          value={f.name}
+          value={form.name}
           onChange={set('name')}
           aria-invalid={!!errors.name}
         />
@@ -48,7 +48,7 @@ export default function DetailsStep({
           type="tel"
           id="booker-phone"
           placeholder="e.g. +61 412 345 678"
-          value={f.phone}
+          value={form.phone}
           onChange={set('phone')}
           aria-invalid={!!errors.phone}
         />
@@ -67,7 +67,7 @@ export default function DetailsStep({
           type="email"
           id="booker-email"
           placeholder="you@email.com"
-          value={f.email}
+          value={form.email}
           onChange={set('email')}
           aria-invalid={!!errors.email}
         />
@@ -86,7 +86,7 @@ export default function DetailsStep({
           type="text"
           id="pickup"
           placeholder="Hotel / villa name or area"
-          value={f.pickup}
+          value={form.pickup}
           onChange={set('pickup')}
           aria-invalid={!!errors.pickup}
         />
@@ -106,7 +106,7 @@ export default function DetailsStep({
             type="text"
             id="dropoff"
             placeholder="Where should we drop you off?"
-            value={f.dropoff}
+            value={form.dropoff}
             onChange={set('dropoff')}
             aria-invalid={!!errors.dropoff}
           />
@@ -127,7 +127,7 @@ export default function DetailsStep({
             type="text"
             id="flight-number"
             placeholder="e.g. QZ7501"
-            value={f.flightNumber}
+            value={form.flightNumber}
             onChange={set('flightNumber')}
             aria-invalid={!!errors.flightNumber}
           />
@@ -139,16 +139,16 @@ export default function DetailsStep({
         </div>
       )}
 
-      {lines.map((l, i) =>
-        isAirportLine(l) && i === 0 && needsFlight ? (
-          <div className={GROUP} key={`dt${i}`}>
+      {lines.map((line, index) =>
+        isAirportLine(line) && index === 0 && needsFlight ? (
+          <div className={GROUP} key={`dt${index}`}>
             <label className={LABEL} htmlFor="flight-datetime">
               Flight date &amp; time
             </label>
             <DateTimeField
               id="flight-datetime"
               label="Flight date & time"
-              value={f.flightDatetime}
+              value={form.flightDatetime}
               onChange={setValue('flightDatetime')}
             />
             <small className={HINT}>We use this as your pick-up time, so you are collected for this flight.</small>
@@ -159,25 +159,25 @@ export default function DetailsStep({
             )}
           </div>
         ) : (
-          <div className={GROUP} key={`dt${i}`}>
-            <label className={LABEL} htmlFor={`bk-dt-${i}`}>
-              {lines.length > 1 ? `${l.day_no ? `Day ${l.day_no} · ` : ''}${l.service}` : 'Date & time'}
+          <div className={GROUP} key={`dt${index}`}>
+            <label className={LABEL} htmlFor={`bk-dt-${index}`}>
+              {lines.length > 1 ? `${line.day_no ? `Day ${line.day_no} · ` : ''}${line.service}` : 'Date & time'}
             </label>
             <DateField
-              id={`bk-dt-${i}`}
+              id={`bk-dt-${index}`}
               label="Date & time"
-              value={lineDateTime(i).date}
-              onChange={(v) => setDT(i, 'date', v)}
+              value={lineDateTime(index).date}
+              onChange={(dateValue) => setDT(index, 'date', dateValue)}
               placeholder="Select date"
               withTime
-              time={lineDateTime(i).time}
-              onTimeChange={(v) => setDT(i, 'time', v)}
-              category={categoryOfLine(l)}
-              itemName={l.service}
+              time={lineDateTime(index).time}
+              onTimeChange={(timeValue) => setDT(index, 'time', timeValue)}
+              category={categoryOfLine(line)}
+              itemName={line.service}
             />
-            {dtErr[i] && (
+            {dtErr[index] && (
               <small role="alert" className={FIELD_ERR}>
-                {dtErr[i]}
+                {dtErr[index]}
               </small>
             )}
           </div>

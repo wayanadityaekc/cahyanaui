@@ -16,8 +16,8 @@ export default function Explore() {
         </div>
       </div>
       <div className={GRID_XPLORE}>
-        {CARDS.map((c) => (
-          <HomepageCard key={c.href + c.name} {...c} />
+        {CARDS.map((card) => (
+          <HomepageCard key={card.href + card.name} {...card} />
         ))}
       </div>
       <div className="mt-8 text-right max-[768px]:mt-[1.6rem]">

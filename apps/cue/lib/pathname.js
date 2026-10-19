@@ -1,4 +1,4 @@
 export function normalizePath(pathname) {
-  const p = pathname || '/';
-  return p === '/index.html' || p === '/index' ? '/' : p;
+  const path = pathname || '/';
+  return path === '/index.html' || path === '/index' ? '/' : path;
 }

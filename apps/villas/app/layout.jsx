@@ -16,6 +16,9 @@ import { SavedVillasProvider } from '@/components/providers/SavedVillasProvider'
 import BookingSheet from '@/components/booking/BookingSheet';
 import { BAR_BODY_PAD, IosZoomFix } from '@cahyana/ui';
 
+const ASSET_HASH_LENGTH = 8;
+const CATALOG_FETCH_TIMEOUT_MS = 10000;
+
 const inter = localFont({
   src: '../public/fonts/inter-latin.woff2',
   weight: '300 700',
@@ -25,23 +28,26 @@ const inter = localFont({
   fallback: ['system-ui', 'sans-serif'],
 });
 
-function assetV(...rel) {
+function buildAssetVersion(...rel) {
   return createHash('sha1')
     .update(readFileSync(join(process.cwd(), 'public', ...rel)))
     .digest('hex')
-    .slice(0, 8);
+    .slice(0, ASSET_HASH_LENGTH);
 }
 
 export const metadata = {
   metadataBase: new URL('https://ubudprivatevillas.com'),
   icons: {
     icon: [
-      { url: `/assets/icons/favicon.svg?v=${assetV('assets', 'icons', 'favicon.svg')}`, type: 'image/svg+xml' },
-      { url: `/assets/icons/favicon.ico?v=${assetV('assets', 'icons', 'favicon.ico')}`, sizes: 'any' },
+      {
+        url: `/assets/icons/favicon.svg?v=${buildAssetVersion('assets', 'icons', 'favicon.svg')}`,
+        type: 'image/svg+xml',
+      },
+      { url: `/assets/icons/favicon.ico?v=${buildAssetVersion('assets', 'icons', 'favicon.ico')}`, sizes: 'any' },
     ],
     apple: [
       {
-        url: `/assets/icons/apple-touch-icon.png?v=${assetV('assets', 'icons', 'apple-touch-icon.png')}`,
+        url: `/assets/icons/apple-touch-icon.png?v=${buildAssetVersion('assets', 'icons', 'apple-touch-icon.png')}`,
         sizes: '180x180',
       },
     ],
@@ -51,7 +57,9 @@ export const metadata = {
 
 async function buildFx() {
   try {
-    const response = await fetch(`${API_BASE}/pricing/catalog?currency=USD`, { signal: AbortSignal.timeout(10000) });
+    const response = await fetch(`${API_BASE}/pricing/catalog?currency=USD`, {
+      signal: AbortSignal.timeout(CATALOG_FETCH_TIMEOUT_MS),
+    });
     if (!response.ok) return null;
     const catalog = await response.json();
     return catalog?.fx?.perUsd && catalog.fx.idrPerUsd ? catalog.fx : null;

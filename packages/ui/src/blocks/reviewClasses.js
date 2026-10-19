@@ -1,5 +1,8 @@
 import { BLEED_MOBILE } from './gridClasses.js';
 
+const MAX_STAR_COUNT = 5;
+const RADIX_DECIMAL = 10;
+
 export const REVIEW_SLIDER =
   `max-w-[1200px] mx-auto pb-4 min-[993px]:grid min-[993px]:grid-cols-3 min-[993px]:gap-[1.4rem] min-[993px]:items-stretch ` +
   `max-[992px]:flex max-[992px]:items-stretch max-[992px]:overflow-x-auto max-[992px]:overflow-y-hidden ` +
@@ -28,6 +31,6 @@ export const REVIEW_CARD = {
 };
 
 export function starText(rating) {
-  const n = Math.max(1, Math.min(5, parseInt(rating, 10) || 0));
-  return { n, stars: '★'.repeat(n) + '☆'.repeat(5 - n) };
+  const starCount = Math.max(1, Math.min(MAX_STAR_COUNT, parseInt(rating, RADIX_DECIMAL) || 0));
+  return { n: starCount, stars: '★'.repeat(starCount) + '☆'.repeat(MAX_STAR_COUNT - starCount) };
 }

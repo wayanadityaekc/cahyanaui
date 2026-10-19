@@ -4,12 +4,12 @@ import { useAccount } from '@/state/AccountProvider';
 import { useTripPrefs } from '@/state/TripPrefsProvider';
 import { readLocal } from '@/lib/storage';
 import { KEY, WHATSAPP_NUMBER } from '@/lib/constants';
-import { imageForProgram } from '@/lib/programImages';
+import { findImageForProgram } from '@/lib/programImages';
 import { withSymbol } from '@/components/Price';
 import { BTN_PILL } from '@/components/ui/btnClasses';
 import SignInPrompt from '@/components/account/SignInPrompt';
 import ItemIcon from './ItemIcon';
-import { fmtDay, fmtRange } from './tripDates';
+import { formatDay, formatRange } from './tripDates';
 import {
   MTC_EMPTY,
   MTC_EMPTY_LEAD,
@@ -36,45 +36,55 @@ import {
   MTC_CANCEL_BTN,
 } from './myTripsClasses';
 
+const ICON_STROKE_WIDTH_LIGHT = 1.6;
+
 export default function BookedTrips({ isPast, openRef, setOpenRef, setReview }) {
   const { account, trips, reviewableItems } = useAccount();
   const { currency } = useTripPrefs();
 
-  function bookedMoney(usd, idr) {
+  function formatBookedMoney(usd, idr) {
     return currency === 'IDR'
       ? `Rp${Number(idr || 0).toLocaleString('id-ID')}`
       : `$${Number(usd || 0).toLocaleString('en-US')}`;
   }
 
-  function bookingCard(t, isPast) {
-    const img = imageForProgram(t.name) || imageForProgram((t.lines && t.lines[0] && t.lines[0].service) || '');
-    const status = isPast ? 'Completed' : t.status ? t.status.charAt(0).toUpperCase() + t.status.slice(1) : 'Booked';
-    const open = openRef === t.ref;
-    const items = t.lines || [];
+  function renderBookingCard(trip, isPast) {
+    const image =
+      findImageForProgram(trip.name) ||
+      findImageForProgram((trip.lines && trip.lines[0] && trip.lines[0].service) || '');
+    function pickStatusLabel() {
+      if (isPast) return 'Completed';
+      if (trip.status) return trip.status.charAt(0).toUpperCase() + trip.status.slice(1);
+      return 'Booked';
+    }
+
+    const status = pickStatusLabel();
+    const isOpen = openRef === trip.ref;
+    const items = trip.lines || [];
     return (
-      <div className={MTC_BOOK} key={t.ref}>
+      <div className={MTC_BOOK} key={trip.ref}>
         <div className={MTC_ITEM_BOOKED}>
-          {img ? (
+          {image ? (
             <span
               className={MTC_ITEM_ICON_PHOTO}
-              style={{ backgroundImage: `url(/assets/images/${img})` }}
+              style={{ backgroundImage: `url(/assets/images/${image})` }}
               aria-hidden="true"
             />
           ) : (
             <ItemIcon row={{ kind: 'tour' }} />
           )}
           <div className={MTC_ITEM_BODY}>
-            <p className={MTC_ITEM_TITLE}>{t.name}</p>
+            <p className={MTC_ITEM_TITLE}>{trip.name}</p>
             <p className={MTC_ITEM_DESC}>
-              {status} · {t.guests || '-'} guests
+              {status} · {trip.guests || '-'} guests
             </p>
             <p className={MTC_ITEM_DATE}>
-              {fmtRange(t.start_date, t.end_date)}
-              {t.ref ? ` · ${t.ref}` : ''}
+              {formatRange(trip.start_date, trip.end_date)}
+              {trip.ref ? ` · ${trip.ref}` : ''}
             </p>
           </div>
           <span className={MTC_ITEM_PRICE}>
-            <span className={PRICE}>{withSymbol(bookedMoney(t.price_usd, t.price_idr))}</span>
+            <span className={PRICE}>{withSymbol(formatBookedMoney(trip.price_usd, trip.price_idr))}</span>
           </span>
         </div>
 
@@ -83,26 +93,26 @@ export default function BookedTrips({ isPast, openRef, setOpenRef, setReview }) 
             <button
               type="button"
               className={MTC_DET_TOGGLE}
-              aria-expanded={open ? 'true' : 'false'}
-              onClick={() => setOpenRef(open ? null : t.ref)}
+              aria-expanded={isOpen ? 'true' : 'false'}
+              onClick={() => setOpenRef(isOpen ? null : trip.ref)}
             >
-              {open ? 'Hide details' : `View details (${items.length}${items.length > 1 ? ' items)' : ' item)'}`}
-              <ChevronDown className={MTC_DET_CHEV} strokeWidth={1.6} aria-hidden="true" />
+              {isOpen ? 'Hide details' : `View details (${items.length}${items.length > 1 ? ' items)' : ' item)'}`}
+              <ChevronDown className={MTC_DET_CHEV} strokeWidth={ICON_STROKE_WIDTH_LIGHT} aria-hidden="true" />
             </button>
-            {open && (
+            {isOpen && (
               <ul className={MTC_DET_LIST}>
-                {items.map((l, i) => (
-                  <li className={MTC_DET_LINE} key={i}>
+                {items.map((item, index) => (
+                  <li className={MTC_DET_LINE} key={index}>
                     <span className={MTC_DET_NAME}>
-                      {l.day_no ? `Day ${l.day_no} · ` : ''}
-                      {l.service}
+                      {item.day_no ? `Day ${item.day_no} · ` : ''}
+                      {item.service}
                       <span className={MTC_DET_META}>
-                        {fmtDay(l.date)}
-                        {l.guests ? ` · ${l.guests} pax` : ''}
-                        {l.pickup_time ? ` · ${l.pickup_time}` : ''}
+                        {formatDay(item.date)}
+                        {item.guests ? ` · ${item.guests} pax` : ''}
+                        {item.pickup_time ? ` · ${item.pickup_time}` : ''}
                       </span>
                     </span>
-                    <span className={MTC_DET_AMT}>{withSymbol(bookedMoney(l.price_usd, l.price_idr))}</span>
+                    <span className={MTC_DET_AMT}>{withSymbol(formatBookedMoney(item.price_usd, item.price_idr))}</span>
                   </li>
                 ))}
               </ul>
@@ -115,7 +125,7 @@ export default function BookedTrips({ isPast, openRef, setOpenRef, setReview }) 
             <a
               className={MTC_CANCEL_BTN}
               href={`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(
-                `Hi, I'd like to ask about cancelling or changing my booking${t.ref ? ` (${t.ref})` : ''} - ${t.name || 'my trip'}${t.start_date ? ` on ${fmtRange(t.start_date, t.end_date)}` : ''}.`,
+                `Hi, I'd like to ask about cancelling or changing my booking${trip.ref ? ` (${trip.ref})` : ''} - ${trip.name || 'my trip'}${trip.start_date ? ` on ${formatRange(trip.start_date, trip.end_date)}` : ''}.`,
               )}`}
               target="_blank"
               rel="noopener"
@@ -143,8 +153,8 @@ export default function BookedTrips({ isPast, openRef, setOpenRef, setReview }) 
       </div>
     );
   }
-  const arr = (isPast ? trips.history : trips.upcoming) || [];
-  if (!arr.length) {
+  const tripList = (isPast ? trips.history : trips.upcoming) || [];
+  if (!tripList.length) {
     return (
       <div className={MTC_EMPTY}>
         <p className={MTC_EMPTY_LEAD}>{isPast ? 'No past trips yet.' : 'No booked trips yet.'}</p>
@@ -158,7 +168,7 @@ export default function BookedTrips({ isPast, openRef, setOpenRef, setReview }) 
   }
   return (
     <div>
-      {arr.map((t) => bookingCard(t, isPast))}
+      {tripList.map((trip) => renderBookingCard(trip, isPast))}
       {isPast && reviewableItems.length > 0 && (
         <div className={MTC_REVIEW_BOX}>
           <button

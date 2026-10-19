@@ -1,4 +1,4 @@
-export function detailBlocks(title, { facts, included, excluded }, rest = []) {
+export function buildDetailBlocks(title, { facts, included, excluded }, rest = []) {
   return [
     { type: 'heading', sub: false, html: title },
     { type: 'facts', items: facts },

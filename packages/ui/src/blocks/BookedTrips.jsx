@@ -23,6 +23,9 @@ import {
   TRIP_CANCEL_BTN,
 } from './tripClasses.js';
 
+const ICON_STROKE_WIDTH_REGULAR = 1.7;
+const ICON_STROKE_WIDTH_THIN = 1.6;
+
 const STATUS = { new: 'New', paid: 'Paid', pending: 'Pending', confirmed: 'Confirmed', mismatch: 'Mismatch' };
 
 const COPY = {
@@ -54,20 +57,20 @@ export default function BookedTrips({
   cancelHref = () => '#',
   copy = {},
 }) {
-  const t = { ...COPY, ...copy };
+  const mergedCopy = { ...COPY, ...copy };
   if (!signedIn) return signIn;
   if (!trips) {
     return (
       <div className={TRIP_EMPTY}>
-        <p className={TRIP_EMPTY_SUB}>{t.loading}</p>
+        <p className={TRIP_EMPTY_SUB}>{mergedCopy.loading}</p>
       </div>
     );
   }
   if (!trips.length) {
     return (
       <div className={TRIP_EMPTY}>
-        <p className={TRIP_EMPTY_LEAD}>{past ? t.emptyPastLead : t.emptyBookedLead}</p>
-        <p className={TRIP_EMPTY_SUB}>{past ? t.emptyPastSub : t.emptyBookedSub}</p>
+        <p className={TRIP_EMPTY_LEAD}>{past ? mergedCopy.emptyPastLead : mergedCopy.emptyBookedLead}</p>
+        <p className={TRIP_EMPTY_SUB}>{past ? mergedCopy.emptyPastSub : mergedCopy.emptyBookedSub}</p>
       </div>
     );
   }
@@ -76,12 +79,14 @@ export default function BookedTrips({
       {trips.map((trip) => {
         const image = imageFor(trip);
         const lines = trip.lines || [];
-        const open = openRef === trip.ref;
-        const status = past
-          ? t.completed
-          : trip.status
-            ? STATUS[trip.status] || trip.status.charAt(0).toUpperCase() + trip.status.slice(1)
-            : t.booked;
+        const isOpen = openRef === trip.ref;
+        function pickStatusLabel() {
+          if (past) return mergedCopy.completed;
+          if (trip.status) return STATUS[trip.status] || trip.status.charAt(0).toUpperCase() + trip.status.slice(1);
+          return mergedCopy.booked;
+        }
+
+        const status = pickStatusLabel();
         return (
           <div className={TRIP_CARD} key={trip.ref}>
             <div className={TRIP_HEAD}>
@@ -90,12 +95,12 @@ export default function BookedTrips({
                 style={image ? { backgroundImage: `url(${image})` } : undefined}
                 aria-hidden="true"
               >
-                {!image && <CalendarCheck strokeWidth={1.7} />}
+                {!image && <CalendarCheck strokeWidth={ICON_STROKE_WIDTH_REGULAR} />}
               </span>
               <div className={TRIP_BODY}>
                 <p className={TRIP_TITLE}>{trip.name}</p>
                 <p className={TRIP_DESC}>
-                  {status} · {t.guests(trip.guests || '-')}
+                  {status} · {mergedCopy.guests(trip.guests || '-')}
                 </p>
                 <p className={TRIP_DATE}>
                   {range(trip.start_date, trip.end_date)}
@@ -110,13 +115,13 @@ export default function BookedTrips({
                 <button
                   type="button"
                   className={TRIP_DET_TOGGLE}
-                  aria-expanded={open ? 'true' : 'false'}
-                  onClick={() => onToggle(open ? null : trip.ref)}
+                  aria-expanded={isOpen ? 'true' : 'false'}
+                  onClick={() => onToggle(isOpen ? null : trip.ref)}
                 >
-                  {open ? t.hide : t.view(lines.length)}
-                  <ChevronDown className={TRIP_DET_CHEV} strokeWidth={1.6} aria-hidden="true" />
+                  {isOpen ? mergedCopy.hide : mergedCopy.view(lines.length)}
+                  <ChevronDown className={TRIP_DET_CHEV} strokeWidth={ICON_STROKE_WIDTH_THIN} aria-hidden="true" />
                 </button>
-                {open && (
+                {isOpen && (
                   <ul className={TRIP_DET_LIST}>
                     {lines.map((line, index) => (
                       <li className={TRIP_DET_LINE} key={index}>
@@ -124,7 +129,7 @@ export default function BookedTrips({
                           {line.service}
                           <span className={TRIP_DET_META}>
                             {lineDate(line.date)}
-                            {line.guests ? ` · ${t.pax(line.guests)}` : ''}
+                            {line.guests ? ` · ${mergedCopy.pax(line.guests)}` : ''}
                             {line.pickup_time ? ` · ${line.pickup_time}` : ''}
                           </span>
                         </span>
@@ -139,7 +144,7 @@ export default function BookedTrips({
             {!past && (
               <div className={TRIP_CANCEL_BOX}>
                 <a className={TRIP_CANCEL_BTN} href={cancelHref(trip)} target="_blank" rel="noopener">
-                  {t.contact}
+                  {mergedCopy.contact}
                 </a>
               </div>
             )}

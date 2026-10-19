@@ -5,89 +5,95 @@ import { useAccount } from './AccountProvider';
 import { readLocalJSON, writeLocal, removeLocal } from '@/lib/storage';
 import { KEY } from '@/lib/constants';
 
+const MINUTES_PER_HOUR = 60;
+const SECONDS_PER_MINUTE = 60;
+const MILLISECONDS_PER_SECOND = 1000;
+
 const BookingContext = createContext(null);
 
-const RESUME_MS = 60 * 60 * 1000;
+const RESUME_MS = MINUTES_PER_HOUR * SECONDS_PER_MINUTE * MILLISECONDS_PER_SECOND;
 
-function here() {
+function readPathname() {
   return window.location.pathname;
 }
 function readMarker() {
-  const m = readLocalJSON(KEY.resumeBook, null);
-  return m && m.path && Date.now() - (m.at || 0) < RESUME_MS ? m : null;
+  const marker = readLocalJSON(KEY.resumeBook, null);
+  return marker && marker.path && Date.now() - (marker.at || 0) < RESUME_MS ? marker : null;
 }
 
 export function BookingProvider({ children }) {
   const { account, hydrated, justSignedIn } = useAccount();
-  const [ctx, setCtx] = useState(null);
-  const [gate, setGate] = useState(false);
+  const [bookingContext, setBookingContext] = useState(null);
+  const [isGateOpen, setIsGateOpen] = useState(false);
   const held = useRef(null);
 
   const openBooking = useCallback(
-    (opts) => {
-      if (!opts) {
-        setCtx(null);
+    (options) => {
+      if (!options) {
+        setBookingContext(null);
         return;
       }
       if (hydrated && account) {
-        setCtx(opts);
+        setBookingContext(options);
         return;
       }
-      held.current = opts;
+      held.current = options;
       if (!hydrated) return;
-      writeLocal(KEY.resumeBook, { path: here(), at: Date.now() });
-      setGate(true);
+      writeLocal(KEY.resumeBook, { path: readPathname(), at: Date.now() });
+      setIsGateOpen(true);
     },
     [account, hydrated],
   );
 
-  const closeBooking = useCallback(() => setCtx(null), []);
+  const closeBooking = useCallback(() => setBookingContext(null), []);
 
   const cancelGate = useCallback(() => {
-    setGate(false);
+    setIsGateOpen(false);
     held.current = null;
   }, []);
 
   useEffect(() => {
     if (!hydrated || !held.current) return;
     if (account) {
-      const opts = held.current;
+      const options = held.current;
       held.current = null;
       removeLocal(KEY.resumeBook);
-      setGate(false);
-      setCtx(opts);
-    } else if (!gate) {
-      writeLocal(KEY.resumeBook, { path: here(), at: Date.now() });
-      setGate(true);
+      setIsGateOpen(false);
+      setBookingContext(options);
+    } else if (!isGateOpen) {
+      writeLocal(KEY.resumeBook, { path: readPathname(), at: Date.now() });
+      setIsGateOpen(true);
     }
-  }, [account, hydrated, gate]);
+  }, [account, hydrated, isGateOpen]);
 
   useEffect(() => {
-    if (!hydrated || !account || !justSignedIn) return;
-    const m = readMarker();
-    if (m && m.path !== here()) window.location.replace(m.path);
+    const shouldSkipSignInPrompt = !hydrated || !account || !justSignedIn;
+    if (shouldSkipSignInPrompt) return;
+    const marker = readMarker();
+    if (marker && marker.path !== readPathname()) window.location.replace(marker.path);
   }, [hydrated, account, justSignedIn]);
 
   return (
-    <BookingContext.Provider value={{ ctx, openBooking, closeBooking, gate, cancelGate }}>
+    <BookingContext.Provider value={{ ctx: bookingContext, openBooking, closeBooking, gate: isGateOpen, cancelGate }}>
       {children}
     </BookingContext.Provider>
   );
 }
 
 export function useBooking() {
-  const c = useContext(BookingContext);
-  if (!c) throw new Error('useBooking must be used inside BookingProvider');
-  return c;
+  const bookingContext = useContext(BookingContext);
+  if (!bookingContext) throw new Error('useBooking must be used inside BookingProvider');
+  return bookingContext;
 }
 
 export function useResumeBooking(ready, run) {
   const { account, hydrated } = useAccount();
   const done = useRef(false);
   useEffect(() => {
-    if (done.current || !hydrated || !account || !ready) return;
-    const m = readMarker();
-    if (!m || m.path !== here()) return;
+    const shouldSkipAutoOpen = done.current || !hydrated || !account || !ready;
+    if (shouldSkipAutoOpen) return;
+    const marker = readMarker();
+    if (!marker || marker.path !== readPathname()) return;
     done.current = true;
     removeLocal(KEY.resumeBook);
     run();

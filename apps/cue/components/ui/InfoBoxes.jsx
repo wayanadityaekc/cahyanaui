@@ -18,18 +18,24 @@ const ROWS_RULED =
   '[&_li]:[border-bottom:1px_solid_var(--line)] [&_li:last-child]:[border-bottom:none] ' + '[&_li:last-child]:pb-0';
 
 export function InfoBoxList({ items, variant, render }) {
-  const ruled = variant === 'yes' || variant === 'no';
+  const isRuled = variant === 'yes' || variant === 'no';
   return (
-    <ul className={`${ROWS_BASE} ${ruled ? `${ROWS_RULED} ` : ''}${variant === 'no' ? 'text-muted' : 'text-ink'}`}>
-      {items.map((item, i) => (
-        <li key={i}>{render ? render(item) : item}</li>
+    <ul className={`${ROWS_BASE} ${isRuled ? `${ROWS_RULED} ` : ''}${variant === 'no' ? 'text-muted' : 'text-ink'}`}>
+      {items.map((item, index) => (
+        <li key={index}>{render ? render(item) : item}</li>
       ))}
     </ul>
   );
 }
 
 export function InfoBox({ title, variant, children }) {
-  const cls = variant === 'no' ? BOX_NO : variant === 'yes' ? BOX_FRAMED : BOX_TEXT;
+  function pickBoxClasses() {
+    if (variant === 'no') return BOX_NO;
+    if (variant === 'yes') return BOX_FRAMED;
+    return BOX_TEXT;
+  }
+
+  const cls = pickBoxClasses();
   return (
     <div className={cls}>
       {title && <h3 className={BOX_TITLE}>{title}</h3>}

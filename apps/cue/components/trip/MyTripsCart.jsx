@@ -1,5 +1,5 @@
 'use client';
-import { fmtTime } from '@/content/shared/timeSlots';
+import { formatTime } from '@/content/shared/timeSlots';
 import PayWaiting from '@/components/booking/PayWaiting';
 
 import { useMemo, useState, useRef } from 'react';
@@ -15,14 +15,14 @@ import ReviewModal from '@/components/reviews/ReviewModal';
 import AddItemPicker from './AddItemPicker';
 import DatePopup from '@/components/booking/DatePopup';
 import { removeRow, setRowDate } from '@/lib/cart';
-import { cartRows } from '@/lib/cartRows';
+import { buildCartRows } from '@/lib/cartRows';
 import { usePricing } from '@/state/PricingProvider';
 import RailLayout from '@/components/ui/RailLayout';
-import { crumbsFor } from '@/lib/crumbs';
+import { buildCrumbs } from '@/lib/crumbs';
 import CartPanel from './CartPanel';
 import BookedTrips from './BookedTrips';
 import { usePaymentReturn, useReviewLink } from './useMyTripsLinks';
-import { fmtDay } from './tripDates';
+import { formatDay } from './tripDates';
 
 export default function MyTripsCart() {
   const { state, save, hydrated } = useItinerary();
@@ -33,23 +33,23 @@ export default function MyTripsCart() {
   const checkoutRef = useRef(null);
   const pricing = usePricing();
 
-  const { returnRef, clearReturn } = usePaymentReturn();
+  const { returnRef, clearReturn: handleReturnClear } = usePaymentReturn();
 
   const [review, setReview] = useState(null);
-  const [adding, setAdding] = useState(false);
+  const [isAdding, setIsAdding] = useState(false);
   const [editDate, setEditDate] = useState(null);
   const [tab, setTab] = useState('custom');
-  const [reading, setReading] = useState(true);
+  const [isReading, setIsReading] = useState(true);
   const [openRef, setOpenRef] = useState(null);
 
-  useReviewLink({ trips, reviewableItems, account, setTab, setReading, setReview });
+  useReviewLink({ trips, reviewableItems, account, setTab, setReading: setIsReading, setReview });
 
-  const rows = useMemo(() => cartRows(state, displayGuests), [state, displayGuests]);
+  const rows = useMemo(() => buildCartRows(state, displayGuests), [state, displayGuests]);
 
-  function categoryOfRow({ kind, service }) {
+  function findRowCategory({ kind, service }) {
     if (kind !== 'day') return kind;
-    const c = pricing && pricing.catalog && pricing.catalog.items.find((i) => i.name === service);
-    return c ? c.category : null;
+    const catalogItem = pricing && pricing.catalog && pricing.catalog.items.find((item) => item.name === service);
+    return catalogItem ? catalogItem.category : null;
   }
 
   const priced = useQuote({
@@ -68,17 +68,17 @@ export default function MyTripsCart() {
 
   if (!hydrated) return <div data-mytrips-cart />;
 
-  const undated = rows.some((row) => !row.date);
+  const hasUndatedRow = rows.some((row) => !row.date);
   const totalText = priced ? format(priced.total.display) : '-';
 
   function remove(row) {
     save(removeRow(state, row));
   }
 
-  function checkout() {
-    if (!rows.length || undated) return;
+  function handleCheckout() {
+    if (!rows.length || hasUndatedRow) return;
     const parts = [];
-    const dayCount = new Set(rows.filter((row) => row.kind === 'day').map((r) => r.day_no)).size;
+    const dayCount = new Set(rows.filter((row) => row.kind === 'day').map((row) => row.day_no)).size;
     const transferCount = rows.filter((row) => row.kind === 'transfer').length;
     const charterCount = rows.filter((row) => row.kind === 'charter').length;
     if (dayCount) parts.push(`${dayCount} day${dayCount > 1 ? 's' : ''}`);
@@ -94,13 +94,13 @@ export default function MyTripsCart() {
       detailsTitle: 'Trip details',
       detailLines: rows.map(
         (row) =>
-          `${row.day_no ? `Day ${row.day_no} · ` : ''}${fmtDay(row.date)}${row.time ? ` · ${fmtTime(row.time)}` : ''} · ${row.service}`,
+          `${row.day_no ? `Day ${row.day_no} · ` : ''}${formatDay(row.date)}${row.time ? ` · ${formatTime(row.time)}` : ''} · ${row.service}`,
       ),
       lines: rows,
       onSuccess: () => save({ days: [], transfers: [], charters: [] }),
     });
   }
-  checkoutRef.current = checkout;
+  checkoutRef.current = handleCheckout;
 
   const TABS = [
     { id: 'custom', label: 'My Trip', Icon: ShoppingBag },
@@ -111,7 +111,7 @@ export default function MyTripsCart() {
   const payReturn = returnRef ? (
     <PayWaiting
       bookingRef={returnRef}
-      onClose={clearReturn}
+      onClose={handleReturnClear}
       onConfirmed={() => save({ days: [], transfers: [], charters: [] })}
     />
   ) : null;
@@ -126,12 +126,12 @@ export default function MyTripsCart() {
           active={tab}
           onSelect={(id) => {
             setTab(id);
-            setReading(true);
+            setIsReading(true);
           }}
-          reading={reading}
-          onBack={() => setReading(false)}
+          reading={isReading}
+          onBack={() => setIsReading(false)}
           collapsible
-          breadcrumb={crumbsFor('my-trips')}
+          breadcrumb={buildCrumbs('my-trips')}
           scrollContent
         >
           {tab === 'custom' && (
@@ -140,11 +140,11 @@ export default function MyTripsCart() {
               priced={priced}
               format={format}
               totalText={totalText}
-              undated={undated}
-              setAdding={setAdding}
+              undated={hasUndatedRow}
+              setAdding={setIsAdding}
               setEditDate={setEditDate}
               remove={remove}
-              checkout={checkout}
+              checkout={handleCheckout}
             />
           )}
 
@@ -162,7 +162,7 @@ export default function MyTripsCart() {
 
         <ReviewModal open={!!review} prefill={review} onClose={() => setReview(null)} />
 
-        <AddItemPicker open={adding} onClose={() => setAdding(false)} />
+        <AddItemPicker open={isAdding} onClose={() => setIsAdding(false)} />
 
         <DatePopup
           open={!!editDate}
@@ -176,7 +176,7 @@ export default function MyTripsCart() {
           onClose={() => setEditDate(null)}
           withTime
           initialTime={editDate ? editDate.row.time || '' : ''}
-          category={editDate ? categoryOfRow(editDate.row) : null}
+          category={editDate ? findRowCategory(editDate.row) : null}
           itemName={editDate ? editDate.row.service : null}
         />
       </div>

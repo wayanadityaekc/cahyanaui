@@ -13,6 +13,9 @@ import LiveRegion from '@/components/ui/LiveRegion';
 import { withSymbol } from '@/components/Price';
 import { useTransferRoute } from '@/components/sections/TransferRouteProvider';
 
+const RETURN_TRIP_DISCOUNT_FACTOR = 0.9;
+const TOAST_DURATION_MS = 2600;
+
 const UBUD = 'Ubud';
 
 export default function TransferPicker() {
@@ -24,26 +27,44 @@ export default function TransferPicker() {
   const catalog = pricing && pricing.catalog;
   const areas = useMemo(() => {
     if (!catalog) return [];
-    return catalog.transfers.map((t) => ({ route: t.route, area: t.route.replace(/\s*–\s*Ubud$/, '') }));
+    return catalog.transfers.map((transfer) => ({
+      route: transfer.route,
+      area: transfer.route.replace(/\s*–\s*Ubud$/, ''),
+    }));
   }, [catalog]);
 
-  const { from, to, pickFrom, pickTo, pickerRef } = useTransferRoute();
+  const { from, to, pickFrom: handleFromPick, pickTo: handleToPick, pickerRef } = useTransferRoute();
   const [isReturn, setIsReturn] = useState(false);
 
-  const area = from === UBUD ? to : to === UBUD ? from : '';
+  function pickOtherPlace() {
+    if (from === UBUD) return to;
+    if (to === UBUD) return from;
+    return '';
+  }
+
+  const area = pickOtherPlace();
   const routeName = area && area !== UBUD ? `${area} – Ubud` : '';
-  const entry = catalog && routeName ? catalog.transfers.find((t) => t.route === routeName) : null;
+  const entry = catalog && routeName ? catalog.transfers.find((transfer) => transfer.route === routeName) : null;
 
   const symbol = (catalog && catalog.symbol) || '$';
   const base = entry ? entry.display : null;
-  const amount = base == null ? null : isReturn ? Math.round(base * 2 * 0.9) : base;
+  function calculateTransferAmount() {
+    if (base == null) return null;
+    if (isReturn) return Math.round(base * 2 * RETURN_TRIP_DISCOUNT_FACTOR);
+    return base;
+  }
+
+  const amount = calculateTransferAmount();
   const priceText = amount == null ? '—' : symbol + amount.toLocaleString(currency === 'IDR' ? 'id-ID' : 'en-US');
 
-  const options = [{ value: UBUD, label: 'Ubud' }, ...areas.map((a) => ({ value: a.area, label: a.area }))];
+  const options = [
+    { value: UBUD, label: 'Ubud' },
+    ...areas.map((areaItem) => ({ value: areaItem.area, label: areaItem.area })),
+  ];
 
-  function swap() {
-    pickFrom(to);
-    pickTo(from);
+  function handleRouteSwap() {
+    handleFromPick(to);
+    handleToPick(from);
   }
 
   function addToTrip(goto) {
@@ -58,7 +79,7 @@ export default function TransferPicker() {
     if (goto) window.location.href = '/my-trips.html';
     else {
       setToast('Added to My Trips');
-      setTimeout(() => setToast(''), 2600);
+      setTimeout(() => setToast(''), TOAST_DURATION_MS);
     }
   }
 
@@ -70,13 +91,20 @@ export default function TransferPicker() {
           <label className={FIELD_LABEL} htmlFor="tp-from">
             From
           </label>
-          <Select id="tp-from" label="From" value={from} onChange={pickFrom} options={options} placeholder="Select" />
+          <Select
+            id="tp-from"
+            label="From"
+            value={from}
+            onChange={handleFromPick}
+            options={options}
+            placeholder="Select"
+          />
         </div>
         <button
           type="button"
           className="inline-flex items-center justify-center w-[var(--btn-h)] h-[var(--btn-h)] rounded-sm border border-line bg-white text-gold-d text-small leading-none mb-[0.15rem] cursor-pointer [@media(max-width:600px)]:justify-self-center [@media(max-width:600px)]:[transform:rotate(90deg)]"
           aria-label="Swap direction"
-          onClick={swap}
+          onClick={handleRouteSwap}
         >
           &#8646;
         </button>
@@ -84,7 +112,7 @@ export default function TransferPicker() {
           <label className={FIELD_LABEL} htmlFor="tp-to">
             To
           </label>
-          <Select id="tp-to" label="To" value={to} onChange={pickTo} options={options} placeholder="Select" />
+          <Select id="tp-to" label="To" value={to} onChange={handleToPick} options={options} placeholder="Select" />
         </div>
       </div>
 
@@ -106,7 +134,7 @@ export default function TransferPicker() {
           type="checkbox"
           className="peer absolute opacity-0 w-0 h-0"
           checked={isReturn}
-          onChange={(e) => setIsReturn(e.target.checked)}
+          onChange={(event) => setIsReturn(event.target.checked)}
         />
         <span className="w-10 h-[23px] rounded-pill bg-line relative shrink-0 transition-[background] duration-200 peer-checked:bg-gold after:content-[''] after:absolute after:top-[3px] after:left-[3px] after:w-[17px] after:h-[17px] after:rounded-[50%] after:bg-white after:transition-[left] after:duration-200 peer-checked:after:left-[20px]" />
         <span>

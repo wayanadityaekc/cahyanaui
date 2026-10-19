@@ -16,24 +16,24 @@ function copyDir(from, to) {
   fs.cpSync(from, to, { recursive: true });
 }
 
-for (const d of ['app', 'components', 'lib', 'content']) {
-  copyDir(path.join(APP, d), path.join(DEST, d));
+for (const directoryName of ['app', 'components', 'lib', 'content']) {
+  copyDir(path.join(APP, directoryName), path.join(DEST, directoryName));
 }
 
 function mergeDir(from, to) {
   if (!fs.existsSync(from)) return;
   fs.mkdirSync(to, { recursive: true });
-  for (const e of fs.readdirSync(from, { withFileTypes: true })) {
-    const src = path.join(from, e.name);
-    const dst = path.join(to, e.name);
-    if (e.isDirectory()) mergeDir(src, dst);
-    else fs.copyFileSync(src, dst);
+  for (const entry of fs.readdirSync(from, { withFileTypes: true })) {
+    const src = path.join(from, entry.name);
+    const destination = path.join(to, entry.name);
+    if (entry.isDirectory()) mergeDir(src, destination);
+    else fs.copyFileSync(src, destination);
   }
 }
 mergeDir(path.join(APP, 'public'), path.join(DEST, 'public'));
-for (const f of ['next.config.js', 'jsconfig.json', 'postcss.config.mjs']) {
-  const src = path.join(APP, f);
-  if (fs.existsSync(src)) fs.copyFileSync(src, path.join(DEST, f));
+for (const fileName of ['next.config.js', 'jsconfig.json', 'postcss.config.mjs']) {
+  const src = path.join(APP, fileName);
+  if (fs.existsSync(src)) fs.copyFileSync(src, path.join(DEST, fileName));
 }
 
 copyDir(path.join(HERE, 'packages', 'ui'), path.join(DEST, 'packages', 'ui'));

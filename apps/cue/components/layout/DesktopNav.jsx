@@ -4,6 +4,8 @@ import { useEffect, useId, useRef, useState } from 'react';
 import { ChevronDown } from 'lucide-react';
 import { PopMenu } from '@/components/ui/Reveal';
 
+const ICON_STROKE_WIDTH_MEDIUM = 1.8;
+
 export const PROGRAM_LINKS = [
   ['/tour.html', 'Tours'],
   ['/destinations.html', 'Destinations'],
@@ -22,30 +24,29 @@ function LINK(active) {
 }
 
 export default function DesktopNav({ isActive }) {
-  const [open, setOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
   const boxRef = useRef(null);
   const btnRef = useRef(null);
   const panelId = useId();
-  const programActive = PROGRAM_LINKS.some(([h]) => isActive(h));
+  const isProgramActive = PROGRAM_LINKS.some(([href]) => isActive(href));
 
   useEffect(() => {
-    if (!open) return undefined;
-    function onDoc(e) {
-      if (boxRef.current && !boxRef.current.contains(e.target)) setOpen(false);
+    if (!isOpen) return undefined;
+    function handleDocumentClick(event) {
+      if (boxRef.current && !boxRef.current.contains(event.target)) setIsOpen(false);
     }
-    function onKey(e) {
-      if (e.key === 'Escape') {
-        setOpen(false);
-        btnRef.current?.focus();
-      }
+    function handleKeyDown(event) {
+      if (event.key !== 'Escape') return;
+      setIsOpen(false);
+      btnRef.current?.focus();
     }
-    document.addEventListener('click', onDoc);
-    document.addEventListener('keydown', onKey);
+    document.addEventListener('click', handleDocumentClick);
+    document.addEventListener('keydown', handleKeyDown);
     return () => {
-      document.removeEventListener('click', onDoc);
-      document.removeEventListener('keydown', onKey);
+      document.removeEventListener('click', handleDocumentClick);
+      document.removeEventListener('keydown', handleKeyDown);
     };
-  }, [open]);
+  }, [isOpen]);
 
   return (
     <ul className="max-[992px]:hidden flex items-center gap-1 list-none m-0 p-0 mr-auto ml-2" data-desktop-nav>
@@ -54,23 +55,23 @@ export default function DesktopNav({ isActive }) {
           Home
         </a>
       </li>
-      <li className="relative" ref={boxRef} onMouseEnter={() => setOpen(true)} onMouseLeave={() => setOpen(false)}>
+      <li className="relative" ref={boxRef} onMouseEnter={() => setIsOpen(true)} onMouseLeave={() => setIsOpen(false)}>
         <button
           type="button"
           ref={btnRef}
-          aria-expanded={open}
+          aria-expanded={isOpen}
           aria-controls={panelId}
-          className={LINK(programActive)}
-          onClick={() => setOpen((v) => !v)}
+          className={LINK(isProgramActive)}
+          onClick={() => setIsOpen((wasOpen) => !wasOpen)}
         >
           Program
           <ChevronDown
-            className={`w-[var(--icon-sm)] h-[var(--icon-sm)] transition-[rotate] duration-200 ${open ? 'rotate-180' : ''}`}
-            strokeWidth={1.8}
+            className={`w-[var(--icon-sm)] h-[var(--icon-sm)] transition-[rotate] duration-200 ${isOpen ? 'rotate-180' : ''}`}
+            strokeWidth={ICON_STROKE_WIDTH_MEDIUM}
             aria-hidden="true"
           />
         </button>
-        <PopMenu open={open}>
+        <PopMenu open={isOpen}>
           <div className="absolute left-0 top-full pt-[var(--space-1)] z-[130]">
             <ul
               id={panelId}

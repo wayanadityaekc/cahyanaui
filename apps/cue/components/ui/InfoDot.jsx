@@ -4,6 +4,8 @@ import { useEffect, useRef, useState } from 'react';
 import { Info } from 'lucide-react';
 import { PopMenu } from '@/components/ui/Reveal';
 
+const ICON_STROKE_WIDTH_REGULAR = 1.7;
+
 const BTN =
   'shrink-0 flex items-center p-0 bg-transparent border-none cursor-pointer text-muted ' +
   '[transition:color_var(--dur)_var(--ease),opacity_var(--dur)_var(--ease),scale_var(--dur-fast)_var(--ease)] hover:text-gold';
@@ -27,24 +29,24 @@ const FADE = {
 
 export default function InfoDot({ label = 'More information', align = 'start', subtle = false, children }) {
   const tone = subtle ? 'subtle' : 'normal';
-  const [open, setOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
   const ref = useRef(null);
 
   useEffect(() => {
-    if (!open) return undefined;
-    function onDown(e) {
-      if (!ref.current?.contains(e.target)) setOpen(false);
+    if (!isOpen) return undefined;
+    function handlePointerDown(event) {
+      if (!ref.current?.contains(event.target)) setIsOpen(false);
     }
-    function onKey(e) {
-      if (e.key === 'Escape') setOpen(false);
+    function handleKeyDown(event) {
+      if (event.key === 'Escape') setIsOpen(false);
     }
-    document.addEventListener('pointerdown', onDown);
-    document.addEventListener('keydown', onKey);
+    document.addEventListener('pointerdown', handlePointerDown);
+    document.addEventListener('keydown', handleKeyDown);
     return () => {
-      document.removeEventListener('pointerdown', onDown);
-      document.removeEventListener('keydown', onKey);
+      document.removeEventListener('pointerdown', handlePointerDown);
+      document.removeEventListener('keydown', handleKeyDown);
     };
-  }, [open]);
+  }, [isOpen]);
 
   return (
     <span className="relative flex" ref={ref}>
@@ -52,14 +54,14 @@ export default function InfoDot({ label = 'More information', align = 'start', s
         type="button"
         data-infodot
         aria-haspopup="true"
-        aria-expanded={open}
+        aria-expanded={isOpen}
         aria-label={label}
         className={BTN + FADE[tone]}
-        onClick={() => setOpen((v) => !v)}
+        onClick={() => setIsOpen((wasOpen) => !wasOpen)}
       >
-        <Info strokeWidth={1.7} className={ICON[tone]} aria-hidden="true" />
+        <Info strokeWidth={ICON_STROKE_WIDTH_REGULAR} className={ICON[tone]} aria-hidden="true" />
       </button>
-      <PopMenu open={open}>
+      <PopMenu open={isOpen}>
         <span className={`${PANEL_BASE} ${PANEL_ALIGN[align] || PANEL_ALIGN.start}`} role="note">
           {children}
         </span>

@@ -32,6 +32,8 @@ import {
   BK_NATIVE,
 } from './controlClasses.js';
 
+const ICON_STROKE_WIDTH_BOLD = 1.8;
+
 const DOW = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
 const MONTHS = [
   'January',
@@ -48,15 +50,15 @@ const MONTHS = [
   'December',
 ];
 
-function iso(d) {
-  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+function formatIsoDate(date) {
+  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
 }
 
-function fmtLabel(v) {
-  if (!v) return '';
-  const [y, m, d] = v.split('-').map(Number);
-  const dt = new Date(y, m - 1, d);
-  return dt.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+function formatDateLabel(isoDate) {
+  if (!isoDate) return '';
+  const [year, month, day] = isoDate.split('-').map(Number);
+  const labelDate = new Date(year, month - 1, day);
+  return labelDate.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
 }
 
 export default function DateField({
@@ -71,38 +73,48 @@ export default function DateField({
   icon = null,
   hint = '',
 }) {
-  const rich = !!(icon || hint);
-  const [open, setOpen] = useState(false);
-  const [mounted, setMounted] = useState(false);
+  const hasIconOrHint = !!(icon || hint);
+  const [isOpen, setIsOpen] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
   const [cursor, setCursor] = useState(() => {
-    const base = value ? new Date(value) : min ? new Date(min) : new Date();
+    function pickCalendarDate() {
+      if (value) return new Date(value);
+      if (min) return new Date(min);
+      return new Date();
+    }
+
+    const base = pickCalendarDate();
     return new Date(base.getFullYear(), base.getMonth(), 1);
   });
 
-  useEffect(() => setMounted(true), []);
+  useEffect(() => setIsMounted(true), []);
   useEffect(() => {
-    if (!open) return;
-    function onKey(e) {
-      return e.key === 'Escape' && setOpen(false);
+    if (!isOpen) return;
+    function handleEscapeKeyDown(event) {
+      return event.key === 'Escape' && setIsOpen(false);
     }
-    document.addEventListener('keydown', onKey);
-    return () => document.removeEventListener('keydown', onKey);
-  }, [open]);
+    document.addEventListener('keydown', handleEscapeKeyDown);
+    return () => document.removeEventListener('keydown', handleEscapeKeyDown);
+  }, [isOpen]);
 
-  const minDate = min || iso(new Date());
+  const minDate = min || formatIsoDate(new Date());
   const first = new Date(cursor.getFullYear(), cursor.getMonth(), 1);
   const daysInMonth = new Date(cursor.getFullYear(), cursor.getMonth() + 1, 0).getDate();
   const lead = first.getDay();
 
-  const cells = [];
-  for (let i = 0; i < lead; i++) cells.push(null);
-  for (let d = 1; d <= daysInMonth; d++) cells.push(new Date(cursor.getFullYear(), cursor.getMonth(), d));
+  const cells = [
+    ...Array.from({ length: lead }, () => null),
+    ...Array.from(
+      { length: daysInMonth },
+      (_, dayIndex) => new Date(cursor.getFullYear(), cursor.getMonth(), dayIndex + 1),
+    ),
+  ];
 
   const panel = (
-    <div className={panelBookdate(open)}>
+    <div className={panelBookdate(isOpen)}>
       <div className={PANEL_HEAD_BOOKDATE}>
         <h3 className={PANEL_HEAD_H3}>{label}</h3>
-        <button type="button" className={PANEL_CLOSE} aria-label="Close" onClick={() => setOpen(false)}>
+        <button type="button" className={PANEL_CLOSE} aria-label="Close" onClick={() => setIsOpen(false)}>
           &times;
         </button>
       </div>
@@ -130,25 +142,25 @@ export default function DateField({
             </button>
           </div>
           <div className={CAL_GRID}>
-            {DOW.map((d) => (
-              <span className={CAL_DOW} key={d}>
-                {d}
+            {DOW.map((weekday) => (
+              <span className={CAL_DOW} key={weekday}>
+                {weekday}
               </span>
             ))}
-            {cells.map((cell, i) => {
-              if (!cell) return <span className={calDay(true)} key={`e${i}`} />;
-              const v = iso(cell);
-              const disabled = v < minDate || (max ? v > max : false);
+            {cells.map((cell, index) => {
+              if (!cell) return <span className={calDay(true)} key={`e${index}`} />;
+              const isoDate = formatIsoDate(cell);
+              const disabled = isoDate < minDate || (max ? isoDate > max : false);
               return (
                 <button
                   type="button"
-                  key={v}
-                  className={calDay(disabled, v === value)}
-                  aria-pressed={v === value}
+                  key={isoDate}
+                  className={calDay(disabled, isoDate === value)}
+                  aria-pressed={isoDate === value}
                   disabled={disabled}
                   onClick={() => {
-                    onChange(v);
-                    setOpen(false);
+                    onChange(isoDate);
+                    setIsOpen(false);
                   }}
                 >
                   {cell.getDate()}
@@ -171,42 +183,42 @@ export default function DateField({
         value={value || ''}
         min={minDate}
         max={max || undefined}
-        onChange={(e) => onChange(e.target.value)}
+        onChange={(event) => onChange(event.target.value)}
         tabIndex={-1}
         aria-hidden="true"
       />
       <button
         type="button"
-        className={rich ? CONTROL_RICH : CONTROL}
+        className={hasIconOrHint ? CONTROL_RICH : CONTROL}
         aria-haspopup="dialog"
-        aria-expanded={open}
-        onClick={() => setOpen(true)}
+        aria-expanded={isOpen}
+        onClick={() => setIsOpen(true)}
       >
         {icon && (
           <span className={CONTROL_IC} aria-hidden="true">
             {icon}
           </span>
         )}
-        {rich ? (
+        {hasIconOrHint ? (
           <span className={CONTROL_STACK}>
             {hint && <span className={CONTROL_HINT}>{hint}</span>}
             <span className={!value ? CONTROL_VAL_RICH_PLACEHOLDER : CONTROL_VAL_RICH}>
-              {value ? fmtLabel(value) : placeholder}
+              {value ? formatDateLabel(value) : placeholder}
             </span>
           </span>
         ) : (
           <span className={!value ? CONTROL_VAL_PLACEHOLDER : CONTROL_VAL}>
-            {value ? fmtLabel(value) : placeholder}
+            {value ? formatDateLabel(value) : placeholder}
           </span>
         )}
-        {rich ? (
+        {hasIconOrHint ? (
           <ChevronDown className={CHEV} aria-hidden="true" />
         ) : (
-          <Calendar className={CHEV_CAL} strokeWidth={1.8} aria-hidden="true" />
+          <Calendar className={CHEV_CAL} strokeWidth={ICON_STROKE_WIDTH_BOLD} aria-hidden="true" />
         )}
       </button>
-      {mounted && createPortal(panel, document.body)}
-      {mounted && <Overlay open={open} onClose={() => setOpen(false)} />}
+      {isMounted && createPortal(panel, document.body)}
+      {isMounted && <Overlay open={isOpen} onClose={() => setIsOpen(false)} />}
     </div>
   );
 }

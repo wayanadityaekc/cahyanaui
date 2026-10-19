@@ -2,12 +2,14 @@
 
 import { useEffect, useRef } from 'react';
 
+const FOCUS_RETRY_DELAY_MS = 120;
+
 const FOCUSABLE =
   'a[href], button:not([disabled]), input:not([disabled]):not([type="hidden"]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
 
-const stack = [];
+const dialogStack = [];
 
-function visible(node) {
+function isNodeVisible(node) {
   return node.getClientRects().length > 0 && getComputedStyle(node).visibility !== 'hidden';
 }
 
@@ -23,7 +25,7 @@ export default function useDialog({ shown = false, onClose = null, escape = true
 
     const opener = document.activeElement;
     const token = {};
-    stack.push(token);
+    dialogStack.push(token);
 
     if (!node.hasAttribute('tabindex')) node.setAttribute('tabindex', '-1');
     function focusBox() {
@@ -34,52 +36,55 @@ export default function useDialog({ shown = false, onClose = null, escape = true
     let timer = 0;
     if (!focusBox()) {
       raf = requestAnimationFrame(() => {
-        if (!focusBox()) timer = setTimeout(focusBox, 120);
+        if (!focusBox()) timer = setTimeout(focusBox, FOCUS_RETRY_DELAY_MS);
       });
     }
 
-    function onKey(e) {
-      if (stack[stack.length - 1] !== token) return;
+    function handleEscapeKeyDown(event) {
+      if (dialogStack[dialogStack.length - 1] !== token) return;
 
-      if (e.key === 'Escape') {
-        if (!escape || e.defaultPrevented) return;
+      if (event.key === 'Escape') {
+        if (!escape || event.defaultPrevented) return;
         if (document.querySelector('[data-portal][data-open]')) return;
         closeRef.current?.();
         return;
       }
 
-      if (e.key !== 'Tab') return;
+      if (event.key !== 'Tab') return;
       const focused = document.activeElement;
-      if (focused && !node.contains(focused) && focused.closest && focused.closest('[data-portal]')) return;
+      const isFocusInsidePortal =
+        focused && !node.contains(focused) && focused.closest && focused.closest('[data-portal]');
+      if (isFocusInsidePortal) return;
 
-      const items = Array.from(node.querySelectorAll(FOCUSABLE)).filter(visible);
+      const items = Array.from(node.querySelectorAll(FOCUSABLE)).filter(isNodeVisible);
       if (!items.length) {
-        e.preventDefault();
+        event.preventDefault();
         node.focus({ preventScroll: true });
         return;
       }
       const first = items[0];
       const last = items[items.length - 1];
       if (!node.contains(focused) || focused === node) {
-        e.preventDefault();
-        (e.shiftKey ? last : first).focus();
-      } else if (e.shiftKey && focused === first) {
-        e.preventDefault();
+        event.preventDefault();
+        (event.shiftKey ? last : first).focus();
+      } else if (event.shiftKey && focused === first) {
+        event.preventDefault();
         last.focus();
-      } else if (!e.shiftKey && focused === last) {
-        e.preventDefault();
+      } else if (!event.shiftKey && focused === last) {
+        event.preventDefault();
         first.focus();
       }
     }
 
-    document.addEventListener('keydown', onKey);
+    document.addEventListener('keydown', handleEscapeKeyDown);
     return () => {
       cancelAnimationFrame(raf);
       clearTimeout(timer);
-      document.removeEventListener('keydown', onKey);
-      const index = stack.indexOf(token);
-      if (index >= 0) stack.splice(index, 1);
-      if (opener && opener !== document.body && document.contains(opener) && opener.focus) {
+      document.removeEventListener('keydown', handleEscapeKeyDown);
+      const index = dialogStack.indexOf(token);
+      if (index >= 0) dialogStack.splice(index, 1);
+      const canRestoreOpenerFocus = opener && opener !== document.body && document.contains(opener) && opener.focus;
+      if (canRestoreOpenerFocus) {
         opener.focus({ preventScroll: true });
       }
     };

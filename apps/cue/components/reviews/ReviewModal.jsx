@@ -28,14 +28,14 @@ import { ROW_RULE } from '@/components/ui/separatorClasses';
 import useBodyLock from '@/components/ui/useBodyLock';
 import { useAccount } from '@/state/AccountProvider';
 
-const COUNTRY_OPTIONS = COUNTRIES.map((c) => ({ value: c.code, label: c.name, flag: c.code }));
+const COUNTRY_OPTIONS = COUNTRIES.map((country) => ({ value: country.code, label: country.name, flag: country.code }));
 
-function itemKey({ ref, service }) {
+function buildItemKey({ ref, service }) {
   return `${ref}::${service}`;
 }
 
 export default function ReviewModal({ open = false, prefill = null, onClose = () => {} }) {
-  const [mounted, setMounted] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
   const [name, setName] = useState('');
   const [countryCode, setCountryCode] = useState('');
   const [checked, setChecked] = useState([]);
@@ -43,25 +43,25 @@ export default function ReviewModal({ open = false, prefill = null, onClose = ()
   const [message, setMessage] = useState('');
   const [errors, setErrors] = useState({});
   const [error, setError] = useState('');
-  const [busy, setBusy] = useState(false);
-  const [done, setDone] = useState(false);
+  const [isBusy, setIsBusy] = useState(false);
+  const [isDone, setIsDone] = useState(false);
   const [partial, setPartial] = useState([]);
   const { refreshTrips } = useAccount() || {};
   const sent = useRef(false);
 
-  useEffect(() => setMounted(true), []);
+  useEffect(() => setIsMounted(true), []);
 
   useEffect(() => {
     if (!open || !prefill) return;
     setName(view.name || '');
     setCountryCode('');
-    setChecked((view.items || []).map(itemKey));
+    setChecked((view.items || []).map(buildItemKey));
     setRating(0);
     setMessage('');
     setErrors({});
     setError('');
     setPartial([]);
-    setDone(false);
+    setIsDone(false);
     sent.current = false;
   }, [open, prefill]);
 
@@ -70,9 +70,9 @@ export default function ReviewModal({ open = false, prefill = null, onClose = ()
 
   if (prefill) lastPrefill.current = prefill;
   const view = prefill || lastPrefill.current;
-  if (!mounted || !view) return null;
+  if (!isMounted || !view) return null;
 
-  function close() {
+  function handleClose() {
     if (sent.current && refreshTrips) {
       sent.current = false;
       refreshTrips();
@@ -81,12 +81,12 @@ export default function ReviewModal({ open = false, prefill = null, onClose = ()
   }
 
   const items = view.items || [];
-  const multi = items.length > 1;
+  const hasMultipleItems = items.length > 1;
 
-  async function submit() {
-    const picked = items.filter((it) => checked.includes(itemKey(it)));
+  async function handleReviewSubmit() {
+    const picked = items.filter((it) => checked.includes(buildItemKey(it)));
     const { ok, errors: fieldErrors } = validateWith(reviewSchema, {
-      picked: picked.map(itemKey),
+      picked: picked.map(buildItemKey),
       rating,
       message,
     });
@@ -97,9 +97,9 @@ export default function ReviewModal({ open = false, prefill = null, onClose = ()
     }
     setError('');
     setPartial([]);
-    setBusy(true);
+    setIsBusy(true);
     const token = readLocal(KEY.token, '');
-    const country = (COUNTRIES.find((c) => c.code === countryCode) || {}).name || '';
+    const country = (COUNTRIES.find((countryItem) => countryItem.code === countryCode) || {}).name || '';
     const results = [];
     for (const it of picked) {
       try {
@@ -125,18 +125,18 @@ export default function ReviewModal({ open = false, prefill = null, onClose = ()
         results.push({ it, ok: false, reason: 'Something went wrong. Please try again.' });
       }
     }
-    setBusy(false);
+    setIsBusy(false);
     if (results.some((result) => result.ok)) sent.current = true;
-    const failed = results.filter((result) => !result.ok);
-    if (failed.length === results.length) {
-      setError(failed[0].reason);
+    const failedResults = results.filter((result) => !result.ok);
+    if (failedResults.length === results.length) {
+      setError(failedResults[0].reason);
       return;
     }
-    setPartial(failed.map((r) => ({ service: r.it.service, reason: r.reason })));
-    setDone(true);
+    setPartial(failedResults.map((failure) => ({ service: failure.it.service, reason: failure.reason })));
+    setIsDone(true);
   }
 
-  function star(active) {
+  function buildStarClass(active) {
     return `p-0 border-none bg-transparent text-[1.9rem] leading-none cursor-pointer transition-[color] duration-[var(--dur-fast)] ${active ? 'text-amber' : 'text-[#d8d2c4]'}`;
   }
   const CHECK_ROW = `flex items-start gap-[0.6rem] py-[0.5rem] ${ROW_RULE} cursor-pointer`;
@@ -144,27 +144,30 @@ export default function ReviewModal({ open = false, prefill = null, onClose = ()
   const CHECK_SVC = 'font-semibold text-green text-body';
   const CHECK_META = 'block text-small text-muted mt-[0.1rem]';
 
-  return createPortal(
-    <ModalPresence open={!!open && !!prefill} onClose={close} label="Leave a review" box={BOX}>
-      <button className={CLOSE} aria-label="Close" onClick={close}>
-        &times;
-      </button>
-      <h3 className={TITLE}>Leave a Review</h3>
-
-      {!done && !items.length ? (
+  function renderReviewStep() {
+    if (!isDone && !items.length)
+      return (
         <div className="text-center">
           <LoadFallback className="mb-4" />
-          <button type="button" className={BTN} onClick={close}>
+          <button type="button" className={BTN} onClick={handleClose}>
             Close
           </button>
         </div>
-      ) : !done ? (
+      );
+    if (!isDone)
+      return (
         <div data-step="write">
           <div className={GROUP}>
             <label className={LABEL} htmlFor="rvm-name">
               Your name
             </label>
-            <input className={INPUT} type="text" id="rvm-name" value={name} onChange={(e) => setName(e.target.value)} />
+            <input
+              className={INPUT}
+              type="text"
+              id="rvm-name"
+              value={name}
+              onChange={(event) => setName(event.target.value)}
+            />
           </div>
           <div className={GROUP}>
             <label className={LABEL} htmlFor="rvm-country">
@@ -180,21 +183,27 @@ export default function ReviewModal({ open = false, prefill = null, onClose = ()
             />
           </div>
 
-          {multi && (
+          {hasMultipleItems && (
             <div className={GROUP}>
               <label className={LABEL}>Which trips are you reviewing?</label>
               <div>
                 {items.map((it) => {
-                  const key = itemKey(it);
+                  const key = buildItemKey(it);
                   return (
                     <label key={key} className={CHECK_ROW}>
                       <input
                         className={CHECK_INPUT}
                         type="checkbox"
                         checked={checked.includes(key)}
-                        onChange={(e) => {
-                          setChecked((c) => (e.target.checked ? [...c, key] : c.filter((x) => x !== key)));
-                          setErrors((v) => (v.picked ? { ...v, picked: undefined } : v));
+                        onChange={(event) => {
+                          setChecked((previousChecked) =>
+                            event.target.checked
+                              ? [...previousChecked, key]
+                              : previousChecked.filter((checkedKey) => checkedKey !== key),
+                          );
+                          setErrors((previousErrors) =>
+                            previousErrors.picked ? { ...previousErrors, picked: undefined } : previousErrors,
+                          );
                         }}
                       />
                       <span>
@@ -222,15 +231,17 @@ export default function ReviewModal({ open = false, prefill = null, onClose = ()
           <div className={GROUP}>
             <label className={LABEL}>Overall Experience</label>
             <div className="flex gap-[0.3rem]">
-              {[1, 2, 3, 4, 5].map((n) => (
+              {[1, 2, 3, 4, 5].map((starNumber) => (
                 <button
                   type="button"
-                  key={n}
-                  className={star(rating >= n)}
-                  aria-label={`${n} star${n > 1 ? 's' : ''}`}
+                  key={starNumber}
+                  className={buildStarClass(rating >= starNumber)}
+                  aria-label={`${starNumber} star${starNumber > 1 ? 's' : ''}`}
                   onClick={() => {
-                    setRating(n);
-                    setErrors((v) => (v.rating ? { ...v, rating: undefined } : v));
+                    setRating(starNumber);
+                    setErrors((previousErrors) =>
+                      previousErrors.rating ? { ...previousErrors, rating: undefined } : previousErrors,
+                    );
                   }}
                 >
                   &#9733;
@@ -254,9 +265,11 @@ export default function ReviewModal({ open = false, prefill = null, onClose = ()
               rows="4"
               placeholder="What would you like to share?"
               value={message}
-              onChange={(e) => {
-                setMessage(e.target.value);
-                setErrors((v) => (v.message ? { ...v, message: undefined } : v));
+              onChange={(event) => {
+                setMessage(event.target.value);
+                setErrors((previousErrors) =>
+                  previousErrors.message ? { ...previousErrors, message: undefined } : previousErrors,
+                );
               }}
               aria-invalid={!!errors.message}
             />
@@ -268,33 +281,44 @@ export default function ReviewModal({ open = false, prefill = null, onClose = ()
           </div>
 
           {error && <p className="mt-[-0.4rem] mb-4 text-small text-err">{error}</p>}
-          <button type="button" className={BTN} onClick={submit} disabled={busy}>
-            {busy ? 'Sending...' : 'Submit review'}
+          <button type="button" className={BTN} onClick={handleReviewSubmit} disabled={isBusy}>
+            {isBusy ? 'Sending...' : 'Submit review'}
           </button>
         </div>
-      ) : (
-        <div className="text-center">
-          <div className={SUCCESS_ICON}>&#10003;</div>
-          <h3 className={TITLE}>Thank you!</h3>
-          <p className={SUCCESS_TEXT}>
-            {partial.length
-              ? `Your review is live on the site. ${partial.length} of the trips you ticked could not be included:`
-              : 'Your review is now live on the site.'}
-          </p>
-          {partial.length ? (
-            <ul className="list-none text-left mx-auto mb-4 max-w-[22rem]">
-              {partial.map((p) => (
-                <li key={p.service} className={`text-small text-muted py-[0.35rem] ${ROW_RULE}`}>
-                  <span className="font-semibold text-green">{p.service}</span> - {p.reason}
-                </li>
-              ))}
-            </ul>
-          ) : null}
-          <button type="button" className={BTN} onClick={close}>
-            Done
-          </button>
-        </div>
-      )}
+      );
+    return (
+      <div className="text-center">
+        <div className={SUCCESS_ICON}>&#10003;</div>
+        <h3 className={TITLE}>Thank you!</h3>
+        <p className={SUCCESS_TEXT}>
+          {partial.length
+            ? `Your review is live on the site. ${partial.length} of the trips you ticked could not be included:`
+            : 'Your review is now live on the site.'}
+        </p>
+        {partial.length ? (
+          <ul className="list-none text-left mx-auto mb-4 max-w-[22rem]">
+            {partial.map((partialFailure) => (
+              <li key={partialFailure.service} className={`text-small text-muted py-[0.35rem] ${ROW_RULE}`}>
+                <span className="font-semibold text-green">{partialFailure.service}</span> - {partialFailure.reason}
+              </li>
+            ))}
+          </ul>
+        ) : null}
+        <button type="button" className={BTN} onClick={handleClose}>
+          Done
+        </button>
+      </div>
+    );
+  }
+
+  return createPortal(
+    <ModalPresence open={!!open && !!prefill} onClose={handleClose} label="Leave a review" box={BOX}>
+      <button className={CLOSE} aria-label="Close" onClick={handleClose}>
+        &times;
+      </button>
+      <h3 className={TITLE}>Leave a Review</h3>
+
+      {renderReviewStep()}
     </ModalPresence>,
     document.body,
   );

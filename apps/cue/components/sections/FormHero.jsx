@@ -1,6 +1,6 @@
 import Img from '@/components/ui/Img';
 import Breadcrumb from '@/components/ui/Breadcrumb';
-import { crumbsFor } from '@/lib/crumbs';
+import { buildCrumbs } from '@/lib/crumbs';
 import { SUBHERO_TITLE } from '@/components/ui/subheroClasses';
 import { INFO_CARD_BODY } from '@/components/ui/infoClasses';
 
@@ -33,7 +33,7 @@ export default function FormHero({
   return (
     <section className={`${HEAD} ${HEAD_TOP}`} data-formhero>
       <div className={INNER}>
-        <Breadcrumb items={crumbsFor(page)} className="mb-2" />
+        <Breadcrumb items={buildCrumbs(page)} className="mb-2" />
         <h1 className={`${SUBHERO_TITLE} m-0 text-left`}>{title}</h1>
         <p className={SUB}>{sub}</p>
         <div className={`${GRID} ${half ? GRID_COLS_HALF : GRID_COLS}`}>

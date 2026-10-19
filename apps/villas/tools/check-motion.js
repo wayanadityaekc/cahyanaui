@@ -9,7 +9,7 @@ if (!fs.existsSync(OUT)) {
   process.exit(2);
 }
 
-function tokenSources() {
+function listTokenSources() {
   const vendored = path.join(ROOT, 'packages/ui/src/tokens/tokens.css');
   const monorepo = path.join(ROOT, '../../packages/ui/src/tokens/tokens.css');
   return [path.join(ROOT, 'app/globals.css'), fs.existsSync(vendored) ? vendored : monorepo].filter((file) =>
@@ -27,17 +27,17 @@ function walk(dir, test, skipNext) {
   });
 }
 
-function tokenize(classes) {
+function splitClassTokens(classes) {
   return classes.split(/\s+/).filter(Boolean);
 }
 
-function baseOf(token) {
+function extractBaseClass(token) {
   let depth = 0;
   let last = -1;
-  token.split('').forEach((ch, i) => {
+  token.split('').forEach((ch, index) => {
     if (ch === '[') depth++;
     else if (ch === ']') depth--;
-    else if (ch === ':' && depth === 0) last = i;
+    else if (ch === ':' && depth === 0) last = index;
   });
   return {
     base: last === -1 ? token : token.slice(last + 1),
@@ -45,11 +45,11 @@ function baseOf(token) {
   };
 }
 
-function inner(token) {
+function extractBracketContent(token) {
   return token.slice(token.indexOf('[') + 1, token.lastIndexOf(']'));
 }
 
-function setsProperty(base) {
+function findSetProperty(base) {
   if (/^-?translate(-|$)/.test(base)) return 'translate';
   if (/^-?rotate(-|$)/.test(base)) return 'rotate';
   if (/^-?scale(-|$)/.test(base)) return 'scale';
@@ -67,16 +67,16 @@ const KEYWORD_LISTS = {
   'transition-shadow': ['box-shadow'],
 };
 
-function transitionList(base) {
+function listTransitionProperties(base) {
   if (base in KEYWORD_LISTS) return KEYWORD_LISTS[base];
   if (/^transition-\[/.test(base)) {
-    return inner(base)
+    return extractBracketContent(base)
       .split(',')
       .map((prop) => prop.trim().split(/[\s_]/)[0])
       .filter(Boolean);
   }
   if (/^\[transition:/.test(base)) {
-    return inner(base)
+    return extractBracketContent(base)
       .replace(/^transition:/, '')
       .split(',')
       .map((prop) => prop.trim().split(/[\s_]/)[0])
@@ -86,7 +86,7 @@ function transitionList(base) {
 }
 
 const pages = walk(OUT, (name) => name.endsWith('.html'), true);
-const stylesheets = [...walk(OUT, (name) => name.endsWith('.css'), false), ...tokenSources()];
+const stylesheets = [...walk(OUT, (name) => name.endsWith('.css'), false), ...listTokenSources()];
 const dead = new Map();
 const snap = new Map();
 const cycles = [];
@@ -109,19 +109,19 @@ pages.forEach((file) => {
   const page = path.relative(OUT, file);
   [...html.matchAll(/<([a-z][a-z0-9]*)\b([^>]*)\sclass="([^"]*)"/g)].forEach((match) => {
     const [, tag, attrs, cls] = match;
-    const tokens = tokenize(cls.replace(/&quot;/g, '"'));
+    const tokens = splitClassTokens(cls.replace(/&quot;/g, '"'));
     elements++;
 
     const setBy = new Map();
     const transBy = new Map();
     tokens.forEach((token) => {
-      const { base, scope } = baseOf(token);
-      const prop = setsProperty(base);
+      const { base, scope } = extractBaseClass(token);
+      const prop = findSetProperty(base);
       if (prop) {
         if (!setBy.has(scope)) setBy.set(scope, new Set());
         setBy.get(scope).add(prop);
       }
-      const list = transitionList(base);
+      const list = listTransitionProperties(base);
       if (list) transBy.set(scope, list);
     });
 
@@ -137,18 +137,20 @@ pages.forEach((file) => {
       }
       const where = scope ? ` (under ${scope}:)` : '';
 
-      const standalone = ['translate', 'rotate', 'scale'].filter((prop) => set.has(prop) && !has(prop));
-      if (list.includes('transform') && !set.has('transform') && standalone.length) {
-        const key = `transition names 'transform'${where} but the element sets ${standalone.join('/')} - name it ${standalone.join(',')} instead`;
+      const standaloneTransforms = ['translate', 'rotate', 'scale'].filter((prop) => set.has(prop) && !has(prop));
+      const hasUnusedTransformTransition =
+        list.includes('transform') && !set.has('transform') && standaloneTransforms.length;
+      if (hasUnusedTransformTransition) {
+        const key = `transition names 'transform'${where} but the element sets ${standaloneTransforms.join('/')} - name it ${standaloneTransforms.join(',')} instead`;
         if (!dead.has(key)) dead.set(key, `${page}  <${tag} class="…${cls.slice(0, 90)}…">`);
       }
 
-      const clickable =
+      const isClickable =
         tag === 'button' || /role="button"/.test(attrs) || (tag === 'a' && tokens.includes('rounded-pill'));
-      if (!scope && clickable && !has('scale')) {
-        const key = `${tag} transitions [${list.join(',')}] with no 'scale' - the press feedback will snap`;
-        if (!snap.has(key)) snap.set(key, `${page}  <${tag} class="…${cls.slice(0, 90)}…">`);
-      }
+      const isClickableWithoutScale = !scope && isClickable && !has('scale');
+      if (!isClickableWithoutScale) return;
+      const key = `${tag} transitions [${list.join(',')}] with no 'scale' - the press feedback will snap`;
+      if (!snap.has(key)) snap.set(key, `${page}  <${tag} class="…${cls.slice(0, 90)}…">`);
     });
   });
 });
@@ -160,19 +162,20 @@ console.log(`Dead transitions     : ${dead.size}`);
 console.log(`Snapping clickables  : ${snap.size}`);
 console.log(`Self-referencing vars: ${cycles.length}`);
 
-const blind = [];
-if (!pages.length || !elements) blind.push('no pages or no classed elements found in out/');
+const blindSpots = [];
+if (!pages.length || !elements) blindSpots.push('no pages or no classed elements found in out/');
 if (!sentinelSeen)
-  blind.push(`no scanned stylesheet defines ${SENTINEL_TOKEN} - rule 3 is not reading the token files`);
-if (blind.length) {
-  blind.forEach((why) => {
+  blindSpots.push(`no scanned stylesheet defines ${SENTINEL_TOKEN} - rule 3 is not reading the token files`);
+if (blindSpots.length) {
+  blindSpots.forEach((why) => {
     console.log(`\n  BLIND ${why}`);
   });
   console.log('\nMotion check FAILED - it scanned nothing.');
   process.exit(1);
 }
 
-if (dead.size || snap.size || cycles.length) {
+const hasMotionProblems = dead.size || snap.size || cycles.length;
+if (hasMotionProblems) {
   [...dead].forEach(([why, where]) => {
     console.log(`\n  DEAD  ${why}\n        first seen: ${where}`);
   });

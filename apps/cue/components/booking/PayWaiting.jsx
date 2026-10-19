@@ -8,24 +8,30 @@ import { readLocal } from '@/lib/storage';
 import { BTN, BTN_WA, STACK } from '@/components/ui/modalClasses';
 import useBodyLock from '@/components/ui/useBodyLock';
 
+const HTTP_STATUS_UNAUTHORIZED = 401;
+const HTTP_STATUS_NOT_FOUND = 404;
+
 const POLL_MS = 4000;
 const GIVE_UP_MS = 120000;
 
 export default function PayWaiting({ bookingRef, onClose, onConfirmed }) {
   const [phase, setPhase] = useState('waiting');
-  const [idx, setIdx] = useState(0);
-  const [mounted, setMounted] = useState(false);
+  const [index, setIndex] = useState(0);
+  const [isMounted, setIsMounted] = useState(false);
   const timer = useRef(null);
 
-  useEffect(() => setMounted(true), []);
+  useEffect(() => setIsMounted(true), []);
   useBodyLock(true);
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
     const still = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (still || WAIT_PHOTOS.length < 2) return;
-    const t = setInterval(() => setIdx((i) => (i + 1) % WAIT_PHOTOS.length), WAIT_SLIDE_MS);
-    return () => clearInterval(t);
+    const slideTimer = setInterval(
+      () => setIndex((previousIndex) => (previousIndex + 1) % WAIT_PHOTOS.length),
+      WAIT_SLIDE_MS,
+    );
+    return () => clearInterval(slideTimer);
   }, []);
 
   useEffect(() => {
@@ -46,7 +52,7 @@ export default function PayWaiting({ bookingRef, onClose, onConfirmed }) {
           headers: { Authorization: `Bearer ${token}` },
         });
         if (stop) return;
-        if (response.status === 401 || response.status === 404) {
+        if (response.status === HTTP_STATUS_UNAUTHORIZED || response.status === HTTP_STATUS_NOT_FOUND) {
           setPhase('blind');
           return;
         }
@@ -76,9 +82,9 @@ export default function PayWaiting({ bookingRef, onClose, onConfirmed }) {
     };
   }, [bookingRef, onConfirmed]);
 
-  if (!mounted) return null;
+  if (!isMounted) return null;
 
-  const waiting = phase === 'waiting';
+  const isWaiting = phase === 'waiting';
   const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(
     `Hello, I just paid for booking ${bookingRef || ''} and I'd like to check it came through.`,
   )}`;
@@ -122,21 +128,21 @@ export default function PayWaiting({ bookingRef, onClose, onConfirmed }) {
 
   return createPortal(
     <div className="fixed inset-0 z-[300] overflow-hidden" role="dialog" aria-modal="true" aria-live="polite">
-      {WAIT_PHOTOS.map((p, i) =>
-        i <= idx + 1 || i === WAIT_PHOTOS.length - 1 ? (
+      {WAIT_PHOTOS.map((photo, photoIndex) =>
+        photoIndex <= index + 1 || photoIndex === WAIT_PHOTOS.length - 1 ? (
           <img
-            key={p.src}
-            src={p.src}
-            alt={i === idx ? p.alt : ''}
-            aria-hidden={i === idx ? undefined : 'true'}
-            className={`absolute inset-0 w-full h-full object-cover [transition:opacity_1.2s_var(--ease)] ${i === idx ? 'opacity-100' : 'opacity-0'}`}
+            key={photo.src}
+            src={photo.src}
+            alt={photoIndex === index ? photo.alt : ''}
+            aria-hidden={photoIndex === index ? undefined : 'true'}
+            className={`absolute inset-0 w-full h-full object-cover [transition:opacity_1.2s_var(--ease)] ${photoIndex === index ? 'opacity-100' : 'opacity-0'}`}
           />
         ) : null,
       )}
       <div className="absolute inset-0 bg-[rgba(20,19,16,0.62)]" />
 
       <div className="relative z-10 flex flex-col items-center justify-center h-full px-[var(--container-x)] text-center">
-        {waiting && (
+        {isWaiting && (
           <span
             className="w-[26px] h-[26px] mb-5 rounded-[50%] border-[3px] border-solid border-[rgba(255,255,255,0.28)] border-t-white animate-[spin_0.7s_linear_infinite]"
             aria-hidden="true"
@@ -144,9 +150,9 @@ export default function PayWaiting({ bookingRef, onClose, onConfirmed }) {
         )}
         <h2 className="mb-3 font-body text-h2 font-semibold text-white">{COPY.title}</h2>
         <div className="max-w-[420px]">
-          {COPY.lines.map((t, i) => (
-            <p className="mb-2 text-body leading-[var(--lh-body)] text-[rgba(255,255,255,0.86)]" key={i}>
-              {t}
+          {COPY.lines.map((line, lineIndex) => (
+            <p className="mb-2 text-body leading-[var(--lh-body)] text-[rgba(255,255,255,0.86)]" key={lineIndex}>
+              {line}
             </p>
           ))}
         </div>
@@ -156,7 +162,7 @@ export default function PayWaiting({ bookingRef, onClose, onConfirmed }) {
           </p>
         )}
 
-        {!waiting && (
+        {!isWaiting && (
           <div className="w-full max-w-[320px] mt-6">
             <button type="button" className={BTN} onClick={onClose}>
               Done

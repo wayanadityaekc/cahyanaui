@@ -20,8 +20,8 @@ export default function AccountSettings({
   emailNote = 'Your email is how you sign in, so it cannot be changed here.',
 }) {
   const [form, setForm] = useState({ name: '', phone: '' });
-  const [msg, setMsg] = useState(null);
-  const [busy, setBusy] = useState(false);
+  const [message, setMessage] = useState(null);
+  const [isBusy, setIsBusy] = useState(false);
 
   useEffect(() => {
     if (account) setForm({ name: account.name || '', phone: account.phone || '' });
@@ -30,12 +30,12 @@ export default function AccountSettings({
   if (!account)
     return <p className="m-0 text-body text-muted">Sorry, we could not load this information. Please try again.</p>;
 
-  async function save() {
-    setBusy(true);
-    setMsg(null);
+  async function handleSave() {
+    setIsBusy(true);
+    setMessage(null);
     const result = await onSave(form);
-    setBusy(false);
-    setMsg(
+    setIsBusy(false);
+    setMessage(
       result && result.ok
         ? { ok: true, text: 'Saved.' }
         : { ok: false, text: (result && result.error) || 'Could not save. Please try again.' },
@@ -76,14 +76,17 @@ export default function AccountSettings({
         {prefs}
       </div>
 
-      {msg && (
-        <p role={msg.ok ? 'status' : 'alert'} className={`mt-3 mb-0 text-label ${msg.ok ? 'text-ok' : 'text-err'}`}>
-          {msg.text}
+      {message && (
+        <p
+          role={message.ok ? 'status' : 'alert'}
+          className={`mt-3 mb-0 text-label ${message.ok ? 'text-ok' : 'text-err'}`}
+        >
+          {message.text}
         </p>
       )}
       <div className="flex flex-wrap gap-2 mt-5">
-        <Button onClick={save} disabled={busy}>
-          {busy ? 'Saving...' : 'Save changes'}
+        <Button onClick={handleSave} disabled={isBusy}>
+          {isBusy ? 'Saving...' : 'Save changes'}
         </Button>
         <Button variant="ghost" onClick={onLogout}>
           Sign out

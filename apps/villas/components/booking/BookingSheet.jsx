@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { ChevronLeft, MessageCircle, X } from 'lucide-react';
+import { ChevronLeft, MessageCircle, X as CloseIcon } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { Button, DateRangeField, EYEBROW_LINE } from '@cahyana/ui';
 import DragSheet from '@/components/ui/DragSheet';
@@ -14,38 +14,49 @@ import { useCurrency } from '@/components/providers/CurrencyProvider';
 import { VILLAS, VILLA_LIST, priceBreakdown } from '@/lib/villas';
 import { formatRupiah } from '@/lib/currency';
 import BookingTerms from '@/components/booking/BookingTerms';
-import { whatsappLink } from '@/lib/constants';
-import { AVAILABILITY_COPY, STAY_RULES, baliToday, checkStay } from '@/lib/availability';
+import { buildWhatsappLink } from '@/lib/constants';
+import { AVAILABILITY_COPY, STAY_RULES, formatBaliToday, checkStay } from '@/lib/availability';
 import StayCheckout from '@/components/booking/StayCheckout';
 import useVillaAvailability from '@/components/booking/useVillaAvailability';
 
+const ICON_STROKE_WIDTH_MEDIUM = 1.8;
+const VILLA_THUMBNAIL_SIZE_PX = 64;
+
 export default function BookingSheet() {
-  const { isOpen, step, booking, closeBooking, updateBooking, goToSummary, goToDetails } = useBooking();
+  const {
+    isOpen,
+    step,
+    booking,
+    closeBooking: handleBookingClose,
+    updateBooking: handleBookingUpdate,
+    goToSummary,
+    goToDetails: handleDetailsOpen,
+  } = useBooking();
   const { currency, format, formatAmount, breakdown: convert } = useCurrency();
   const { setStay } = useCart();
   const isPhone = useMobile('(max-width: 639px)');
   const [availability, setAvailability] = useState('');
   const [checkoutStay, setCheckoutStay] = useState(null);
   const [today, setToday] = useState('');
-  useEffect(() => setToday(baliToday()), []);
+  useEffect(() => setToday(formatBaliToday()), []);
   const calendar = useVillaAvailability(isOpen ? booking.villaSlug : '');
 
   useEffect(() => {
     setAvailability('');
   }, [booking.villaSlug, booking.checkIn, booking.checkOut]);
 
-  function bookNow() {
+  function handleBookNow() {
     const stay = {
       villaSlug: villa.slug,
       checkIn: booking.checkIn,
       checkOut: booking.checkOut,
       guests: booking.guests,
     };
-    closeBooking();
+    handleBookingClose();
     setCheckoutStay(stay);
   }
 
-  async function checkAvailability() {
+  async function handleAvailabilityCheck() {
     setAvailability('checking');
     const answer = await checkStay(booking.villaSlug, booking.checkIn, booking.checkOut);
     setAvailability(answer);
@@ -65,7 +76,7 @@ export default function BookingSheet() {
   const villa = VILLAS[booking.villaSlug] || VILLA_LIST[0];
   const breakdown = priceBreakdown(villa.slug, booking.checkIn, booking.checkOut);
   const shown = convert(breakdown);
-  const inRupiah = currency === 'IDR';
+  const isInRupiah = currency === 'IDR';
   const canContinue = booking.checkIn && booking.checkOut && breakdown && breakdown.nights > 0;
 
   const message = breakdown
@@ -75,7 +86,7 @@ export default function BookingSheet() {
         `Check-out: ${booking.checkOut || '-'}`,
         `Guests: ${booking.guests}`,
         `${shown.nights} night(s) x ${formatAmount(shown.nightly)} = ${formatAmount(shown.subtotal)}`,
-        `Total: ${formatAmount(shown.total)}${inRupiah ? '' : ` (exact price ${formatRupiah(breakdown.totalIdr)})`}`,
+        `Total: ${formatAmount(shown.total)}${isInRupiah ? '' : ` (exact price ${formatRupiah(breakdown.totalIdr)})`}`,
       ].join('\n')
     : `Hi! I'd like to ask about booking ${villa.name}.`;
 
@@ -83,14 +94,14 @@ export default function BookingSheet() {
     <>
       <SheetPresence
         open={isOpen}
-        onClose={closeBooking}
+        onClose={handleBookingClose}
         label={step === 'details' ? 'Book Your Stay' : 'Price Summary'}
         shell="fixed inset-0 z-[100] flex items-end sm:items-center justify-center bg-black/45"
         box="relative w-full sm:max-w-md"
       >
         <DragSheet
           enabled={isPhone}
-          onDismiss={closeBooking}
+          onDismiss={handleBookingClose}
           handleClassName="absolute top-0 left-0 right-0 h-5 z-20 [touch-action:none] cursor-grab active:cursor-grabbing"
           className="relative bg-surface-raised rounded-t-xl sm:rounded-xl [box-shadow:var(--shadow-xl)] max-h-[92vh] overflow-y-auto max-[639px]:pt-5"
         >
@@ -103,23 +114,42 @@ export default function BookingSheet() {
           <div className="flex items-center justify-between px-5 py-4 border-b border-line sticky top-0 max-[639px]:top-5 bg-surface-raised z-10">
             <div className="flex items-center gap-2">
               {step === 'summary' && (
-                <button type="button" onClick={goToDetails} aria-label="Back" className="text-gold cursor-pointer">
-                  <ChevronLeft className="w-[var(--icon-md)] h-[var(--icon-md)]" strokeWidth={1.8} aria-hidden="true" />
+                <button
+                  type="button"
+                  onClick={handleDetailsOpen}
+                  aria-label="Back"
+                  className="text-gold cursor-pointer"
+                >
+                  <ChevronLeft
+                    className="w-[var(--icon-md)] h-[var(--icon-md)]"
+                    strokeWidth={ICON_STROKE_WIDTH_MEDIUM}
+                    aria-hidden="true"
+                  />
                 </button>
               )}
               <h3 className="text-h3 font-semibold text-gold">
                 {step === 'details' ? 'Book Your Stay' : 'Price Summary'}
               </h3>
             </div>
-            <button type="button" onClick={closeBooking} aria-label="Close" className="text-gold cursor-pointer">
-              <X className="w-[var(--icon-md)] h-[var(--icon-md)]" strokeWidth={1.8} aria-hidden="true" />
+            <button type="button" onClick={handleBookingClose} aria-label="Close" className="text-gold cursor-pointer">
+              <CloseIcon
+                className="w-[var(--icon-md)] h-[var(--icon-md)]"
+                strokeWidth={ICON_STROKE_WIDTH_MEDIUM}
+                aria-hidden="true"
+              />
             </button>
           </div>
 
           {step === 'details' ? (
             <div className="p-5 flex flex-col gap-5">
               <div className="flex items-center gap-3 p-3 rounded-lg bg-cream">
-                <img src={villa.cardImg} alt="" width={64} height={64} className="w-16 h-16 object-cover" />
+                <img
+                  src={villa.cardImg}
+                  alt=""
+                  width={VILLA_THUMBNAIL_SIZE_PX}
+                  height={VILLA_THUMBNAIL_SIZE_PX}
+                  className="w-16 h-16 object-cover"
+                />
                 <div className="flex-1">
                   <p className="text-h3 font-semibold text-gold">{villa.name}</p>
                   <p className="text-small text-muted">{format(villa.nightlyRateIdr)} / night</p>
@@ -133,7 +163,7 @@ export default function BookingSheet() {
                     id="bk-villa"
                     label="Villa"
                     value={villa.slug}
-                    onChange={(slug) => updateBooking({ villaSlug: slug })}
+                    onChange={(slug) => handleBookingUpdate({ villaSlug: slug })}
                     options={VILLA_LIST.map((villaEntry) => ({ value: villaEntry.slug, label: villaEntry.name }))}
                   />
                 </div>
@@ -144,7 +174,7 @@ export default function BookingSheet() {
                 <DateRangeField
                   id="bk-checkin"
                   value={{ checkIn: booking.checkIn, checkOut: booking.checkOut }}
-                  onChange={updateBooking}
+                  onChange={handleBookingUpdate}
                   min={today || undefined}
                   busy={calendar.busy}
                   minNights={STAY_RULES.minNights}
@@ -158,8 +188,8 @@ export default function BookingSheet() {
                   id="bk-guests"
                   label="Guests"
                   value={String(booking.guests)}
-                  onChange={(value) => updateBooking({ guests: Number(value) })}
-                  options={Array.from({ length: villa.guests }, (_, i) => i + 1).map((count) => ({
+                  onChange={(value) => handleBookingUpdate({ guests: Number(value) })}
+                  options={Array.from({ length: villa.guests }, (unusedValue, index) => index + 1).map((count) => ({
                     value: String(count),
                     label: `${count} guest${count > 1 ? 's' : ''}`,
                   }))}
@@ -169,7 +199,7 @@ export default function BookingSheet() {
               <Button
                 full
                 disabled={!canContinue || availability === 'checking'}
-                onClick={checkAvailability}
+                onClick={handleAvailabilityCheck}
                 className="disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {availability === 'checking' ? 'Checking...' : 'Check availability'}
@@ -188,7 +218,13 @@ export default function BookingSheet() {
           ) : (
             <div className="p-5 flex flex-col gap-5">
               <div className="flex items-center gap-3 p-3 rounded-lg bg-cream">
-                <img src={villa.cardImg} alt="" width={64} height={64} className="w-16 h-16 object-cover" />
+                <img
+                  src={villa.cardImg}
+                  alt=""
+                  width={VILLA_THUMBNAIL_SIZE_PX}
+                  height={VILLA_THUMBNAIL_SIZE_PX}
+                  className="w-16 h-16 object-cover"
+                />
                 <div className="flex-1">
                   <p className="text-h3 font-semibold text-gold">{villa.name}</p>
                   <p className="text-small text-muted">
@@ -209,7 +245,7 @@ export default function BookingSheet() {
                   <span className="text-h3 font-bold text-amber">{formatAmount(shown.total)}</span>
                 </div>
               </div>
-              {inRupiah ? null : (
+              {isInRupiah ? null : (
                 <p className="text-label text-muted -mt-3">
                   Exact price {formatRupiah(breakdown.totalIdr)}; other currencies follow today's rate.
                 </p>
@@ -225,20 +261,20 @@ export default function BookingSheet() {
               )}
 
               {availability === 'unknown' ? (
-                <Button as="a" full href={whatsappLink(message)} target="_blank" rel="noopener">
+                <Button as="a" full href={buildWhatsappLink(message)} target="_blank" rel="noopener">
                   <MessageCircle
                     className="w-[var(--icon-sm)] h-[var(--icon-sm)]"
-                    strokeWidth={1.8}
+                    strokeWidth={ICON_STROKE_WIDTH_MEDIUM}
                     aria-hidden="true"
                   />
                   Continue to WhatsApp
                 </Button>
               ) : (
-                <Button full onClick={bookNow} data-book-now>
+                <Button full onClick={handleBookNow} data-book-now>
                   Book now
                 </Button>
               )}
-              <Button as={Link} href="/my-booking" variant="ghost" full onClick={closeBooking}>
+              <Button as={Link} href="/my-booking" variant="ghost" full onClick={handleBookingClose}>
                 Add extras
               </Button>
               <p className="text-label text-muted text-center -mt-3">

@@ -1,5 +1,5 @@
 import { CUE_LINK } from '@/lib/constants';
-import { AIRPORT_ROUTE, allowedSlots, fmtTime } from '@/lib/timeSlots';
+import { AIRPORT_ROUTE, findAllowedSlots, formatTime } from '@/lib/timeSlots';
 
 export const EXTRA_PROGRAMS = [
   { key: 'Ubud Tour', group: 'tours', title: 'Ubud: Rice Terrace & Monkey Forest', path: '/ubud-tour.html' },
@@ -39,36 +39,37 @@ export const TRANSFERS = [
 
 export const TRANSFER_KEY = AIRPORT_ROUTE;
 
-export function programByKey(key) {
+export function findProgramByKey(key) {
   return EXTRA_PROGRAMS.find((program) => program.key === key) || null;
 }
 
-export function transferById(id) {
+export function findTransferById(id) {
   return TRANSFERS.find((transfer) => transfer.id === id) || null;
 }
 
-export function extraId(extra) {
+export function buildExtraId(extra) {
   return extra.kind === 'transfer' ? `transfer:${extra.dir}` : `program:${extra.key}`;
 }
 
-export function slotsFor(key, category) {
+export function findSlots(key, category) {
   if (!category) return null;
-  return allowedSlots(category, key) || null;
+  return findAllowedSlots(category, key) || null;
 }
 
 export function timeLabel(time) {
-  return fmtTime(time);
+  return formatTime(time);
 }
 
-export function extraProblem(extra, stay, category) {
-  if (!stay || !stay.checkIn || !stay.checkOut) return 'Pick your stay dates first.';
+export function findExtraProblem(extra, stay, category) {
+  const isStayDatesMissing = !stay || !stay.checkIn || !stay.checkOut;
+  if (isStayDatesMissing) return 'Pick your stay dates first.';
   if (extra.kind === 'transfer') {
     if (!extra.time) return 'Add the pickup time for your flight.';
     return '';
   }
   if (!extra.date) return 'Pick a date.';
   if (extra.date < stay.checkIn || extra.date > stay.checkOut) return 'Pick a date inside your stay.';
-  const slots = slotsFor(extra.key, category);
+  const slots = findSlots(extra.key, category);
   if (!extra.time) return 'Pick a start time.';
   if (slots && !slots.includes(extra.time)) return 'Pick one of the listed start times.';
   return '';
@@ -89,7 +90,7 @@ export function isOffered(key, catalog) {
   return !!item && item.active !== false;
 }
 
-export function extrasTotals(extras, catalog) {
+export function calculateExtrasTotals(extras, catalog) {
   if (!extras.length) return { total: 0, totalIdr: 0, deposit: 0, rest: 0 };
   const prices = extras.map((extra) => priceFor(extra, catalog));
   if (prices.some((price) => !price) || !catalog.deposit) return null;

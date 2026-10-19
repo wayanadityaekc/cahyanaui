@@ -1,8 +1,10 @@
 import { Check, ShieldCheck } from 'lucide-react';
-import { REGISTRATION as R } from '@/content/shared/registration';
+import { REGISTRATION as registration } from '@/content/shared/registration';
+
+const ICON_STROKE_WIDTH_REGULAR = 1.7;
 
 function SealIcon({ className }) {
-  return <ShieldCheck className={className} strokeWidth={1.7} aria-hidden="true" />;
+  return <ShieldCheck className={className} strokeWidth={ICON_STROKE_WIDTH_REGULAR} aria-hidden="true" />;
 }
 function CheckIcon({ className }) {
   return <Check className={className} aria-hidden="true" />;
@@ -10,9 +12,9 @@ function CheckIcon({ className }) {
 
 export default function RegistrationBlock({ company = false }) {
   const rows = [
-    ['Ministry of Law Decree', R.decree],
-    ['Business License (NIB)', R.nib],
-    ['Registered in', R.location],
+    ['Ministry of Law Decree', registration.decree],
+    ['Business License (NIB)', registration.nib],
+    ['Registered in', registration.location],
   ];
   const sec = company
     ? 'max-w-none mx-0 px-0 pb-0'
@@ -28,21 +30,21 @@ export default function RegistrationBlock({ company = false }) {
             <SealIcon className="w-5 h-5" />
           </span>
           <div>
-            <div className="text-h2 font-bold text-gold tracking-[-0.01em] leading-[1.2]">{R.name}</div>
+            <div className="text-h2 font-bold text-gold tracking-[-0.01em] leading-[1.2]">{registration.name}</div>
             <div className="text-small font-medium tracking-[0.04em] uppercase text-muted mt-[0.15rem]">
               Registered in Indonesia
             </div>
           </div>
         </div>
         <dl className="mt-4">
-          {rows.map(([k, v]) => (
+          {rows.map(([label, value]) => (
             <div
               className="flex justify-between gap-4 py-2 [&:not(:first-child)]:[border-top:1px_dashed_var(--line)]"
-              key={k}
+              key={label}
             >
-              <dt className="text-label tracking-[0.06em] uppercase text-muted">{k}</dt>
+              <dt className="text-label tracking-[0.06em] uppercase text-muted">{label}</dt>
               <dd className="m-0 text-small font-semibold text-amber text-right [font-variant-numeric:tabular-nums]">
-                {v}
+                {value}
               </dd>
             </div>
           ))}
@@ -50,7 +52,12 @@ export default function RegistrationBlock({ company = false }) {
         <p className="flex items-center gap-2 mt-4 text-small text-green">
           <CheckIcon className="w-[15px] h-[15px] flex-none text-ok" />
           Verify our registration on the official portal{' '}
-          <a href={R.verifyUrl} target="_blank" rel="noopener" className="text-cta font-semibold no-underline">
+          <a
+            href={registration.verifyUrl}
+            target="_blank"
+            rel="noopener"
+            className="text-cta font-semibold no-underline"
+          >
             ahu.go.id
           </a>
         </p>

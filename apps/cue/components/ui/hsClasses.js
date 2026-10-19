@@ -32,7 +32,7 @@ const PANEL_POPUP_STATIC =
   `bg-white [border:1px_solid_var(--line)] rounded-xl z-[340] ` +
   `flex flex-col overflow-hidden [overscroll-behavior:contain] ` +
   `[transition:opacity_0.24s_var(--ease),transform_0.24s_var(--ease),visibility_0.24s] ${PANEL_MOBILE_TRANSITION}`;
-export function panelPopup(open) {
+export function buildPanelPopupClass(open) {
   return `${PANEL_POPUP_STATIC} ${open ? 'opacity-100 visible pointer-events-auto [transform:translate(-50%,-50%)_scale(1)]' : 'opacity-0 invisible pointer-events-none [transform:translate(-50%,-50%)_scale(0.96)]'}`;
 }
 export const PANEL_HEAD =
@@ -43,15 +43,15 @@ export const PANEL_CLOSE =
 export const PANEL_BODY =
   'max-h-none overflow-y-auto flex-[1_1_auto] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden';
 
-export function opt(sel, disabled) {
+export function buildOptionClass(selector, disabled) {
   return `w-full flex items-center gap-[0.8rem] py-3 px-4 border-none text-left [&+&]:[border-top:1px_solid_var(--line)] ${
     disabled
       ? 'cursor-not-allowed opacity-40 bg-transparent'
-      : `cursor-pointer ${sel ? 'bg-[rgba(34,32,28,0.14)]' : 'bg-transparent hover:bg-[#faf8f3]'}`
+      : `cursor-pointer ${selector ? 'bg-[rgba(34,32,28,0.14)]' : 'bg-transparent hover:bg-[#faf8f3]'}`
   }`;
 }
 
-export function overlay(open, elevated) {
+export function buildOverlayClass(open, elevated) {
   return (
     `fixed inset-0 bg-[rgba(26,26,26,0.42)] ${elevated ? 'z-[300]' : 'z-[55]'} ` +
     `transition-opacity duration-[var(--dur-slow)] ease-[var(--ease-out)] motion-reduce:transition-none ` +
@@ -67,7 +67,7 @@ const PANEL_BOOKDATE_STATIC =
   `flex flex-col overflow-hidden [overscroll-behavior:contain] ` +
   `[transition:opacity_0.24s_var(--ease),transform_0.24s_var(--ease),visibility_0.24s] ${PANEL_MOBILE_TRANSITION} ` +
   `min-[769px]:w-[min(430px,92vw)] min-[769px]:max-h-[86vh] min-[769px]:overflow-y-auto min-[769px]:[scrollbar-width:none] min-[769px]:[&::-webkit-scrollbar]:hidden`;
-export function panelBookdate(open) {
+export function buildPanelBookdateClass(open) {
   return `${PANEL_BOOKDATE_STATIC} ${open ? 'opacity-100 visible pointer-events-auto' : 'opacity-0 invisible pointer-events-none'} ${open ? '[transform:translate(-50%,-50%)_scale(1)] min-[769px]:[transform:translate(-50%,-50%)]' : '[transform:translate(-50%,-50%)_scale(0.96)] min-[769px]:[transform:translate(-50%,-48%)]'}`;
 }
 export const PANEL_HEAD_BOOKDATE =
@@ -83,14 +83,14 @@ export const CAL_CAP_BTN =
   'flex-[0_0_auto] w-8 h-8 inline-flex items-center justify-center [border:1px_solid_var(--line)] rounded-sm bg-white text-gold text-[1.3rem] leading-none cursor-pointer [transition:background_var(--dur-fast)_ease,border-color_var(--dur-fast)_ease,scale_var(--dur-fast)_var(--ease)] hover:bg-cream hover:[border-color:var(--color-gold)]';
 export const CAL_GRID = 'grid [grid-template-columns:repeat(7,1fr)] gap-[2px]';
 export const CAL_DOW = 'font-body font-medium text-label tracking-[0.14em] uppercase text-muted text-center py-1';
-export function calDay(off, sel) {
-  return `aspect-square flex items-center justify-center font-body font-normal text-small border-none border-current rounded-sm ${
-    sel
-      ? 'bg-gold text-white cursor-pointer hover:bg-gold-d'
-      : off
-        ? 'bg-transparent text-[#cfccc4] cursor-default'
-        : 'bg-transparent text-ink cursor-pointer hover:bg-[#f1efe9]'
-  }`;
+export function buildCalendarDayClass(off, selector) {
+  function pickRouteFilterValue() {
+    if (selector) return 'bg-gold text-white cursor-pointer hover:bg-gold-d';
+    if (off) return 'bg-transparent text-[#cfccc4] cursor-default';
+    return 'bg-transparent text-ink cursor-pointer hover:bg-[#f1efe9]';
+  }
+
+  return `aspect-square flex items-center justify-center font-body font-normal text-small border-none border-current rounded-sm ${pickRouteFilterValue()}`;
 }
 
 export const CAL_FOOT =
@@ -99,7 +99,7 @@ export const CAL_HINT = 'font-body font-normal text-small text-muted';
 export const CAL_APPLY = `inline-flex ${BTN_SM} font-body bg-cta text-white border-none [border-color:var(--color-cta)] cursor-pointer hover:bg-cta-d hover:[border-color:var(--color-cta-d)] hover:text-white disabled:opacity-50 disabled:cursor-default`;
 export const PANEL_CLOSE_SHEET = `${PANEL_CLOSE} min-[769px]:hidden`;
 
-export function panelMenu(open) {
+export function buildPanelMenuClass(open) {
   return [
     'absolute top-[calc(100%_+_8px)] left-0 right-0 z-[60] bg-white [border:1px_solid_var(--line)] rounded-lg overflow-hidden [overscroll-behavior:contain]',
     '[transition:opacity_0.24s_var(--ease),transform_0.24s_var(--ease),visibility_0.24s]',
@@ -118,8 +118,8 @@ export function panelMenu(open) {
 export const PANEL_HEAD_MENU =
   'hidden [@media(max-width:768px)]:flex [@media(max-width:768px)]:items-center [@media(max-width:768px)]:justify-between [@media(max-width:768px)]:pt-4 [@media(max-width:768px)]:px-5 [@media(max-width:768px)]:pb-3 [@media(max-width:768px)]:[border-bottom:1px_solid_var(--line)] [@media(max-width:768px)]:sticky [@media(max-width:768px)]:top-0 [@media(max-width:768px)]:bg-white';
 export const PANEL_BODY_MENU = 'max-h-[500px] overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden';
-export function optMenu(sel) {
-  return `w-full flex items-center gap-[0.8rem] py-[0.85rem] px-4 border-none text-left cursor-pointer [&+&]:[border-top:1px_solid_var(--line)] ${sel ? 'bg-[rgba(34,32,28,0.14)]' : 'bg-transparent hover:bg-[#faf8f3]'}`;
+export function buildOptionMenuClass(selector) {
+  return `w-full flex items-center gap-[0.8rem] py-[0.85rem] px-4 border-none text-left cursor-pointer [&+&]:[border-top:1px_solid_var(--line)] ${selector ? 'bg-[rgba(34,32,28,0.14)]' : 'bg-transparent hover:bg-[#faf8f3]'}`;
 }
 
 export const CSEL_GROUP = 'relative block w-full';

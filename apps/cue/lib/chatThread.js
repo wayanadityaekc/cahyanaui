@@ -1,9 +1,11 @@
 import { API_BASE, KEY } from '@/lib/constants';
 
+const HTTP_STATUS_NOT_FOUND = 404;
+
 export function readThread() {
   try {
-    const v = localStorage.getItem(KEY.chatThread);
-    return /^[a-f0-9]{48}$/.test(v || '') ? v : null;
+    const threadId = localStorage.getItem(KEY.chatThread);
+    return /^[a-f0-9]{48}$/.test(threadId || '') ? threadId : null;
   } catch (e) {
     return null;
   }
@@ -41,7 +43,7 @@ export async function sendToThread(id, body) {
 
 export async function pollThread(id, since) {
   const response = await fetch(`${API_BASE}/chat/${id}?since=${Number(since) || 0}`);
-  if (response.status === 404) {
+  if (response.status === HTTP_STATUS_NOT_FOUND) {
     writeThread(null);
     return { gone: true, messages: [] };
   }

@@ -14,6 +14,9 @@ import LoadingScreen from '@/components/ui/LoadingScreen';
 import BookConfirmModal from '@/components/booking/BookConfirmModal';
 import BookingGate from '@/components/booking/BookingGate';
 
+const ASSET_HASH_LENGTH = 8;
+const CATALOG_FETCH_TIMEOUT_MS = 10000;
+
 const inter = localFont({
   src: '../public/assets/fonts/inter-latin.woff2',
   weight: '300 700',
@@ -23,31 +26,33 @@ const inter = localFont({
   fallback: ['system-ui', 'sans-serif'],
 });
 
-function assetV(...rel) {
+function hashAsset(...rel) {
   return createHash('sha1')
     .update(readFileSync(join(process.cwd(), 'public', ...rel)))
     .digest('hex')
-    .slice(0, 8);
+    .slice(0, ASSET_HASH_LENGTH);
 }
 
-const STYLE_V = assetV('style.css');
-const ICON_SVG_V = assetV('assets', 'icons', 'favicon.svg');
-const ICON_ICO_V = assetV('assets', 'icons', 'favicon.ico');
-const ICON_APPLE_V = assetV('assets', 'icons', 'apple-touch-icon.png');
+const STYLE_V = hashAsset('style.css');
+const ICON_SVG_V = hashAsset('assets', 'icons', 'favicon.svg');
+const ICON_ICO_V = hashAsset('assets', 'icons', 'favicon.ico');
+const ICON_APPLE_V = hashAsset('assets', 'icons', 'apple-touch-icon.png');
 
 export const metadata = {
   metadataBase: new URL('https://cahyanaubudexperience.com'),
 };
 
 let buildCatalog = null;
-function catalogForBuild() {
+function fetchBuildCatalog() {
   if (!buildCatalog) {
     const query = new URLSearchParams({ currency: 'USD', guests: String(DISPLAY_GUESTS), stay: '' });
     buildCatalog = (async () => {
       try {
-        const response = await fetch(`${API_BASE}/pricing/catalog?${query}`, { signal: AbortSignal.timeout(10000) });
-        const d = response.ok ? await response.json() : null;
-        return d && Array.isArray(d.items) ? d : null;
+        const response = await fetch(`${API_BASE}/pricing/catalog?${query}`, {
+          signal: AbortSignal.timeout(CATALOG_FETCH_TIMEOUT_MS),
+        });
+        const catalog = response.ok ? await response.json() : null;
+        return catalog && Array.isArray(catalog.items) ? catalog : null;
       } catch (e) {
         return null;
       }
@@ -57,7 +62,7 @@ function catalogForBuild() {
 }
 
 export default async function RootLayout({ children }) {
-  const initialCatalog = await catalogForBuild();
+  const initialCatalog = await fetchBuildCatalog();
   return (
     <html lang="en" className={inter.variable}>
       <head>

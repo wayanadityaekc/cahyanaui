@@ -88,3 +88,11 @@ Both repos were merged in with `git-filter-repo --to-subdirectory-filter`, so
 of the villa site, back to CUE's first commit. A plain `git subtree add` was
 tried first and rejected: it keeps the commits but leaves them pointing at the
 old paths, so a per-file log stops at the merge showing one commit.
+
+## Exceptions to global
+
+| Global rule | What this repo does | Reason |
+|---|---|---|
+| Tests in `tests/` | `apps/cue` keeps CUE's 25 root `verify-*.mjs` and `tools/` harnesses; the library's own test is in `packages/ui/tests/`; one check in `tools/` | `apps/cue` is a stale snapshot (see above), not changed. |
+
+Anything not listed follows `CLAUDE-global.md`. `apps/cue` and `apps/villas` carry the exceptions of their source repos (`cahyana-ubud-experience/CLAUDE.md` section 12, `ubud-private-villas/CLAUDE.md`).

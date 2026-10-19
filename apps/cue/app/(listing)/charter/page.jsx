@@ -15,7 +15,6 @@ export default function Page() {
     <>
       <JsonLd page="charter" />
       <CharterSection />
-      {/* Every charter booking stores the same service key (CHARTER_SERVICE), so one query covers the page. */}
       <ServiceReviews
         service={CHARTER_SERVICE}
         title="What guests say about our charters"

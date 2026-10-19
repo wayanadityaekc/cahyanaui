@@ -8,7 +8,8 @@ import { GUIDE_CRUMBS, breadcrumbList } from '@/lib/schema';
 
 export const metadata = pageMeta({
   title: 'Ubud Guide | Ubud Private Villas',
-  description: 'Getting around Ubud, what is near the villas, when to visit Bali, and whether a villa or a hotel suits your trip - written by the family who hosts here.',
+  description:
+    'Getting around Ubud, what is near the villas, when to visit Bali, and whether a villa or a hotel suits your trip - written by the family who hosts here.',
   path: '/guide/',
 });
 
@@ -28,34 +29,35 @@ export default function GuideHubPage() {
         </Container>
       </section>
 
-      {/* One section per category: article category links point at /guide#<id>, so the id lives here. */}
       {CATEGORIES.map((cat) => {
         const items = ARTICLES.filter((article) => article.cat === cat.id);
         if (items.length === 0) return null;
         return (
-          <Section
-            key={cat.id}
-            id={cat.id}
-            className="scroll-mt-[calc(var(--header-h,58px)+1.5rem)]"
-          >
-              <h2 className="text-h2 font-medium text-gold mb-6">{cat.label}</h2>
-              <div className={GRID_CARDS}>
-                {items.map((article) => (
-                  <Card as={Link} hover key={article.slug} href={`/guide/${article.slug}`} className="p-5 flex flex-col gap-2 no-underline">
-                    <p className={`${EYEBROW_LINE} !mb-0`}>{categoryLabel(article.cat)}</p>
-                    <h3 className="text-h3 font-semibold text-gold">{article.title}</h3>
-                    <p className="text-small text-muted">{article.sub}</p>
-                    <span className="mt-auto pt-3 flex items-center justify-between gap-3">
-                      <span className={`${CAPS} inline-flex items-center gap-1.5 text-cta`}>
-                        Read <ArrowRight className={ICON} strokeWidth={1.6} aria-hidden="true" />
-                      </span>
-                      <span className="inline-flex items-center gap-1.5 text-label text-muted">
-                        <Clock className={ICON} strokeWidth={1.7} aria-hidden="true" />~{article.read} min
-                      </span>
+          <Section key={cat.id} id={cat.id} className="scroll-mt-[calc(var(--header-h,58px)+1.5rem)]">
+            <h2 className="text-h2 font-medium text-gold mb-6">{cat.label}</h2>
+            <div className={GRID_CARDS}>
+              {items.map((article) => (
+                <Card
+                  as={Link}
+                  hover
+                  key={article.slug}
+                  href={`/guide/${article.slug}`}
+                  className="p-5 flex flex-col gap-2 no-underline"
+                >
+                  <p className={`${EYEBROW_LINE} !mb-0`}>{categoryLabel(article.cat)}</p>
+                  <h3 className="text-h3 font-semibold text-gold">{article.title}</h3>
+                  <p className="text-small text-muted">{article.sub}</p>
+                  <span className="mt-auto pt-3 flex items-center justify-between gap-3">
+                    <span className={`${CAPS} inline-flex items-center gap-1.5 text-cta`}>
+                      Read <ArrowRight className={ICON} strokeWidth={1.6} aria-hidden="true" />
                     </span>
-                  </Card>
-                ))}
-              </div>
+                    <span className="inline-flex items-center gap-1.5 text-label text-muted">
+                      <Clock className={ICON} strokeWidth={1.7} aria-hidden="true" />~{article.read} min
+                    </span>
+                  </span>
+                </Card>
+              ))}
+            </div>
           </Section>
         );
       })}

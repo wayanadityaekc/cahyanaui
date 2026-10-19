@@ -4,7 +4,6 @@ import { AnimatePresence, LazyMotion, domAnimation, m, useReducedMotion } from '
 import { useCurrency } from '@/components/providers/CurrencyProvider';
 import { priceBreakdown } from '@/lib/villas';
 
-// Nights and total for the picked stay, fading in once both dates are set (Wayan: Framer Motion on date selection).
 export default function StaySummary({ villaSlug = '', checkIn = '', checkOut = '' }) {
   const { formatAmount, breakdown: convert } = useCurrency();
   const reduce = useReducedMotion();
@@ -25,12 +24,16 @@ export default function StaySummary({ villaSlug = '', checkIn = '', checkOut = '
             data-stay-summary
           >
             <div className="flex justify-between py-2">
-              <span className="text-muted">{formatAmount(shown.nightly)} x {shown.nights} night{shown.nights === 1 ? '' : 's'}</span>
+              <span className="text-muted">
+                {formatAmount(shown.nightly)} x {shown.nights} night{shown.nights === 1 ? '' : 's'}
+              </span>
               <span className="text-gold">{formatAmount(shown.subtotal)}</span>
             </div>
             <div className="flex justify-between py-2.5">
               <span className="font-semibold text-gold">Total</span>
-              <span className="font-bold text-amber" data-stay-total>{formatAmount(shown.total)}</span>
+              <span className="font-bold text-amber" data-stay-total>
+                {formatAmount(shown.total)}
+              </span>
             </div>
           </m.div>
         )}

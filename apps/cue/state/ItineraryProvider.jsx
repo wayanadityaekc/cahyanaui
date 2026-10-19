@@ -8,7 +8,6 @@ const ItineraryContext = createContext(null);
 
 const EMPTY = { days: [], transfers: [], charters: [] };
 
-// Map renamed products in old saved trips to their current name; the API prices by name.
 function currentName(name) {
   return LEGACY_ITEM_NAMES[name] || name;
 }
@@ -17,7 +16,7 @@ function normalise(state) {
   if (!state || typeof state !== 'object') return { ...EMPTY };
   return {
     days: Array.isArray(state.days)
-      ? state.days.map((d) => (Array.isArray(d.items) ? { ...d, items: d.items.map(currentName) } : d))
+      ? state.days.map((day) => (Array.isArray(day.items) ? { ...day, items: day.items.map(currentName) } : day))
       : [],
     transfers: Array.isArray(state.transfers) ? state.transfers : [],
     charters: Array.isArray(state.charters) ? state.charters : [],
@@ -44,11 +43,7 @@ export function ItineraryProvider({ children }) {
     state.transfers.length +
     state.charters.length;
 
-  return (
-    <ItineraryContext.Provider value={{ state, save, count, hydrated }}>
-      {children}
-    </ItineraryContext.Provider>
-  );
+  return <ItineraryContext.Provider value={{ state, save, count, hydrated }}>{children}</ItineraryContext.Provider>;
 }
 
 export function useItinerary() {

@@ -5,12 +5,12 @@ import { breadcrumbList, serviceCrumbs } from '@/lib/schema';
 
 export const metadata = pageMeta({
   title: 'Breakfast at Your Villa in Ubud',
-  description: 'Breakfast cooked fresh at your Ubud villa each morning: Balinese and western options, plus floating breakfast in your private pool.',
+  description:
+    'Breakfast cooked fresh at your Ubud villa each morning: Balinese and western options, plus floating breakfast in your private pool.',
   path: '/services/breakfast/',
   image: '/images/breakfast-served-poolside.jpg',
 });
 
-// CEK WAYAN: photos hidden until Wayan supplies real ones; the hero falls back to its dark gradient band.
 export default function BreakfastPage() {
   return (
     <>
@@ -51,7 +51,12 @@ export default function BreakfastPage() {
         ]}
         aside={{
           title: 'Breakfast at your villa',
-          facts: ['Balinese or western', 'Your time, your table', 'Floating tray on request', 'Vegetarian & vegan versions'],
+          facts: [
+            'Balinese or western',
+            'Your time, your table',
+            'Floating tray on request',
+            'Vegetarian & vegan versions',
+          ],
           ctaLabel: 'Ask us',
           otherServices: [
             { href: '/services/spa', label: 'Spa & Massage' },

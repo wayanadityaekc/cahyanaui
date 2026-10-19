@@ -37,11 +37,8 @@ if (missing.length) {
 
 console.log(`URL check passed - all ${expected.length} live URLs present in out/.`);
 
-// Legacy guide pages relied on <base href="/">, which the export does not carry.
-// Any relative src/href left in the extracted HTML resolves against /guide/ and
-// 404s - it broke 104 images and 319 links before this check existed.
 (function checkRelativeUrls() {
-  const path = require("path");
+  const path = require('path');
   const files = [];
   (function w(d) {
     fs.readdirSync(d, { withFileTypes: true }).forEach((e) => {
@@ -49,17 +46,15 @@ console.log(`URL check passed - all ${expected.length} live URLs present in out/
       if (e.isDirectory()) w(p);
       else if (/\.jsx?$/.test(e.name)) files.push(p);
     });
-  })("content");
+  })('content');
   const bad = [];
   files.forEach((file) => {
-    const src = fs.readFileSync(file, "utf8");
+    const src = fs.readFileSync(file, 'utf8');
     [...src.matchAll(/(src|href)=(\\?")([^"\\]+)/g)].forEach((m) => {
       const u = m[3];
       if (/^(https?:|\/|#|mailto:|tel:|data:|\{)/.test(u)) return;
       bad.push(`${file}  ${m[1]}="${u}"`);
     });
-    // Inline styles hide the same problem inside CSS url(), which the attribute
-    // scan above cannot see.
     [...src.matchAll(/url\(\s*(\\?['"]?)([^'")\\]+)/g)].forEach((m) => {
       const u = m[2];
       if (/^(https?:|\/|#|data:)/.test(u)) return;
@@ -67,82 +62,71 @@ console.log(`URL check passed - all ${expected.length} live URLs present in out/
     });
   });
   if (bad.length) {
-    console.error("\nRELATIVE URLS IN EXTRACTED HTML (must be root-absolute):");
+    console.error('\nRELATIVE URLS IN EXTRACTED HTML (must be root-absolute):');
     bad.slice(0, 20).forEach((b) => console.error(`  ${b}`));
     if (bad.length > 20) console.error(`  ... and ${bad.length - 20} more`);
     process.exitCode = 1;
   } else {
-    console.log("Relative URLs in extracted HTML : none");
+    console.log('Relative URLs in extracted HTML : none');
   }
 })();
 
-// A new page that never reaches sitemap.xml is invisible to search, and nothing
-// else notices - our-company.html once shipped without it.
-// Pages marked noindex are meant to be absent, so they are skipped.
 (function checkSitemap() {
-  const path = require("path");
-  const OUT = path.join(__dirname, "..", "out");
-  const SITEMAP = path.join(__dirname, "..", "sitemap.xml");
+  const path = require('path');
+  const OUT = path.join(__dirname, '..', 'out');
+  const SITEMAP = path.join(__dirname, '..', 'sitemap.xml');
   if (!fs.existsSync(OUT) || !fs.existsSync(SITEMAP)) return;
-  const sitemap = fs.readFileSync(SITEMAP, "utf8");
+  const sitemap = fs.readFileSync(SITEMAP, 'utf8');
   const pages = [];
   (function w(d, rel) {
     fs.readdirSync(d, { withFileTypes: true }).forEach((e) => {
-      // assets/ holds a favicon <head> snippet, not a page
-      if (e.name === "_next" || e.name === "assets") return;
+      if (e.name === '_next' || e.name === 'assets') return;
       const p = path.join(d, e.name);
       if (e.isDirectory()) w(p, `${rel}${e.name}/`);
-      else if (e.name.endsWith(".html")) pages.push(rel + e.name);
+      else if (e.name.endsWith('.html')) pages.push(rel + e.name);
     });
-  })(OUT, "");
+  })(OUT, '');
   const missing = [];
-  pages.forEach((p) => {
-    if (/^(404|_not-found)\.html$/.test(p)) return;
-    const html = fs.readFileSync(path.join(OUT, p), "utf8");
+  pages.forEach((page) => {
+    if (/^(404|_not-found)\.html$/.test(page)) return;
+    const html = fs.readFileSync(path.join(OUT, page), 'utf8');
     if (/name="robots"[^>]*noindex/.test(html)) return;
-    if (p === "index.html") {
-      if (!/<loc>https:\/\/cahyanaubudexperience\.com\/<\/loc>/.test(sitemap)) missing.push(`${p} (homepage)`);
+    if (page === 'index.html') {
+      if (!/<loc>https:\/\/cahyanaubudexperience\.com\/<\/loc>/.test(sitemap)) missing.push(`${page} (homepage)`);
       return;
     }
-    if (!sitemap.includes(`/${p}<`)) missing.push(p);
+    if (!sitemap.includes(`/${page}<`)) missing.push(page);
   });
   if (missing.length) {
-    console.error("\nINDEXABLE PAGES MISSING FROM sitemap.xml:");
+    console.error('\nINDEXABLE PAGES MISSING FROM sitemap.xml:');
     missing.forEach((m) => console.error(`  ${m}`));
     process.exitCode = 1;
   } else {
-    console.log("Indexable pages missing from sitemap : none");
+    console.log('Indexable pages missing from sitemap : none');
   }
 })();
 
-// Two sitemaps exist: sitemap.xml at the repo root (hand-kept checklist, read by
-// the checks above) and out/sitemap.xml (generated from lib/routes.js - the one
-// that actually ships). They silently drifted once: the root file dropped the six
-// retired legal/about pages while routes.js kept them, so the live sitemap sent
-// Google to six redirects. Comparing them makes that impossible to repeat.
 (function checkSitemapsAgree() {
-  const path = require("path");
-  const root = path.join(__dirname, "..", "sitemap.xml");
-  const built = path.join(__dirname, "..", "out", "sitemap.xml");
+  const path = require('path');
+  const root = path.join(__dirname, '..', 'sitemap.xml');
+  const built = path.join(__dirname, '..', 'out', 'sitemap.xml');
   if (!fs.existsSync(root) || !fs.existsSync(built)) return;
-  // Commented-out entries are deliberately-parked URLs (e.g. a parked tour), not
-  // live ones - strip comments first or they read as present in the checklist.
   function locs(file) {
     return new Set(
-        [
-          ...fs
-            .readFileSync(file, "utf8")
-            .replace(/<!--[\s\S]*?-->/g, "")
-            .matchAll(/<loc>([^<]+)<\/loc>/g),
-        ].map((m) => m[1].trim()),
-      );
+      [
+        ...fs
+          .readFileSync(file, 'utf8')
+          .replace(/<!--[\s\S]*?-->/g, '')
+          .matchAll(/<loc>([^<]+)<\/loc>/g),
+      ].map((m) => m[1].trim()),
+    );
   }
   const rootLocs = locs(root);
   const builtLocs = locs(built);
   const onlyBuilt = [...builtLocs].filter((u) => !rootLocs.has(u));
   const onlyRoot = [...rootLocs].filter((u) => !builtLocs.has(u));
   if (onlyBuilt.length || onlyRoot.length) {
-    console.error("\nSITEMAP MISMATCH - sitemap.xml and out/sitemap.xml disagree:");
+    console.error('\nSITEMAP MISMATCH - sitemap.xml and out/sitemap.xml disagree:');
     onlyBuilt.forEach((u) => console.error(`  shipped but not in the root checklist: ${u}`));
     onlyRoot.forEach((u) => console.error(`  in the root checklist but not shipped: ${u}`));
     process.exitCode = 1;

@@ -4,7 +4,6 @@ import Mosaic from '@/components/ui/Mosaic';
 import ServiceAside from '@/components/sections/ServiceAside';
 import LoadFallback from '@/components/ui/LoadFallback';
 
-// Shared layout for every 'at your villa' service page, so styling lives in one place.
 export default function ServiceDetail({
   kicker = '',
   title = '',
@@ -46,13 +45,17 @@ export default function ServiceDetail({
                   </li>
                 ))}
               </ul>
-            ) : <LoadFallback className="mb-2" />}
+            ) : (
+              <LoadFallback className="mb-2" />
+            )}
 
             {!sections.length && <LoadFallback className="mt-9" />}
             {sections.map((section) => (
               <div key={section.heading}>
                 <h2 className="text-h2 font-medium mt-9 mb-3 text-gold">{section.heading}</h2>
-                {section.body?.map((para, i) => <p key={i}>{para}</p>)}
+                {section.body?.map((para, i) => (
+                  <p key={i}>{para}</p>
+                ))}
                 {section.list && (
                   <ul className="grid sm:grid-cols-2 gap-x-8">
                     {section.list.map((item) => (
@@ -78,9 +81,13 @@ export default function ServiceDetail({
         <h2 className="text-h2 font-medium text-white">{bottomHeading}</h2>
         <p className="mt-2 text-small text-white/75">{bottomText}</p>
         <div className="flex justify-center mt-6">
-          {bottomCta || <Button as={Link} variant="onDark" href="/#villas">See villas</Button>}
+          {bottomCta || (
+            <Button as={Link} variant="onDark" href="/#villas">
+              See villas
+            </Button>
+          )}
         </div>
-</Section>
+      </Section>
     </>
   );
 }

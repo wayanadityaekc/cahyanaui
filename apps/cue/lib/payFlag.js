@@ -1,10 +1,7 @@
-// Default for showing the payment step; ?pay=1 / ?pay=0 overrides per browser, set false to turn checkout off for all.
-
 export const PAY_DEFAULT = true;
 
 const KEY = 'cue_pay_beta';
 
-// Never call during render: static export, so read it in an effect to match the prerendered HTML.
 export function readPayFlag() {
   if (typeof window === 'undefined') return PAY_DEFAULT;
   try {
@@ -15,8 +12,6 @@ export function readPayFlag() {
     }
     const saved = localStorage.getItem(KEY);
     if (saved === '1' || saved === '0') return saved === '1';
-  } catch (e) {
-    // Storage blocked (private mode): fall back to PAY_DEFAULT.
-  }
+  } catch (e) {}
   return PAY_DEFAULT;
 }

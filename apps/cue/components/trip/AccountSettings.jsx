@@ -20,11 +20,9 @@ import MyReviews from './MyReviews';
 import DeleteAccountModal from './DeleteAccountModal';
 import SignInPrompt from '@/components/account/SignInPrompt';
 
-// Ghost red button that only opens the delete confirmation; the destructive button is in DeleteAccountModal.
 const BTN_DANGER_GHOST = `inline-flex ${BTN_SM} font-body [border:1px_solid_var(--color-err)] bg-white text-err cursor-pointer hover:bg-err hover:text-white`;
 const SECTION_TITLE = 'font-head font-medium text-h3 text-green m-0 mb-3';
 
-// Same RailLayout shell as My Trips and Our Company; one item, so mobileNav skips the phone list/back screen.
 const RAIL_ITEMS = [{ id: 'account', label: 'Account Settings', Icon: UserRound }];
 
 function SettingsShell({ children }) {
@@ -40,7 +38,9 @@ function SettingsShell({ children }) {
       scrollContent
     >
       <div className={RAIL_READ}>
-        <h1 className="font-head font-medium tracking-[-0.01em] text-h2 leading-[var(--lh-heading)] text-green m-0 mb-[0.3rem]">Account Settings</h1>
+        <h1 className="font-head font-medium tracking-[-0.01em] text-h2 leading-[var(--lh-heading)] text-green m-0 mb-[0.3rem]">
+          Account Settings
+        </h1>
         <p className="text-muted text-body m-0 mb-[1.6rem]">Update your details and saved trip preferences.</p>
         {children}
       </div>
@@ -55,7 +55,6 @@ export default function AccountSettings() {
   const [msg, setMsg] = useState('');
   const [busy, setBusy] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
-  // Keeps a confirmation screen after delete, since clearing `account` would otherwise swap to the sign-in prompt.
   const [deleted, setDeleted] = useState(false);
 
   useEffect(() => {
@@ -63,17 +62,22 @@ export default function AccountSettings() {
   }, [account]);
 
   async function confirmDelete() {
-    const res = await deleteAccount();
-    if (res.ok) setDeleted(true);
-    return res;
+    const result = await deleteAccount();
+    if (result.ok) setDeleted(true);
+    return result;
   }
 
   if (deleted) {
     return (
       <SettingsShell>
         <div id="settings-root" data-settings>
-          <p className="text-body text-green m-0">Your account has been deleted. You can close this page, or
-            {' '}<a href="/" className="text-gold-d font-medium">return home</a>.</p>
+          <p className="text-body text-green m-0">
+            Your account has been deleted. You can close this page, or{' '}
+            <a href="/" className="text-gold-d font-medium">
+              return home
+            </a>
+            .
+          </p>
         </div>
       </SettingsShell>
     );
@@ -96,17 +100,17 @@ export default function AccountSettings() {
     setBusy(true);
     setMsg('');
     try {
-      const res = await fetch(`${API_BASE}/account`, {
+      const response = await fetch(`${API_BASE}/account`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${readLocal(KEY.token, '')}` },
         body: JSON.stringify({ ...form, guest_count_pref: String(guests || ''), stay_area_pref: stay || '' }),
       });
-      const d = await res.json();
-      if (d && d.account) {
-        setAccount(d.account);
+      const data = await response.json();
+      if (data && data.account) {
+        setAccount(data.account);
         setMsg('Saved.');
       } else {
-        setMsg((d && d.detail) || 'Could not save. Please try again.');
+        setMsg((data && data.detail) || 'Could not save. Please try again.');
       }
     } catch (e) {
       setMsg('Could not save. Please try again.');
@@ -115,67 +119,98 @@ export default function AccountSettings() {
     }
   }
 
-  function set(k) { return (e) => setForm((v) => ({ ...v, [k]: e.target.value })); }
+  function set(k) {
+    return (e) => setForm((v) => ({ ...v, [k]: e.target.value }));
+  }
 
   return (
     <SettingsShell>
-    <div id="settings-root" data-settings>
-      {/* Initials avatar (no photo upload), using the same initialsOf() as the navbar. */}
-      <div className="flex items-center gap-4 mb-6">
-        <span
-          className="w-[72px] h-[72px] shrink-0 rounded-[50%] bg-gold text-white grid place-items-center text-h2 font-semibold tracking-[0.02em]"
-          aria-hidden="true"
-        >
-          {initialsOf(account.name, account.email)}
-        </span>
-        <div className="min-w-0">
-          <div className="font-semibold text-h3 text-green overflow-hidden text-ellipsis whitespace-nowrap">{account.name || 'Your account'}</div>
-          <div className="text-body text-muted overflow-hidden text-ellipsis whitespace-nowrap">{account.email}</div>
+      <div id="settings-root" data-settings>
+        <div className="flex items-center gap-4 mb-6">
+          <span
+            className="w-[72px] h-[72px] shrink-0 rounded-[50%] bg-gold text-white grid place-items-center text-h2 font-semibold tracking-[0.02em]"
+            aria-hidden="true"
+          >
+            {initialsOf(account.name, account.email)}
+          </span>
+          <div className="min-w-0">
+            <div className="font-semibold text-h3 text-green overflow-hidden text-ellipsis whitespace-nowrap">
+              {account.name || 'Your account'}
+            </div>
+            <div className="text-body text-muted overflow-hidden text-ellipsis whitespace-nowrap">{account.email}</div>
+          </div>
         </div>
-      </div>
 
-      <div className={CONTACT_GROUP}>
-        <label className={FIELD_LABEL} htmlFor="st-name">Name</label>
-        <input className={CONTACT_INPUT} type="text" id="st-name" value={form.name} onChange={set('name')} />
-      </div>
-      <div className={CONTACT_GROUP}>
-        <label className={FIELD_LABEL} htmlFor="st-email">Email</label>
-        <input className={CONTACT_INPUT} type="email" id="st-email" value={form.email} onChange={set('email')} />
-      </div>
-      <div className={CONTACT_GROUP}>
-        <label className={FIELD_LABEL} htmlFor="st-phone">Phone</label>
-        <input className={CONTACT_INPUT} type="tel" id="st-phone" value={form.phone} onChange={set('phone')} />
-      </div>
-      <div className={CONTACT_GROUP}>
-        <label className={FIELD_LABEL} htmlFor="st-guests">Guests</label>
-        <Select
-          id="st-guests"
-          label="Guests"
-          value={guests || ''}
-          onChange={setGuests}
-          options={[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((n) => ({ value: String(n), label: String(n) }))}
-          placeholder="Not set"
-        />
-      </div>
-      <div className={CONTACT_GROUP}>
-        <label className={FIELD_LABEL} htmlFor="st-stay">Pickup area</label>
-        <input className={CONTACT_INPUT} type="text" id="st-stay" value={stay} onChange={(e) => setStay(e.target.value)} placeholder="Ubud & nearby" />
-      </div>
-      {msg && <small role="status" className={REFMSG}>{msg}</small>}
-      {/* Use BTN_CTA, not a bare className: a class with no CSS rule renders as a raw browser button with no warning. */}
-      <button className={`inline-flex ${BTN_CTA}`} onClick={save} disabled={busy}>{busy ? 'Saving...' : 'Save changes'}</button>
-      <button className={BTN_PILL} onClick={logout}>Sign out</button>
+        <div className={CONTACT_GROUP}>
+          <label className={FIELD_LABEL} htmlFor="st-name">
+            Name
+          </label>
+          <input className={CONTACT_INPUT} type="text" id="st-name" value={form.name} onChange={set('name')} />
+        </div>
+        <div className={CONTACT_GROUP}>
+          <label className={FIELD_LABEL} htmlFor="st-email">
+            Email
+          </label>
+          <input className={CONTACT_INPUT} type="email" id="st-email" value={form.email} onChange={set('email')} />
+        </div>
+        <div className={CONTACT_GROUP}>
+          <label className={FIELD_LABEL} htmlFor="st-phone">
+            Phone
+          </label>
+          <input className={CONTACT_INPUT} type="tel" id="st-phone" value={form.phone} onChange={set('phone')} />
+        </div>
+        <div className={CONTACT_GROUP}>
+          <label className={FIELD_LABEL} htmlFor="st-guests">
+            Guests
+          </label>
+          <Select
+            id="st-guests"
+            label="Guests"
+            value={guests || ''}
+            onChange={setGuests}
+            options={[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((n) => ({ value: String(n), label: String(n) }))}
+            placeholder="Not set"
+          />
+        </div>
+        <div className={CONTACT_GROUP}>
+          <label className={FIELD_LABEL} htmlFor="st-stay">
+            Pickup area
+          </label>
+          <input
+            className={CONTACT_INPUT}
+            type="text"
+            id="st-stay"
+            value={stay}
+            onChange={(e) => setStay(e.target.value)}
+            placeholder="Ubud & nearby"
+          />
+        </div>
+        {msg && (
+          <small role="status" className={REFMSG}>
+            {msg}
+          </small>
+        )}
+        <button className={`inline-flex ${BTN_CTA}`} onClick={save} disabled={busy}>
+          {busy ? 'Saving...' : 'Save changes'}
+        </button>
+        <button className={BTN_PILL} onClick={logout}>
+          Sign out
+        </button>
 
-      <Separator className="my-6" />
-      <h2 className={SECTION_TITLE}>My reviews</h2>
-      <MyReviews />
+        <Separator className="my-6" />
+        <h2 className={SECTION_TITLE}>My reviews</h2>
+        <MyReviews />
 
-      <Separator className="my-6" />
-      <h2 className={SECTION_TITLE}>Danger zone</h2>
-      <p className="text-body text-muted m-0 mb-3">Delete your account. Your bookings and any reviews you&apos;ve written stay on record.</p>
-      <button type="button" className={BTN_DANGER_GHOST} onClick={() => setDeleteOpen(true)}>Delete account</button>
-      <DeleteAccountModal open={deleteOpen} onClose={() => setDeleteOpen(false)} onConfirm={confirmDelete} />
-    </div>
+        <Separator className="my-6" />
+        <h2 className={SECTION_TITLE}>Danger zone</h2>
+        <p className="text-body text-muted m-0 mb-3">
+          Delete your account. Your bookings and any reviews you&apos;ve written stay on record.
+        </p>
+        <button type="button" className={BTN_DANGER_GHOST} onClick={() => setDeleteOpen(true)}>
+          Delete account
+        </button>
+        <DeleteAccountModal open={deleteOpen} onClose={() => setDeleteOpen(false)} onConfirm={confirmDelete} />
+      </div>
     </SettingsShell>
   );
 }

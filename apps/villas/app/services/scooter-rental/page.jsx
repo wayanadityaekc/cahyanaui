@@ -3,14 +3,13 @@ import { JsonLd } from '@cahyana/ui';
 import { pageMeta } from '@/lib/seo';
 import { breadcrumbList, serviceCrumbs } from '@/lib/schema';
 
-// CEK WAYAN: details hidden until Wayan confirms models, rates, licence and deposit terms; say nothing unconfirmed here.
 export const metadata = pageMeta({
   title: 'Scooter Rental in Ubud',
-  description: 'Scooter rental for guests at Cahyana House and Cahyana Tibuah in Ubud. Details are being confirmed; message us with your dates and we will tell you what is available.',
+  description:
+    'Scooter rental for guests at Cahyana House and Cahyana Tibuah in Ubud. Details are being confirmed; message us with your dates and we will tell you what is available.',
   path: '/services/scooter-rental/',
 });
 
-// CEK WAYAN: photos hidden until Wayan supplies real ones; the hero falls back to its dark gradient band.
 export default function ScooterRentalPage() {
   return (
     <>

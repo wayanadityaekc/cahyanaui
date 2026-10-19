@@ -1,10 +1,8 @@
-// Chat answers from published FAQ or the live catalog only; it must never compose a price, else it hands off to Wayan.
 import { FAQ } from '@/content/shared/faq';
 import { LISTINGS } from '@/content/shared/listings';
 import { CHARTER } from '@/content/shared/charter';
 import { TOPICS, HUMAN_WORDS, GREETINGS, THANKS, CHAT_COPY } from '@/content/shared/chat';
 
-// Strip HTML from FAQ answers for chat bubbles, keeping the text inside tags (that is where the numbers are).
 function stripTags(html) {
   return String(html)
     .replace(/<[^>]+>/g, ' ')
@@ -14,14 +12,12 @@ function stripTags(html) {
     .trim();
 }
 
-// Throws when the FAQ question text no longer exists, so a topic cannot silently point at a deleted entry.
 function faqAnswer(question) {
   const hit = FAQ.find((f) => f.q === question);
   if (!hit) throw new Error(`chat: no FAQ entry titled "${question}"`);
   return stripTags(hit.a);
 }
 
-// Everything the site sells, flattened into one searchable list. Built once.
 let INDEX = null;
 export function itemIndex() {
   if (INDEX) return INDEX;
@@ -31,9 +27,13 @@ export function itemIndex() {
       (cat.cards || []).forEach((c) => {
         if (!c.name || !c.href) return;
         out.push({
-          name: c.name, href: c.href, meta: c.meta || '',
-          priceName: c.priceName || '', fallback: c.priceFallback || '',
-          stops: c.stops || 0, section,
+          name: c.name,
+          href: c.href,
+          meta: c.meta || '',
+          priceName: c.priceName || '',
+          fallback: c.priceFallback || '',
+          stops: c.stops || 0,
+          section,
         });
       });
     });
@@ -43,23 +43,76 @@ export function itemIndex() {
 }
 
 const STOP = new Set([
-  'the', 'a', 'an', 'is', 'are', 'do', 'does', 'did', 'can', 'i', 'we', 'you',
-  'my', 'me', 'to', 'for', 'of', 'in', 'on', 'at', 'and', 'or', 'it', 'be',
-  'how', 'what', 'when', 'where', 'much', 'many', 'with', 'from', 'your', 'us',
-  'please', 'hi', 'hello', 'there', 'want', 'would', 'like', 'need', 'about',
-  'have', 'has', 'get', 'got', 'this', 'that', 'any', 'all',
+  'the',
+  'a',
+  'an',
+  'is',
+  'are',
+  'do',
+  'does',
+  'did',
+  'can',
+  'i',
+  'we',
+  'you',
+  'my',
+  'me',
+  'to',
+  'for',
+  'of',
+  'in',
+  'on',
+  'at',
+  'and',
+  'or',
+  'it',
+  'be',
+  'how',
+  'what',
+  'when',
+  'where',
+  'much',
+  'many',
+  'with',
+  'from',
+  'your',
+  'us',
+  'please',
+  'hi',
+  'hello',
+  'there',
+  'want',
+  'would',
+  'like',
+  'need',
+  'about',
+  'have',
+  'has',
+  'get',
+  'got',
+  'this',
+  'that',
+  'any',
+  'all',
 ]);
 
-function norm(s) { return String(s || '').toLowerCase().replace(/[^a-z0-9\s]/g, ' ').replace(/\s+/g, ' ').trim(); }
-function words(s) { return norm(s).split(' ').filter((w) => w.length > 2 && !STOP.has(w)); }
+function norm(s) {
+  return String(s || '')
+    .toLowerCase()
+    .replace(/[^a-z0-9\s]/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+function words(s) {
+  return norm(s)
+    .split(' ')
+    .filter((w) => w.length > 2 && !STOP.has(w));
+}
 
-// Catalog price if it has answered, else the card's fallback from the same build; never invented.
 function priceOf({ priceName, fallback }, ctx) {
   const live = priceName && ctx.lookup ? ctx.lookup(priceName) : null;
   return (live && live.standard && live.standard.display) || fallback || '';
 }
-
-// ---- builders: answers that FAQ does not cover because they are data ----
 
 function tourPrices(ctx) {
   const picks = itemIndex()
@@ -85,10 +138,12 @@ function airportPrice({ catalog }) {
 }
 
 function charterPrices({ catalog }) {
-  const rows = (CHARTER.durations || []).map((d) => {
-    const c = catalog ? (catalog.charters || []).find((x) => x.duration === d.dur) : null;
-    return { label: d.name, note: d.sub, price: (c && c.display) || '', href: '/charter.html' };
-  }).filter((r) => r.price);
+  const rows = (CHARTER.durations || [])
+    .map((d) => {
+      const c = catalog ? (catalog.charters || []).find((x) => x.duration === d.dur) : null;
+      return { label: d.name, note: d.sub, price: (c && c.display) || '', href: '/charter.html' };
+    })
+    .filter((r) => r.price);
   return {
     text: rows.length
       ? 'You can take the car and driver for the day and decide the route as you go:'
@@ -98,20 +153,15 @@ function charterPrices({ catalog }) {
   };
 }
 
-// These are the site's own scheduling rules, not a guess about traffic.
 function startTimes() {
   return {
-    text:
-      'Most day tours start at 8:00, 8:30 or 9:00 in the morning. Some are fixed by what you are going to see: Lempuyang runs from 3:00 for the light at the gates, Batur trekking and the sunrise jeep leave at 2:00 or 3:00, and Kecak starts at 19:00. Transfers and charters you can set to any hour.',
+    text: 'Most day tours start at 8:00, 8:30 or 9:00 in the morning. Some are fixed by what you are going to see: Lempuyang runs from 3:00 for the light at the gates, Batur trekking and the sunrise jeep leave at 2:00 or 3:00, and Kecak starts at 19:00. Transfers and charters you can set to any hour.',
     link: { href: '/tour.html', label: 'All tours' },
   };
 }
 
 const BUILDERS = { tourPrices, airportPrice, charterPrices, startTimes };
 
-// ---- matching ----
-
-// Match a named item by how many of its own name words the question repeats; a bare 'tour' matches nothing.
 function matchItem(question) {
   const questionWords = words(question);
   if (!questionWords.length) return null;
@@ -120,8 +170,9 @@ function matchItem(question) {
     const iw = words(item.name);
     if (!iw.length) return;
     let hits = 0;
-    iw.forEach((w) => { if (questionWords.includes(w)) hits += 1; });
-    // Needs two of the item's words, or one distinctive word of 7+ letters.
+    iw.forEach((w) => {
+      if (questionWords.includes(w)) hits += 1;
+    });
     const strong = iw.some((w) => w.length >= 7 && questionWords.includes(w));
     if (hits >= 2 || (hits === 1 && strong)) {
       const score = hits + (strong ? 1 : 0);
@@ -140,20 +191,19 @@ function matchTopic(question) {
     let strong = false;
     t.words.forEach((w) => {
       if (w.includes(' ')) {
-        if (n.includes(w)) score += 3;          // a phrase is worth more than a word
+        if (n.includes(w)) score += 3;
       } else if (questionWords.includes(w)) score += 1;
     });
     (t.strong || []).forEach((w) => {
-      if (w.includes(' ') ? n.includes(w) : questionWords.includes(w)) { strong = true; score += 3; }
+      if (w.includes(' ') ? n.includes(w) : questionWords.includes(w)) {
+        strong = true;
+        score += 3;
+      }
     });
     if (!score) return;
-    // A topic matching one of its own distinctive words beats one that only matched generic words.
-    const better = !best
-      || (strong && !best.strong)
-      || (strong === best.strong && score > best.score);
+    const better = !best || (strong && !best.strong) || (strong === best.strong && score > best.score);
     if (better) best = { topic: t, score, strong };
   });
-  // Need a score of at least 2; one generic word alone is noise.
   return best && best.score >= 2 ? best.topic : null;
 }
 
@@ -164,17 +214,14 @@ function answerTopic(topic, ctx) {
   return build(ctx);
 }
 
-// Entry point; returns { kind: 'answer', text, rows?, link? } or { kind: 'handoff', text } - no third outcome.
 export function answerFor(question, ctx = {}) {
   const text = String(question || '').trim();
-  // Only reachable from a caller that is not the panel; the panel drops empties.
   if (!text) return { kind: 'answer', text: CHAT_COPY.greeting };
 
   const bare = norm(text);
   if (GREETINGS.includes(bare)) return { kind: 'answer', text: CHAT_COPY.hello };
   if (THANKS.includes(bare)) return { kind: 'answer', text: CHAT_COPY.thanks };
 
-  // Situations (HUMAN_WORDS) go to a person before any lookup can answer them.
   const n = norm(text);
   const qw0 = words(text);
   const human = HUMAN_WORDS.some((w) => (w.includes(' ') ? n.includes(w) : qw0.includes(w)));
@@ -196,6 +243,5 @@ export function answerFor(question, ctx = {}) {
   const topic = matchTopic(text);
   if (topic) return { kind: 'answer', ...answerTopic(topic, ctx) };
 
-  // Nothing matched, so hand off to Wayan; do not add a word-list 'off topic' decline.
   return { kind: 'handoff', text: CHAT_COPY.handoff };
 }

@@ -6,7 +6,6 @@ import { useCurrency } from '@/components/providers/CurrencyProvider';
 import { API_BASE } from '@/lib/constants';
 import { CHARTER_CARD, CHARTER_PLANS } from '@/content/charter';
 
-// CUE's charter price per tier, in the guest's currency; null until the API answers, so no price is ever guessed.
 function useCharterPrices(currency = 'USD') {
   const [prices, setPrices] = useState(null);
 
@@ -19,21 +18,22 @@ function useCharterPrices(currency = 'USD') {
         const data = await response.json();
         if (!alive || !data || !Array.isArray(data.charters) || data.currency !== currency) return;
         const byTier = {};
-        data.charters.forEach((row) => { byTier[row.duration] = row.display; });
+        data.charters.forEach((row) => {
+          byTier[row.duration] = row.display;
+        });
         setPrices(byTier);
-      } catch (e) {
-        // API down: prices stay "-" and the card still links to CUE.
-      }
+      } catch (e) {}
     }
     setPrices(null);
     load();
-    return () => { alive = false; };
+    return () => {
+      alive = false;
+    };
   }, [currency]);
 
   return prices;
 }
 
-// G8: CUE's charter plans with live prices, linking out to book on CUE. "compact" is the My Booking card version.
 export default function CharterCard({ compact = false }) {
   const { currency, formatAmount } = useCurrency();
   const prices = useCharterPrices(currency);
@@ -50,7 +50,12 @@ export default function CharterCard({ compact = false }) {
           <p className="mt-1 mb-4 text-body text-muted">{CHARTER_CARD.bookingNote}</p>
         </>
       ) : (
-        <SectionHeading eyebrow={CHARTER_CARD.eyebrow} title={CHARTER_CARD.title} lede={CHARTER_CARD.lede} className="mb-6" />
+        <SectionHeading
+          eyebrow={CHARTER_CARD.eyebrow}
+          title={CHARTER_CARD.title}
+          lede={CHARTER_CARD.lede}
+          className="mb-6"
+        />
       )}
       <PlanList plans={plans} label="Charter plans" />
       <div className="mt-5">

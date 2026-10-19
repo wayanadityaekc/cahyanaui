@@ -1,9 +1,5 @@
 import { cn } from '../lib/cn.js';
 
-/**
- * Said instead of an empty block when the data a component needs did not
- * arrive. A blank space reads as "nothing here"; this reads as "try again".
- */
 export default function LoadFallback({
   message = 'Sorry, we could not load this information. Please try again.',
   className = '',

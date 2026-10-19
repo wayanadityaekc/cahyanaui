@@ -1,9 +1,9 @@
+@CLAUDE-global.md
+
 # cahyanaui — Project Rules (monorepo and shared library)
 
 Project-specific. Universal rules live in `CLAUDE-global.md` (this repo holds the **master**; the other repos hold copies, so change it here first, then copy it to each repo).
 Last brought up to date: 9 Oct 2026. The old file, which also held a copy of the shared rules, is kept at `docs/archive/CLAUDE.old.md`.
-
-@CLAUDE-global.md
 
 ## What this is
 

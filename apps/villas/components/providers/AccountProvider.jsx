@@ -3,17 +3,24 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import { API_BASE, API_SITE, TOKEN_KEY } from '@/lib/constants';
 
-// Passwordless account shared with CUE; read in an effect, never initial state, so first paint matches the static HTML.
 const AccountContext = createContext(null);
 
 function read() {
-  try { return window.localStorage.getItem(TOKEN_KEY) || ''; } catch (e) { return ''; }
+  try {
+    return window.localStorage.getItem(TOKEN_KEY) || '';
+  } catch (e) {
+    return '';
+  }
 }
 function write(token) {
-  try { window.localStorage.setItem(TOKEN_KEY, token); } catch (e) { /* ignore */ }
+  try {
+    window.localStorage.setItem(TOKEN_KEY, token);
+  } catch (e) {}
 }
 function drop() {
-  try { window.localStorage.removeItem(TOKEN_KEY); } catch (e) { /* ignore */ }
+  try {
+    window.localStorage.removeItem(TOKEN_KEY);
+  } catch (e) {}
 }
 
 export function AccountProvider({ children }) {
@@ -23,7 +30,6 @@ export function AccountProvider({ children }) {
   useEffect(() => {
     let cancelled = false;
 
-    // Take the ?token= from the sign-in email and strip it from the URL, or it gets shared, bookmarked and kept in history.
     const params = new URLSearchParams(window.location.search);
     const magic = params.get('token');
     if (magic) {
@@ -34,7 +40,10 @@ export function AccountProvider({ children }) {
     }
 
     const token = read();
-    if (!token) { setHydrated(true); return undefined; }
+    if (!token) {
+      setHydrated(true);
+      return undefined;
+    }
 
     async function load() {
       try {
@@ -42,20 +51,19 @@ export function AccountProvider({ children }) {
         const data = response.ok ? await response.json() : null;
         if (cancelled) return;
         if (data && data.account) setAccount(data.account);
-        // A token the server no longer knows makes every later call fail silently, so drop it.
         else drop();
       } catch (e) {
-        // Offline or API down: keep the token and try again next visit.
       } finally {
         if (!cancelled) setHydrated(true);
       }
     }
     load();
 
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
-  // The server never says if an address is registered (that would leak who has an account), so any completed request counts as sent.
   async function requestLogin(email) {
     try {
       const response = await fetch(`${API_BASE}/account/login`, {
@@ -69,7 +77,6 @@ export function AccountProvider({ children }) {
     }
   }
 
-  // Check the emailed code; the session token is issued only on a match.
   async function verifyCode(email, code) {
     try {
       const response = await fetch(`${API_BASE}/account/verify`, {
@@ -102,7 +109,6 @@ export function AccountProvider({ children }) {
         setAccount(data.account || null);
         return { ok: true };
       }
-      // Email already has an account: the server emailed that inbox a code instead of handing over a login.
       if (response.ok && data.signin_sent) return { ok: false, signin: true, email: data.email || email };
       return { ok: false, error: (data && data.detail) || (data && data.error) || '' };
     } catch (e) {
@@ -110,7 +116,6 @@ export function AccountProvider({ children }) {
     }
   }
 
-  // Email is left out on purpose: the server refuses an email change without a code sent to the new inbox.
   async function updateAccount({ name, phone }) {
     try {
       const response = await fetch(`${API_BASE}/account`, {
@@ -131,7 +136,10 @@ export function AccountProvider({ children }) {
 
   async function deleteAccount() {
     try {
-      const response = await fetch(`${API_BASE}/account`, { method: 'DELETE', headers: { Authorization: `Bearer ${read()}` } });
+      const response = await fetch(`${API_BASE}/account`, {
+        method: 'DELETE',
+        headers: { Authorization: `Bearer ${read()}` },
+      });
       const data = await response.json().catch(() => ({}));
       if (response.ok && data.status === 'ok') {
         drop();
@@ -144,10 +152,15 @@ export function AccountProvider({ children }) {
     }
   }
 
-  function logout() { drop(); setAccount(null); }
+  function logout() {
+    drop();
+    setAccount(null);
+  }
 
   return (
-    <AccountContext.Provider value={{ account, hydrated, requestLogin, verifyCode, createAccount, updateAccount, deleteAccount, logout }}>
+    <AccountContext.Provider
+      value={{ account, hydrated, requestLogin, verifyCode, createAccount, updateAccount, deleteAccount, logout }}
+    >
       {children}
     </AccountContext.Provider>
   );

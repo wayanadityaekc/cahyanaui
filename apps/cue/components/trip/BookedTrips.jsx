@@ -11,33 +11,44 @@ import SignInPrompt from '@/components/account/SignInPrompt';
 import ItemIcon from './ItemIcon';
 import { fmtDay, fmtRange } from './tripDates';
 import {
-  MTC_EMPTY, MTC_EMPTY_LEAD, MTC_EMPTY_SUB, MTC_ITEM_ICON_PHOTO, MTC_ITEM_BODY, MTC_ITEM_TITLE, MTC_ITEM_DESC,
-  MTC_ITEM_PRICE, MTC_ITEM_DATE, MTC_DET_TOGGLE, MTC_DET_CHEV, MTC_DET_LIST, MTC_DET_LINE, MTC_DET_NAME,
-  MTC_DET_META, MTC_DET_AMT, MTC_ITEM_BOOKED, MTC_BOOK, MTC_DET_BOX, MTC_REVIEW_BOX, MTC_REVIEW_BTN,
-  MTC_CANCEL_BOX, MTC_CANCEL_BTN,
+  MTC_EMPTY,
+  MTC_EMPTY_LEAD,
+  MTC_EMPTY_SUB,
+  MTC_ITEM_ICON_PHOTO,
+  MTC_ITEM_BODY,
+  MTC_ITEM_TITLE,
+  MTC_ITEM_DESC,
+  MTC_ITEM_PRICE,
+  MTC_ITEM_DATE,
+  MTC_DET_TOGGLE,
+  MTC_DET_CHEV,
+  MTC_DET_LIST,
+  MTC_DET_LINE,
+  MTC_DET_NAME,
+  MTC_DET_META,
+  MTC_DET_AMT,
+  MTC_ITEM_BOOKED,
+  MTC_BOOK,
+  MTC_DET_BOX,
+  MTC_REVIEW_BOX,
+  MTC_REVIEW_BTN,
+  MTC_CANCEL_BOX,
+  MTC_CANCEL_BTN,
 } from './myTripsClasses';
 
-// Booked / Past tab: sign-in prompt, loading and empty states, trip cards, one Leave-a-review button.
 export default function BookedTrips({ isPast, openRef, setOpenRef, setReview }) {
   const { account, trips, reviewableItems } = useAccount();
   const { currency } = useTripPrefs();
 
-  // Booked trips show the stored charged amount, not a live conversion.
   function bookedMoney(usd, idr) {
     return currency === 'IDR'
-        ? `Rp${Number(idr || 0).toLocaleString('id-ID')}`
-        : `$${Number(usd || 0).toLocaleString('en-US')}`;
+      ? `Rp${Number(idr || 0).toLocaleString('id-ID')}`
+      : `$${Number(usd || 0).toLocaleString('en-US')}`;
   }
 
   function bookingCard(t, isPast) {
-    const img =
-      imageForProgram(t.name) ||
-      imageForProgram((t.lines && t.lines[0] && t.lines[0].service) || '');
-    const status = isPast
-      ? 'Completed'
-      : t.status
-        ? t.status.charAt(0).toUpperCase() + t.status.slice(1)
-        : 'Booked';
+    const img = imageForProgram(t.name) || imageForProgram((t.lines && t.lines[0] && t.lines[0].service) || '');
+    const status = isPast ? 'Completed' : t.status ? t.status.charAt(0).toUpperCase() + t.status.slice(1) : 'Booked';
     const open = openRef === t.ref;
     const items = t.lines || [];
     return (
@@ -54,9 +65,12 @@ export default function BookedTrips({ isPast, openRef, setOpenRef, setReview }) 
           )}
           <div className={MTC_ITEM_BODY}>
             <p className={MTC_ITEM_TITLE}>{t.name}</p>
-            <p className={MTC_ITEM_DESC}>{status} · {t.guests || '-'} guests</p>
+            <p className={MTC_ITEM_DESC}>
+              {status} · {t.guests || '-'} guests
+            </p>
             <p className={MTC_ITEM_DATE}>
-              {fmtRange(t.start_date, t.end_date)}{t.ref ? ` · ${t.ref}` : ''}
+              {fmtRange(t.start_date, t.end_date)}
+              {t.ref ? ` · ${t.ref}` : ''}
             </p>
           </div>
           <span className={MTC_ITEM_PRICE}>
@@ -72,9 +86,7 @@ export default function BookedTrips({ isPast, openRef, setOpenRef, setReview }) 
               aria-expanded={open ? 'true' : 'false'}
               onClick={() => setOpenRef(open ? null : t.ref)}
             >
-              {open
-                ? 'Hide details'
-                : `View details (${items.length}${items.length > 1 ? ' items)' : ' item)'}`}
+              {open ? 'Hide details' : `View details (${items.length}${items.length > 1 ? ' items)' : ' item)'}`}
               <ChevronDown className={MTC_DET_CHEV} strokeWidth={1.6} aria-hidden="true" />
             </button>
             {open && (
@@ -82,7 +94,8 @@ export default function BookedTrips({ isPast, openRef, setOpenRef, setReview }) 
                 {items.map((l, i) => (
                   <li className={MTC_DET_LINE} key={i}>
                     <span className={MTC_DET_NAME}>
-                      {l.day_no ? `Day ${l.day_no} · ` : ''}{l.service}
+                      {l.day_no ? `Day ${l.day_no} · ` : ''}
+                      {l.service}
                       <span className={MTC_DET_META}>
                         {fmtDay(l.date)}
                         {l.guests ? ` · ${l.guests} pax` : ''}

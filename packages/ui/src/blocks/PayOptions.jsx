@@ -2,7 +2,6 @@
 
 import { cn } from '../lib/cn.js';
 
-// CUE's PaymentStep look: rail tiles (icon only, name in aria-label) above plain option rows; amounts come from the site.
 const METHOD = 'flex items-center justify-center h-[2.9rem] rounded-md bg-white cursor-pointer';
 const METHOD_ON = '[border:1.5px_solid_var(--color-gold)] bg-cream';
 const METHOD_OFF = '[border:1.5px_solid_var(--line)] hover:[border-color:var(--color-gold)]';
@@ -25,7 +24,8 @@ export default function PayOptions({
   optionsTitle = 'How much now?',
   optionsNote = '',
 }) {
-  if (!options.length) return <p className="m-0 text-body text-muted">Sorry, we could not load this information. Please try again.</p>;
+  if (!options.length)
+    return <p className="m-0 text-body text-muted">Sorry, we could not load this information. Please try again.</p>;
   return (
     <div data-pay-options>
       {rails.length > 1 && (
@@ -47,11 +47,21 @@ export default function PayOptions({
               </button>
             ))}
           </div>
-          {note ? <p className="m-0 mb-4 text-small text-muted leading-[var(--lh-body)]" data-pay-note>{note}</p> : <div className="mb-4" />}
+          {note ? (
+            <p className="m-0 mb-4 text-small text-muted leading-[var(--lh-body)]" data-pay-note>
+              {note}
+            </p>
+          ) : (
+            <div className="mb-4" />
+          )}
         </>
       )}
       <p className={HEAD}>{optionsTitle}</p>
-      {optionsNote ? <p className="m-0 mb-[0.6rem] text-small text-muted leading-[var(--lh-body)]" data-pay-options-note>{optionsNote}</p> : null}
+      {optionsNote ? (
+        <p className="m-0 mb-[0.6rem] text-small text-muted leading-[var(--lh-body)]" data-pay-options-note>
+          {optionsNote}
+        </p>
+      ) : null}
       <div className="flex flex-col gap-2" role="radiogroup" aria-label={optionsTitle}>
         {options.map(({ id, label, sub, amount }) => {
           const on = value === id;
@@ -63,9 +73,13 @@ export default function PayOptions({
                 </span>
                 <span className="flex-1 min-w-0">
                   <span className="font-semibold text-green text-[1rem] leading-tight">{label}</span>
-                  {sub ? <span className="block mt-[0.2rem] text-small text-muted leading-[var(--lh-body)]">{sub}</span> : null}
+                  {sub ? (
+                    <span className="block mt-[0.2rem] text-small text-muted leading-[var(--lh-body)]">{sub}</span>
+                  ) : null}
                 </span>
-                <span className="font-semibold text-amber text-[1rem] whitespace-nowrap" data-pay-amount>{amount}</span>
+                <span className="font-semibold text-amber text-[1rem] whitespace-nowrap" data-pay-amount>
+                  {amount}
+                </span>
               </button>
             </div>
           );

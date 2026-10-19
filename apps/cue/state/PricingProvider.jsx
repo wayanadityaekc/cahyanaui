@@ -6,7 +6,6 @@ import { useTripPrefs } from './TripPrefsProvider';
 
 const PricingContext = createContext(null);
 
-// Normalize the catalog so missing transfers/charters become [] instead of crashing consumers; null if no items.
 function normalizeCatalog(c) {
   if (!c || !Array.isArray(c.items)) return null;
   return {
@@ -25,11 +24,10 @@ export function PricingProvider({ children, initialCatalog = null }) {
     if (!hydrated) return;
     let cancelled = false;
     const query = new URLSearchParams({ currency, guests: String(displayGuests), stay: stay || '' });
-    // load the live catalog for this currency / group / pickup
     async function load() {
       try {
-        const r = await fetch(`${API_BASE}/pricing/catalog?${query}`);
-        const d = r.ok ? await r.json() : null;
+        const response = await fetch(`${API_BASE}/pricing/catalog?${query}`);
+        const d = response.ok ? await response.json() : null;
         const c = normalizeCatalog(d);
         if (!cancelled && c) setCatalog(c);
       } catch (e) {}
@@ -40,13 +38,13 @@ export function PricingProvider({ children, initialCatalog = null }) {
     };
   }, [currency, displayGuests, stay, hydrated]);
 
-  // Look up a catalog item, or a transfer route normalized to the item shape so <Price> works for both.
   function lookup(name) {
     if (!catalog) return null;
     const item = catalog.items.find((i) => i.name === name);
     if (item) return item;
     const transfer = catalog.transfers.find((t) => t.route === name);
-    if (transfer) return { name: transfer.route, standard: { display: transfer.display }, exclusive: null, hasExclusive: false };
+    if (transfer)
+      return { name: transfer.route, standard: { display: transfer.display }, exclusive: null, hasExclusive: false };
     return null;
   }
 

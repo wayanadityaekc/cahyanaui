@@ -22,26 +22,37 @@ const ICON = 'w-[var(--icon-lg)] h-[var(--icon-lg)]';
 const RAILS = RAIL_CHOICES.map(({ id, label }) => ({
   id,
   label,
-  icon: id === 'paypal' ? <BrandIcon name="PayPal" className={ICON} /> : <CreditCard className={`${ICON} text-gold`} strokeWidth={1.7} aria-hidden="true" />,
+  icon:
+    id === 'paypal' ? (
+      <BrandIcon name="PayPal" className={ICON} />
+    ) : (
+      <CreditCard className={`${ICON} text-gold`} strokeWidth={1.7} aria-hidden="true" />
+    ),
 }));
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[a-z]{2,}$/i;
 
 function readToken() {
-  try { return window.localStorage.getItem(TOKEN_KEY) || ''; } catch (e) { return ''; }
+  try {
+    return window.localStorage.getItem(TOKEN_KEY) || '';
+  } catch (e) {
+    return '';
+  }
 }
 function writeToken(token) {
-  try { window.localStorage.setItem(TOKEN_KEY, token); } catch (e) { /* the booking still stands */ }
+  try {
+    window.localStorage.setItem(TOKEN_KEY, token);
+  } catch (e) {}
 }
 
 function guestProblems({ name, email, phone }) {
   const problems = {};
   if (!name.trim()) problems.name = 'Please enter your name.';
   if (!EMAIL_RE.test(email.trim())) problems.email = 'Please enter a valid email, like you@gmail.com.';
-  if (phone.replace(/\D/g, '').length < 7) problems.phone = 'Please enter a phone or WhatsApp number with the country code.';
+  if (phone.replace(/\D/g, '').length < 7)
+    problems.phone = 'Please enter a phone or WhatsApp number with the country code.';
   return problems;
 }
 
-// Book & pay for My Booking: details, then how to pay (amounts from the server's own quote), then the rail.
 export default function CheckoutSheet({ open = false, onClose = () => {}, cart = null, onPaid = () => {} }) {
   const { account } = useAccount();
   const { currency, formatAmount } = useCurrency();
@@ -57,10 +68,14 @@ export default function CheckoutSheet({ open = false, onClose = () => {}, cart =
   const [bookingRef, setBookingRef] = useState('');
 
   useEffect(() => {
-    if (open && account) setGuest((current) => ({ name: current.name || account.name || '', email: current.email || account.email || '', phone: current.phone || account.phone || '' }));
+    if (open && account)
+      setGuest((current) => ({
+        name: current.name || account.name || '',
+        email: current.email || account.email || '',
+        phone: current.phone || account.phone || '',
+      }));
   }, [open, account]);
 
-  // Ask the server what each option charges; the site never computes a charge itself.
   useEffect(() => {
     if (!open || !cart) return undefined;
     let alive = true;
@@ -74,19 +89,28 @@ export default function CheckoutSheet({ open = false, onClose = () => {}, cart =
         });
         const data = await response.json().catch(() => null);
         if (!alive) return;
-        const options = data && data.payment ? data.payment.options.filter((row) => row.id !== 'referral' && row.available !== false && row.amount) : [];
+        const options =
+          data && data.payment
+            ? data.payment.options.filter((row) => row.id !== 'referral' && row.available !== false && row.amount)
+            : [];
         setPrepaid(data && data.payment ? data.payment.prepaid : null);
         setQuote(options.length ? options : 'error');
-        setOption((current) => (options.some((row) => row.id === current) ? current : options.length ? options[0].id : ''));
+        setOption((current) =>
+          options.some((row) => row.id === current) ? current : options.length ? options[0].id : '',
+        );
       } catch (e) {
         if (alive) setQuote('error');
       }
     }
     load();
-    return () => { alive = false; };
+    return () => {
+      alive = false;
+    };
   }, [open, cart, currency]);
 
-  function set(key) { return (event) => setGuest((current) => ({ ...current, [key]: event.target.value })); }
+  function set(key) {
+    return (event) => setGuest((current) => ({ ...current, [key]: event.target.value }));
+  }
 
   function toPayment() {
     const problems = guestProblems(guest);
@@ -122,13 +146,14 @@ export default function CheckoutSheet({ open = false, onClose = () => {}, cart =
   const chosen = Array.isArray(quote) ? quote.find((row) => row.id === option) : null;
   const optionRows = Array.isArray(quote)
     ? quote.map((row) => ({
-      id: row.id,
-      label: row.id === 'full' ? 'Pay everything now' : 'Villa now, deposit on the extras',
-      sub: row.id === 'full'
-        ? 'Nothing left to pay on the day.'
-        : `The villa in full plus a ${formatAmount(row.amount.display - (prepaid ? prepaid.display : 0))} deposit; then ${formatAmount(row.balance.display)} for the extras, paid to your driver on the day.`,
-      amount: formatAmount(row.amount.display),
-    }))
+        id: row.id,
+        label: row.id === 'full' ? 'Pay everything now' : 'Villa now, deposit on the extras',
+        sub:
+          row.id === 'full'
+            ? 'Nothing left to pay on the day.'
+            : `The villa in full plus a ${formatAmount(row.amount.display - (prepaid ? prepaid.display : 0))} deposit; then ${formatAmount(row.balance.display)} for the extras, paid to your driver on the day.`,
+        amount: formatAmount(row.amount.display),
+      }))
     : [];
   const title = step === 'details' ? 'Your details' : step === 'pay' ? 'How to pay' : 'Payment';
 
@@ -140,10 +165,17 @@ export default function CheckoutSheet({ open = false, onClose = () => {}, cart =
       shell="fixed inset-0 z-[130] flex items-center justify-center p-3 bg-[rgba(0,0,0,0.55)]"
       box="relative w-full max-w-[460px] max-h-[calc(100dvh-24px)] overflow-y-auto p-6 rounded-md bg-white"
     >
-      <button type="button" onClick={onClose} aria-label="Close" className="absolute top-3 right-4 text-green bg-transparent border-none cursor-pointer">
+      <button
+        type="button"
+        onClick={onClose}
+        aria-label="Close"
+        className="absolute top-3 right-4 text-green bg-transparent border-none cursor-pointer"
+      >
         <X className="w-[var(--icon-md)] h-[var(--icon-md)]" strokeWidth={1.8} aria-hidden="true" />
       </button>
-      <p className="m-0 mb-1 text-label font-medium tracking-[0.08em] uppercase text-muted">Step {step === 'details' ? 1 : step === 'pay' ? 2 : 3} of 3</p>
+      <p className="m-0 mb-1 text-label font-medium tracking-[0.08em] uppercase text-muted">
+        Step {step === 'details' ? 1 : step === 'pay' ? 2 : 3} of 3
+      </p>
       <h3 className="m-0 mb-5 font-body text-h3 font-semibold text-gold">{title}</h3>
 
       {step === 'details' && (
@@ -152,35 +184,88 @@ export default function CheckoutSheet({ open = false, onClose = () => {}, cart =
             <Input id="co-name" autoComplete="name" value={guest.name} onChange={set('name')} invalid={!!errors.name} />
           </Field>
           <Field label="Email" htmlFor="co-email" error={errors.email}>
-            <Input id="co-email" type="email" autoComplete="email" value={guest.email} onChange={set('email')} invalid={!!errors.email} />
+            <Input
+              id="co-email"
+              type="email"
+              autoComplete="email"
+              value={guest.email}
+              onChange={set('email')}
+              invalid={!!errors.email}
+            />
           </Field>
           <Field label="Phone / WhatsApp" htmlFor="co-phone" error={errors.phone}>
-            <Input id="co-phone" type="tel" autoComplete="tel" placeholder="+61 412 345 678" value={guest.phone} onChange={set('phone')} invalid={!!errors.phone} />
+            <Input
+              id="co-phone"
+              type="tel"
+              autoComplete="tel"
+              placeholder="+61 412 345 678"
+              value={guest.phone}
+              onChange={set('phone')}
+              invalid={!!errors.phone}
+            />
           </Field>
-          <Button full onClick={toPayment}>Continue</Button>
+          <Button full onClick={toPayment}>
+            Continue
+          </Button>
         </div>
       )}
 
       {step === 'pay' && (
         <div className="flex flex-col gap-4" data-checkout-step="pay">
           {quote === null && <p className="m-0 text-body text-muted">Getting your total...</p>}
-          {quote === 'error' && <p role="alert" className="m-0 text-body text-err">We could not get the price right now. Please try again in a moment.</p>}
-          {Array.isArray(quote) && (
-            <PayOptions rails={RAILS} rail={rail} onRail={setRail} options={optionRows} value={option} onChange={setOption} note={noteFor(currency, railFor(rail)) || ''} />
+          {quote === 'error' && (
+            <p role="alert" className="m-0 text-body text-err">
+              We could not get the price right now. Please try again in a moment.
+            </p>
           )}
-          {message && <p role="alert" className="m-0 text-small text-err">{message}</p>}
-          <Button full onClick={book} disabled={busy || !chosen}>{busy ? 'Booking...' : 'Book now'}</Button>
-          <button type="button" onClick={() => setStep('details')} className="self-center bg-transparent border-none p-0 text-small text-gold-d font-medium cursor-pointer">Edit details</button>
-          <p className="m-0 text-label text-muted text-center">The stay follows the Firm cancellation policy; each extra can be cancelled free up to 24 hours before.</p>
+          {Array.isArray(quote) && (
+            <PayOptions
+              rails={RAILS}
+              rail={rail}
+              onRail={setRail}
+              options={optionRows}
+              value={option}
+              onChange={setOption}
+              note={noteFor(currency, railFor(rail)) || ''}
+            />
+          )}
+          {message && (
+            <p role="alert" className="m-0 text-small text-err">
+              {message}
+            </p>
+          )}
+          <Button full onClick={book} disabled={busy || !chosen}>
+            {busy ? 'Booking...' : 'Book now'}
+          </Button>
+          <button
+            type="button"
+            onClick={() => setStep('details')}
+            className="self-center bg-transparent border-none p-0 text-small text-gold-d font-medium cursor-pointer"
+          >
+            Edit details
+          </button>
+          <p className="m-0 text-label text-muted text-center">
+            The stay follows the Firm cancellation policy; each extra can be cancelled free up to 24 hours before.
+          </p>
         </div>
       )}
 
       {step === 'checkout' && chosen && (
         <div data-checkout-step="checkout">
-          <p className="m-0 mb-3 text-body text-green">Booking <b>{bookingRef}</b> is saved. Pay {formatAmount(chosen.amount.display)} to confirm it.</p>
-          {railFor(rail) === 'paypal'
-            ? <PayPalCheckout bookingRef={bookingRef} option={option} copy={PAY_COPY} currency={currency} onPaid={() => onPaid(bookingRef)} />
-            : <DokuCheckout bookingRef={bookingRef} option={option} amountText={formatAmount(chosen.amount.display)} />}
+          <p className="m-0 mb-3 text-body text-green">
+            Booking <b>{bookingRef}</b> is saved. Pay {formatAmount(chosen.amount.display)} to confirm it.
+          </p>
+          {railFor(rail) === 'paypal' ? (
+            <PayPalCheckout
+              bookingRef={bookingRef}
+              option={option}
+              copy={PAY_COPY}
+              currency={currency}
+              onPaid={() => onPaid(bookingRef)}
+            />
+          ) : (
+            <DokuCheckout bookingRef={bookingRef} option={option} amountText={formatAmount(chosen.amount.display)} />
+          )}
         </div>
       )}
     </SheetPresence>

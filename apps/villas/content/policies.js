@@ -1,7 +1,5 @@
-// Booking terms set by Wayan (Sep 2026), the single source for every page: never edit a number to make a page read better.
 import { REGISTRATION } from '@/content/registration';
 
-// Full payment up front, no deposit option: with only two villas, a held date that never turns up costs a whole week.
 export const PAYMENT = {
   mode: 'full',
   headline: 'Full payment when you book',
@@ -10,7 +8,6 @@ export const PAYMENT = {
   appliesTo: ['Villa stays', 'Scooter rental'],
 };
 
-// Airbnb "Firm" tier on purpose; bands run longest notice first, and refund is the percent RETURNED, not withheld.
 export const CANCELLATION = {
   name: 'Firm',
   basis: 'Matches the Airbnb "Firm" policy, so booking direct is not stricter than booking through the listing.',
@@ -22,36 +19,48 @@ export const CANCELLATION = {
   note: 'Notice is counted from your check-in date, in Bali time (WITA, UTC+8).',
 };
 
-/** Arrival and departure. Both are local Bali time. */
 export const TIMES = {
   checkIn: '2:00 PM',
   checkOut: '11:00 AM',
   note: 'Earlier check-in or a later check-out is sometimes possible - ask, and we will tell you honestly whether the villa is free.',
 };
 
-// The three lines a guest sees before paying, shared by the booking sheet and villa panel so both say the same.
 export const BOOKING_TERMS = [
   PAYMENT.short,
   `Free cancellation up to 30 days before check-in, 50% up to 7 days.`,
   `Check-in from ${TIMES.checkIn}, check-out by ${TIMES.checkOut}.`,
 ];
 
-/** Long form, for Our Company. Same facts, room to explain them. */
 export const TERMS_BLOCKS = [
   { type: 'heading', html: 'Who you are booking with' },
-  { type: 'para', html: `Stays are booked with <strong>${REGISTRATION.name}</strong> (${REGISTRATION.type}, NIB ${REGISTRATION.nib}), based in ${REGISTRATION.location}. Cahyana House and Cahyana Tibuah are both run by the company.` },
+  {
+    type: 'para',
+    html: `Stays are booked with <strong>${REGISTRATION.name}</strong> (${REGISTRATION.type}, NIB ${REGISTRATION.nib}), based in ${REGISTRATION.location}. Cahyana House and Cahyana Tibuah are both run by the company.`,
+  },
 
   { type: 'heading', html: 'Booking and payment' },
-  { type: 'para', html: `Stays are paid <strong>in full when you book</strong>. There is no deposit-only option, for a villa or for a scooter.` },
+  {
+    type: 'para',
+    html: `Stays are paid <strong>in full when you book</strong>. There is no deposit-only option, for a villa or for a scooter.`,
+  },
   { type: 'para', html: PAYMENT.why },
-  { type: 'para', html: 'You get a confirmation with the dates, the villa and the total. If anything on it is wrong, tell us before you travel and we will fix it.' },
+  {
+    type: 'para',
+    html: 'You get a confirmation with the dates, the villa and the total. If anything on it is wrong, tell us before you travel and we will fix it.',
+  },
 
   { type: 'heading', html: 'Check-in and check-out' },
-  { type: 'para', html: `Check-in is from <strong>${TIMES.checkIn}</strong>. Check-out is by <strong>${TIMES.checkOut}</strong>.` },
+  {
+    type: 'para',
+    html: `Check-in is from <strong>${TIMES.checkIn}</strong>. Check-out is by <strong>${TIMES.checkOut}</strong>.`,
+  },
   { type: 'para', html: TIMES.note },
 
   { type: 'heading', html: 'Who can stay' },
-  { type: 'para', html: 'Each villa is booked as an entire house, for the number of guests on the booking. Cahyana House sleeps up to six, Cahyana Tibuah up to four. If your group changes, tell us - we would rather move you to the right villa than have you arrive and not fit.' },
+  {
+    type: 'para',
+    html: 'Each villa is booked as an entire house, for the number of guests on the booking. Cahyana House sleeps up to six, Cahyana Tibuah up to four. If your group changes, tell us - we would rather move you to the right villa than have you arrive and not fit.',
+  },
 ];
 
 export const CANCELLATION_BLOCKS = [
@@ -62,11 +71,20 @@ export const CANCELLATION_BLOCKS = [
     items: CANCELLATION.bands.map((band) => `<strong>${band.when}:</strong> ${band.label.toLowerCase()}`),
   },
   { type: 'para', html: CANCELLATION.note },
-  { type: 'para', html: 'To cancel, message us on WhatsApp or email - whichever you booked through. We will confirm in writing what is being refunded and when, and the refund goes back the way you paid.' },
+  {
+    type: 'para',
+    html: 'To cancel, message us on WhatsApp or email - whichever you booked through. We will confirm in writing what is being refunded and when, and the refund goes back the way you paid.',
+  },
 
   { type: 'heading', html: 'If we have to cancel' },
-  { type: 'para', html: 'If something on our side makes the villa unusable, you get everything back, whenever it happens. We will also help you find somewhere else in Ubud if you want us to.' },
+  {
+    type: 'para',
+    html: 'If something on our side makes the villa unusable, you get everything back, whenever it happens. We will also help you find somewhere else in Ubud if you want us to.',
+  },
 
   { type: 'heading', html: 'Changing your dates' },
-  { type: 'para', html: 'Moving dates is not a cancellation, and we will always try. If the villa is free on your new dates and you tell us more than 7 days out, we move the booking at no charge. Inside 7 days it depends on whether we can still fill the original nights - ask and we will tell you straight.' },
+  {
+    type: 'para',
+    html: 'Moving dates is not a cancellation, and we will always try. If the villa is free on your new dates and you tell us more than 7 days out, we move the booking at no charge. Inside 7 days it depends on whether we can still fill the original nights - ask and we will tell you straight.',
+  },
 ];

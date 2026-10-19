@@ -1,4 +1,3 @@
-// Shared by the gates: imports one of the app's own ESM files (lib/routes.js, lib/villas.js) so a gate reads the real list instead of a regex copy.
 const path = require('node:path');
 const { register } = require('node:module');
 const { pathToFileURL } = require('node:url');
@@ -6,7 +5,6 @@ const { pathToFileURL } = require('node:url');
 const ROOT = path.join(__dirname, '..');
 let registered = false;
 
-// Resolves the "@/" alias and treats the repo's .js files as ES modules (package.json has no "type").
 const HOOKS = `
 const root = ${JSON.stringify(pathToFileURL(`${ROOT}/`).href)};
 export async function resolve(specifier, context, next) {

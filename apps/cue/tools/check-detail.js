@@ -1,7 +1,4 @@
 #!/usr/bin/env node
-// The 71 bookable detail pages deliberately differ from the originals
-// (Wayan, 3 Sep 2026), so the class diff cannot police them. This checks the
-// shape they are meant to have instead, so a regression still fails the build.
 const fs = require('fs');
 const path = require('path');
 const ROOT = path.join(__dirname, '..');
@@ -12,10 +9,7 @@ function list(name) {
   return m ? [...m[1].matchAll(/'([^']+)'/g)].map((x) => x[1]) : [];
 }
 
-const pages = [
-  ...list('TOURS').map((s) => `${s}.html`),
-  ...list('ATTRACTIONS').map((s) => `attractions/${s}.html`),
-];
+const pages = [...list('TOURS').map((s) => `${s}.html`), ...list('ATTRACTIONS').map((s) => `attractions/${s}.html`)];
 
 const MUST_HAVE = [
   ['booksidebar', 'booking sidebar card'],
@@ -33,21 +27,25 @@ let bad = 0;
 let sliders = 0;
 let related = 0;
 
-pages.forEach((p) => {
-  const f = path.join(ROOT, 'out', p);
+pages.forEach((page) => {
+  const f = path.join(ROOT, 'out', page);
   if (!fs.existsSync(f)) {
-    console.error(`  MISSING BUILD  ${p}`);
+    console.error(`  MISSING BUILD  ${page}`);
     bad++;
     return;
   }
   const html = fs.readFileSync(f, 'utf8');
   const problems = [];
-  MUST_HAVE.forEach(([needle, label]) => { if (!html.includes(needle)) problems.push(`missing ${label}`); });
-  MUST_NOT.forEach(([needle, label]) => { if (html.includes(needle)) problems.push(`still has ${label}`); });
+  MUST_HAVE.forEach(([needle, label]) => {
+    if (!html.includes(needle)) problems.push(`missing ${label}`);
+  });
+  MUST_NOT.forEach(([needle, label]) => {
+    if (html.includes(needle)) problems.push(`still has ${label}`);
+  });
   if (html.includes('hero-slider__dots')) sliders++;
   if (html.includes('related__title')) related++;
   if (problems.length) {
-    console.error(`  ${p}: ${problems.join(', ')}`);
+    console.error(`  ${page}: ${problems.join(', ')}`);
     bad++;
   }
 });

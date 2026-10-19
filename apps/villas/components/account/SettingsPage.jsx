@@ -29,26 +29,39 @@ function DeleteSheet({ open = false, onClose = () => {}, onConfirm = async () =>
       shell="fixed inset-0 z-[130] flex items-center justify-center p-6 bg-[rgba(0,0,0,0.55)]"
       box="relative w-full max-w-[420px] max-h-[90vh] overflow-y-auto p-8 rounded-md bg-white"
     >
-      <button type="button" onClick={onClose} aria-label="Close" className="absolute top-3 right-4 text-green bg-transparent border-none cursor-pointer">
+      <button
+        type="button"
+        onClick={onClose}
+        aria-label="Close"
+        className="absolute top-3 right-4 text-green bg-transparent border-none cursor-pointer"
+      >
         <X className="w-[var(--icon-md)] h-[var(--icon-md)]" strokeWidth={1.8} aria-hidden="true" />
       </button>
       <h3 className="mb-4 font-body text-h3 font-semibold text-gold">Delete your account?</h3>
       <p className="m-0 mb-3 text-body text-green leading-[var(--lh-body,1.6)]">
-        This removes your saved details and signs you out. Any booking you already made stays on record, because we still owe you that stay.
+        This removes your saved details and signs you out. Any booking you already made stays on record, because we
+        still owe you that stay.
       </p>
       <p className="m-0 mb-5 text-body text-green leading-[var(--lh-body,1.6)]">
         The same account is used on Cahyana Ubud Experience, so it is deleted there too.
       </p>
-      {msg && <p role="alert" className="m-0 mb-3 text-label text-err">{msg}</p>}
+      {msg && (
+        <p role="alert" className="m-0 mb-3 text-label text-err">
+          {msg}
+        </p>
+      )}
       <div className="flex gap-2 max-[480px]:flex-col">
-        <Button variant="ghost" onClick={onClose} disabled={busy}>Keep account</Button>
-        <Button onClick={confirm} disabled={busy} className="!bg-err hover:!brightness-90">{busy ? 'Deleting...' : 'Delete account'}</Button>
+        <Button variant="ghost" onClick={onClose} disabled={busy}>
+          Keep account
+        </Button>
+        <Button onClick={confirm} disabled={busy} className="!bg-err hover:!brightness-90">
+          {busy ? 'Deleting...' : 'Delete account'}
+        </Button>
       </div>
     </SheetPresence>
   );
 }
 
-// The villa's Account Settings: CUE's page, minus trip reviews, which the villa site does not collect.
 export default function SettingsPage() {
   const { account, hydrated, updateAccount, deleteAccount, logout } = useAccount();
   const [authOpen, setAuthOpen] = useState(false);
@@ -66,7 +79,15 @@ export default function SettingsPage() {
 
   let body = null;
   if (deleted) {
-    body = <p className="m-0 text-body text-green">Your account has been deleted. You can close this page, or <Link href="/" className="text-gold font-medium">return home</Link>.</p>;
+    body = (
+      <p className="m-0 text-body text-green">
+        Your account has been deleted. You can close this page, or{' '}
+        <Link href="/" className="text-gold font-medium">
+          return home
+        </Link>
+        .
+      </p>
+    );
   } else if (!hydrated) {
     body = <div className="min-h-[30vh]" aria-busy="true" />;
   } else if (!account) {

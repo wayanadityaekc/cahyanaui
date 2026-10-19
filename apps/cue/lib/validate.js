@@ -1,4 +1,3 @@
-// Run a Zod schema and return the first error per field, so all missing fields show at once.
 export function validateWith(schema, values) {
   const result = schema.safeParse(values);
   if (result.success) return { ok: true, errors: {}, data: result.data };

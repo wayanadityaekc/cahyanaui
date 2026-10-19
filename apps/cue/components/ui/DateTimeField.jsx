@@ -17,7 +17,6 @@ export default function DateTimeField({ label = 'Date & time', value, onChange, 
     onChange(`${d}T${h || '00'}:${m || '00'}`);
   }
 
-  // Hour and minute Selects share the row equally.
   const TIMESEL = 'flex-[1_1_0] min-w-0';
   return (
     <div className="flex flex-col gap-2">

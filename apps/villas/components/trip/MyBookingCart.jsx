@@ -35,15 +35,17 @@ function EmptyState() {
         Pick your dates on a villa and they will show up here, with whatever services you want waiting.
       </p>
       <div className="flex flex-wrap justify-center gap-3 mt-6">
-        <Button as={Link} href="/#villas">See villas</Button>
-        {/* Tours belong to the sister site, so this button leaves the site. */}
-        <Button as="a" variant="ghost" href={CUE_LINK} target="_blank" rel="noopener">Bali tours</Button>
+        <Button as={Link} href="/#villas">
+          See villas
+        </Button>
+        <Button as="a" variant="ghost" href={CUE_LINK} target="_blank" rel="noopener">
+          Bali tours
+        </Button>
       </div>
     </div>
   );
 }
 
-// My Booking: the stay (paid in full), CUE extras from the price list (deposit now), villa services paid at the villa.
 export default function MyBookingCart() {
   const { cart, ready, clearStay, toggleService, addExtra, removeExtra, updateExtra, clear } = useCart();
   const { currency, formatAmount, breakdown: convert } = useCurrency();
@@ -52,15 +54,15 @@ export default function MyBookingCart() {
   const [checkoutOpen, setCheckoutOpen] = useState(false);
   const [waitingRef, setWaitingRef] = useState('');
 
-  // Back from DOKU (?ref=): climb out of its iframe if we landed inside it, then wait for the server to say paid.
   useEffect(() => {
     const ref = new URLSearchParams(window.location.search).get('ref');
     if (!ref) return;
     try {
-      if (window.top !== window.self) { window.top.location.replace(window.location.href); return; }
-    } catch (e) {
-      // A browser that refuses the climb keeps the page where it is.
-    }
+      if (window.top !== window.self) {
+        window.top.location.replace(window.location.href);
+        return;
+      }
+    } catch (e) {}
     setWaitingRef(ref);
   }, []);
 
@@ -69,7 +71,6 @@ export default function MyBookingCart() {
     window.history.replaceState({}, '', window.location.pathname);
   }
 
-  // Draw nothing until the stored booking is read, or 'nothing here yet' flashes at guests who have one.
   if (!ready) return <div className="min-h-[40vh]" aria-busy="true" />;
 
   const stay = cart.stay;
@@ -81,10 +82,24 @@ export default function MyBookingCart() {
   const chosen = cart.services.map(serviceById).filter(Boolean);
   const extras = stay ? cart.extras : [];
   const totals = extrasTotals(extras, catalog);
-  const blocked = extras.some((extra) => extraProblem(extra, stay, catalog?.items[extra.key]?.category || null)) || (extras.length > 0 && !totals);
+  const blocked =
+    extras.some((extra) => extraProblem(extra, stay, catalog?.items[extra.key]?.category || null)) ||
+    (extras.length > 0 && !totals);
   const isEmpty = !stay && chosen.length === 0;
 
-  const message = bookingMessage({ stay, villa, nights, shown, breakdown, inRupiah, extras, totals, catalog, services: chosen, formatAmount });
+  const message = bookingMessage({
+    stay,
+    villa,
+    nights,
+    shown,
+    breakdown,
+    inRupiah,
+    extras,
+    totals,
+    catalog,
+    services: chosen,
+    formatAmount,
+  });
 
   return (
     <Container className="py-10">
@@ -95,23 +110,34 @@ export default function MyBookingCart() {
       </p>
 
       {isEmpty ? (
-        <div className="mt-8"><EmptyState /></div>
+        <div className="mt-8">
+          <EmptyState />
+        </div>
       ) : (
         <div className="grid lg:grid-cols-[1.6fr_1fr] gap-6 items-start mt-8">
           <div className="flex flex-col gap-6">
             {stay && villa && (
               <div className={`${CARD} p-5`}>
                 <div className="flex items-start gap-4">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={villa.cardImg} alt="" width={72} height={72} className="w-[72px] h-[72px] object-cover shrink-0" />
+                  <img
+                    src={villa.cardImg}
+                    alt=""
+                    width={72}
+                    height={72}
+                    className="w-[72px] h-[72px] object-cover shrink-0"
+                  />
                   <div className="flex-1 min-w-0">
                     <h2 className={ROW_H}>{villa.name}</h2>
                     <p className="mt-1 text-body text-muted">
-                      {stay.checkIn || '-'} to {stay.checkOut || '-'} · {stay.guests} {stay.guests === 1 ? 'guest' : 'guests'}
+                      {stay.checkIn || '-'} to {stay.checkOut || '-'} · {stay.guests}{' '}
+                      {stay.guests === 1 ? 'guest' : 'guests'}
                       {nights > 0 ? ` · ${nights} ${nights === 1 ? 'night' : 'nights'}` : ''}
                     </p>
                     <div className="flex flex-wrap items-center gap-4 mt-3">
-                      <Link href={`/villas/${villa.slug}`} className="inline-flex items-center gap-1.5 text-body text-gold hover:text-cta">
+                      <Link
+                        href={`/villas/${villa.slug}`}
+                        className="inline-flex items-center gap-1.5 text-body text-gold hover:text-cta"
+                      >
                         Change dates <ArrowRight className={ICON} strokeWidth={1.6} aria-hidden="true" />
                       </Link>
                       <button type="button" className={ICON_BTN} onClick={clearStay}>
@@ -126,7 +152,8 @@ export default function MyBookingCart() {
             <div className={`${CARD} p-5`}>
               <h2 className={ROW_H}>Add to your stay</h2>
               <p className="mt-1 mb-4 text-body text-muted">
-                Tours, activities and airport transfers are run by Cahyana Ubud Experience, our sister company, with prices from its price list.
+                Tours, activities and airport transfers are run by Cahyana Ubud Experience, our sister company, with
+                prices from its price list.
               </p>
               <ExtrasSection
                 stay={stay}
@@ -152,14 +179,20 @@ export default function MyBookingCart() {
             {breakdown && nights > 0 ? (
               <div className="mt-4 flex flex-col gap-2">
                 <p className={LINE}>
-                  <span className="text-muted">{nights} {nights === 1 ? 'night' : 'nights'} x {formatAmount(shown.nightly)}</span>
+                  <span className="text-muted">
+                    {nights} {nights === 1 ? 'night' : 'nights'} x {formatAmount(shown.nightly)}
+                  </span>
                   <span>{formatAmount(shown.subtotal)}</span>
                 </p>
                 <p className={`${LINE} pt-3 mt-1 border-t border-line`}>
                   <span className={LABEL}>Stay total, paid in full</span>
                   <span className="text-h2 font-bold text-amber">{formatAmount(shown.total)}</span>
                 </p>
-                {inRupiah ? null : <p className="text-label text-muted">Exact price {formatRupiah(breakdown.totalIdr)}; other currencies follow today's rate.</p>}
+                {inRupiah ? null : (
+                  <p className="text-label text-muted">
+                    Exact price {formatRupiah(breakdown.totalIdr)}; other currencies follow today's rate.
+                  </p>
+                )}
               </div>
             ) : (
               <p className="mt-3 text-body text-muted">
@@ -172,12 +205,25 @@ export default function MyBookingCart() {
                 <p className={LABEL}>Extras</p>
                 {totals ? (
                   <div className="mt-2 flex flex-col gap-1.5">
-                    <p className={LINE}><span className="text-muted">{extras.length} {extras.length === 1 ? 'extra' : 'extras'}</span><span>{formatAmount(totals.total)}</span></p>
-                    <p className={LINE}><span className="text-muted">Deposit now</span><span data-deposit>{formatAmount(totals.deposit)}</span></p>
-                    <p className={LINE}><span className="text-muted">Rest on the day</span><span>{formatAmount(totals.rest)}</span></p>
+                    <p className={LINE}>
+                      <span className="text-muted">
+                        {extras.length} {extras.length === 1 ? 'extra' : 'extras'}
+                      </span>
+                      <span>{formatAmount(totals.total)}</span>
+                    </p>
+                    <p className={LINE}>
+                      <span className="text-muted">Deposit now</span>
+                      <span data-deposit>{formatAmount(totals.deposit)}</span>
+                    </p>
+                    <p className={LINE}>
+                      <span className="text-muted">Rest on the day</span>
+                      <span>{formatAmount(totals.rest)}</span>
+                    </p>
                   </div>
                 ) : (
-                  <p className="mt-2 text-body text-muted">Prices are loading. If this stays, please try again in a moment.</p>
+                  <p className="mt-2 text-body text-muted">
+                    Prices are loading. If this stays, please try again in a moment.
+                  </p>
                 )}
               </div>
             )}
@@ -196,7 +242,12 @@ export default function MyBookingCart() {
               </div>
             )}
 
-            <Button full onClick={() => setCheckoutOpen(true)} disabled={blocked || !breakdown || nights < 1} className="mt-6 disabled:opacity-50 disabled:cursor-not-allowed">
+            <Button
+              full
+              onClick={() => setCheckoutOpen(true)}
+              disabled={blocked || !breakdown || nights < 1}
+              className="mt-6 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
               Book now
             </Button>
             <Button
@@ -207,18 +258,32 @@ export default function MyBookingCart() {
               aria-disabled={blocked || undefined}
               target="_blank"
               rel="noopener"
-              onClick={(event) => { if (blocked) { event.preventDefault(); return; } setSent(true); }}
+              onClick={(event) => {
+                if (blocked) {
+                  event.preventDefault();
+                  return;
+                }
+                setSent(true);
+              }}
               className={`mt-2 ${blocked ? 'opacity-50 cursor-not-allowed' : ''}`}
             >
               <MessageCircle className={ICON} strokeWidth={1.8} aria-hidden="true" />
               Ask on WhatsApp
             </Button>
-            {blocked && <p className="mt-3 text-label text-err text-center" role="status">Add a date and time for each extra first.</p>}
+            {blocked && (
+              <p className="mt-3 text-label text-err text-center" role="status">
+                Add a date and time for each extra first.
+              </p>
+            )}
             <p className="mt-3 text-label text-muted text-center">
               Book now to pay online and confirm straight away, or ask us first on WhatsApp.
             </p>
             {sent && (
-              <button type="button" onClick={clear} className="mt-4 w-full text-body text-muted hover:text-err bg-transparent border-none cursor-pointer">
+              <button
+                type="button"
+                onClick={clear}
+                className="mt-4 w-full text-body text-muted hover:text-err bg-transparent border-none cursor-pointer"
+              >
                 Clear this booking
               </button>
             )}
@@ -229,7 +294,10 @@ export default function MyBookingCart() {
         open={checkoutOpen}
         onClose={() => setCheckoutOpen(false)}
         cart={cart}
-        onPaid={(ref) => { setCheckoutOpen(false); setWaitingRef(ref); }}
+        onPaid={(ref) => {
+          setCheckoutOpen(false);
+          setWaitingRef(ref);
+        }}
       />
       {waitingRef && <PayWaiting bookingRef={waitingRef} onClose={closeWaiting} onConfirmed={clear} />}
     </Container>

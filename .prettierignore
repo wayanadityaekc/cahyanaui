@@ -1,0 +1,12 @@
+node_modules
+.next
+out
+public
+.turbo
+pnpm-lock.yaml
+package-lock.json
+*.md
+*.json
+*.html
+*.yml
+*.yaml

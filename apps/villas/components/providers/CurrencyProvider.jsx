@@ -5,7 +5,6 @@ import { BASELINE_FX, formatMoney } from '@cahyana/ui';
 import { API_BASE } from '@/lib/constants';
 import { CURRENCIES, CURRENCY_STORAGE_KEY, DEFAULT_CURRENCY, displayBreakdown, formatCurrency } from '@/lib/currency';
 
-// Display currency (saved in localStorage) plus the live rates; the build bakes in that day's rates, the page refreshes them.
 const CurrencyContext = createContext(null);
 
 async function fetchRates() {
@@ -27,25 +26,23 @@ export function CurrencyProvider({ initialFx = null, children }) {
     try {
       const saved = window.localStorage.getItem(CURRENCY_STORAGE_KEY);
       if (saved && CURRENCIES.includes(saved)) setCurrency(saved);
-    } catch (e) {
-      // localStorage unavailable: keep the default.
-    }
+    } catch (e) {}
     let alive = true;
     async function refresh() {
       const live = await fetchRates();
       if (alive && live) setFx(live);
     }
     refresh();
-    return () => { alive = false; };
+    return () => {
+      alive = false;
+    };
   }, []);
 
   function changeCurrency(code) {
     setCurrency(code);
     try {
       window.localStorage.setItem(CURRENCY_STORAGE_KEY, code);
-    } catch (e) {
-      // Not saved; the choice still applies on this page.
-    }
+    } catch (e) {}
   }
 
   const value = {

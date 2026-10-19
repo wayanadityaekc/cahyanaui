@@ -14,20 +14,22 @@ export function ReferralProvider({ children }) {
   }, []);
 
   async function apply(code) {
-    const clean = String(code || '').trim().toUpperCase();
+    const clean = String(code || '')
+      .trim()
+      .toUpperCase();
     if (!clean) return 0;
     try {
-      const res = await fetch(`${API_BASE}/referral/validate`, {
+      const response = await fetch(`${API_BASE}/referral/validate`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ code: clean }),
       });
-      const d = await res.json();
-      if (d && d.valid) {
-        const entry = { code: clean, pct: d.pct };
+      const data = await response.json();
+      if (data && data.valid) {
+        const entry = { code: clean, pct: data.pct };
         setReferral(entry);
         writeLocal(KEY.referral, entry);
-        return d.pct;
+        return data.pct;
       }
     } catch (e) {}
     return 0;

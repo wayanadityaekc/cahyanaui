@@ -9,11 +9,9 @@ import Prose from '@/components/prose/Prose';
 import DetailHero from '@/components/sections/DetailHero';
 import { guideCard, readMinutes, guideCategory } from '@/lib/guideMeta';
 
-// Gap under the hero; keep the 560px step or the first line shifts on phones.
 const BOX = `${RAIL_PAGE_BOX} pt-[2.85rem] max-[560px]:pt-[2.6rem]`;
 
 export default function GuideArticle({ data }) {
-  // One trail, rendered on screen AND emitted as JSON-LD.
   const crumbs = guideCrumbs(data.tabs, data.title);
   const slug = (data.__page || '').replace(/^guide\//, '');
   const card = guideCard(slug) || {};
@@ -26,7 +24,6 @@ export default function GuideArticle({ data }) {
   return (
     <div className="guide-article-page">
       <JsonLd page={data.__page} crumbs={crumbs} />
-      {/* Split hero shared with tour/attraction pages; photo comes from the guide's hub card, not heroStyle. */}
       <DetailHero
         heroBg={card.img}
         title={data.heading || data.title}
@@ -37,7 +34,6 @@ export default function GuideArticle({ data }) {
         ctaHref="/tour.html"
       />
 
-      {/* Same RailLayout as Our Company/My Trips; categories are link items, desktop-only rail, phones get the dropdown. */}
       <div className={BOX}>
         <RailLayout
           label="Bali Guide"
@@ -53,11 +49,13 @@ export default function GuideArticle({ data }) {
         </RailLayout>
       </div>
 
-      {data.more.map((m, i) => (
-        m.kind
-          ? <GuideMore block={m} key={i} />
-          : <section className={m.cls} key={i} dangerouslySetInnerHTML={{ __html: m.html }} />
-      ))}
+      {data.more.map((m, i) =>
+        m.kind ? (
+          <GuideMore block={m} key={i} />
+        ) : (
+          <section className={m.cls} key={i} dangerouslySetInnerHTML={{ __html: m.html }} />
+        ),
+      )}
     </div>
   );
 }

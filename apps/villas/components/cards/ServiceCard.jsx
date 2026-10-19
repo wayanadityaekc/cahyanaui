@@ -5,7 +5,6 @@ import { CAPS, Card } from '@cahyana/ui';
 export default function ServiceCard({ href, img, alt, name, desc, cta }) {
   return (
     <Card as={Link} hover href={href} className="flex flex-col overflow-hidden">
-      {/* eslint-disable-next-line @next/next/no-img-element */}
       <img src={img} alt={alt} width={700} height={460} loading="lazy" className="w-full aspect-[3/2] object-cover" />
       <div className="p-5">
         <h3 className="text-h3 font-semibold text-gold">{name}</h3>

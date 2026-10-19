@@ -1,6 +1,5 @@
 import { WHY_US } from '@/content/shared/home';
 
-// Why Us band: 4 icon columns (2 at <=760px); icon size set via [&>svg].
 const CLS = {
   section: 'bg-cream',
   in: 'max-w-[var(--container)] mx-auto px-[var(--container-x)] py-12',
@@ -25,7 +24,9 @@ export default function WhyUs() {
         <div className={CLS.grid}>
           {WHY_US.map((c) => (
             <div className={CLS.col} key={c.title}>
-              <span className={CLS.ic}><c.Icon strokeWidth={1.6} /></span>
+              <span className={CLS.ic}>
+                <c.Icon strokeWidth={1.6} />
+              </span>
               <h3 className={CLS.h3}>{c.title}</h3>
               <p className={CLS.p}>{c.text}</p>
             </div>

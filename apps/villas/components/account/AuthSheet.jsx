@@ -7,12 +7,11 @@ import SheetPresence from '@/components/ui/SheetPresence';
 import { useAccount } from '@/components/providers/AccountProvider';
 import { createAccountSchema, signInSchema } from '@/lib/schemas';
 
-// Resend cooldown for the code; UX only, the server's login limiter is the real rate limit.
 const RESEND_SECONDS = 30;
 const EMPTY_FORM = { name: '', email: '', phone: '' };
-const LINK_BUTTON = 'bg-transparent border-none p-0 cursor-pointer font-body text-small font-semibold text-gold underline';
+const LINK_BUTTON =
+  'bg-transparent border-none p-0 cursor-pointer font-body text-small font-semibold text-gold underline';
 
-// CUE's sign-in flow on the villa site's sheet: both views share one email -> 6-digit code stage.
 export default function AuthSheet({ open = false, onClose = () => {} }) {
   const { requestLogin, verifyCode, createAccount } = useAccount();
   const [view, setView] = useState('signin');
@@ -39,15 +38,27 @@ export default function AuthSheet({ open = false, onClose = () => {} }) {
       setErrors((prev) => (prev[field] ? { ...prev, [field]: undefined } : prev));
     };
   }
-  function reset() { setErrors({}); setMsg(''); setNote(''); }
-  function close() { reset(); setForm(EMPTY_FORM); setStage('email'); setCode(''); setView('signin'); onClose(); }
+  function reset() {
+    setErrors({});
+    setMsg('');
+    setNote('');
+  }
+  function close() {
+    reset();
+    setForm(EMPTY_FORM);
+    setStage('email');
+    setCode('');
+    setView('signin');
+    onClose();
+  }
 
-  // One validator for both views; Zod drops unknown keys, so every field must be in the schema.
   function check(schema) {
     const result = schema.safeParse(form);
     if (result.success) return result.data;
     const next = {};
-    result.error.issues.forEach((issue) => { if (!next[issue.path[0]]) next[issue.path[0]] = issue.message; });
+    result.error.issues.forEach((issue) => {
+      if (!next[issue.path[0]]) next[issue.path[0]] = issue.message;
+    });
     setErrors(next);
     return null;
   }
@@ -63,7 +74,10 @@ export default function AuthSheet({ open = false, onClose = () => {} }) {
     setBusy(true);
     const sent = await requestLogin(email);
     setBusy(false);
-    if (!sent) { setMsg('Sorry, we could not send the code. Please try again, or reach us on WhatsApp.'); return; }
+    if (!sent) {
+      setMsg('Sorry, we could not send the code. Please try again, or reach us on WhatsApp.');
+      return;
+    }
     reset();
     toCodeStage(email);
   }
@@ -82,9 +96,15 @@ export default function AuthSheet({ open = false, onClose = () => {} }) {
     setBusy(true);
     const result = await createAccount(data);
     setBusy(false);
-    if (result.ok) { close(); return; }
-    // Email already has an account: the server emailed a code, so go to the code stage.
-    if (result.signin) { toCodeStage(result.email); setNote(`You already have an account as ${result.email}.`); return; }
+    if (result.ok) {
+      close();
+      return;
+    }
+    if (result.signin) {
+      toCodeStage(result.email);
+      setNote(`You already have an account as ${result.email}.`);
+      return;
+    }
     setMsg(result.error || 'Sorry, we could not create your account. Please try again.');
   }
 
@@ -93,7 +113,10 @@ export default function AuthSheet({ open = false, onClose = () => {} }) {
     setBusy(true);
     const result = await verifyCode(codeEmail, fullCode);
     setBusy(false);
-    if (result.ok) { close(); return; }
+    if (result.ok) {
+      close();
+      return;
+    }
     setCode('');
     setMsg(result.error || 'Sorry, something went wrong. Please try again.');
   }
@@ -103,8 +126,17 @@ export default function AuthSheet({ open = false, onClose = () => {} }) {
     await sendCode(codeEmail);
   }
 
-  function backToEmail() { setStage('email'); setCode(''); reset(); }
-  function swap(nextView) { setView(nextView); setStage('email'); setCode(''); reset(); }
+  function backToEmail() {
+    setStage('email');
+    setCode('');
+    reset();
+  }
+  function swap(nextView) {
+    setView(nextView);
+    setStage('email');
+    setCode('');
+    reset();
+  }
 
   let title = view === 'signin' ? 'Sign in' : 'Create your account';
   if (stage === 'code') title = 'Enter your code';
@@ -117,8 +149,12 @@ export default function AuthSheet({ open = false, onClose = () => {} }) {
       shell="fixed inset-0 z-[130] flex items-center justify-center p-6 bg-[rgba(0,0,0,0.55)]"
       box="relative w-full max-w-[420px] max-h-[90vh] overflow-y-auto p-8 rounded-md bg-white"
     >
-      {/* CUE's account modal geometry (modalClasses SHELL/BOX/CLOSE/TITLE). */}
-      <button type="button" onClick={close} aria-label="Close" className="absolute top-3 right-4 text-green bg-transparent border-none cursor-pointer">
+      <button
+        type="button"
+        onClick={close}
+        aria-label="Close"
+        className="absolute top-3 right-4 text-green bg-transparent border-none cursor-pointer"
+      >
         <X className="w-[var(--icon-md)] h-[var(--icon-md)]" strokeWidth={1.8} aria-hidden="true" />
       </button>
       <h3 className="mb-5 font-body text-h3 text-center font-semibold tracking-normal text-gold">{title}</h3>
@@ -127,16 +163,35 @@ export default function AuthSheet({ open = false, onClose = () => {} }) {
         {stage === 'code' && (
           <>
             <p className="text-small text-muted text-center">
-              We sent a 6-digit code to <b className="text-green">{codeEmail}</b>. Enter it below - it expires in 10 minutes.
+              We sent a 6-digit code to <b className="text-green">{codeEmail}</b>. Enter it below - it expires in 10
+              minutes.
             </p>
             <OtpFields value={code} onChange={setCode} onComplete={doVerify} error={!!msg} disabled={busy} autoFocus />
-            {msg && <p role="alert" className="text-label text-err text-center">{msg}</p>}
-            {note && <p role="status" data-signin-note className="text-label text-cta text-center">{note}</p>}
-            <Button full onClick={() => doVerify(code)} disabled={busy || code.length < 6}>{busy ? 'Checking...' : 'Verify'}</Button>
+            {msg && (
+              <p role="alert" className="text-label text-err text-center">
+                {msg}
+              </p>
+            )}
+            {note && (
+              <p role="status" data-signin-note className="text-label text-cta text-center">
+                {note}
+              </p>
+            )}
+            <Button full onClick={() => doVerify(code)} disabled={busy || code.length < 6}>
+              {busy ? 'Checking...' : 'Verify'}
+            </Button>
             <p className="text-center text-small text-muted">
-              {cooldown > 0 ? `Resend code in ${cooldown}s` : <button type="button" className={LINK_BUTTON} onClick={resend}>Resend code</button>}
+              {cooldown > 0 ? (
+                `Resend code in ${cooldown}s`
+              ) : (
+                <button type="button" className={LINK_BUTTON} onClick={resend}>
+                  Resend code
+                </button>
+              )}
               {' · '}
-              <button type="button" className={LINK_BUTTON} onClick={backToEmail}>Change email</button>
+              <button type="button" className={LINK_BUTTON} onClick={backToEmail}>
+                Change email
+              </button>
             </p>
           </>
         )}
@@ -147,13 +202,29 @@ export default function AuthSheet({ open = false, onClose = () => {} }) {
               Enter your email and we&apos;ll send you a 6-digit code. No password needed.
             </p>
             <Field label="Email" htmlFor="auth-email" error={errors.email}>
-              <Input id="auth-email" type="email" autoComplete="email" placeholder="you@email.com" value={form.email} onChange={set('email')} invalid={!!errors.email} />
+              <Input
+                id="auth-email"
+                type="email"
+                autoComplete="email"
+                placeholder="you@email.com"
+                value={form.email}
+                onChange={set('email')}
+                invalid={!!errors.email}
+              />
             </Field>
-            {msg && <p role="alert" className="text-label text-err">{msg}</p>}
-            <Button full onClick={doSignIn} disabled={busy}>{busy ? 'Sending...' : 'Send code'}</Button>
+            {msg && (
+              <p role="alert" className="text-label text-err">
+                {msg}
+              </p>
+            )}
+            <Button full onClick={doSignIn} disabled={busy}>
+              {busy ? 'Sending...' : 'Send code'}
+            </Button>
             <p className="text-center text-small text-muted">
               New here?{' '}
-              <button type="button" className={LINK_BUTTON} onClick={() => swap('create')}>Create an account</button>
+              <button type="button" className={LINK_BUTTON} onClick={() => swap('create')}>
+                Create an account
+              </button>
             </p>
           </>
         )}
@@ -164,19 +235,51 @@ export default function AuthSheet({ open = false, onClose = () => {} }) {
               No password - we&apos;ll email you a code whenever you need to sign in.
             </p>
             <Field label="Your name" htmlFor="auth-name" error={errors.name}>
-              <Input id="auth-name" type="text" autoComplete="name" placeholder="Enter your name" value={form.name} onChange={set('name')} invalid={!!errors.name} />
+              <Input
+                id="auth-name"
+                type="text"
+                autoComplete="name"
+                placeholder="Enter your name"
+                value={form.name}
+                onChange={set('name')}
+                invalid={!!errors.name}
+              />
             </Field>
             <Field label="Email" htmlFor="auth-cemail" error={errors.email}>
-              <Input id="auth-cemail" type="email" autoComplete="email" placeholder="you@email.com" value={form.email} onChange={set('email')} invalid={!!errors.email} />
+              <Input
+                id="auth-cemail"
+                type="email"
+                autoComplete="email"
+                placeholder="you@email.com"
+                value={form.email}
+                onChange={set('email')}
+                invalid={!!errors.email}
+              />
             </Field>
             <Field label="Phone / WhatsApp" htmlFor="auth-phone" error={errors.phone}>
-              <Input id="auth-phone" type="tel" autoComplete="tel" placeholder="+62 ..." value={form.phone} onChange={set('phone')} invalid={!!errors.phone} />
+              <Input
+                id="auth-phone"
+                type="tel"
+                autoComplete="tel"
+                placeholder="+62 ..."
+                value={form.phone}
+                onChange={set('phone')}
+                invalid={!!errors.phone}
+              />
             </Field>
-            {msg && <p role="alert" className="text-label text-err">{msg}</p>}
-            <Button full onClick={doCreate} disabled={busy}>{busy ? 'Creating...' : 'Create account'}</Button>
+            {msg && (
+              <p role="alert" className="text-label text-err">
+                {msg}
+              </p>
+            )}
+            <Button full onClick={doCreate} disabled={busy}>
+              {busy ? 'Creating...' : 'Create account'}
+            </Button>
             <p className="text-center text-small text-muted">
               Already have an account?{' '}
-              <button type="button" className={LINK_BUTTON} onClick={() => swap('signin')}>Sign in</button>
+              <button type="button" className={LINK_BUTTON} onClick={() => swap('signin')}>
+                Sign in
+              </button>
             </p>
           </>
         )}

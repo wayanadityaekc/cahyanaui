@@ -6,7 +6,30 @@ import clsx from 'clsx';
 import { ChevronDown } from 'lucide-react';
 import useMobile from './useMobile';
 import Overlay from './Overlay';
-import { CONTROL, CONTROL_RICH, CHEV, CONTROL_VAL, CONTROL_VAL_PLACEHOLDER, CONTROL_VAL_FLAG, CONTROL_FLAG_NM, CONTROL_IC, CONTROL_STACK, CONTROL_HINT, CONTROL_VAL_RICH, CONTROL_VAL_RICH_PLACEHOLDER, panelPopup, PANEL_HEAD, PANEL_HEAD_H3, PANEL_CLOSE, PANEL_BODY, opt, CSEL_GROUP, BK_NATIVE, HS_OPT_FLAG, HS_OPT_NM } from './hsClasses';
+import {
+  CONTROL,
+  CONTROL_RICH,
+  CHEV,
+  CONTROL_VAL,
+  CONTROL_VAL_PLACEHOLDER,
+  CONTROL_VAL_FLAG,
+  CONTROL_FLAG_NM,
+  CONTROL_IC,
+  CONTROL_STACK,
+  CONTROL_HINT,
+  CONTROL_VAL_RICH,
+  CONTROL_VAL_RICH_PLACEHOLDER,
+  panelPopup,
+  PANEL_HEAD,
+  PANEL_HEAD_H3,
+  PANEL_CLOSE,
+  PANEL_BODY,
+  opt,
+  CSEL_GROUP,
+  BK_NATIVE,
+  HS_OPT_FLAG,
+  HS_OPT_NM,
+} from './hsClasses';
 
 function Chevron() {
   return <ChevronDown className={CHEV} aria-hidden="true" />;
@@ -47,14 +70,15 @@ export default function Select({
 
   useEffect(() => {
     if (!open) return;
-    function onKey(e) { return e.key === 'Escape' && setOpen(false); }
+    function onKey(e) {
+      return e.key === 'Escape' && setOpen(false);
+    }
     document.addEventListener('keydown', onKey);
     return () => document.removeEventListener('keydown', onKey);
   }, [open]);
 
   const selected = options.find((o) => String(o.value) === String(value));
 
-  // Panel is always popup mode; a dropdown/bottom-sheet mode (popup=false) would need to be added back.
   const panel = (
     <div className={panelPopup(open)} data-portal="select" data-open={open ? '' : undefined}>
       <div className={PANEL_HEAD}>
@@ -89,10 +113,20 @@ export default function Select({
 
   return (
     <div className={clsx(CSEL_GROUP, className)} ref={groupRef}>
-      <select name={name} id={fieldId} className={BK_NATIVE} value={value ?? ''} onChange={(e) => onChange(e.target.value)} tabIndex={-1} aria-hidden="true">
+      <select
+        name={name}
+        id={fieldId}
+        className={BK_NATIVE}
+        value={value ?? ''}
+        onChange={(e) => onChange(e.target.value)}
+        tabIndex={-1}
+        aria-hidden="true"
+      >
         {placeholder && <option value="">{placeholder}</option>}
         {options.map((o) => (
-          <option key={String(o.value)} value={o.value} disabled={o.disabled}>{o.label}</option>
+          <option key={String(o.value)} value={o.value} disabled={o.disabled}>
+            {o.label}
+          </option>
         ))}
       </select>
 
@@ -103,7 +137,11 @@ export default function Select({
         aria-expanded={open}
         onClick={() => setOpen((v) => !v)}
       >
-        {icon && <span className={CONTROL_IC} aria-hidden="true">{icon}</span>}
+        {icon && (
+          <span className={CONTROL_IC} aria-hidden="true">
+            {icon}
+          </span>
+        )}
         {rich ? (
           <span className={CONTROL_STACK}>
             {hint && <span className={CONTROL_HINT}>{hint}</span>}
@@ -112,15 +150,22 @@ export default function Select({
             </span>
           </span>
         ) : (
-          <span className={!selected ? CONTROL_VAL_PLACEHOLDER : (selected.flag ? `${CONTROL_VAL} ${CONTROL_VAL_FLAG}` : CONTROL_VAL)}>
-            {selected && selected.flag && <img className={HS_OPT_FLAG} src={`/assets/flags/${selected.flag}.svg`} alt="" />}
-            <span className={selected && selected.flag ? `${HS_OPT_NM} ${CONTROL_FLAG_NM}` : 'hs-opt__nm'}>{selected ? selected.label : placeholder}</span>
+          <span
+            className={
+              !selected ? CONTROL_VAL_PLACEHOLDER : selected.flag ? `${CONTROL_VAL} ${CONTROL_VAL_FLAG}` : CONTROL_VAL
+            }
+          >
+            {selected && selected.flag && (
+              <img className={HS_OPT_FLAG} src={`/assets/flags/${selected.flag}.svg`} alt="" />
+            )}
+            <span className={selected && selected.flag ? `${HS_OPT_NM} ${CONTROL_FLAG_NM}` : 'hs-opt__nm'}>
+              {selected ? selected.label : placeholder}
+            </span>
           </span>
         )}
         <Chevron />
       </button>
 
-      {/* Keep the portal panel mounted while closed so the open transition has a closed frame to animate from. */}
       {mounted && asPortal && createPortal(panel, document.body)}
       {mounted && asPortal && <Overlay open={open} elevated={popup} onClose={() => setOpen(false)} />}
       {(!asPortal || !mounted) && panel}

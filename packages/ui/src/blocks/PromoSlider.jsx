@@ -3,7 +3,6 @@
 import { useRef, useState } from 'react';
 import { BTN_SM } from '../primitives/btnClasses.js';
 
-// Ported from CUE ProgramPromoSlider. No autoplay (Wayan): slides move only on tap, swipe or dot.
 export default function PromoSlider({ slides = [], label = 'Other Cahyana programs', external = false }) {
   const [cur, setCur] = useState(0);
   const touch = useRef({ x: 0, y: 0 });
@@ -15,7 +14,6 @@ export default function PromoSlider({ slides = [], label = 'Other Cahyana progra
     setCur((n + total) % total);
   }
 
-  // Only the current slide and its two neighbours load a photo, so the band costs 3 images, not 8.
   function near(i) {
     const gap = Math.abs(i - cur);
     return gap <= 1 || gap === total - 1;
@@ -45,12 +43,17 @@ export default function PromoSlider({ slides = [], label = 'Other Cahyana progra
           style={near(i) ? { backgroundImage: `url(${slide.img})` } : undefined}
           aria-hidden={i !== cur}
         >
-          <span aria-hidden="true" className="absolute inset-0 pointer-events-none mix-blend-multiply [background:linear-gradient(180deg,rgba(214,178,120,0.18),rgba(120,80,40,0.30))]" />
+          <span
+            aria-hidden="true"
+            className="absolute inset-0 pointer-events-none mix-blend-multiply [background:linear-gradient(180deg,rgba(214,178,120,0.18),rgba(120,80,40,0.30))]"
+          />
           <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(20,19,15,0.55),rgba(20,19,15,0.74))]" />
           <div className="relative z-[1] flex flex-col items-center justify-center h-full text-center px-6 py-12">
             <div className="max-w-[560px]">
               <span className="block mb-[0.55rem] text-small font-medium text-white">{slide.kicker}</span>
-              <h2 className="mt-0 mb-[0.7rem] font-head text-h2 font-medium text-white tracking-[-0.01em] leading-[1.15]">{slide.title}</h2>
+              <h2 className="mt-0 mb-[0.7rem] font-head text-h2 font-medium text-white tracking-[-0.01em] leading-[1.15]">
+                {slide.title}
+              </h2>
               <p className="mx-auto mt-0 mb-[1.3rem] max-w-[46ch] text-body leading-[1.6] text-white">{slide.text}</p>
               <a
                 href={slide.href}

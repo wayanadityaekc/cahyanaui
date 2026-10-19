@@ -5,16 +5,21 @@ import { useDialog } from '@cahyana/ui';
 import useMobile from './useMobile';
 import useBodyLock from './useBodyLock';
 
-// AnimatePresence keeps the panel mounted until its exit finishes: CSS alone cannot animate an unmounting element.
 const EASE_OUT = [0.16, 1, 0.3, 1];
 
-// Bottom sheet on a phone, centred card on desktop, so each gets its own motion; useMobile picks.
 const SHEET_FROM = { y: '100%', opacity: 1 };
 const SHEET_TO = { y: 0, opacity: 1 };
 const CARD_FROM = { opacity: 0, y: 14, scale: 0.96 };
 const CARD_TO = { opacity: 1, y: 0, scale: 1 };
 
-export default function SheetPresence({ open = false, onClose = null, shell = '', box = '', label = 'Dialog', children }) {
+export default function SheetPresence({
+  open = false,
+  onClose = null,
+  shell = '',
+  box = '',
+  label = 'Dialog',
+  children,
+}) {
   const reduced = useReducedMotion();
   const isMobile = useMobile();
   useBodyLock(open);
@@ -34,7 +39,6 @@ export default function SheetPresence({ open = false, onClose = null, shell = ''
             className={shell}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            // pointerEvents goes in exit, not a style from open: the leaving element keeps old props, so buttons stay clickable.
             exit={{ opacity: 0, pointerEvents: 'none' }}
             transition={{ duration: scrimDur, ease: EASE_OUT }}
             onClick={(e) => e.target === e.currentTarget && onClose?.()}

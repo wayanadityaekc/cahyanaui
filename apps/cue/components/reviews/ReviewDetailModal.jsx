@@ -3,7 +3,6 @@
 import { useRef } from 'react';
 import Modal from '@/components/ui/Modal';
 
-// Full text of a clicked ReviewCard, in the shared Modal shell.
 function fmtDate(iso) {
   if (!iso) return '';
   try {
@@ -15,7 +14,6 @@ function fmtDate(iso) {
 
 export default function ReviewDetailModal({ review, onClose }) {
   const open = !!review;
-  // Keep the last review on screen while the modal fades out, or the text blanks mid-fade.
   const lastRef = useRef(null);
   if (review) lastRef.current = review;
   const r = review || lastRef.current || {};
@@ -34,7 +32,9 @@ export default function ReviewDetailModal({ review, onClose }) {
           {r.services && r.services.length > 1 ? r.services.join(' · ') : r.service}
         </div>
       )}
-      <div className="mb-3 text-amber tracking-[2px]" aria-label={`${n} out of 5`}>{stars}</div>
+      <div className="mb-3 text-amber tracking-[2px]" aria-label={`${n} out of 5`}>
+        {stars}
+      </div>
       <p className="m-0 text-body text-green leading-[var(--lh-body)] whitespace-pre-line">{r.message}</p>
     </Modal>
   );

@@ -1,16 +1,16 @@
 import { ImageIcon } from 'lucide-react';
 import { cn } from '../lib/cn.js';
 
-// Four across on desktop by default, so 4-dish groups fill one row; `cols={3}` for a narrow column. Two across on phones.
 const GRIDS = {
   4: 'grid grid-cols-2 min-[769px]:grid-cols-4 gap-x-2 gap-y-6 m-0 p-0 list-none',
   3: 'grid grid-cols-2 min-[769px]:grid-cols-3 gap-x-2 gap-y-6 m-0 p-0 list-none',
 };
 
-const PHOTO = 'relative aspect-[4/3] overflow-hidden rounded-base bg-cream [&>img]:absolute [&>img]:inset-0 [&>img]:w-full [&>img]:h-full [&>img]:object-cover';
+const PHOTO =
+  'relative aspect-[4/3] overflow-hidden rounded-base bg-cream [&>img]:absolute [&>img]:inset-0 [&>img]:w-full [&>img]:h-full [&>img]:object-cover';
 
-// Placeholder tile: soft cream with an outline photo icon and a short label.
-const EMPTY = 'absolute inset-0 rounded-base grid place-content-center justify-items-center gap-1 text-muted border border-dashed border-line';
+const EMPTY =
+  'absolute inset-0 rounded-base grid place-content-center justify-items-center gap-1 text-muted border border-dashed border-line';
 
 export default function MenuList({
   groups = [],
@@ -36,7 +36,6 @@ export default function MenuList({
               <li key={name} className="grid gap-2 content-start min-w-0" data-menu-item>
                 <div className={PHOTO}>
                   {img ? (
-                    // eslint-disable-next-line @next/next/no-img-element
                     <img src={img} alt={alt || name} width={800} height={600} loading="lazy" />
                   ) : (
                     <span className={EMPTY} data-menu-placeholder>

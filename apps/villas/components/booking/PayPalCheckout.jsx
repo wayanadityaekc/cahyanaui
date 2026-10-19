@@ -5,11 +5,12 @@ import { API_BASE } from '@/lib/constants';
 import { chargeCurrency } from '@/lib/rails';
 import { CONTROL } from '@cahyana/ui';
 
-// Ported from CUE components/booking/PayPalCheckout.jsx. Inline PayPal checkout: hosted Card Fields (card data stays in PayPal iframes) plus PayPal buttons as fallback.
-
-// SDK is loaded per currency under its own namespace; PayPal rejects orders in a currency the SDK wasn't loaded with.
-function sdkId(cur) { return `paypal-sdk-${cur}`; }
-function sdkNs(cur) { return `paypal_${cur}`; }
+function sdkId(cur) {
+  return `paypal-sdk-${cur}`;
+}
+function sdkNs(cur) {
+  return `paypal_${cur}`;
+}
 
 function loadSdk({ clientId, currency }) {
   const id = sdkId(currency);
@@ -25,7 +26,6 @@ function loadSdk({ clientId, currency }) {
     const s = document.createElement('script');
     s.id = id;
     s.setAttribute('data-namespace', sdkNamespace);
-    // card-fields is always requested; on an ineligible account isEligible() is false and buttons are used instead.
     s.src =
       `https://www.paypal.com/sdk/js?client-id=${encodeURIComponent(clientId)}` +
       `&currency=${encodeURIComponent(currency)}&components=buttons,card-fields&intent=capture`;
@@ -36,51 +36,53 @@ function loadSdk({ clientId, currency }) {
 }
 
 const LABEL = 'block text-label font-medium tracking-[0.08em] uppercase text-muted mb-[0.4rem]';
-// Box around PayPal's card field iframe; uses the shared field style.
 const FIELD = `${CONTROL} [&>*]:w-full`;
 const NOTE = 'mt-[0.6rem] text-small leading-[var(--lh-body)]';
 
 export default function PayPalCheckout({ bookingRef, option, copy, currency = 'USD', onPaid, onError }) {
-  const [state, setState] = useState('loading'); // loading | ready | paying | done | error
+  const [state, setState] = useState('loading');
   const [msg, setMsg] = useState('');
   const [cardsOn, setCardsOn] = useState(false);
   const buttonsRef = useRef(null);
   const cardRef = useRef(null);
   const mounted = useRef(true);
 
-  useEffect(() => () => { mounted.current = false; }, []);
+  useEffect(
+    () => () => {
+      mounted.current = false;
+    },
+    [],
+  );
 
   useEffect(() => {
     let cancelled = false;
 
-    // Never send an amount from here: the server prices the booking itself, this only names the option.
     async function createOrder() {
-      const r = await fetch(`${API_BASE}/paypal/create-order`, {
+      const response = await fetch(`${API_BASE}/paypal/create-order`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ booking_ref: bookingRef, option }),
       });
-      const d = await r.json().catch(() => null);
-      if (!r.ok || !d || !d.id) throw new Error((d && d.detail) || 'Could not start the payment.');
-      if (d.converted && !cancelled) {
-        setMsg(`PayPal cannot charge ${d.converted.from}, so this is billed as ${d.currency} ${d.amount}.`);
+      const data = await response.json().catch(() => null);
+      if (!response.ok || !data || !data.id) throw new Error((data && data.detail) || 'Could not start the payment.');
+      if (data.converted && !cancelled) {
+        setMsg(`PayPal cannot charge ${data.converted.from}, so this is billed as ${data.currency} ${data.amount}.`);
       }
-      return d.id;
+      return data.id;
     }
 
-    // Capture only; the booking is confirmed by the webhook, so don't claim it is confirmed from this response.
     async function capture(orderId) {
-      const r = await fetch(`${API_BASE}/paypal/capture-order`, {
+      const response = await fetch(`${API_BASE}/paypal/capture-order`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ order_id: orderId }),
       });
-      const d = await r.json().catch(() => null);
-      if (r.status === 402) throw Object.assign(new Error(copy.declined), { soft: true });
-      if (!r.ok || !d || d.status !== 'ok') {
-        throw Object.assign(new Error((d && d.detail) || copy.failed), { soft: true });
+      const data = await response.json().catch(() => null);
+      if (response.status === 402) throw Object.assign(new Error(copy.declined), { soft: true });
+      if (!response.ok || !data || data.status !== 'ok') {
+        throw Object.assign(new Error((data && data.detail) || copy.failed), { soft: true });
       }
-      return d;
+      return data;
     }
 
     function fail(e) {
@@ -101,7 +103,6 @@ export default function PayPalCheckout({ bookingRef, option, copy, currency = 'U
       try {
         const cfg = await (await fetch(`${API_BASE}/paypal/config`)).json();
         if (!cfg.ready) throw new Error(cfg.reason || 'Payments are not available right now.');
-        // Load the SDK in the currency the order is billed in (USD for rupiah), or every order is rejected.
         const billCurrency = chargeCurrency(currency, 'paypal');
         const sdk = await loadSdk({ clientId: cfg.clientId, currency: billCurrency });
         if (cancelled) return;
@@ -110,17 +111,33 @@ export default function PayPalCheckout({ bookingRef, option, copy, currency = 'U
           .Buttons({
             style: { layout: 'vertical', shape: 'pill', height: 46 },
             createOrder,
-            onApprove: async (data) => { try { succeed(await capture(data.orderID)); } catch (e) { fail(e); } },
-            onCancel: () => { if (!cancelled) { setState('ready'); setMsg(copy.cancelled); } },
+            onApprove: async (data) => {
+              try {
+                succeed(await capture(data.orderID));
+              } catch (e) {
+                fail(e);
+              }
+            },
+            onCancel: () => {
+              if (!cancelled) {
+                setState('ready');
+                setMsg(copy.cancelled);
+              }
+            },
             onError: (e) => fail(e instanceof Error ? e : new Error(copy.failed)),
           })
           .render(buttonsRef.current);
 
-        // Card Fields, when the account is allowed them.
         const cardFields = sdk.CardFields
           ? sdk.CardFields({
               createOrder,
-              onApprove: async (data) => { try { succeed(await capture(data.orderID)); } catch (e) { fail(e); } },
+              onApprove: async (data) => {
+                try {
+                  succeed(await capture(data.orderID));
+                } catch (e) {
+                  fail(e);
+                }
+              },
               onError: (e) => fail(e instanceof Error ? e : new Error(copy.failed)),
             })
           : null;
@@ -134,11 +151,16 @@ export default function PayPalCheckout({ bookingRef, option, copy, currency = 'U
         }
         if (!cancelled) setState('ready');
       } catch (e) {
-        if (!cancelled) { setState('error'); setMsg(e.message); }
+        if (!cancelled) {
+          setState('error');
+          setMsg(e.message);
+        }
       }
     })();
 
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+    };
   }, [bookingRef, option, copy, currency, onPaid, onError]);
 
   async function payByCard() {
@@ -147,9 +169,11 @@ export default function PayPalCheckout({ bookingRef, option, copy, currency = 'U
     setMsg('');
     try {
       await cardRef.current.submit();
-      // onApprove resolves the rest; submit() rejects on a declined card.
     } catch (e) {
-      if (mounted.current) { setState('ready'); setMsg(copy.declined); }
+      if (mounted.current) {
+        setState('ready');
+        setMsg(copy.declined);
+      }
     }
   }
 

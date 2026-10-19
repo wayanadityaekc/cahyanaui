@@ -3,38 +3,29 @@
 import { useEffect, useState } from 'react';
 import { ChevronRight, ChevronLeft, PanelLeft } from 'lucide-react';
 import {
-  RAIL_FRAME, RAIL_FRAME_SCROLL, RAIL_ASIDE, RAIL_ASIDE_COLLAPSED, RAIL_STICK, RAIL_STICK_COLLAPSED,
-  RAIL_LABEL, railItem, RAIL_SPLIT, RAIL_MAIN, RAIL_MAIN_SCROLL, RAIL_SCROLL_BODY,
-  RAIL_MLIST, RAIL_MLABEL, railMobileItem, RAIL_MCHEV, RAIL_BACK,
-  RAIL_HEADER, RAIL_HEADER_PAD, RAIL_TRIGGER, RAIL_HEADER_SEP,
+  RAIL_FRAME,
+  RAIL_FRAME_SCROLL,
+  RAIL_ASIDE,
+  RAIL_ASIDE_COLLAPSED,
+  RAIL_STICK,
+  RAIL_STICK_COLLAPSED,
+  RAIL_LABEL,
+  railItem,
+  RAIL_SPLIT,
+  RAIL_MAIN,
+  RAIL_MAIN_SCROLL,
+  RAIL_SCROLL_BODY,
+  RAIL_MLIST,
+  RAIL_MLABEL,
+  railMobileItem,
+  RAIL_MCHEV,
+  RAIL_BACK,
+  RAIL_HEADER,
+  RAIL_HEADER_PAD,
+  RAIL_TRIGGER,
+  RAIL_HEADER_SEP,
 } from './railClasses.js';
 
-/**
- * Sticky side menu + content column. On phones the menu is the first screen;
- * `reading` true shows the open section with a back row instead.
- *
- *   items     [{ id, label, Icon?, href?, split? }] - href makes a row a link
- *             (rendered with `linkAs`, default <a>), otherwise it calls onSelect.
- *             split draws a line above the row.
- *   help      optional node at the end of the rail (and of the phone list).
- *   mobileNav optional node that REPLACES the phone list and back row, for a
- *             page that must land on its content (an article).
- *   breadcrumb  optional node in the desktop header row.
- *   collapsible  adds a collapse trigger. `collapsed` + `onCollapsedChange`
- *             make it controlled (the site decides where to remember it);
- *             without them it keeps its own state.
- *   storageKey  makes the collapsed state one site-wide preference, kept in
- *             localStorage under this key and read AFTER mount (CUE's way), so
- *             the site needs no state of its own.
- *   scrollContent  caps the frame to one screen and scrolls only the content.
- *   contentAs  the content column's element. 'div' by default, because the
- *             site's layout usually owns the page's one <main>; pass 'main'
- *             when it does not.
- *
- * Paint note: a site's state read from storage must arrive AFTER mount (pass
- * the initial `collapsed`/`reading` as false and set it in an effect), or a
- * static export's first paint differs from its pre-rendered HTML.
- */
 export default function RailLayout({
   label,
   items,
@@ -58,16 +49,19 @@ export default function RailLayout({
 }) {
   const [ownCollapsed, setOwnCollapsed] = useState(false);
   const collapsed = collapsedProp ?? ownCollapsed;
-  // Read in an effect, not initial state, so a static export's first paint matches its HTML.
   useEffect(() => {
     if (!storageKey) return;
-    try { setOwnCollapsed(window.localStorage.getItem(storageKey) === '1'); } catch (e) { /* ignore */ }
+    try {
+      setOwnCollapsed(window.localStorage.getItem(storageKey) === '1');
+    } catch (e) {}
   }, [storageKey]);
   function toggleCollapsed() {
     const next = !collapsed;
     if (collapsedProp === undefined) setOwnCollapsed(next);
     if (storageKey) {
-      try { window.localStorage.setItem(storageKey, next ? '1' : '0'); } catch (e) { /* ignore */ }
+      try {
+        window.localStorage.setItem(storageKey, next ? '1' : '0');
+      } catch (e) {}
     }
     if (onCollapsedChange) onCollapsedChange(next);
   }
@@ -84,15 +78,22 @@ export default function RailLayout({
           {mobile && <ChevronRight className={RAIL_MCHEV} strokeWidth={1.7} aria-hidden="true" />}
         </>
       );
-      // Collapsed rows keep the label as their accessible name.
       const a11y = !mobile && railCollapsed ? { title: t.label, 'aria-label': t.label } : {};
       return (
         <div key={t.id} className="contents">
           {t.split && <span className={RAIL_SPLIT} aria-hidden="true" />}
           {t.href ? (
-            <LinkAs href={t.href} className={cls} aria-current={selected ? 'page' : undefined} {...a11y}>{inner}</LinkAs>
+            <LinkAs href={t.href} className={cls} aria-current={selected ? 'page' : undefined} {...a11y}>
+              {inner}
+            </LinkAs>
           ) : (
-            <button type="button" aria-current={selected ? 'true' : undefined} onClick={() => onSelect(t.id)} className={cls} {...a11y}>
+            <button
+              type="button"
+              aria-current={selected ? 'true' : undefined}
+              onClick={() => onSelect(t.id)}
+              className={cls}
+              {...a11y}
+            >
               {inner}
             </button>
           )}
@@ -106,7 +107,9 @@ export default function RailLayout({
       <aside className={railCollapsed ? RAIL_ASIDE_COLLAPSED : RAIL_ASIDE} aria-label={label}>
         <div className={railCollapsed ? RAIL_STICK_COLLAPSED : RAIL_STICK}>
           {!railCollapsed && <p className={RAIL_LABEL}>{label}</p>}
-          <nav className="flex flex-col" aria-label={label}>{rows(false)}</nav>
+          <nav className="flex flex-col" aria-label={label}>
+            {rows(false)}
+          </nav>
           {!railCollapsed && help}
         </div>
       </aside>
@@ -119,7 +122,10 @@ export default function RailLayout({
         </div>
       )}
 
-      <Content data-rail-content className={`${scrollContent ? RAIL_MAIN_SCROLL : mainClass} ${mobileNav || reading ? '' : 'max-[992px]:hidden'}`}>
+      <Content
+        data-rail-content
+        className={`${scrollContent ? RAIL_MAIN_SCROLL : mainClass} ${mobileNav || reading ? '' : 'max-[992px]:hidden'}`}
+      >
         {(collapsible || breadcrumb) && (
           <div className={scrollContent ? `${RAIL_HEADER} ${RAIL_HEADER_PAD}` : RAIL_HEADER}>
             {collapsible && (

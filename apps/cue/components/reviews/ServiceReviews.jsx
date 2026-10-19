@@ -2,7 +2,6 @@ import ReviewsStrip from './ReviewsStrip';
 import ReviewCtaBand from './ReviewCtaBand';
 import { SECTION_TITLE, ST_LEFT } from '@/components/ui/sectionTitle';
 
-// Reviews for charter/transfer/airport pages: pass ONE service or a group (transfers), never both.
 export default function ServiceReviews({ service, group, title = 'Guest reviews', emptyText }) {
   return (
     <section className="experience">

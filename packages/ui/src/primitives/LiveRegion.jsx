@@ -1,4 +1,3 @@
-// Always-mounted screen-reader-only live region, so changes are announced reliably (status, or alert if assertive).
 export default function LiveRegion({ children = null, assertive = false }) {
   return (
     <div

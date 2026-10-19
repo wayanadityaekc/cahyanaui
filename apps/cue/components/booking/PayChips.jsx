@@ -1,11 +1,22 @@
-// Card brands shown at the booking step (Visa, Mastercard, JCB, Amex); brand marks stay hand-drawn, not Lucide.
 export default function PayChips({ className = '', logosClass = '', chipClass = '', svgClass = '' }) {
   return (
     <div className={className}>
       <div className={logosClass}>
         <span className={chipClass}>
           <svg className={svgClass} viewBox="0 0 48 16" role="img" aria-label="Visa">
-            <text x="24" y="13" textAnchor="middle" fontFamily="Arial, Helvetica, sans-serif" fontSize="15" fontWeight="700" fontStyle="italic" letterSpacing="0.5" fill="#1434CB">VISA</text>
+            <text
+              x="24"
+              y="13"
+              textAnchor="middle"
+              fontFamily="Arial, Helvetica, sans-serif"
+              fontSize="15"
+              fontWeight="700"
+              fontStyle="italic"
+              letterSpacing="0.5"
+              fill="#1434CB"
+            >
+              VISA
+            </text>
           </svg>
         </span>
         <span className={chipClass}>
@@ -20,15 +31,56 @@ export default function PayChips({ className = '', logosClass = '', chipClass = 
             <rect x="0" y="1" width="14.5" height="14" rx="2" fill="#0B4EA2" />
             <rect x="16.75" y="1" width="14.5" height="14" rx="2" fill="#E4002B" />
             <rect x="33.5" y="1" width="14.5" height="14" rx="2" fill="#009944" />
-            <text x="7.25" y="11.5" textAnchor="middle" fontFamily="Arial, Helvetica, sans-serif" fontSize="10" fontWeight="700" fill="#fff">J</text>
-            <text x="24" y="11.5" textAnchor="middle" fontFamily="Arial, Helvetica, sans-serif" fontSize="10" fontWeight="700" fill="#fff">C</text>
-            <text x="40.75" y="11.5" textAnchor="middle" fontFamily="Arial, Helvetica, sans-serif" fontSize="10" fontWeight="700" fill="#fff">B</text>
+            <text
+              x="7.25"
+              y="11.5"
+              textAnchor="middle"
+              fontFamily="Arial, Helvetica, sans-serif"
+              fontSize="10"
+              fontWeight="700"
+              fill="#fff"
+            >
+              J
+            </text>
+            <text
+              x="24"
+              y="11.5"
+              textAnchor="middle"
+              fontFamily="Arial, Helvetica, sans-serif"
+              fontSize="10"
+              fontWeight="700"
+              fill="#fff"
+            >
+              C
+            </text>
+            <text
+              x="40.75"
+              y="11.5"
+              textAnchor="middle"
+              fontFamily="Arial, Helvetica, sans-serif"
+              fontSize="10"
+              fontWeight="700"
+              fill="#fff"
+            >
+              B
+            </text>
           </svg>
         </span>
         <span className={chipClass}>
           <svg className={svgClass} viewBox="0 0 48 16" role="img" aria-label="American Express">
             <rect x="0" y="1" width="48" height="14" rx="2" fill="#006FCF" />
-            <text x="24" y="11.5" textAnchor="middle" fontFamily="Arial, Helvetica, sans-serif" fontSize="9" fontWeight="700" letterSpacing="0.5" fill="#fff">AMEX</text>
+            <text
+              x="24"
+              y="11.5"
+              textAnchor="middle"
+              fontFamily="Arial, Helvetica, sans-serif"
+              fontSize="9"
+              fontWeight="700"
+              letterSpacing="0.5"
+              fill="#fff"
+            >
+              AMEX
+            </text>
           </svg>
         </span>
       </div>

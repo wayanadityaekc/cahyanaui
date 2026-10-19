@@ -1,108 +1,46 @@
-/* ==========================================================================
-   Layer 1 - TOKENS
-   ==========================================================================
-   The only file in the library that is allowed to hold a raw value. Every
-   primitive and block reads from here, so a brand change is an edit in one
-   place rather than a search across two sites.
-
-   Values come from CUE as the parent brand - this is CUE's palette and type
-   scale, lifted out rather than reinvented.
-
-   HOW A SITE USES IT
-     @import "@cahyana/ui/tokens.css";
-     @source "../../../packages/ui/src";   <- so Tailwind sees library classes
-
-   The @source line is not optional. Tailwind v4 only generates the utilities
-   it can find in scanned files; without it every class used *inside* a library
-   component is dropped from the build and the component renders unstyled.
-   ========================================================================== */
-
 @theme {
-  /* --- Colour ------------------------------------------------------------
-     One palette for both sites. They are told apart by their SURFACE, not by
-     different colours - see the brand block further down. */
-  --color-green: #5c5c5c;       /* secondary text, body colour on CUE */
-  --color-gold: #22201c;        /* the accent. Named gold, IS soft black:     */
-  --color-gold-d: #16140f;      /* Wayan replaced the real gold with black in */
-  --color-gold-l: #cfc9ba;      /* Aug 2026 and kept the name. Do not "fix"   */
-                                /* it to a yellow - it is deliberate.         */
-  --color-cta: #1a1814;         /* primary action: near-black (Wayan, Oct 2026) */
+  --color-green: #5c5c5c;
+  --color-gold: #22201c;
+  --color-gold-d: #16140f;
+  --color-gold-l: #cfc9ba;
+  --color-cta: #1a1814;
   --color-cta-d: #35322b;
-  --color-amber: #c9a45c;       /* the REAL gold. Three jobs only: prices,    */
-  --color-amber-d: #b08d43;     /* rating stars, "Popular" badges.            */
-  /* Warmed from #f8f8f8 to sit in the same family as the villa site's bone
-     page. A neutral grey-white tint on warm paper reads as a colour mistake;
-     this is still lighter than the page, so a tinted pill or band still lifts. */
+  --color-amber: #c9a45c;
+  --color-amber-d: #b08d43;
   --color-cream: #faf8f3;
   --color-line: #e7e4dd;
   --color-ok: #2e7d54;
   --color-err: #9a4a3f;
   --color-ink: #46453f;
   --color-muted: #7a7466;
-
-  /* Surface is a pointer, not a value - it is what each site swaps. */
   --color-surface: var(--surface);
   --color-surface-raised: var(--surface-raised);
+  --font-body: 'Inter', system-ui, sans-serif;
+  --font-head: 'Inter', system-ui, sans-serif;
 
-  /* --- Type --------------------------------------------------------------
-     ONE typeface. Playfair Display was tried in Aug 2026 and dropped - Wayan
-     found it overwrought - so headings and body are both Inter. If it is ever
-     revisited, --font-head is the single line to change. */
-  --font-body: "Inter", system-ui, sans-serif;
-  --font-head: "Inter", system-ui, sans-serif;
-  /* A SERIF WAS TRIED HERE TWICE AND DROPPED TWICE. CUE tried Playfair for
-     headings in Aug 2026; the villa card tried it for a villa's name and price
-     in Sep 2026 after Wayan's mock drew one. Both times the answer was the
-     same - "font pakai font global" - so both sites are Inter, everywhere, and
-     --font-head above stays the single line that would change it. */
-
-  --text-display: clamp(2rem, 4.2vw, 3.25rem);   /* H1, 32-52px */
-  --text-h2: clamp(1.625rem, 2.8vw, 2.25rem);          /* section heading, 26-36px */
-  --text-h3: 0.875rem;                          /* card title, 14px */
+  --text-display: clamp(2rem, 4.2vw, 3.25rem);
+  --text-h2: clamp(1.625rem, 2.8vw, 2.25rem);
+  --text-h3: 0.875rem;
   --text-strong: 0.875rem;
-  --text-body: 0.8rem;                          /* 12.8px */
+  --text-body: 0.8rem;
   --text-field: 0.8rem;
   --text-small: 0.8rem;
-  --text-label: 0.64rem;                        /* 10.24px, uppercase labels */
-
-  /* Corner radius: the villa site uses CUE's radius scale (Wayan, 14 Oct 2026), the same five steps as CUE app/globals.css.
-     --radius-base (`rounded-base`, about 57 places) is the small step, 8px like CUE's buttons, so those corners stay on the scale. */
+  --text-label: 0.64rem;
   --radius-sm: 8px;
   --radius-md: 12px;
   --radius-lg: 16px;
   --radius-xl: 22px;
   --radius-pill: 999px;
   --radius-base: var(--radius-sm);
-
-  /* NO SHADOWS ON THE VILLA SITE (Sep 2026, Wayan sent an aman.com screenshot:
-     "hilangin semua shadow biar seperti ini"). The four steps are kept as names
-     so nothing has to be rewritten to turn depth back on - set them here and it
-     returns everywhere at once.
-     --focus-ring below is NOT one of these. It is drawn with box-shadow, but it
-     is the keyboard focus indicator, not decoration, and removing it would take
-     away the only thing telling a keyboard user where they are. */
   --shadow-sm: none;
   --shadow-md: none;
   --shadow-lg: none;
   --shadow-xl: none;
 
   --ease-DEFAULT: cubic-bezier(0.4, 0, 0.2, 1);
-  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);    /* entrances */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
 }
-
-/* --- Aliases -------------------------------------------------------------
-   Tailwind generates its utilities from the LONG names above (--color-line,
-   --radius-md). Components are written against these SHORT ones. Both exist
-   on purpose: the long names feed `border-line` / `rounded-md`, the short
-   ones feed `var(--line)` / `var(--r-md)` inside an arbitrary value.
-
-   A missing alias does not fail loudly. A var() that resolves to nothing
-   inside a `transition:` shorthand makes the whole declaration invalid, and
-   it silently falls back to `all 0s` - no animation, green build. That cost
-   CUE three weeks across 43 usages, so the full set is declared up front.
-   -------------------------------------------------------------------------- */
 :root {
-  /* Surface: white. The villa brand overrides this and nothing else. */
   --surface: #ffffff;
   --surface-raised: #ffffff;
 
@@ -140,7 +78,6 @@
   --container-x: 1.5rem;
 
   --field-h: 2.1rem;
-  /* Buttons have their own token so a field height change never moves them; 2.1rem is CUE's (villas followed it, Sep 2026). */
   --btn-h: 2.1rem;
   --icon-sm: 16px;
   --icon-md: 20px;
@@ -153,34 +90,11 @@
 
   --focus-ring: 0 0 0 3px rgba(34, 32, 28, 0.18);
 }
-
-/* Phone gutter. 992px is not arbitrary: it is the width the full-bleed card
-   tracks turn on at, and a track insets its first card by 1rem. A 24px gutter
-   against a 16px card inset is visibly out by a hair at every section. */
 @media (max-width: 992px) {
-  :root { --container-x: 1rem; }
+  :root {
+    --container-x: 1rem;
+  }
 }
-
-/* Both sites use CUE's palette (Wayan, 30 Sep 2026); data-brand stays on <html> as the hook if a brand ever needs its own value. */
-
-/* ---------------------------------------------------------------------------
-   The ONE component rule the library ships as CSS rather than as a utility
-   string, and the reason is worth knowing.
-
-   `.prose-copy` sets the size, colour and rhythm of every <p> inside running
-   copy - but it has to LOSE to any paragraph that states its own. A review
-   quote in gold, an eyebrow at label size: those say what they are, and the
-   wrapper must not overrule them.
-
-   A rule in @layer components loses to every utility, whatever the specificity.
-   That is exactly the behaviour wanted here, and it is not reproducible with a
-   `[&_p]:` string: two utilities are settled by the compiled stylesheet's
-   order, and the wrapper's variant wins. Ported as a string first and measured:
-   a gold quote turned muted and nine eyebrows jumped from 10.24px to 12.8px.
-
-   So this stays CSS. Everything else in the library is a string, because
-   everything else wants to win.
-   --------------------------------------------------------------------------- */
 @layer components {
   .prose-copy p {
     margin-bottom: 0.9rem;
@@ -188,30 +102,34 @@
     font-size: var(--text-body);
     line-height: var(--lh-body, 1.6);
   }
-  .prose-copy p:last-child { margin-bottom: 0; }
+  .prose-copy p:last-child {
+    margin-bottom: 0;
+  }
 }
-
-/* The splash spinner's rotation. Defined here rather than relying on
-   Tailwind's own `spin` keyframes: the library must render the same whether or
-   not the consuming app happens to have generated that utility. */
 @keyframes cahyana-spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
-
-/* The chat typing dots (CUE chatdot): opacity only, so it never fights the press-feedback scale. */
 @keyframes cahyana-chatdot {
-  0%, 80%, 100% { opacity: 0.3; }
-  40% { opacity: 1; }
+  0%,
+  80%,
+  100% {
+    opacity: 0.3;
+  }
+  40% {
+    opacity: 1;
+  }
 }
-
-/* The Cahyana coin (CUE coinRoll): one full turn, then rest for the remaining 70% of the cycle. */
 @keyframes cahyana-coinroll {
-  0% { transform: rotate(0deg); }
-  30%, 100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  30%,
+  100% {
+    transform: rotate(360deg);
+  }
 }
-
-/* The Coin Rewards panel coin (Coin shine): still, a metal shine sweeps the face (2.5s) then rests (2.5s).
-   5s cycle is off the motion scale on purpose (Wayan, 13 Oct 2026). Reduced motion: no shine. */
 @layer components {
   .cahyana-coin-shine {
     position: absolute;
@@ -221,23 +139,38 @@
     clip-path: circle(47% at 50% 50%);
   }
   .cahyana-coin-shine::before {
-    content: "";
+    content: '';
     position: absolute;
     top: -20%;
     bottom: -20%;
     left: -60%;
     width: 35%;
-    background: linear-gradient(105deg, rgba(255, 255, 255, 0) 0%, rgba(255, 236, 190, 0.15) 32%, rgba(255, 246, 222, 0.95) 50%, rgba(255, 236, 190, 0.15) 68%, rgba(255, 255, 255, 0) 100%);
+    background: linear-gradient(
+      105deg,
+      rgba(255, 255, 255, 0) 0%,
+      rgba(255, 236, 190, 0.15) 32%,
+      rgba(255, 246, 222, 0.95) 50%,
+      rgba(255, 236, 190, 0.15) 68%,
+      rgba(255, 255, 255, 0) 100%
+    );
     transform: skewX(-12deg);
     mix-blend-mode: plus-lighter;
     animation: coinShine 3s ease-in-out infinite;
   }
   @media (prefers-reduced-motion: reduce) {
-    .cahyana-coin-shine::before { animation: none; display: none; }
+    .cahyana-coin-shine::before {
+      animation: none;
+      display: none;
+    }
   }
 }
 
 @keyframes coinShine {
-  0% { left: -60%; }
-  50%, 100% { left: 130%; }
+  0% {
+    left: -60%;
+  }
+  50%,
+  100% {
+    left: 130%;
+  }
 }

@@ -10,15 +10,13 @@ import { FIELD_LABEL } from '@/components/ui/formClasses';
 import { useAccount } from '@/state/AccountProvider';
 import OtpFields from './OtpFields';
 
-// Resend cooldown for the code; UX only, the server's loginLimiter is the real rate limit.
 const RESEND_SECONDS = 30;
 
-// Sign-in/create modal; both views share one email -> 6-digit code stage; reason='book' fires onSignedIn.
 export default function AuthModal({ open, onClose, reason, onSignedIn }) {
   const forBook = reason === 'book';
   const { requestLogin, verifyCode, createAccount } = useAccount();
-  const [view, setView] = useState('signin'); // 'signin' | 'create'
-  const [stage, setStage] = useState('email'); // 'email' | 'code'
+  const [view, setView] = useState('signin');
+  const [stage, setStage] = useState('email');
   const [f, setF] = useState({ name: '', email: '', phone: '' });
   const [codeEmail, setCodeEmail] = useState('');
   const [code, setCode] = useState('');
@@ -41,14 +39,27 @@ export default function AuthModal({ open, onClose, reason, onSignedIn }) {
       setErrors((v) => (v[k] ? { ...v, [k]: undefined } : v));
     };
   }
-  function reset() { setMsg(''); setOk(''); setErrors({}); }
-  function close() { reset(); setF({ name: '', email: '', phone: '' }); setStage('email'); setCode(''); onClose(); }
+  function reset() {
+    setMsg('');
+    setOk('');
+    setErrors({});
+  }
+  function close() {
+    reset();
+    setF({ name: '', email: '', phone: '' });
+    setStage('email');
+    setCode('');
+    onClose();
+  }
 
   async function sendCode(email) {
     setBusy(true);
     const sent = await requestLogin(email);
     setBusy(false);
-    if (!sent) { setMsg('Sorry, we could not send the code. Please try again, or reach us on WhatsApp.'); return; }
+    if (!sent) {
+      setMsg('Sorry, we could not send the code. Please try again, or reach us on WhatsApp.');
+      return;
+    }
     setCodeEmail(email);
     setCode('');
     setStage('code');
@@ -70,22 +81,40 @@ export default function AuthModal({ open, onClose, reason, onSignedIn }) {
     setErrors(fieldErrors);
     if (!valid) return;
     setBusy(true);
-    const res = await createAccount({ name: data.name, email: data.email, phone: data.phone });
+    const result = await createAccount({ name: data.name, email: data.email, phone: data.phone });
     setBusy(false);
-    if (res.ok) { reset(); setF({ name: '', email: '', phone: '' }); (onSignedIn || onClose)(); return; }
-    // Email already has an account: the server emailed a code, so go to the code stage (no login handed over).
-    if (res.signin) { setCodeEmail(res.email); setCode(''); setStage('code'); setCooldown(RESEND_SECONDS); setOk(`You already have an account as ${res.email}.`); return; }
-    setMsg(res.error || 'Sorry, we could not create your account. Please try again.');
+    if (result.ok) {
+      reset();
+      setF({ name: '', email: '', phone: '' });
+      (onSignedIn || onClose)();
+      return;
+    }
+    if (result.signin) {
+      setCodeEmail(result.email);
+      setCode('');
+      setStage('code');
+      setCooldown(RESEND_SECONDS);
+      setOk(`You already have an account as ${result.email}.`);
+      return;
+    }
+    setMsg(result.error || 'Sorry, we could not create your account. Please try again.');
   }
 
   async function doVerify(fullCode) {
     reset();
     setBusy(true);
-    const res = await verifyCode(codeEmail, fullCode);
+    const result = await verifyCode(codeEmail, fullCode);
     setBusy(false);
-    if (res.ok) { reset(); setF({ name: '', email: '', phone: '' }); setStage('email'); setCode(''); (onSignedIn || onClose)(); return; }
+    if (result.ok) {
+      reset();
+      setF({ name: '', email: '', phone: '' });
+      setStage('email');
+      setCode('');
+      (onSignedIn || onClose)();
+      return;
+    }
     setCode('');
-    setMsg(res.error || 'Sorry, something went wrong. Please try again.');
+    setMsg(result.error || 'Sorry, something went wrong. Please try again.');
   }
 
   async function resend() {
@@ -93,87 +122,208 @@ export default function AuthModal({ open, onClose, reason, onSignedIn }) {
     await sendCode(codeEmail);
   }
 
-  function backToEmail() { setStage('email'); setCode(''); reset(); }
-  function swap(v) { setView(v); setStage('email'); setCode(''); reset(); }
+  function backToEmail() {
+    setStage('email');
+    setCode('');
+    reset();
+  }
+  function swap(v) {
+    setView(v);
+    setStage('email');
+    setCode('');
+    reset();
+  }
 
-  const title = stage === 'code'
-    ? 'Enter your code'
-    : view === 'signin' ? (forBook ? 'Sign in to book' : 'Sign in') : 'Create your account';
+  const title =
+    stage === 'code'
+      ? 'Enter your code'
+      : view === 'signin'
+        ? forBook
+          ? 'Sign in to book'
+          : 'Sign in'
+        : 'Create your account';
 
   return (
     <Modal open={open} onClose={close} title={title}>
       {stage === 'code' ? (
         <>
           <p className="m-0 mb-[1.1rem] text-muted text-small leading-[1.5] text-center">
-            We sent a 6-digit code to <b className="text-green">{codeEmail}</b>. Enter it below - it expires in 10 minutes.
+            We sent a 6-digit code to <b className="text-green">{codeEmail}</b>. Enter it below - it expires in 10
+            minutes.
           </p>
-          <OtpFields
-            value={code}
-            onChange={setCode}
-            onComplete={doVerify}
-            error={!!msg}
-            disabled={busy}
-            autoFocus
-          />
-          {msg && <small role="alert" className={`${REFMSG_ERR} block text-center mt-3`}>{msg}</small>}
-          {ok && <small role="status" data-signin-note className={`${REFMSG} block text-center mt-3`}>{ok}</small>}
-          <button type="button" className={`${BTN} mt-4`} onClick={() => doVerify(code)} disabled={busy || code.length < 6}>
+          <OtpFields value={code} onChange={setCode} onComplete={doVerify} error={!!msg} disabled={busy} autoFocus />
+          {msg && (
+            <small role="alert" className={`${REFMSG_ERR} block text-center mt-3`}>
+              {msg}
+            </small>
+          )}
+          {ok && (
+            <small role="status" data-signin-note className={`${REFMSG} block text-center mt-3`}>
+              {ok}
+            </small>
+          )}
+          <button
+            type="button"
+            className={`${BTN} mt-4`}
+            onClick={() => doVerify(code)}
+            disabled={busy || code.length < 6}
+          >
             {busy ? 'Checking...' : 'Verify'}
           </button>
           <p className="mt-4 text-center text-small text-muted">
-            {cooldown > 0 ? `Resend code in ${cooldown}s` : (
-              <button type="button" className="bg-transparent border-none p-0 cursor-pointer font-body text-small text-gold font-semibold underline hover:text-gold-d" onClick={resend}>Resend code</button>
+            {cooldown > 0 ? (
+              `Resend code in ${cooldown}s`
+            ) : (
+              <button
+                type="button"
+                className="bg-transparent border-none p-0 cursor-pointer font-body text-small text-gold font-semibold underline hover:text-gold-d"
+                onClick={resend}
+              >
+                Resend code
+              </button>
             )}
             {' · '}
-            <button type="button" className="bg-transparent border-none p-0 cursor-pointer font-body text-small text-gold font-semibold underline hover:text-gold-d" onClick={backToEmail}>Change email</button>
+            <button
+              type="button"
+              className="bg-transparent border-none p-0 cursor-pointer font-body text-small text-gold font-semibold underline hover:text-gold-d"
+              onClick={backToEmail}
+            >
+              Change email
+            </button>
           </p>
         </>
       ) : view === 'signin' ? (
         <>
           <p className="m-0 mb-[1.1rem] text-muted text-small leading-[1.5]">
-            {forBook
-              ? <>Your trip is saved. Enter your email and we&apos;ll send a 6-digit code to sign in - no password needed.</>
-              : <>Enter your email and we&apos;ll send you a 6-digit code. No password needed.</>}
+            {forBook ? (
+              <>
+                Your trip is saved. Enter your email and we&apos;ll send a 6-digit code to sign in - no password needed.
+              </>
+            ) : (
+              <>Enter your email and we&apos;ll send you a 6-digit code. No password needed.</>
+            )}
           </p>
           <div className={CONTACT_GROUP}>
-            <label className={FIELD_LABEL} htmlFor="auth-email">Email</label>
-            <input className={CONTACT_INPUT} type="email" id="auth-email" placeholder="you@email.com" value={f.email} onChange={set('email')} autoComplete="email" aria-invalid={!!errors.email} />
-            {errors.email && <small role="alert" className={FIELD_ERR}>{errors.email}</small>}
+            <label className={FIELD_LABEL} htmlFor="auth-email">
+              Email
+            </label>
+            <input
+              className={CONTACT_INPUT}
+              type="email"
+              id="auth-email"
+              placeholder="you@email.com"
+              value={f.email}
+              onChange={set('email')}
+              autoComplete="email"
+              aria-invalid={!!errors.email}
+            />
+            {errors.email && (
+              <small role="alert" className={FIELD_ERR}>
+                {errors.email}
+              </small>
+            )}
           </div>
-          {msg && <small role="alert" className={REFMSG_ERR}>{msg}</small>}
+          {msg && (
+            <small role="alert" className={REFMSG_ERR}>
+              {msg}
+            </small>
+          )}
           <button type="button" className={BTN} onClick={doSignIn} disabled={busy}>
             {busy ? 'Sending...' : 'Send code'}
           </button>
           <p className="mt-4 text-center text-small text-muted">
             New here?{' '}
-            <button type="button" className="bg-transparent border-none p-0 cursor-pointer font-body text-small text-gold font-semibold underline hover:text-gold-d" onClick={() => swap('create')}>Create an account</button>
+            <button
+              type="button"
+              className="bg-transparent border-none p-0 cursor-pointer font-body text-small text-gold font-semibold underline hover:text-gold-d"
+              onClick={() => swap('create')}
+            >
+              Create an account
+            </button>
           </p>
         </>
       ) : (
         <>
-          <p className="m-0 mb-[1.1rem] text-muted text-small leading-[1.5]">No password - we&apos;ll recognise you by email &amp; phone.</p>
+          <p className="m-0 mb-[1.1rem] text-muted text-small leading-[1.5]">
+            No password - we&apos;ll recognise you by email &amp; phone.
+          </p>
           <div className={CONTACT_GROUP}>
-            <label className={FIELD_LABEL} htmlFor="auth-name">Your Name</label>
-            <input className={CONTACT_INPUT} type="text" id="auth-name" placeholder="Enter your name" value={f.name} onChange={set('name')} autoComplete="name" aria-invalid={!!errors.name} />
-            {errors.name && <small role="alert" className={FIELD_ERR}>{errors.name}</small>}
+            <label className={FIELD_LABEL} htmlFor="auth-name">
+              Your Name
+            </label>
+            <input
+              className={CONTACT_INPUT}
+              type="text"
+              id="auth-name"
+              placeholder="Enter your name"
+              value={f.name}
+              onChange={set('name')}
+              autoComplete="name"
+              aria-invalid={!!errors.name}
+            />
+            {errors.name && (
+              <small role="alert" className={FIELD_ERR}>
+                {errors.name}
+              </small>
+            )}
           </div>
           <div className={CONTACT_GROUP}>
-            <label className={FIELD_LABEL} htmlFor="auth-cemail">Email</label>
-            <input className={CONTACT_INPUT} type="email" id="auth-cemail" placeholder="you@email.com" value={f.email} onChange={set('email')} autoComplete="email" aria-invalid={!!errors.email} />
-            {errors.email && <small role="alert" className={FIELD_ERR}>{errors.email}</small>}
+            <label className={FIELD_LABEL} htmlFor="auth-cemail">
+              Email
+            </label>
+            <input
+              className={CONTACT_INPUT}
+              type="email"
+              id="auth-cemail"
+              placeholder="you@email.com"
+              value={f.email}
+              onChange={set('email')}
+              autoComplete="email"
+              aria-invalid={!!errors.email}
+            />
+            {errors.email && (
+              <small role="alert" className={FIELD_ERR}>
+                {errors.email}
+              </small>
+            )}
           </div>
           <div className={CONTACT_GROUP}>
-            <label className={FIELD_LABEL} htmlFor="auth-phone">Phone / WhatsApp</label>
-            <input className={CONTACT_INPUT} type="tel" id="auth-phone" placeholder="+62 ..." value={f.phone} onChange={set('phone')} autoComplete="tel" aria-invalid={!!errors.phone} />
-            {errors.phone && <small role="alert" className={FIELD_ERR}>{errors.phone}</small>}
+            <label className={FIELD_LABEL} htmlFor="auth-phone">
+              Phone / WhatsApp
+            </label>
+            <input
+              className={CONTACT_INPUT}
+              type="tel"
+              id="auth-phone"
+              placeholder="+62 ..."
+              value={f.phone}
+              onChange={set('phone')}
+              autoComplete="tel"
+              aria-invalid={!!errors.phone}
+            />
+            {errors.phone && (
+              <small role="alert" className={FIELD_ERR}>
+                {errors.phone}
+              </small>
+            )}
           </div>
-          {msg && <small role="alert" className={REFMSG_ERR}>{msg}</small>}
+          {msg && (
+            <small role="alert" className={REFMSG_ERR}>
+              {msg}
+            </small>
+          )}
           <button type="button" className={BTN} onClick={doCreate} disabled={busy}>
             {busy ? 'Creating...' : 'Create Account'}
           </button>
           <p className="mt-4 text-center text-small text-muted">
             Already have an account?{' '}
-            <button type="button" className="bg-transparent border-none p-0 cursor-pointer font-body text-small text-gold font-semibold underline hover:text-gold-d" onClick={() => swap('signin')}>Sign in</button>
+            <button
+              type="button"
+              className="bg-transparent border-none p-0 cursor-pointer font-body text-small text-gold font-semibold underline hover:text-gold-d"
+              onClick={() => swap('signin')}
+            >
+              Sign in
+            </button>
           </p>
         </>
       )}

@@ -4,40 +4,6 @@ import { cn } from '../lib/cn.js';
 import Card from './Card.jsx';
 import { BTN_SM } from '../primitives/btnClasses.js';
 
-/**
- * The booking panel that rides alongside a stay or a tour: an optional title, price, the dates,
- * the one green CTA, then the quieter ways out.
- *
- *   title      optional short heading above the price
- *   price      node - the "From Rp… / night" block. Passed in, because what a
- *              price MEANS is the app's business (per night, per car, per
- *              person) and getting that wrong is worse than getting it ugly.
- *   fields     node - the date/guest controls
- *   cta        node - the single primary action
- *   secondary  node - quieter actions under it (ask on WhatsApp, and the
- *              Airbnb hand-off; see SECONDARY_BTN below)
- *   note       node - the fine print under the buttons. Rendered in a div, so
- *              it can be a block of terms rather than only a sentence.
- *   sticky     desktop only: the panel follows the reader down the page
- *
- * WHY `sticky` IS ON THE PANEL AND NOT ON A WRAPPER. `position: sticky` binds
- * to the nearest scrolling ancestor, and any ancestor with `overflow: hidden`
- * silently becomes one - the panel then scrolls away with the page and nothing
- * anywhere reports an error. If this stops sticking, look up the tree for an
- * `overflow-hidden` and change it to `overflow-clip`: clip crops the same way
- * without creating a scroll container.
- *
- * THE AIRBNB BUTTON. Both villas are also listed on Airbnb, and some guests
- * simply trust a platform's checkout more than a villa's own form. Sending them
- * there is a real conversion, not a leak - so it belongs in the panel, as a
- * SECONDARY action under the direct CTA. It is only rendered when a URL is
- * actually supplied: a booking button that goes nowhere is a broken promise,
- * unlike a social icon in a footer where aria-disabled is enough.
- */
-
-// Full-width, outlined, stacked under the CTA. It takes BTN_SM like every other
-// button, so the stack reads as one block of choices - this was the last 46px
-// pill left on the site after the button sweep.
 export const SECONDARY_BTN =
   `flex w-full gap-2 ${BTN_SM} [border:1px_solid_var(--line)] bg-transparent text-gold font-body ` +
   'no-underline cursor-pointer transition-[color,border-color,scale] duration-200 ease-in-out ' +
@@ -58,20 +24,13 @@ export default function BookingPanel({
   ...rest
 }) {
   return (
-    <aside
-      className={cn('flex flex-col gap-5', sticky && 'lg:sticky lg:top-24', className)}
-      {...rest}
-    >
+    <aside className={cn('flex flex-col gap-5', sticky && 'lg:sticky lg:top-24', className)} {...rest}>
       <Card as={as} ref={panelRef} className="p-6">
         {title ? <h2 className="m-0 mb-2 text-strong font-semibold text-gold">{title}</h2> : null}
         {price}
         {fields ? <div className="mt-5">{fields}</div> : null}
         {cta ? <div className="mt-4">{cta}</div> : null}
         {secondary ? <div className="mt-2 flex flex-col gap-2">{secondary}</div> : null}
-        {/* A div, not a p. The fine print started as one sentence and is now a
-           small block of terms; nesting that inside a <p> is invalid HTML that
-           browsers silently "fix" by splitting the paragraph, which reorders
-           what is on screen. */}
         {note ? <div className="text-label text-muted text-center mt-3">{note}</div> : null}
       </Card>
       {children}

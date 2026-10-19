@@ -7,7 +7,6 @@ import { BADGE_POPULAR, CARD_FRAME, CARD_IMG } from '@/components/ui/cardClasses
 
 const PLACEHOLDER_GRADIENT = 'linear-gradient(135deg, rgba(31, 61, 43, 0.92), rgba(46, 90, 64, 0.86))';
 
-// Photo 4:3 card on CARD_FRAME with a 2-row body grid (title/rating, meta/price).
 const IMG_WRAP =
   'relative aspect-[4/3] rounded-md overflow-hidden bg-green bg-cover bg-center ' +
   "after:content-[''] after:absolute after:inset-0 after:bg-[linear-gradient(to_bottom,transparent_55%,rgba(31,61,43,0.45))]";
@@ -17,9 +16,7 @@ const BODY =
 const BODY_INCL =
   "grid grid-cols-[1fr] [grid-template-areas:'title''meta''incl'] [flex-direction:column] items-baseline " +
   'gap-x-[0.55rem] gap-y-[0.4rem] pt-[0.6rem] px-[0.9rem] pb-[0.8rem] grow';
-const NAME =
-  '[grid-area:title] m-0 text-strong max-[992px]:text-small font-semibold leading-[1.25] line-clamp-2';
-// Rating cell in the title row: same star + amber-d as HomepageCard's badge, inline instead of a pill.
+const NAME = '[grid-area:title] m-0 text-strong max-[992px]:text-small font-semibold leading-[1.25] line-clamp-2';
 const RATING =
   '[grid-area:rating] flex items-center gap-[3px] self-start justify-self-end text-small font-semibold text-amber-d whitespace-nowrap ' +
   '[&>svg]:w-[13px] [&>svg]:h-[13px] [&>svg]:text-amber-d';
@@ -54,7 +51,9 @@ export default function ExperienceCard({
   const body = (
     <>
       <div className={IMG_WRAP} style={img ? undefined : { backgroundImage: PLACEHOLDER_GRADIENT }}>
-        {img && <Img className={CARD_IMG} src={`/assets/images/${img}`} alt={alt || name} width={width} height={height} />}
+        {img && (
+          <Img className={CARD_IMG} src={`/assets/images/${img}`} alt={alt || name} width={width} height={height} />
+        )}
         {badge && <span className={BADGE_POPULAR}>{badge}</span>}
       </div>
       <div className={incl ? BODY_INCL : BODY}>
@@ -76,7 +75,8 @@ export default function ExperienceCard({
         {priceName && (
           <div className={FOOTER}>
             <div className={PRICE}>
-              <span className={PRICE_FROM}>from</span> <Price name={priceName} mode={priceMode} fallback={priceFallback} />
+              <span className={PRICE_FROM}>from</span>{' '}
+              <Price name={priceName} mode={priceMode} fallback={priceFallback} />
             </div>
           </div>
         )}

@@ -1,8 +1,26 @@
 import { CalendarCheck, ChevronDown } from 'lucide-react';
 import {
-  TRIP_EMPTY, TRIP_EMPTY_LEAD, TRIP_EMPTY_SUB, TRIP_CARD, TRIP_HEAD, TRIP_ICON, TRIP_BODY, TRIP_TITLE, TRIP_DESC,
-  TRIP_DATE, TRIP_PRICE, TRIP_DET_BOX, TRIP_DET_TOGGLE, TRIP_DET_CHEV, TRIP_DET_LIST, TRIP_DET_LINE, TRIP_DET_NAME,
-  TRIP_DET_META, TRIP_DET_AMT, TRIP_CANCEL_BOX, TRIP_CANCEL_BTN,
+  TRIP_EMPTY,
+  TRIP_EMPTY_LEAD,
+  TRIP_EMPTY_SUB,
+  TRIP_CARD,
+  TRIP_HEAD,
+  TRIP_ICON,
+  TRIP_BODY,
+  TRIP_TITLE,
+  TRIP_DESC,
+  TRIP_DATE,
+  TRIP_PRICE,
+  TRIP_DET_BOX,
+  TRIP_DET_TOGGLE,
+  TRIP_DET_CHEV,
+  TRIP_DET_LIST,
+  TRIP_DET_LINE,
+  TRIP_DET_NAME,
+  TRIP_DET_META,
+  TRIP_DET_AMT,
+  TRIP_CANCEL_BOX,
+  TRIP_CANCEL_BTN,
 } from './tripClasses.js';
 
 const STATUS = { new: 'New', paid: 'Paid', pending: 'Pending', confirmed: 'Confirmed', mismatch: 'Mismatch' };
@@ -22,20 +40,6 @@ const COPY = {
   emptyPastSub: 'Trips you have already taken will appear here.',
 };
 
-/**
- * CUE's Booked / Past tab body. Presentational: the site passes the trips and
- * the helpers that know its money, dates and photos.
- *
- *   trips       the array for this tab (null while loading)
- *   signedIn    false shows `signIn` instead of the list
- *   signIn      node for the logged-out state
- *   money       (usd, idr) => string, the stored charged amount
- *   range       (start, end) => string
- *   lineDate    (date) => string, optional, for a detail line
- *   imageFor    (trip) => url | null, the card photo
- *   cancelHref  (trip) => url, the "contact us" link on upcoming cards
- *   copy        overrides for any string in COPY
- */
 export default function BookedTrips({
   trips = null,
   past = false,
@@ -53,7 +57,11 @@ export default function BookedTrips({
   const t = { ...COPY, ...copy };
   if (!signedIn) return signIn;
   if (!trips) {
-    return <div className={TRIP_EMPTY}><p className={TRIP_EMPTY_SUB}>{t.loading}</p></div>;
+    return (
+      <div className={TRIP_EMPTY}>
+        <p className={TRIP_EMPTY_SUB}>{t.loading}</p>
+      </div>
+    );
   }
   if (!trips.length) {
     return (
@@ -69,24 +77,42 @@ export default function BookedTrips({
         const image = imageFor(trip);
         const lines = trip.lines || [];
         const open = openRef === trip.ref;
-        const status = past ? t.completed : trip.status ? (STATUS[trip.status] || trip.status.charAt(0).toUpperCase() + trip.status.slice(1)) : t.booked;
+        const status = past
+          ? t.completed
+          : trip.status
+            ? STATUS[trip.status] || trip.status.charAt(0).toUpperCase() + trip.status.slice(1)
+            : t.booked;
         return (
           <div className={TRIP_CARD} key={trip.ref}>
             <div className={TRIP_HEAD}>
-              <span className={TRIP_ICON} style={image ? { backgroundImage: `url(${image})` } : undefined} aria-hidden="true">
+              <span
+                className={TRIP_ICON}
+                style={image ? { backgroundImage: `url(${image})` } : undefined}
+                aria-hidden="true"
+              >
                 {!image && <CalendarCheck strokeWidth={1.7} />}
               </span>
               <div className={TRIP_BODY}>
                 <p className={TRIP_TITLE}>{trip.name}</p>
-                <p className={TRIP_DESC}>{status} · {t.guests(trip.guests || '-')}</p>
-                <p className={TRIP_DATE}>{range(trip.start_date, trip.end_date)}{trip.ref ? ` · ${trip.ref}` : ''}</p>
+                <p className={TRIP_DESC}>
+                  {status} · {t.guests(trip.guests || '-')}
+                </p>
+                <p className={TRIP_DATE}>
+                  {range(trip.start_date, trip.end_date)}
+                  {trip.ref ? ` · ${trip.ref}` : ''}
+                </p>
               </div>
               <span className={TRIP_PRICE}>{money(trip.price_usd, trip.price_idr)}</span>
             </div>
 
             {lines.length > 0 && (
               <div className={TRIP_DET_BOX}>
-                <button type="button" className={TRIP_DET_TOGGLE} aria-expanded={open ? 'true' : 'false'} onClick={() => onToggle(open ? null : trip.ref)}>
+                <button
+                  type="button"
+                  className={TRIP_DET_TOGGLE}
+                  aria-expanded={open ? 'true' : 'false'}
+                  onClick={() => onToggle(open ? null : trip.ref)}
+                >
                   {open ? t.hide : t.view(lines.length)}
                   <ChevronDown className={TRIP_DET_CHEV} strokeWidth={1.6} aria-hidden="true" />
                 </button>
@@ -112,7 +138,9 @@ export default function BookedTrips({
 
             {!past && (
               <div className={TRIP_CANCEL_BOX}>
-                <a className={TRIP_CANCEL_BTN} href={cancelHref(trip)} target="_blank" rel="noopener">{t.contact}</a>
+                <a className={TRIP_CANCEL_BTN} href={cancelHref(trip)} target="_blank" rel="noopener">
+                  {t.contact}
+                </a>
               </div>
             )}
           </div>

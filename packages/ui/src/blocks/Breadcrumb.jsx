@@ -1,6 +1,5 @@
 import { cn } from '../lib/cn.js';
 
-// CUE's breadcrumb: nav + ol, 12.8px, the last item is the current page (plain text, aria-current), never a link.
 export const CRUMB_NAV = 'font-body text-small text-muted';
 export const CRUMB_OL = 'flex flex-wrap items-center gap-0 m-0 p-0 list-none';
 export const CRUMB_LINK = 'text-muted no-underline hover:text-gold hover:underline';
@@ -17,11 +16,19 @@ export default function Breadcrumb({ items = [], linkAs: Link = 'a', className }
           return (
             <li key={`${item.label}-${index}`} className="flex items-center">
               {!last && item.href ? (
-                <Link className={CRUMB_LINK} href={item.href}>{item.label}</Link>
+                <Link className={CRUMB_LINK} href={item.href}>
+                  {item.label}
+                </Link>
               ) : (
-                <span className={last ? CRUMB_HERE : undefined} aria-current={last ? 'page' : undefined}>{item.label}</span>
+                <span className={last ? CRUMB_HERE : undefined} aria-current={last ? 'page' : undefined}>
+                  {item.label}
+                </span>
               )}
-              {!last && <span className={CRUMB_SEP} aria-hidden="true">›</span>}
+              {!last && (
+                <span className={CRUMB_SEP} aria-hidden="true">
+                  ›
+                </span>
+              )}
             </li>
           );
         })}

@@ -25,12 +25,13 @@ const inter = localFont({
   fallback: ['system-ui', 'sans-serif'],
 });
 
-// Content hash for files in public/, so a replaced icon gets a new URL and browsers drop the cached one.
 function assetV(...rel) {
-  return createHash('sha1').update(readFileSync(join(process.cwd(), 'public', ...rel))).digest('hex').slice(0, 8);
+  return createHash('sha1')
+    .update(readFileSync(join(process.cwd(), 'public', ...rel)))
+    .digest('hex')
+    .slice(0, 8);
 }
 
-// Same icon set as CUE (same Cahyana logo): round tab icons, opaque tiles for home screens.
 export const metadata = {
   metadataBase: new URL('https://ubudprivatevillas.com'),
   icons: {
@@ -38,12 +39,16 @@ export const metadata = {
       { url: `/assets/icons/favicon.svg?v=${assetV('assets', 'icons', 'favicon.svg')}`, type: 'image/svg+xml' },
       { url: `/assets/icons/favicon.ico?v=${assetV('assets', 'icons', 'favicon.ico')}`, sizes: 'any' },
     ],
-    apple: [{ url: `/assets/icons/apple-touch-icon.png?v=${assetV('assets', 'icons', 'apple-touch-icon.png')}`, sizes: '180x180' }],
+    apple: [
+      {
+        url: `/assets/icons/apple-touch-icon.png?v=${assetV('assets', 'icons', 'apple-touch-icon.png')}`,
+        sizes: '180x180',
+      },
+    ],
   },
   manifest: '/manifest.webmanifest',
 };
 
-// The day's exchange rates from cahyana-api, fetched once per build; no answer within 10s means the page fetches them itself.
 async function buildFx() {
   try {
     const response = await fetch(`${API_BASE}/pricing/catalog?currency=USD`, { signal: AbortSignal.timeout(10000) });
@@ -55,30 +60,27 @@ async function buildFx() {
   }
 }
 
-// data-brand picks this site's surface from the library tokens, so no component needs to know which site it is in.
 export default async function RootLayout({ children }) {
   const initialFx = await buildFx();
   return (
     <html lang="en" data-brand="villas" className={inter.variable}>
-      {/* The fixed bottom bar needs its height reserved, or it covers the footer on mobile. */}
       <body className={BAR_BODY_PAD}>
         <IosZoomFix />
         <LoadingScreen />
         <CurrencyProvider initialFx={initialFx}>
           <AccountProvider>
-          <TripPrefsProvider>
-          <CartProvider>
-          <SavedVillasProvider>
-          <BookingProvider>
-            <Navbar />
-            {/* Reserve the fixed header's height: --header-h-max only grows, so the page never jumps under the reader. */}
-            <main className="pt-[var(--header-h-max,53px)]">{children}</main>
-            <Footer />
-            <BookingSheet />
-          </BookingProvider>
-          </SavedVillasProvider>
-          </CartProvider>
-          </TripPrefsProvider>
+            <TripPrefsProvider>
+              <CartProvider>
+                <SavedVillasProvider>
+                  <BookingProvider>
+                    <Navbar />
+                    <main className="pt-[var(--header-h-max,53px)]">{children}</main>
+                    <Footer />
+                    <BookingSheet />
+                  </BookingProvider>
+                </SavedVillasProvider>
+              </CartProvider>
+            </TripPrefsProvider>
           </AccountProvider>
         </CurrencyProvider>
       </body>

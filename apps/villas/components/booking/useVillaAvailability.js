@@ -3,7 +3,6 @@
 import { useEffect, useState } from 'react';
 import { fetchAvailability } from '@/lib/availability';
 
-// { status: 'loading' | 'ready' | 'unknown', busy } for one villa, refetched when the villa changes.
 export default function useVillaAvailability(villaSlug) {
   const [state, setState] = useState({ status: 'loading', busy: [] });
 
@@ -16,7 +15,9 @@ export default function useVillaAvailability(villaSlug) {
       if (alive) setState({ status: result.known ? 'ready' : 'unknown', busy: result.busy });
     }
     load();
-    return () => { alive = false; };
+    return () => {
+      alive = false;
+    };
   }, [villaSlug]);
 
   return state;

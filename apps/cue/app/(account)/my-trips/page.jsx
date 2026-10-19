@@ -9,13 +9,11 @@ export const metadata = {
 
 export default function Page() {
   return (
-    // No pb-20 here: RailLayout scrollContent sizes the frame to the viewport and body already pads for the footer.
     <div className="tourprog">
       <JsonLd page="my-trips" />
-    {/* Same rail shell as Our Company; no page-level h1 (the rail's "My trips" label is the title). */}
-    <div className={RAIL_PAGE_SCROLL}>
-      <MyTripsCart />
-    </div>
+      <div className={RAIL_PAGE_SCROLL}>
+        <MyTripsCart />
+      </div>
     </div>
   );
 }

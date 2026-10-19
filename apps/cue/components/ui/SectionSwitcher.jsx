@@ -4,13 +4,11 @@ import { useEffect, useState } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { BAR_SHELL, BAR_UPTO_MD } from '@/components/ui/stickyBar';
 
-// Size comes from the parent button's [&>svg] rule, same as before.
 function Chevron({ dir }) {
   const Icon = dir === 'left' ? ChevronLeft : ChevronRight;
   return <Icon aria-hidden="true" />;
 }
 
-// Mobile listing bar: current category name with prev/next arrows; shares BookBar's shell so only one bar is pinned.
 export default function SectionSwitcher({ zones = [] }) {
   const [idx, setIdx] = useState(0);
 
@@ -50,10 +48,22 @@ export default function SectionSwitcher({ zones = [] }) {
     <div className={`${BAR_SHELL} ${BAR_UPTO_MD}`} role="navigation" aria-label="Jump to category">
       <span className="flex-1 min-w-0 truncate font-semibold text-[0.8rem] text-ink">{zones[idx].label}</span>
       <div className="flex-none flex items-center gap-1">
-        <button type="button" className={arrow} onClick={() => step(-1)} disabled={idx === 0} aria-label="Previous category">
+        <button
+          type="button"
+          className={arrow}
+          onClick={() => step(-1)}
+          disabled={idx === 0}
+          aria-label="Previous category"
+        >
           <Chevron dir="left" />
         </button>
-        <button type="button" className={arrow} onClick={() => step(1)} disabled={idx === zones.length - 1} aria-label="Next category">
+        <button
+          type="button"
+          className={arrow}
+          onClick={() => step(1)}
+          disabled={idx === zones.length - 1}
+          aria-label="Next category"
+        >
           <Chevron dir="right" />
         </button>
       </div>

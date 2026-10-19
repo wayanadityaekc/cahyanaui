@@ -3,17 +3,6 @@
 import { useState } from 'react';
 import { cn } from '../lib/cn.js';
 
-/**
- * Tabs over a gallery: pick a space, see its photo large, its words beside it,
- * and pick another photo from the row of thumbnails. No arrows and nothing
- * slides; every control is a tap on something already visible.
- *
- *   items   [{ id, label, title, text, images: [{ src, alt }] }]
- *   label   accessible name for the tab list
- *
- * The selected tab and thumbnail change colour and outline only, never size or
- * weight, so nothing around them moves when one is pressed.
- */
 export default function TabGallery({ items = [], label = '', className }) {
   const [activeId, setActiveId] = useState(items[0]?.id);
   const [photo, setPhoto] = useState(0);
@@ -39,7 +28,9 @@ export default function TabGallery({ items = [], label = '', className }) {
             onClick={() => choose(entry.id)}
             className={cn(
               'h-[var(--btn-h)] px-4 rounded-pill font-body text-small font-medium cursor-pointer [border:1px_solid_var(--line)] transition-[background-color,color] duration-200 ease-[ease]',
-              entry.id === item.id ? 'bg-gold text-white [border-color:var(--color-gold)]' : 'bg-surface-raised text-green hover:bg-cream',
+              entry.id === item.id
+                ? 'bg-gold text-white [border-color:var(--color-gold)]'
+                : 'bg-surface-raised text-green hover:bg-cream',
             )}
           >
             {entry.label}
@@ -48,8 +39,14 @@ export default function TabGallery({ items = [], label = '', className }) {
       </div>
       <div className="grid gap-6 min-[993px]:grid-cols-[1.45fr_1fr] min-[993px]:gap-10 items-start">
         <div className="relative overflow-hidden bg-cream aspect-[16/10]">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          {current ? <img src={current.src} alt={current.alt || ''} loading="lazy" className="absolute inset-0 w-full h-full object-cover" /> : null}
+          {current ? (
+            <img
+              src={current.src}
+              alt={current.alt || ''}
+              loading="lazy"
+              className="absolute inset-0 w-full h-full object-cover"
+            />
+          ) : null}
         </div>
         <div role="tabpanel" className="grid gap-4 content-start">
           <h3 className="text-h2 font-medium text-gold">{item.title}</h3>
@@ -67,7 +64,6 @@ export default function TabGallery({ items = [], label = '', className }) {
                   index === photo ? 'outline-[var(--color-gold)]' : 'outline-transparent',
                 )}
               >
-                {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src={image.src} alt="" loading="lazy" className="absolute inset-0 w-full h-full object-cover" />
               </button>
             ))}

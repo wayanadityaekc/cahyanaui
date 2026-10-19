@@ -2,9 +2,7 @@ const SOURCE_LOGO = {
   cahyana: { src: '/assets/images/logo.webp', alt: 'Cahyana Ubud Experience' },
 };
 
-// Fixed-height review card with a clamped message, same box everywhere; clicking opens the full review.
 const CLS = {
-  // No overflow-hidden on the card: line-clamp clips the <p> cleanly, clipping the card too cuts text mid-word.
   card: 'relative flex flex-col gap-2 w-full h-[248px] bg-white border border-line rounded-lg px-[1.3rem] pt-[1.4rem] pb-[2.3rem] text-left font-body cursor-pointer focus:outline-none focus:[box-shadow:var(--focus-ring)]',
   head: 'flex items-center gap-2',
   name: 'font-semibold text-small text-green',
@@ -28,7 +26,9 @@ export default function ReviewCard({ name, country, rating, message, service, so
         {country && <span className={CLS.country}>&middot; {country}</span>}
       </div>
       {service && <div className={CLS.service}>{service}</div>}
-      <div className={CLS.stars} aria-label={`${n} out of 5`}>{stars}</div>
+      <div className={CLS.stars} aria-label={`${n} out of 5`}>
+        {stars}
+      </div>
       <p className={CLS.text}>{message}</p>
       <span className={CLS.more}>Read more &rsaquo;</span>
       <img className={CLS.logo} src={logo.src} alt={logo.alt} loading="lazy" />

@@ -2,14 +2,14 @@
 
 import { useEffect, useRef } from 'react';
 
-// CUE's dialog behaviour: focus the box, trap Tab, Escape closes the topmost dialog only, restore focus on close.
 const FOCUSABLE =
   'a[href], button:not([disabled]), input:not([disabled]):not([type="hidden"]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
 
-// Open dialogs, oldest first. Only the last one answers Escape and Tab.
 const stack = [];
 
-function visible(node) { return node.getClientRects().length > 0 && getComputedStyle(node).visibility !== 'hidden'; }
+function visible(node) {
+  return node.getClientRects().length > 0 && getComputedStyle(node).visibility !== 'hidden';
+}
 
 export default function useDialog({ shown = false, onClose = null, escape = true } = {}) {
   const ref = useRef(null);
@@ -26,12 +26,16 @@ export default function useDialog({ shown = false, onClose = null, escape = true
     stack.push(token);
 
     if (!node.hasAttribute('tabindex')) node.setAttribute('tabindex', '-1');
-    // Retry after a frame: a shell still visibility:hidden on the first frame refuses focus.
-    function focusBox() { node.focus({ preventScroll: true }); return document.activeElement === node; }
+    function focusBox() {
+      node.focus({ preventScroll: true });
+      return document.activeElement === node;
+    }
     let raf = 0;
     let timer = 0;
     if (!focusBox()) {
-      raf = requestAnimationFrame(() => { if (!focusBox()) timer = setTimeout(focusBox, 120); });
+      raf = requestAnimationFrame(() => {
+        if (!focusBox()) timer = setTimeout(focusBox, 120);
+      });
     }
 
     function onKey(e) {
@@ -39,7 +43,6 @@ export default function useDialog({ shown = false, onClose = null, escape = true
 
       if (e.key === 'Escape') {
         if (!escape || e.defaultPrevented) return;
-        // A Select or Overlay popup handles its own Escape first.
         if (document.querySelector('[data-portal][data-open]')) return;
         closeRef.current?.();
         return;
@@ -47,7 +50,6 @@ export default function useDialog({ shown = false, onClose = null, escape = true
 
       if (e.key !== 'Tab') return;
       const focused = document.activeElement;
-      // Focus inside a portaled popup (a Select list) is fine; leave it alone.
       if (focused && !node.contains(focused) && focused.closest && focused.closest('[data-portal]')) return;
 
       const items = Array.from(node.querySelectorAll(FOCUSABLE)).filter(visible);

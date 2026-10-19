@@ -1,80 +1,20 @@
 import { cn } from '../lib/cn.js';
 import { BTN_SM } from '../primitives/btnClasses.js';
 
-/**
- * A villa, as a card - Wayan's mock, Sep 2026: one photograph, everything
- * written ON it, a gold "Most Popular" flag top-left, a save heart top-right,
- * and a bottom row that pairs the facts with the price and the CTA.
- *
- * WHY IT IS AN OVERLAY AND NOT A WHITE CARD. Two villas is not a catalogue to
- * scan, it is a choice between two places, and the photograph is the argument.
- * A white body under the picture makes the words compete with it; laid over a
- * scrim they read as a caption to the thing being sold.
- *
- * HEIGHT COMES FROM THE CONTENT, not from an aspect ratio. A fixed ratio card
- * at 390px is ~290px tall and the title, the blurb, three facts, the price and
- * a button do not fit in it - they either overflow or get clipped, and which
- * one you get depends on the guest's font size. So the photo is an absolutely
- * positioned layer and the content sets the height, with a min-height to stop
- * a short card looking like a banner.
- *
- * THIS IS SITE-SPECIFIC AND IT STILL LIVES IN THE LIBRARY - that is the rule.
- * What the library must NOT hold is the villas themselves, the icon set, or
- * anything that needs a provider. So:
- *
- *   villa     { slug, name, badge, cardImg, shortDesc }
- *   place     the line above the name ("Ubud, Bali")
- *   price     the already-formatted string - the currency hook lives in the
- *             app's provider tree, and a library component that reaches for it
- *             can only ever be rendered inside that one app
- *   facts     [{ icon, label }] - which facts matter is editorial, and the
- *             icons are nodes so the library takes no dependency on Lucide
- *   saveIcon  the heart. Passed in for the same reason; omit it and the
- *             control is not drawn at all, which is the honest state when
- *             there is nowhere for a saved villa to go.
- *   saved     whether this one is on the guest's shortlist, plus onSave to
- *             toggle it. WHERE that list lives is the app's business - today a
- *             per-browser key, one day the guest's account - and the card does
- *             not need to know which.
- */
-
-// The scrim. Two stops rather than a flat wash: the words sit in the bottom
-// third, so that is where the darkness belongs - a full-card overlay just
-// makes the photograph muddy. The top stop exists for the badge and heart.
-// The scrim is built from the SAME dark the rest of the site uses (CUE's 34,32,28),
-// not a near-black of its own. It was rgba(12,11,9,...) while every other dark
-// surface moved to #313131, which left the biggest dark area on the homepage
-// disagreeing with all of them. Measured after the change: white on the bottom
-// stop is 12.03:1, so nothing was traded for it.
 const SCRIM =
   'absolute inset-0 [background:linear-gradient(to_top,rgba(34,32,28,0.93)_0%,rgba(34,32,28,0.86)_22%,rgba(34,32,28,0.55)_44%,rgba(34,32,28,0.10)_70%,rgba(34,32,28,0.34)_100%)]';
 
-// Real gold here, not the soft black the palette calls "gold" - a badge is one
-// of the three jobs --color-amber exists for, and on a photograph it has to
-// carry its own light.
 const FLAG =
   'absolute top-4 left-4 z-[2] inline-flex items-center gap-2 py-2 px-3.5 rounded-sm ' +
   '[background:linear-gradient(105deg,var(--color-amber-d),var(--color-amber))] ' +
   'text-white text-small font-semibold [text-shadow:0_1px_1px_rgba(0,0,0,0.18)]';
 
-// The heart. STILL A CIRCLE - "hilangin border radius" is about cards and
-// pictures; a round control is a shape, not a corner.
-//
-// Saved is shown by COLOUR AND FILL, never by fill alone: the icon is handed in
-// by the app, so this cannot swap it for a solid one. `fill-current` makes
-// whatever outline heart arrives read as solid, and the amber is the same token
-// the price uses - the two things on this card the guest chose.
 const SAVE =
   'absolute top-4 right-4 z-[3] grid place-items-center w-9 h-9 rounded-base bg-white ' +
   'cursor-pointer [transition:color_var(--dur)_var(--ease),background-color_var(--dur)_var(--ease),scale_var(--dur-fast)_var(--ease)] hover:bg-cream';
 const SAVE_ON = 'text-amber [&_svg]:fill-current';
 const SAVE_OFF = 'text-gold';
 
-// Geometry comes from BTN_SM, which this card no longer gets to disagree with.
-// It used to spell out its own h-2.6rem / px-5 / text-strong, and for a while
-// that made it the ONLY button on the site at 41.6px while every other one sat
-// at 33.6 - two sizes, and the odd one out was the most important control on
-// the page. Now BTN_SM is that size and the card just asks for it.
 const CTA =
   `inline-flex ${BTN_SM} gap-2 bg-surface-raised text-gold ` +
   '[transition:background-color_var(--dur)_var(--ease),scale_var(--dur-fast)_var(--ease)] group-hover:bg-cream';
@@ -96,8 +36,12 @@ export default function VillaCard({
   className,
 }) {
   return (
-    <div className={cn('group relative isolate overflow-hidden bg-gold min-h-[27rem] min-[560px]:min-h-[30rem]', className)}>
-      {/* eslint-disable-next-line @next/next/no-img-element */}
+    <div
+      className={cn(
+        'group relative isolate overflow-hidden bg-gold min-h-[27rem] min-[560px]:min-h-[30rem]',
+        className,
+      )}
+    >
       <img
         src={villa.cardImg}
         alt={`${villa.name} private pool and garden`}
@@ -116,16 +60,10 @@ export default function VillaCard({
         </span>
       ) : null}
 
-      {/* The heart sits OUTSIDE the link, not inside it: a button nested in an
-          anchor is invalid HTML, and browsers resolve it by guessing - usually
-          by following the link the moment the guest tries to save. */}
       {saveIcon ? (
         <button
           type="button"
           className={cn(SAVE, saved ? SAVE_ON : SAVE_OFF)}
-          // aria-pressed, not a changed label: this is one control that toggles,
-          // and a screen reader should hear its STATE rather than be handed a
-          // different button each time it is pressed.
           aria-pressed={saved}
           aria-label={`Save ${villa.name}`}
           onClick={onSave || undefined}
@@ -134,10 +72,6 @@ export default function VillaCard({
         </button>
       ) : null}
 
-      {/* The whole photograph is the link, and it sits UNDER the bottom row so
-          the CTA and the heart stay their own targets. `after` rather than a
-          wrapper: a link wrapping the content would make every word inside it
-          part of one enormous accessible name. */}
       <Link
         href={href || `/villas/${villa.slug}`}
         className="absolute inset-0 z-[1]"
@@ -162,22 +96,7 @@ export default function VillaCard({
           <p className="mt-2 max-w-[30rem] text-small text-white/85 leading-[1.5]">{villa.shortDesc}</p>
         ) : null}
 
-        {/* Facts left, money right - one row where there is room, stacked where
-            there is not. The break is at 560px because below it the three
-            facts alone already fill the width. */}
         <div className="mt-5 flex flex-col gap-4 min-[560px]:flex-row min-[560px]:items-end min-[560px]:justify-between min-[560px]:gap-6">
-          {/* TWO SHAPES, because a phone card and a desktop card have opposite
-              problems here.
-                desktop - the facts share the row with the price, so they get
-                  about 300px and have to be stacked two lines to fit
-                phone - they own the full width, but three two-line stacks side
-                  by side READ as piled up (Wayan: "tulisan up to guest, private
-                  pool dan bedroom di mobile numpuk bro"). Measured: the three
-                  came to 239px inside a 248px row at 320.
-              So below 560 each fact is ONE short line at label size and the
-              stack is hidden. The short line carries the accessible text and
-              the stack is aria-hidden, so a screen reader reads each fact
-              exactly once at either width. */}
           {facts.length ? (
             <ul className="list-none flex items-center gap-x-2 min-[560px]:gap-x-4 m-0 p-0 text-label min-[560px]:text-small text-white/90 [&_svg]:w-3.5 [&_svg]:h-3.5 min-[560px]:[&_svg]:w-[var(--icon-md)] min-[560px]:[&_svg]:h-[var(--icon-md)]">
               {facts.map((f, i) => (
@@ -190,19 +109,24 @@ export default function VillaCard({
                 >
                   {f.icon}
                   <span className="leading-[1.25]">
-                    {f.short ? (
-                      <span className="block whitespace-nowrap min-[560px]:hidden">{f.short}</span>
-                    ) : null}
-                    <span className={f.short ? 'max-[559px]:hidden' : undefined} aria-hidden={f.short ? 'true' : undefined}>
+                    {f.short ? <span className="block whitespace-nowrap min-[560px]:hidden">{f.short}</span> : null}
+                    <span
+                      className={f.short ? 'max-[559px]:hidden' : undefined}
+                      aria-hidden={f.short ? 'true' : undefined}
+                    >
                       {(f.lines || [f.label]).map((l) => (
-                        <span key={l} className="block whitespace-nowrap">{l}</span>
+                        <span key={l} className="block whitespace-nowrap">
+                          {l}
+                        </span>
                       ))}
                     </span>
                   </span>
                 </li>
               ))}
             </ul>
-          ) : <span />}
+          ) : (
+            <span />
+          )}
 
           <div className="flex items-center justify-between gap-4 min-[560px]:flex-col min-[560px]:items-end min-[560px]:gap-3">
             {price ? (
@@ -211,12 +135,16 @@ export default function VillaCard({
                 <span className="font-semibold text-[1.75rem] text-amber">{price}</span>
                 <span className="ml-1.5 text-small text-white/80">{unit}</span>
               </p>
-            ) : <span />}
+            ) : (
+              <span />
+            )}
 
-            {/* pointer-events come back on for the one control the guest is
-                meant to hit, since the whole block above is transparent to
-                clicks so the photo-wide link underneath still works. */}
-            <Link href={href || `/villas/${villa.slug}`} className={cn(CTA, 'pointer-events-auto')} tabIndex={-1} aria-hidden="true">
+            <Link
+              href={href || `/villas/${villa.slug}`}
+              className={cn(CTA, 'pointer-events-auto')}
+              tabIndex={-1}
+              aria-hidden="true"
+            >
               {cta}
               {ctaIcon}
             </Link>

@@ -11,10 +11,8 @@ const GUESTS = [
   { img: 'guest-snorkeling.jpg', alt: 'Guests snorkelling in east Bali' },
 ];
 
-// Track duplicated so translateX(-50%) loops seamlessly (matches vanilla partials/guest-gallery.html).
 const TRACK = [...GUESTS, ...GUESTS];
 
-// Guest photo marquee; the guestScroll keyframe still lives in style.css.
 export default function GuestGallery() {
   return (
     <section className="pt-12 pb-[3.2rem] bg-white" id="guest-gallery" aria-label="Photos with our guests">
@@ -24,7 +22,13 @@ export default function GuestGallery() {
         <div className="grid grid-flow-col grid-rows-[repeat(2,128px)] auto-cols-[128px] gap-[6px] w-max animate-[guestScroll_35s_linear_infinite] motion-reduce:animate-none">
           {TRACK.map((photo, i) => (
             <figure className="m-0 rounded-md overflow-hidden border-2 border-gold" key={i}>
-              <img className="w-[128px] h-full object-cover block" src={`/assets/images/${photo.img}`} alt={photo.alt} width={300} height={300} />
+              <img
+                className="w-[128px] h-full object-cover block"
+                src={`/assets/images/${photo.img}`}
+                alt={photo.alt}
+                width={300}
+                height={300}
+              />
             </figure>
           ))}
         </div>

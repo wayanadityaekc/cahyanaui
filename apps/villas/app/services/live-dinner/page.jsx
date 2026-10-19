@@ -5,11 +5,11 @@ import { breadcrumbList, serviceCrumbs } from '@/lib/schema';
 
 export const metadata = pageMeta({
   title: 'Private Chef Live Dinner in Ubud',
-  description: 'A private chef cooks dinner in your Ubud villa: romantic tables for two, Balinese megibung feasts and BBQ nights. Prices upfront.',
+  description:
+    'A private chef cooks dinner in your Ubud villa: romantic tables for two, Balinese megibung feasts and BBQ nights. Prices upfront.',
   path: '/services/live-dinner/',
 });
 
-// CEK WAYAN: photos hidden until Wayan supplies real ones; the hero falls back to its dark gradient band.
 export default function LiveDinnerPage() {
   return (
     <>
@@ -52,7 +52,12 @@ export default function LiveDinnerPage() {
         ]}
         aside={{
           title: 'Dinner at your villa',
-          facts: ['Chef cooks in your kitchen', 'Book a day ahead', 'Ingredients & clean-up included', 'Cooking class available'],
+          facts: [
+            'Chef cooks in your kitchen',
+            'Book a day ahead',
+            'Ingredients & clean-up included',
+            'Cooking class available',
+          ],
           ctaLabel: 'Plan dinner',
           otherServices: [
             { href: '/services/breakfast', label: 'Breakfast' },

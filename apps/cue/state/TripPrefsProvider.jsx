@@ -52,18 +52,26 @@ export function TripPrefsProvider({ children }) {
   function setDateRange(from, to) {
     setDateFromState(from || '');
     setDateToState(to || '');
-    if (from) writeLocal(KEY.dateFrom, from); else removeLocal(KEY.dateFrom);
-    if (to) writeLocal(KEY.dateTo, to); else removeLocal(KEY.dateTo);
+    if (from) writeLocal(KEY.dateFrom, from);
+    else removeLocal(KEY.dateFrom);
+    if (to) writeLocal(KEY.dateTo, to);
+    else removeLocal(KEY.dateTo);
   }
 
   return (
     <TripPrefsContext.Provider
       value={{
-        currency, setCurrency,
-        guests, setGuests, resetGuests,
+        currency,
+        setCurrency,
+        guests,
+        setGuests,
+        resetGuests,
         displayGuests: guests || DISPLAY_GUESTS,
-        stay, setStay,
-        dateFrom, dateTo, setDateRange,
+        stay,
+        setStay,
+        dateFrom,
+        dateTo,
+        setDateRange,
         hydrated,
       }}
     >

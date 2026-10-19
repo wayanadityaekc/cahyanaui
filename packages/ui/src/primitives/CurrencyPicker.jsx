@@ -4,37 +4,12 @@ import { useEffect, useRef, useState } from 'react';
 import { ChevronDown } from 'lucide-react';
 import { cn } from '../lib/cn.js';
 
-/**
- * Display-currency switcher.
- *
- * PRESENTATIONAL ONLY, and that is the rule for everything in this library:
- * it takes `value`, `onChange` and `options` and knows nothing about where the
- * currency is stored, what the rates are, or who else re-renders when it
- * changes. Each site wires its own context to it. The moment a library
- * component reaches for a site's provider, the other site cannot use it.
- *
- * Flags are the SVG sprite in FlagDefs, which the consuming site must render
- * once somewhere in the tree. Emoji flags were the previous approach and they
- * render as two-letter boxes on most of Windows - a guest on a laptop saw "US"
- * where a flag should be.
- *
- *   variant  navbar  pushes itself to the end of a flex row
- *            hero    sized to match a form field on a search bar
- *            bar     a navbar button: the box of CUE's EN button (32px, 12px corners), list opens to the left
- *            default
- */
-function wrap(variant) { return cn('relative', variant === 'navbar' && 'ml-auto flex-none', variant === 'bar' && 'flex-none'); }
+function wrap(variant) {
+  return cn('relative', variant === 'navbar' && 'ml-auto flex-none', variant === 'bar' && 'flex-none');
+}
 
 const BTN_BASE =
   'flex items-center gap-[0.45rem] w-full bg-surface-raised font-body text-field text-green cursor-pointer';
-// ONE SHAPE, and it is a FIELD's shape, not a button's. The currency picker was
-// a pill everywhere except the hero search form, where it already rendered as a
-// 12px field - so the same control had two corners depending on where it stood.
-// It is a field: it sits in a row beside Guests and Dates and it holds a value
-// rather than performing an action. CUE made the same call. The border colour
-// was also a hardcoded #d8d2c4 in the pill branch, the one place on either site
-// not using the --line token.
-// The navbar button beside the My Cahyana pill (Wayan, 18 Oct 2026): same box as the pill and CUE's EN button.
 const BAR_BTN =
   'flex items-center gap-[0.4rem] h-8 px-[0.6rem] rounded-md bg-surface-raised font-body text-small font-semibold text-gold ' +
   'cursor-pointer [border:1px_solid_var(--line)] [transition:border-color_var(--dur)_var(--ease)] ' +
@@ -55,7 +30,6 @@ const CARET =
   'w-[14px] h-[14px] text-muted flex-none [transition:transform_var(--dur-fast)_ease] ' +
   '[[aria-expanded=true]_&]:[transform:rotate(180deg)]';
 
-// Stays mounted so it can animate; CUE's shape: --line border, capped at 15rem and scrolling.
 function list(variant, open) {
   return cn(
     'absolute mt-1 p-1 list-none bg-surface-raised z-10 max-h-[15rem] overflow-y-auto overscroll-contain',
@@ -101,7 +75,9 @@ export default function CurrencyPicker({
     function onDoc(e) {
       if (ref.current && !ref.current.contains(e.target)) setOpen(false);
     }
-    function onKey(e) { if (e.key === 'Escape') setOpen(false); }
+    function onKey(e) {
+      if (e.key === 'Escape') setOpen(false);
+    }
     document.addEventListener('click', onDoc);
     document.addEventListener('keydown', onKey);
     return () => {

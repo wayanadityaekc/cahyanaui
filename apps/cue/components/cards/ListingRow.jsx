@@ -5,14 +5,22 @@ import { Check, Clock, Map, MapPin, UserRound } from 'lucide-react';
 import Price from '@/components/Price';
 import Rating from '@/components/Rating';
 
-function CheckIcon() { return <Check strokeWidth={2.4} aria-hidden="true" />; }
-function PinIcon() { return <MapPin strokeWidth={1.7} aria-hidden="true" />; }
-function ClockIcon() { return <Clock strokeWidth={1.7} aria-hidden="true" />; }
-// A region, not a point - so not the pin the stop count already uses.
-function AreaIcon() { return <Map strokeWidth={1.7} aria-hidden="true" />; }
-function UserIcon() { return <UserRound strokeWidth={1.7} aria-hidden="true" />; }
+function CheckIcon() {
+  return <Check strokeWidth={2.4} aria-hidden="true" />;
+}
+function PinIcon() {
+  return <MapPin strokeWidth={1.7} aria-hidden="true" />;
+}
+function ClockIcon() {
+  return <Clock strokeWidth={1.7} aria-hidden="true" />;
+}
+function AreaIcon() {
+  return <Map strokeWidth={1.7} aria-hidden="true" />;
+}
+function UserIcon() {
+  return <UserRound strokeWidth={1.7} aria-hidden="true" />;
+}
 
-// Listing card: horizontal row on phones, flips to a vertical card at 769px and up.
 const CARD =
   'scroll-mt-[110px] flex bg-white rounded-lg p-[10px] no-underline text-ink shadow-card ' +
   'transition-[opacity] duration-200 ease-in-out ' +
@@ -38,12 +46,31 @@ const CANCEL =
 const PRICE = 'mt-auto self-end flex items-baseline gap-1 whitespace-nowrap';
 
 export default function ListingRow({
-  href, name, img, alt, meta, metaIcon = 'clock',
-  priceName, priceFallback, priceMode = 'standard', zone, stops, priv, area,
-  dim = false, onReset, anchorId,
+  href,
+  name,
+  img,
+  alt,
+  meta,
+  metaIcon = 'clock',
+  priceName,
+  priceFallback,
+  priceMode = 'standard',
+  zone,
+  stops,
+  priv,
+  area,
+  dim = false,
+  onReset,
+  anchorId,
 }) {
   const photo = img ? { backgroundImage: `url(/assets/images/${img})` } : undefined;
-  const handleClick = dim && onReset ? (e) => { e.preventDefault(); onReset(); } : undefined;
+  const handleClick =
+    dim && onReset
+      ? (e) => {
+          e.preventDefault();
+          onReset();
+        }
+      : undefined;
   return (
     <a
       id={anchorId}
@@ -59,28 +86,51 @@ export default function ListingRow({
         <h3 className={TITLE}>{name}</h3>
         <ul className={META}>
           {stops != null && (
-            <li><PinIcon />{stops} {stops === 1 ? 'stop' : 'stops'}</li>
+            <li>
+              <PinIcon />
+              {stops} {stops === 1 ? 'stop' : 'stops'}
+            </li>
           )}
           {meta && metaIcon === 'pin' && stops == null && (
-            <li><PinIcon />{meta}</li>
+            <li>
+              <PinIcon />
+              {meta}
+            </li>
           )}
           {meta && metaIcon !== 'pin' && (
-            <li><ClockIcon />{meta}</li>
+            <li>
+              <ClockIcon />
+              {meta}
+            </li>
           )}
           {area && (
-            <li><AreaIcon />{area}</li>
+            <li>
+              <AreaIcon />
+              {area}
+            </li>
           )}
           {priv && (
-            <li><UserIcon />Private driver</li>
+            <li>
+              <UserIcon />
+              Private driver
+            </li>
           )}
         </ul>
         {priceName && (
-          <span className={CANCEL}><CheckIcon />Free cancellation</span>
+          <span className={CANCEL}>
+            <CheckIcon />
+            Free cancellation
+          </span>
         )}
         {priceName && (
           <span className={PRICE}>
             <small className="text-muted text-[0.68rem]">from</small>
-            <Price name={priceName} mode={priceMode} fallback={priceFallback} className="text-h2 font-bold text-amber" />
+            <Price
+              name={priceName}
+              mode={priceMode}
+              fallback={priceFallback}
+              className="text-h2 font-bold text-amber"
+            />
           </span>
         )}
       </div>

@@ -6,7 +6,6 @@ import { Button, LiveRegion } from '@cahyana/ui';
 import { useCart } from '@/components/providers/CartProvider';
 import { serviceById } from '@/lib/bookingCart';
 
-// Toggle, not one-way add, so a second tap undoes the first; no price, services are requests.
 export default function AddToBooking({ serviceId, variant = 'ghost', className = 'mt-2' }) {
   const { cart, ready, toggleService } = useCart();
   const [announcement, setAnnouncement] = useState('');
@@ -22,16 +21,16 @@ export default function AddToBooking({ serviceId, variant = 'ghost', className =
 
   return (
     <>
-      <Button
-        variant={variant}
-        full
-        onClick={toggle}
-        aria-pressed={on}
-        className={className}
-      >
-        {on
-          ? <><Check className="w-[var(--icon-sm)] h-[var(--icon-sm)]" strokeWidth={2} aria-hidden="true" /> Added</>
-          : <><Plus className="w-[var(--icon-sm)] h-[var(--icon-sm)]" strokeWidth={2} aria-hidden="true" /> Add service</>}
+      <Button variant={variant} full onClick={toggle} aria-pressed={on} className={className}>
+        {on ? (
+          <>
+            <Check className="w-[var(--icon-sm)] h-[var(--icon-sm)]" strokeWidth={2} aria-hidden="true" /> Added
+          </>
+        ) : (
+          <>
+            <Plus className="w-[var(--icon-sm)] h-[var(--icon-sm)]" strokeWidth={2} aria-hidden="true" /> Add service
+          </>
+        )}
       </Button>
       <LiveRegion>{announcement}</LiveRegion>
     </>

@@ -6,7 +6,6 @@ import Select from '@/components/ui/Select';
 import PickupAreaSelect from '@/components/ui/PickupAreaSelect';
 import CurrencyPicker from './CurrencyPicker';
 
-// Guests/Pickup/Currency shared by the drawer and account menu; idPrefix must differ (both render on desktop).
 const GUEST_OPTIONS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
 export default function TripPrefsFields({ idPrefix, className = '' }) {
@@ -14,7 +13,9 @@ export default function TripPrefsFields({ idPrefix, className = '' }) {
   return (
     <div className={`grid grid-cols-2 gap-[10px] ${className}`}>
       <div className="flex flex-col gap-1 min-w-0">
-        <label className={FIELD_LABEL} htmlFor={`${idPrefix}-guests`}>Guests</label>
+        <label className={FIELD_LABEL} htmlFor={`${idPrefix}-guests`}>
+          Guests
+        </label>
         <Select
           id={`${idPrefix}-guests`}
           label="Guests"
@@ -25,11 +26,15 @@ export default function TripPrefsFields({ idPrefix, className = '' }) {
         />
       </div>
       <div className="flex flex-col gap-1 min-w-0">
-        <label className={FIELD_LABEL} htmlFor={`${idPrefix}-stay`}>Pickup area</label>
+        <label className={FIELD_LABEL} htmlFor={`${idPrefix}-stay`}>
+          Pickup area
+        </label>
         <PickupAreaSelect id={`${idPrefix}-stay`} />
       </div>
       <div className="flex flex-col gap-1 min-w-0">
-        <label className={FIELD_LABEL} htmlFor={`${idPrefix}-cur`}>Currency</label>
+        <label className={FIELD_LABEL} htmlFor={`${idPrefix}-cur`}>
+          Currency
+        </label>
         <CurrencyPicker id={`${idPrefix}-cur`} />
       </div>
     </div>

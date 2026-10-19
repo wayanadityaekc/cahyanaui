@@ -16,7 +16,6 @@ export default function ContactForm({ company = false }) {
   const [errors, setErrors] = useState({});
   const [error, setError] = useState('');
 
-  // Clear a field's error as the guest types in it.
   function set(k) {
     return (e) => {
       const { value } = e.target;
@@ -28,7 +27,10 @@ export default function ContactForm({ company = false }) {
   async function send() {
     const { ok, errors: fieldErrors, data } = validateWith(contactSchema, f);
     setErrors(fieldErrors);
-    if (!ok) { setError(''); return; }
+    if (!ok) {
+      setError('');
+      return;
+    }
     setError('');
     setBusy(true);
     try {
@@ -44,29 +46,84 @@ export default function ContactForm({ company = false }) {
 
   return (
     <>
-      <div className="p-8 text-center rounded-md text-green bg-white" id="contact-success" style={{ display: sent ? 'block' : 'none' }}>
-        <div className="flex items-center justify-center w-14 h-14 mx-auto mb-4 rounded-[50%] text-[1.6rem] text-white bg-[#25d366]">&#10003;</div>
-        <h3 className={`mb-3 font-head text-h2 font-medium leading-[1.15] tracking-[-0.01em] ${company ? '!font-bold !text-gold' : ''}`}>Message Sent!</h3>
+      <div
+        className="p-8 text-center rounded-md text-green bg-white"
+        id="contact-success"
+        style={{ display: sent ? 'block' : 'none' }}
+      >
+        <div className="flex items-center justify-center w-14 h-14 mx-auto mb-4 rounded-[50%] text-[1.6rem] text-white bg-[#25d366]">
+          &#10003;
+        </div>
+        <h3
+          className={`mb-3 font-head text-h2 font-medium leading-[1.15] tracking-[-0.01em] ${company ? '!font-bold !text-gold' : ''}`}
+        >
+          Message Sent!
+        </h3>
         <p>Thanks for reaching out. We&apos;ll get back to you by email shortly.</p>
       </div>
 
       <div className="p-8 rounded-md bg-white" id="contact-form" style={{ display: sent ? 'none' : undefined }}>
-      <div className={CONTACT_GROUP}>
-        <label className={FIELD_LABEL} htmlFor="c-name">Your Name</label>
-        <input className={CONTACT_INPUT} type="text" id="c-name" placeholder="Enter your name" value={f.name} onChange={set('name')} aria-invalid={!!errors.name} />
-        {errors.name && <small role="alert" className={FIELD_ERR}>{errors.name}</small>}
-      </div>
-      <div className={CONTACT_GROUP}>
-        <label className={FIELD_LABEL} htmlFor="c-email">Email</label>
-        <input className={CONTACT_INPUT} type="email" id="c-email" placeholder="you@email.com" value={f.email} onChange={set('email')} aria-invalid={!!errors.email} />
-        {errors.email && <small role="alert" className={FIELD_ERR}>{errors.email}</small>}
-      </div>
-      <div className={CONTACT_GROUP}>
-        <label className={FIELD_LABEL} htmlFor="c-message">Message</label>
-        <textarea className={CONTACT_TEXTAREA} id="c-message" placeholder="Tell us what you need - dates, group size, custom requests..." value={f.message} onChange={set('message')} aria-invalid={!!errors.message} />
-        {errors.message && <small role="alert" className={FIELD_ERR}>{errors.message}</small>}
-      </div>
-      {error && <small role="alert" className={REFMSG_ERR}>{error}</small>}
+        <div className={CONTACT_GROUP}>
+          <label className={FIELD_LABEL} htmlFor="c-name">
+            Your Name
+          </label>
+          <input
+            className={CONTACT_INPUT}
+            type="text"
+            id="c-name"
+            placeholder="Enter your name"
+            value={f.name}
+            onChange={set('name')}
+            aria-invalid={!!errors.name}
+          />
+          {errors.name && (
+            <small role="alert" className={FIELD_ERR}>
+              {errors.name}
+            </small>
+          )}
+        </div>
+        <div className={CONTACT_GROUP}>
+          <label className={FIELD_LABEL} htmlFor="c-email">
+            Email
+          </label>
+          <input
+            className={CONTACT_INPUT}
+            type="email"
+            id="c-email"
+            placeholder="you@email.com"
+            value={f.email}
+            onChange={set('email')}
+            aria-invalid={!!errors.email}
+          />
+          {errors.email && (
+            <small role="alert" className={FIELD_ERR}>
+              {errors.email}
+            </small>
+          )}
+        </div>
+        <div className={CONTACT_GROUP}>
+          <label className={FIELD_LABEL} htmlFor="c-message">
+            Message
+          </label>
+          <textarea
+            className={CONTACT_TEXTAREA}
+            id="c-message"
+            placeholder="Tell us what you need - dates, group size, custom requests..."
+            value={f.message}
+            onChange={set('message')}
+            aria-invalid={!!errors.message}
+          />
+          {errors.message && (
+            <small role="alert" className={FIELD_ERR}>
+              {errors.message}
+            </small>
+          )}
+        </div>
+        {error && (
+          <small role="alert" className={REFMSG_ERR}>
+            {error}
+          </small>
+        )}
         <button className={`flex w-full ${BTN_CTA}`} id="c-send" onClick={send} disabled={busy}>
           {busy ? 'Sending...' : 'Send Message'}
         </button>

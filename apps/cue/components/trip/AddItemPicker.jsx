@@ -6,23 +6,23 @@ import { SUB } from '@/components/ui/modalClasses';
 import { usePricing } from '@/state/PricingProvider';
 import { EXPLORE_OPTIONS } from '@/content/shared/explore-options';
 
-// Bookable categories only (Destinations isn't sold as a standalone item - CLAUDE.md).
 const LINK_OPTIONS = EXPLORE_OPTIONS.filter((o) => o.cat !== 'destination');
 const PICK_CATS_SRC = [
   { key: 'tour', label: 'Tour Programs', cats: ['tour', 'combo'] },
   { key: 'experience', label: 'Activities & Performances', cats: ['experience', 'performance'] },
 ];
 
-// Category picker styles, local to this component.
 const PICK_CATS = 'flex flex-col gap-[0.6rem]';
-const PICK_CAT = 'block w-full py-[0.95rem] px-4 text-center [border:1px_solid_var(--line)] rounded-md bg-cream font-body font-semibold text-green no-underline transition-[border-color,background-color,scale] duration-[var(--dur)] ease-[ease] hover:border-gold hover:bg-[#efe9db]';
+const PICK_CAT =
+  'block w-full py-[0.95rem] px-4 text-center [border:1px_solid_var(--line)] rounded-md bg-cream font-body font-semibold text-green no-underline transition-[border-color,background-color,scale] duration-[var(--dur)] ease-[ease] hover:border-gold hover:bg-[#efe9db]';
 const PICK_CAT_BTN = `${PICK_CAT} cursor-pointer [font-size:inherit]`;
-const LINK_CAT = 'flex items-center gap-[0.85rem] w-full py-[0.85rem] px-4 text-left [border:1px_solid_var(--line)] rounded-md bg-cream font-body text-green no-underline transition-[border-color,background-color,scale] duration-[var(--dur)] ease-[ease] hover:border-gold hover:bg-[#efe9db]';
-const LINK_ICON = 'flex-none w-9 h-9 grid place-items-center rounded-[50%] bg-white text-gold [&>svg]:w-[var(--icon-md)] [&>svg]:h-[var(--icon-md)]';
+const LINK_CAT =
+  'flex items-center gap-[0.85rem] w-full py-[0.85rem] px-4 text-left [border:1px_solid_var(--line)] rounded-md bg-cream font-body text-green no-underline transition-[border-color,background-color,scale] duration-[var(--dur)] ease-[ease] hover:border-gold hover:bg-[#efe9db]';
+const LINK_ICON =
+  'flex-none w-9 h-9 grid place-items-center rounded-[50%] bg-white text-gold [&>svg]:w-[var(--icon-md)] [&>svg]:h-[var(--icon-md)]';
 const LINK_NAME = 'font-semibold text-green';
 const LINK_SUB = 'block text-small text-muted mt-[0.1rem]';
 
-// mode 'link' sends a category to its listing page; mode 'pick' picks an item in-modal (keeps the itinerary day context).
 export default function AddItemPicker({ open, onClose, onPick, mode = 'link' }) {
   const pricing = usePricing();
   const [cat, setCat] = useState(null);
@@ -41,11 +41,15 @@ export default function AddItemPicker({ open, onClose, onPick, mode = 'link' }) 
   if (mode === 'link') {
     return (
       <Modal open={open} onClose={onClose} title="Add to your trip">
-        <p className={SUB}>Pick what you&apos;d like to add - you&apos;ll browse the real options and pick your item there.</p>
+        <p className={SUB}>
+          Pick what you&apos;d like to add - you&apos;ll browse the real options and pick your item there.
+        </p>
         <div className={PICK_CATS}>
           {LINK_OPTIONS.map((o) => (
             <a href={o.href} className={LINK_CAT} key={o.href}>
-              <span className={LINK_ICON}><o.Icon strokeWidth={1.6} /></span>
+              <span className={LINK_ICON}>
+                <o.Icon strokeWidth={1.6} />
+              </span>
               <span>
                 <span className={LINK_NAME}>{o.name}</span>
                 <span className={LINK_SUB}>{o.sub}</span>
@@ -68,8 +72,12 @@ export default function AddItemPicker({ open, onClose, onPick, mode = 'link' }) 
                 {c.label}
               </button>
             ))}
-            <a href="/transfer.html" className={PICK_CAT}>Transfers</a>
-            <a href="/charter.html" className={PICK_CAT}>Private Car Charter</a>
+            <a href="/transfer.html" className={PICK_CAT}>
+              Transfers
+            </a>
+            <a href="/charter.html" className={PICK_CAT}>
+              Private Car Charter
+            </a>
           </div>
         </>
       ) : (

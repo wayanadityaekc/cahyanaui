@@ -10,7 +10,9 @@ export default function Hero() {
 
   useEffect(() => {
     if (!sheetOpen) return;
-    function onKey(e) { return e.key === 'Escape' && setSheetOpen(false); }
+    function onKey(e) {
+      return e.key === 'Escape' && setSheetOpen(false);
+    }
     document.addEventListener('keydown', onKey);
     return () => document.removeEventListener('keydown', onKey);
   }, [sheetOpen]);
@@ -18,7 +20,6 @@ export default function Hero() {
   useBodyLock(sheetOpen);
 
   return (
-    // Homepage hero; the section-gap rule skips it via :first-of-type, so it needs no marker class.
     <section
       className="relative flex items-center min-h-[88vh] pt-28 px-[var(--container-x)] pb-12 bg-green
         min-[993px]:min-h-[92vh] min-[993px]:pt-36 min-[993px]:pb-20
@@ -29,13 +30,16 @@ export default function Hero() {
         max-[992px]:after:bg-[image:linear-gradient(rgba(0,0,0,0.18),rgba(0,0,0,0.3)_45%,rgba(0,0,0,0.6)),url(/assets/images/ubud-saraswati-temple-hero-mobile.webp)]"
       id="hero"
     >
-      {/* Hero inner; z-index is raised on mobile while the plan sheet is open. */}
-      <div className={clsx(
-        'relative z-[1] w-full max-w-[1200px] mx-auto flex items-center gap-8 min-[993px]:gap-12 max-[992px]:flex-col max-[992px]:items-stretch',
-        sheetOpen && 'max-[992px]:z-[46]',
-      )}>
+      <div
+        className={clsx(
+          'relative z-[1] w-full max-w-[1200px] mx-auto flex items-center gap-8 min-[993px]:gap-12 max-[992px]:flex-col max-[992px]:items-stretch',
+          sheetOpen && 'max-[992px]:z-[46]',
+        )}
+      >
         <div className="flex-1 min-w-0 text-white max-[992px]:text-center">
-          <h1 className="font-head text-[length:var(--fs-display)] leading-[var(--lh-heading)] text-white font-bold tracking-[-0.01em] animate-[heroTextIn_0.6s_var(--ease)_backwards] [animation-delay:0.08s] motion-reduce:animate-none">Your Private Bali Trip Planner with a Driver</h1>
+          <h1 className="font-head text-[length:var(--fs-display)] leading-[var(--lh-heading)] text-white font-bold tracking-[-0.01em] animate-[heroTextIn_0.6s_var(--ease)_backwards] [animation-delay:0.08s] motion-reduce:animate-none">
+            Your Private Bali Trip Planner with a Driver
+          </h1>
           <p className="mt-4 text-cream max-w-[52ch] animate-[heroTextIn_0.6s_var(--ease)_backwards] [animation-delay:0.18s] motion-reduce:animate-none">
             Tours, transfers, experiences &amp; villas - build your trip day by day, with real prices before you book.
           </p>
@@ -56,7 +60,6 @@ export default function Hero() {
           <HeroSearch sheetOpen={sheetOpen} onClose={() => setSheetOpen(false)} />
         </div>
 
-        {/* Mobile scrim behind the plan-your-trip sheet; visibility driven by sheetOpen. */}
         <div
           className={`max-[992px]:fixed max-[992px]:inset-0 max-[992px]:z-[44]
             max-[992px]:bg-[rgba(26,26,26,0.42)] max-[992px]:[transition:opacity_var(--dur-slow)_var(--ease),visibility_var(--dur-slow)]

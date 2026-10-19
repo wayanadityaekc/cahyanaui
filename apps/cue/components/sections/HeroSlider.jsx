@@ -4,26 +4,27 @@ import { useRef, useState } from 'react';
 
 const DOT_MAX = 5;
 
-// Hero slider of the page's stop photos; swipe only reacts to a clearly horizontal gesture.
 export default function HeroSlider({ slides = [] }) {
   const [cur, setCur] = useState(0);
   const touch = useRef({ x: 0, y: 0 });
 
   if (!slides.length) return null;
 
-  function goTo(n) { return setCur((n + slides.length) % slides.length); }
+  function goTo(n) {
+    return setCur((n + slides.length) % slides.length);
+  }
 
   const total = slides.length;
   const count = Math.min(DOT_MAX, total);
   const start = total > DOT_MAX ? Math.min(Math.max(cur - 2, 0), total - DOT_MAX) : 0;
 
-  // Slider styles; keep `.hero-slider__dots` as a hook (check-detail counts it).
   const ARROW =
     'w-[30px] h-[30px] flex items-center justify-center border-none rounded-[50%] bg-[rgba(0,0,0,0.3)] p-0 text-white text-[1.25rem] leading-none cursor-pointer hover:bg-[rgba(0,0,0,0.5)]';
   function dotCls(idx, j) {
     let c = 'rounded-[50%] shadow-[0_0_2px_rgba(0,0,0,0.4)] transition-[all] duration-200 ease-[ease] ';
     if (idx === cur) c += 'w-[7px] h-[7px] bg-white';
-    else if (total > DOT_MAX && ((j === 0 && start > 0) || (j === count - 1 && start + count < total))) c += 'w-[3px] h-[3px] opacity-70 bg-[rgba(255,255,255,0.6)]';
+    else if (total > DOT_MAX && ((j === 0 && start > 0) || (j === count - 1 && start + count < total)))
+      c += 'w-[3px] h-[3px] opacity-70 bg-[rgba(255,255,255,0.6)]';
     else c += 'w-[5px] h-[5px] bg-[rgba(255,255,255,0.6)]';
     return c;
   }
@@ -56,8 +57,12 @@ export default function HeroSlider({ slides = [] }) {
       {total > 1 && (
         <>
           <div className="absolute bottom-[12px] right-[14px] z-[2] hidden gap-1.5 min-[769px]:flex">
-            <button type="button" className={ARROW} aria-label="Previous photo" onClick={() => goTo(cur - 1)}>&lsaquo;</button>
-            <button type="button" className={ARROW} aria-label="Next photo" onClick={() => goTo(cur + 1)}>&rsaquo;</button>
+            <button type="button" className={ARROW} aria-label="Previous photo" onClick={() => goTo(cur - 1)}>
+              &lsaquo;
+            </button>
+            <button type="button" className={ARROW} aria-label="Next photo" onClick={() => goTo(cur + 1)}>
+              &rsaquo;
+            </button>
           </div>
           <div className="hero-slider__dots absolute left-0 right-0 bottom-[16px] max-[768px]:left-auto max-[768px]:right-[14px] max-[768px]:bottom-[2.6rem] z-[2] flex justify-center items-center max-[768px]:justify-end gap-1.5 pointer-events-none">
             {Array.from({ length: count }, (_, j) => {

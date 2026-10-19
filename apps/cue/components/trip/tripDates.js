@@ -1,4 +1,3 @@
-// Date labels for My Trips rows and booked-trip cards.
 export function fmtDay(dateStr) {
   if (!dateStr) return 'date TBD';
   const [y, m, d] = dateStr.split('-').map(Number);

@@ -43,7 +43,7 @@ const pkgPath = path.join(DEST, 'package.json');
 const pkg = JSON.parse(fs.readFileSync(path.join(APP, 'package.json'), 'utf8'));
 pkg.dependencies['@cahyana/ui'] = 'file:packages/ui';
 pkg.dependencies = Object.fromEntries(Object.entries(pkg.dependencies).sort());
-fs.writeFileSync(pkgPath, JSON.stringify(pkg, null, 2) + '\n');
+fs.writeFileSync(pkgPath, `${JSON.stringify(pkg, null, 2)  }\n`);
 
 const cssPath = path.join(DEST, 'app', 'globals.css');
 let css = fs.readFileSync(cssPath, 'utf8');

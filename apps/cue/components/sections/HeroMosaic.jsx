@@ -17,11 +17,11 @@ const TILE_BASE =
 const BIG = `${TILE_BASE} flex-[0_0_62%] [scroll-snap-align:start]`;
 const PAIR = 'flex-[0_0_35%] h-full flex flex-col gap-1 [scroll-snap-align:start] [&>*]:flex-[1_1_0] [&>*]:min-h-0';
 const TRACK =
-  'flex gap-1 aspect-[1.6/1] min-[769px]:aspect-[2.7/1] ' +
-  'overflow-x-auto overflow-y-hidden overscroll-x-contain ' +
-  '[scroll-snap-type:x_mandatory] [touch-action:pan-x_pan-y] ' +
-  '[scrollbar-width:none] [&::-webkit-scrollbar]:hidden ' +
-  BLEED_MOBILE;
+  `flex gap-1 aspect-[1.6/1] min-[769px]:aspect-[2.7/1] ` +
+  `overflow-x-auto overflow-y-hidden overscroll-x-contain ` +
+  `[scroll-snap-type:x_mandatory] [touch-action:pan-x_pan-y] ` +
+  `[scrollbar-width:none] [&::-webkit-scrollbar]:hidden ${ 
+  BLEED_MOBILE}`;
 const STATIC_1 = 'aspect-[16/10] min-[769px]:aspect-[2.7/1]';
 const STATIC_2 = `flex gap-1 ${STATIC_1} [&>*]:flex-1 [&>*]:min-w-0`;
 const MORE_BTN =

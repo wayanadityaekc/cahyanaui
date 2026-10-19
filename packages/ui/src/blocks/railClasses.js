@@ -40,11 +40,11 @@ export const RAIL_LABEL =
 
 export function railItem(active, collapsed = false) {
   return `flex items-center ${collapsed ? 'justify-center w-9 h-9 p-0' : 'w-full text-left p-[0.55rem_0.75rem] gap-[0.65rem]'} ` +
-    'rounded-[var(--r-md)] bg-transparent border-none cursor-pointer font-body font-medium text-body leading-[1.35] no-underline ' +
-    '[&>svg]:w-[var(--icon-sm)] [&>svg]:h-[var(--icon-sm)] [&>svg]:shrink-0 ' +
-    (active
+    `rounded-[var(--r-md)] bg-transparent border-none cursor-pointer font-body font-medium text-body leading-[1.35] no-underline ` +
+    `[&>svg]:w-[var(--icon-sm)] [&>svg]:h-[var(--icon-sm)] [&>svg]:shrink-0 ${ 
+    active
       ? `text-gold bg-surface-raised [border:1px_solid_var(--line)] ${collapsed ? '' : 'p-[calc(0.55rem-1px)_calc(0.75rem-1px)]'}`
-      : 'text-muted [&>svg]:opacity-75 hover:text-gold');
+      : 'text-muted [&>svg]:opacity-75 hover:text-gold'}`;
 }
 
 export const RAIL_HEADER =
@@ -74,7 +74,7 @@ export const RAIL_MLABEL =
   'font-body text-small font-medium text-muted m-0 mb-[var(--space-1)] px-[0.75rem]';
 export function railMobileItem(active) {
   return `${MENU_ROW_BOX} no-underline bg-transparent border-none cursor-pointer font-body text-body leading-[1.35] ` +
-    'font-medium ' + (active ? 'text-gold bg-cream' : 'text-muted [&>svg]:opacity-75');
+    `font-medium ${  active ? 'text-gold bg-cream' : 'text-muted [&>svg]:opacity-75'}`;
 }
 export const RAIL_MCHEV = 'ml-auto w-[var(--icon-sm)] h-[var(--icon-sm)] shrink-0 text-muted opacity-70';
 export const RAIL_BACK =

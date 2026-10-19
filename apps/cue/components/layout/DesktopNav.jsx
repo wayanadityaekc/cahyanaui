@@ -14,9 +14,9 @@ export const PROGRAM_LINKS = [
 ];
 
 function LINK(active) {
-  return 'inline-flex items-center gap-1 h-[var(--btn-h)] px-3 rounded-[var(--r-md)] text-small no-underline font-body bg-transparent border-none cursor-pointer ' +
-    '[transition:background-color_var(--dur)_var(--ease),scale_var(--dur-fast)_var(--ease)] hover:bg-cream ' +
-    (active ? 'font-semibold text-green bg-cream' : 'font-medium text-gold');
+  return `inline-flex items-center gap-1 h-[var(--btn-h)] px-3 rounded-[var(--r-md)] text-small no-underline font-body bg-transparent border-none cursor-pointer ` +
+    `[transition:background-color_var(--dur)_var(--ease),scale_var(--dur-fast)_var(--ease)] hover:bg-cream ${ 
+    active ? 'font-semibold text-green bg-cream' : 'font-medium text-gold'}`;
 }
 
 export default function DesktopNav({ isActive }) {

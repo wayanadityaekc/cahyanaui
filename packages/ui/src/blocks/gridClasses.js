@@ -5,12 +5,12 @@ export const BLEED_MOBILE =
 
 
 export const MOBILE_SLIDER =
-  'max-[992px]:flex max-[992px]:overflow-x-auto max-[992px]:overflow-y-hidden ' +
-  'max-[992px]:[scroll-snap-type:x_mandatory] max-[992px]:[touch-action:pan-x_pan-y] ' +
-  '[scrollbar-width:none] [&::-webkit-scrollbar]:hidden ' +
-  'max-[992px]:gap-2 max-[768px]:gap-2 ' +
-  'max-[992px]:[&>*]:flex-[0_0_70%] max-[992px]:[&>*]:[scroll-snap-align:start] ' +
-  'max-[576px]:[&>*]:flex-[0_0_88%] ' + BLEED_MOBILE;
+  `max-[992px]:flex max-[992px]:overflow-x-auto max-[992px]:overflow-y-hidden ` +
+  `max-[992px]:[scroll-snap-type:x_mandatory] max-[992px]:[touch-action:pan-x_pan-y] ` +
+  `[scrollbar-width:none] [&::-webkit-scrollbar]:hidden ` +
+  `max-[992px]:gap-2 max-[768px]:gap-2 ` +
+  `max-[992px]:[&>*]:flex-[0_0_70%] max-[992px]:[&>*]:[scroll-snap-align:start] ` +
+  `max-[576px]:[&>*]:flex-[0_0_88%] ${  BLEED_MOBILE}`;
 
 const D = 'min-[993px]:grid min-[993px]:gap-2 min-[993px]:overflow-visible min-[993px]:[&>*]:flex-none';
 

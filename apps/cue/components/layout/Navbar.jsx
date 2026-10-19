@@ -29,10 +29,10 @@ const BURGER_BAR =
 
 
 function navLink(active) {
-  return `${MENU_ROW_BOX} text-strong no-underline ` +
-    (active
+  return `${MENU_ROW_BOX} text-strong no-underline ${ 
+    active
       ? 'font-semibold bg-cream text-green max-[992px]:text-gold-d'
-      : 'font-medium text-gold hover:bg-cream hover:text-green max-[992px]:hover:text-gold-d');
+      : 'font-medium text-gold hover:bg-cream hover:text-green max-[992px]:hover:text-gold-d'}`;
 }
 
 const NAV_LI = '-mx-3';

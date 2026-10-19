@@ -30,11 +30,11 @@ export const CHEV = 'w-[18px] h-[18px] shrink-0 text-muted [transition:transform
 const PANEL_MOBILE_TRANSITION =
   '[@media(max-width:768px)]:[transition:transform_var(--dur-slow)_var(--ease),visibility_var(--dur-slow)]';
 const PANEL_POPUP_STATIC =
-  'fixed top-1/2 left-1/2 [right:auto] [bottom:auto] w-[min(440px,85vw)] max-h-[85vh] ' +
-  'bg-surface-raised [border:1px_solid_var(--line)] rounded-xl [box-shadow:var(--shadow-xl)] z-[340] ' +
-  'flex flex-col overflow-hidden [overscroll-behavior:contain] ' +
-  '[transition:opacity_0.24s_var(--ease),transform_0.24s_var(--ease),visibility_0.24s] ' +
-  PANEL_MOBILE_TRANSITION;
+  `fixed top-1/2 left-1/2 [right:auto] [bottom:auto] w-[min(440px,85vw)] max-h-[85vh] ` +
+  `bg-surface-raised [border:1px_solid_var(--line)] rounded-xl [box-shadow:var(--shadow-xl)] z-[340] ` +
+  `flex flex-col overflow-hidden [overscroll-behavior:contain] ` +
+  `[transition:opacity_0.24s_var(--ease),transform_0.24s_var(--ease),visibility_0.24s] ${ 
+  PANEL_MOBILE_TRANSITION}`;
 export const panelPopup = (open) =>
   `${PANEL_POPUP_STATIC} ${open ? 'opacity-100 visible pointer-events-auto [transform:translate(-50%,-50%)_scale(1)]' : 'opacity-0 invisible pointer-events-none [transform:translate(-50%,-50%)_scale(0.96)]'}`;
 export const PANEL_HEAD = 'flex items-center justify-between pt-4 px-5 pb-3 [border-bottom:1px_solid_var(--line)] flex-none';
@@ -57,12 +57,12 @@ export const overlay = (open, elevated) =>
 export const CHEV_CAL = 'w-[17px] h-[17px] shrink-0 text-muted [transition:transform_var(--dur)_ease]';
 
 const PANEL_BOOKDATE_STATIC =
-  'fixed top-1/2 left-1/2 [right:auto] [bottom:auto] w-[min(440px,85vw)] max-h-[85vh] ' +
-  'bg-surface-raised [border:1px_solid_var(--line)] rounded-xl [box-shadow:var(--shadow-xl)] z-[340] ' +
-  'flex flex-col overflow-hidden [overscroll-behavior:contain] ' +
-  '[transition:opacity_0.24s_var(--ease),transform_0.24s_var(--ease),visibility_0.24s] ' +
-  PANEL_MOBILE_TRANSITION + ' ' +
-  'min-[769px]:w-[min(430px,92vw)] min-[769px]:max-h-[86vh] min-[769px]:overflow-y-auto min-[769px]:[scrollbar-width:none] min-[769px]:[&::-webkit-scrollbar]:hidden';
+  `fixed top-1/2 left-1/2 [right:auto] [bottom:auto] w-[min(440px,85vw)] max-h-[85vh] ` +
+  `bg-surface-raised [border:1px_solid_var(--line)] rounded-xl [box-shadow:var(--shadow-xl)] z-[340] ` +
+  `flex flex-col overflow-hidden [overscroll-behavior:contain] ` +
+  `[transition:opacity_0.24s_var(--ease),transform_0.24s_var(--ease),visibility_0.24s] ${ 
+  PANEL_MOBILE_TRANSITION  } ` +
+  `min-[769px]:w-[min(430px,92vw)] min-[769px]:max-h-[86vh] min-[769px]:overflow-y-auto min-[769px]:[scrollbar-width:none] min-[769px]:[&::-webkit-scrollbar]:hidden`;
 export const panelBookdate = (open) =>
   `${PANEL_BOOKDATE_STATIC} ${open ? 'opacity-100 visible pointer-events-auto' : 'opacity-0 invisible pointer-events-none'} ${open ? '[transform:translate(-50%,-50%)_scale(1)] min-[769px]:[transform:translate(-50%,-50%)]' : '[transform:translate(-50%,-50%)_scale(0.96)] min-[769px]:[transform:translate(-50%,-48%)]'}`;
 export const PANEL_HEAD_BOOKDATE =

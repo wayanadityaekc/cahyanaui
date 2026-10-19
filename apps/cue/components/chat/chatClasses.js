@@ -21,9 +21,9 @@ export function PANEL(open) {
 }
 
 export function SCRIM(open) {
-  return 'fixed inset-0 z-[125] bg-[rgba(26,26,26,0.45)] ' +
-    '[transition:opacity_300ms_var(--ease),visibility_300ms] motion-reduce:transition-none ' +
-    (open ? 'opacity-100 visible pointer-events-auto' : 'opacity-0 invisible pointer-events-none');
+  return `fixed inset-0 z-[125] bg-[rgba(26,26,26,0.45)] ` +
+    `[transition:opacity_300ms_var(--ease),visibility_300ms] motion-reduce:transition-none ${ 
+    open ? 'opacity-100 visible pointer-events-auto' : 'opacity-0 invisible pointer-events-none'}`;
 }
 
 export const HEAD =

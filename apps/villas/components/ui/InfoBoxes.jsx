@@ -24,7 +24,7 @@ export function InfoBoxList({ items = [], variant = '', render = null }) {
   if (!items.length) return <LoadFallback />;
   const ruled = variant === 'yes' || variant === 'no';
   return (
-    <ul className={`${ROWS_BASE} ${ruled ? ROWS_RULED + ' ' : ''}${variant === 'no' ? 'text-muted' : 'text-ink'}`}>
+    <ul className={`${ROWS_BASE} ${ruled ? `${ROWS_RULED  } ` : ''}${variant === 'no' ? 'text-muted' : 'text-ink'}`}>
       {items.map((item, i) => <li key={i}>{render ? render(item) : item}</li>)}
     </ul>
   );

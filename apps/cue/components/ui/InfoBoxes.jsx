@@ -14,8 +14,8 @@ const BOX_NO = `${BOX_FRAMED} bg-cream`;
 export const BOX_TITLE = 'font-body text-h3 font-semibold text-gold mb-[0.7rem]';
 
 const ROWS_BASE =
-  'list-none m-0 p-0 [&_li]:font-body [&_li]:text-body [&_li]:font-normal ' +
-  '[&_li]:leading-[var(--lh-body)] [&_li]:py-2 ' + PROSE_LINK;
+  `list-none m-0 p-0 [&_li]:font-body [&_li]:text-body [&_li]:font-normal ` +
+  `[&_li]:leading-[var(--lh-body)] [&_li]:py-2 ${  PROSE_LINK}`;
 
 const ROWS_RULED =
   '[&_li]:[border-bottom:1px_solid_var(--line)] [&_li:last-child]:[border-bottom:none] ' +

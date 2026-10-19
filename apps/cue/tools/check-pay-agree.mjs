@@ -41,14 +41,16 @@ CASES.forEach((idr) => {
         ['deposit', 'full', 'referral'].forEach((id) => {
           const siteOption = site.find((option) => option.id === id);
           const serverOption = srv.options.find((option) => option.id === id);
-          const aAvail = siteOption.available !== false;
-          const bAvail = serverOption.available !== false;
+          const isSiteAvailable = siteOption.available !== false;
+          const isServerAvailable = serverOption.available !== false;
           checked++;
-          if (aAvail !== bAvail) {
-            bad.push(`${id} availability ${current}/${stay || 'ubud'}/ref=${ref}: site=${aAvail} server=${bAvail}`);
+          if (isSiteAvailable !== isServerAvailable) {
+            bad.push(
+              `${id} availability ${current}/${stay || 'ubud'}/ref=${ref}: site=${isSiteAvailable} server=${isServerAvailable}`,
+            );
             return;
           }
-          if (!aAvail) return;
+          if (!isSiteAvailable) return;
           const aAmt = siteOption.amount;
           const bAmt = serverOption.amount ? serverOption.amount.display : null;
           if (aAmt !== bAmt) {

@@ -25,11 +25,11 @@ function normalise(state) {
 
 export function ItineraryProvider({ children }) {
   const [state, setState] = useState(EMPTY);
-  const [hydrated, setHydrated] = useState(false);
+  const [isHydrated, setIsHydrated] = useState(false);
 
   useEffect(() => {
     setState(normalise(readLocalJSON(KEY.itinerary, EMPTY)));
-    setHydrated(true);
+    setIsHydrated(true);
   }, []);
 
   function save(next) {
@@ -43,7 +43,11 @@ export function ItineraryProvider({ children }) {
     state.transfers.length +
     state.charters.length;
 
-  return <ItineraryContext.Provider value={{ state, save, count, hydrated }}>{children}</ItineraryContext.Provider>;
+  return (
+    <ItineraryContext.Provider value={{ state, save, count, hydrated: isHydrated }}>
+      {children}
+    </ItineraryContext.Provider>
+  );
 }
 
 export function useItinerary() {

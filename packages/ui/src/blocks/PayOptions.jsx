@@ -64,12 +64,12 @@ export default function PayOptions({
       ) : null}
       <div className="flex flex-col gap-2" role="radiogroup" aria-label={optionsTitle}>
         {options.map(({ id, label, sub, amount }) => {
-          const on = value === id;
+          const isActive = value === id;
           return (
-            <div key={id} className={cn(CARD, on ? CARD_ON : CARD_OFF)} data-pay-option={id}>
-              <button type="button" role="radio" aria-checked={on} className={PICK} onClick={() => onChange(id)}>
-                <span className={cn(DOT, on ? 'bg-gold' : '[border:1.5px_solid_var(--line)]')} aria-hidden="true">
-                  {on ? <span className="w-[7px] h-[7px] rounded-[50%] bg-white" /> : null}
+            <div key={id} className={cn(CARD, isActive ? CARD_ON : CARD_OFF)} data-pay-option={id}>
+              <button type="button" role="radio" aria-checked={isActive} className={PICK} onClick={() => onChange(id)}>
+                <span className={cn(DOT, isActive ? 'bg-gold' : '[border:1.5px_solid_var(--line)]')} aria-hidden="true">
+                  {isActive ? <span className="w-[7px] h-[7px] rounded-[50%] bg-white" /> : null}
                 </span>
                 <span className="flex-1 min-w-0">
                   <span className="font-semibold text-green text-[1rem] leading-tight">{label}</span>

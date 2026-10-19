@@ -54,7 +54,7 @@ export default function DatePopup({
   category = null,
   itemName = null,
 }) {
-  const [mounted, setMounted] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
   const [selector, setSelector] = useState(initial || '');
   const [time, setTime] = useState(initialTime || '');
   const [cursor, setCursor] = useState(() => {
@@ -62,7 +62,7 @@ export default function DatePopup({
     return new Date(base.getFullYear(), base.getMonth(), 1);
   });
 
-  useEffect(() => setMounted(true), []);
+  useEffect(() => setIsMounted(true), []);
   useEffect(() => {
     if (open) setSelector(initial || '');
   }, [open, initial]);
@@ -79,7 +79,7 @@ export default function DatePopup({
     return () => document.removeEventListener('keydown', onKey);
   }, [open, onClose]);
 
-  if (!mounted) return null;
+  if (!isMounted) return null;
 
   const today = iso(new Date());
   const first = new Date(cursor.getFullYear(), cursor.getMonth(), 1);
@@ -132,14 +132,14 @@ export default function DatePopup({
               {cells.map((cell, index) => {
                 if (!cell) return <span className={calDay(true)} key={`e${index}`} />;
                 const isoDate = iso(cell);
-                const past = isoDate < today;
+                const isPast = isoDate < today;
                 return (
                   <button
                     type="button"
                     key={isoDate}
-                    className={calDay(past, isoDate === selector)}
+                    className={calDay(isPast, isoDate === selector)}
                     aria-pressed={isoDate === selector}
-                    disabled={past}
+                    disabled={isPast}
                     onClick={() => setSelector(isoDate)}
                   >
                     {cell.getDate()}

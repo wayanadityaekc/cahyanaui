@@ -7,14 +7,14 @@ import useBodyLock from './useBodyLock';
 import useDialog from './useDialog';
 
 export default function Modal({ open, onClose, title, children, className = '' }) {
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => setMounted(true), []);
+  const [isMounted, setIsMounted] = useState(false);
+  useEffect(() => setIsMounted(true), []);
 
-  const boxRef = useDialog({ shown: open && mounted, onClose });
+  const boxRef = useDialog({ shown: open && isMounted, onClose });
 
   useBodyLock(open);
 
-  if (!mounted) return null;
+  if (!isMounted) return null;
 
   return createPortal(
     <div

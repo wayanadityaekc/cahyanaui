@@ -22,7 +22,7 @@ export default function TripBar() {
   const pathname = normalizePath(usePathname());
   const messages = promoFor(pathname);
   const [index, setIndex] = useState(0);
-  const [dim, setDim] = useState(false);
+  const [isDimmed, setIsDimmed] = useState(false);
   const timers = useRef([]);
 
   const count = messages.length;
@@ -30,10 +30,10 @@ export default function TripBar() {
     setIndex(0);
     if (count < 2) return undefined;
     const tick = setInterval(() => {
-      setDim(true);
+      setIsDimmed(true);
       const fadeTimer = setTimeout(() => {
         setIndex((previousIndex) => (previousIndex + 1) % count);
-        requestAnimationFrame(() => setDim(false));
+        requestAnimationFrame(() => setIsDimmed(false));
       }, FADE_MS);
       timers.current.push(fadeTimer);
     }, ROTATE_MS);
@@ -49,7 +49,7 @@ export default function TripBar() {
   const message = messages[Math.min(index, count - 1)];
   const Icon = ICONS[message.icon] || Tag;
   const inner = (
-    <span className={`${FADE} ${dim ? 'opacity-0' : 'opacity-100'}`}>
+    <span className={`${FADE} ${isDimmed ? 'opacity-0' : 'opacity-100'}`}>
       <Icon className={ICON} strokeWidth={1.7} aria-hidden="true" />
       <span className="truncate">{message.text}</span>
       {message.cta && <span className={CTA}>{message.cta}</span>}

@@ -43,23 +43,23 @@ export default function HeroSearch({ onClose, sheetOpen = false }) {
   const { apply } = useReferral();
   const isMobile = useMobile();
 
-  const [open, setOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
   const [picked, setPicked] = useState(null);
   const [code, setCode] = useState('');
   const [refMsg, setRefMsg] = useState(null);
-  const [mounted, setMounted] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
   const ddRef = useRef(null);
 
-  useEffect(() => setMounted(true), []);
+  useEffect(() => setIsMounted(true), []);
 
   useEffect(() => {
-    if (!open || isMobile) return;
+    if (!isOpen || isMobile) return;
     function onDoc(event) {
-      if (ddRef.current && !ddRef.current.contains(event.target)) setOpen(false);
+      if (ddRef.current && !ddRef.current.contains(event.target)) setIsOpen(false);
     }
     document.addEventListener('click', onDoc);
     return () => document.removeEventListener('click', onDoc);
-  }, [open, isMobile]);
+  }, [isOpen, isMobile]);
 
   const catalog = pricing && pricing.catalog;
   const symbol = (catalog && catalog.symbol) || '$';
@@ -111,10 +111,10 @@ export default function HeroSearch({ onClose, sheetOpen = false }) {
   }
 
   const panel = (
-    <div className={panelMenu(open)}>
+    <div className={panelMenu(isOpen)}>
       <div className={PANEL_HEAD_MENU}>
         <h3 className={PANEL_HEAD_H3}>How to explore</h3>
-        <button type="button" className={PANEL_CLOSE_SHEET} aria-label="Close" onClick={() => setOpen(false)}>
+        <button type="button" className={PANEL_CLOSE_SHEET} aria-label="Close" onClick={() => setIsOpen(false)}>
           &times;
         </button>
       </div>
@@ -130,7 +130,7 @@ export default function HeroSearch({ onClose, sheetOpen = false }) {
                 return;
               }
               setPicked(exploreOption);
-              setOpen(false);
+              setIsOpen(false);
             }}
           >
             <span className={HS_OPT_IC}>
@@ -194,15 +194,15 @@ export default function HeroSearch({ onClose, sheetOpen = false }) {
           type="button"
           className={CONTROL}
           aria-haspopup="listbox"
-          aria-expanded={open}
-          onClick={() => setOpen((wasOpen) => !wasOpen)}
+          aria-expanded={isOpen}
+          onClick={() => setIsOpen((wasOpen) => !wasOpen)}
         >
           <span className={picked ? CONTROL_VAL : CONTROL_VAL_PLACEHOLDER}>{picked ? picked.name : 'Choose'}</span>
           <ChevronDown className={CHEV} />
         </button>
-        {mounted && isMobile && createPortal(panel, document.body)}
-        {mounted && isMobile && <Overlay open={open} onClose={() => setOpen(false)} />}
-        {(!isMobile || !mounted) && panel}
+        {isMounted && isMobile && createPortal(panel, document.body)}
+        {isMounted && isMobile && <Overlay open={isOpen} onClose={() => setIsOpen(false)} />}
+        {(!isMobile || !isMounted) && panel}
       </div>
 
       <div className="mb-[0.8rem]">

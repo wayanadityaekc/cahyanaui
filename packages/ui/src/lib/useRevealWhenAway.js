@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 
 export default function useRevealWhenAway(refs = []) {
-  const [away, setAway] = useState(false);
+  const [isAway, setIsAway] = useState(false);
 
   useEffect(
     () => {
@@ -13,7 +13,7 @@ export default function useRevealWhenAway(refs = []) {
       const seen = new Map(nodes.map((node) => [node, false]));
       const io = new IntersectionObserver((entries) => {
         for (const entry of entries) seen.set(entry.target, entry.isIntersecting);
-        setAway(![...seen.values()].some(Boolean));
+        setIsAway(![...seen.values()].some(Boolean));
       });
       nodes.forEach((node) => io.observe(node));
       return () => io.disconnect();
@@ -21,5 +21,5 @@ export default function useRevealWhenAway(refs = []) {
     refs.map((ref) => ref?.current),
   );
 
-  return away;
+  return isAway;
 }

@@ -13,15 +13,15 @@ function villaCatalogName(slug) {
 function extraLine(extra, stay, villaName) {
   if (extra.kind === 'transfer') {
     const transfer = transferById(extra.dir);
-    const arriving = extra.dir === 'arrival';
+    const isArrival = extra.dir === 'arrival';
     return {
       type: 'transfer',
       service: TRANSFER_KEY,
       date: transfer ? transfer.dateOf(stay) : '',
       time: extra.time || '',
       guests: stay.guests,
-      pickup: arriving ? AIRPORT : villaName,
-      dropoff: arriving ? villaName : AIRPORT,
+      pickup: isArrival ? AIRPORT : villaName,
+      dropoff: isArrival ? villaName : AIRPORT,
       flight_number: String(extra.flight || '').trim(),
     };
   }

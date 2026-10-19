@@ -18,9 +18,9 @@ export default function Slider({ children, className = '', gridClassName = GRID_
   const measure = useCallback(() => {
     const track = trackRef.current;
     if (!track) return;
-    const overflowing = track.scrollWidth - track.clientWidth > 4;
-    setCanPrev(overflowing && track.scrollLeft > 4);
-    setCanNext(overflowing && track.scrollLeft + track.clientWidth < track.scrollWidth - 4);
+    const isOverflowing = track.scrollWidth - track.clientWidth > 4;
+    setCanPrev(isOverflowing && track.scrollLeft > 4);
+    setCanNext(isOverflowing && track.scrollLeft + track.clientWidth < track.scrollWidth - 4);
   }, []);
 
   useEffect(() => {

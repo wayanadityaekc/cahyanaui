@@ -49,9 +49,9 @@ function EmptyState() {
 export default function MyBookingCart() {
   const { cart, ready, clearStay, toggleService, addExtra, removeExtra, updateExtra, clear } = useCart();
   const { currency, formatAmount, breakdown: convert } = useCurrency();
-  const [sent, setSent] = useState(false);
+  const [isSent, setIsSent] = useState(false);
   const catalog = useExtrasCatalog(currency, cart.stay?.guests || 2);
-  const [checkoutOpen, setCheckoutOpen] = useState(false);
+  const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
   const [waitingRef, setWaitingRef] = useState('');
 
   useEffect(() => {
@@ -78,11 +78,11 @@ export default function MyBookingCart() {
   const villa = stay ? VILLAS[stay.villaSlug] : null;
   const nights = stay ? nightsBetween(stay.checkIn, stay.checkOut) : 0;
   const shown = convert(breakdown);
-  const inRupiah = currency === 'IDR';
+  const isInRupiah = currency === 'IDR';
   const chosen = cart.services.map(serviceById).filter(Boolean);
   const extras = stay ? cart.extras : [];
   const totals = extrasTotals(extras, catalog);
-  const blocked =
+  const isBlocked =
     extras.some((extra) => extraProblem(extra, stay, catalog?.items[extra.key]?.category || null)) ||
     (extras.length > 0 && !totals);
   const isEmpty = !stay && chosen.length === 0;
@@ -93,7 +93,7 @@ export default function MyBookingCart() {
     nights,
     shown,
     breakdown,
-    inRupiah,
+    inRupiah: isInRupiah,
     extras,
     totals,
     catalog,
@@ -188,7 +188,7 @@ export default function MyBookingCart() {
                   <span className={LABEL}>Stay total, paid in full</span>
                   <span className="text-h2 font-bold text-amber">{formatAmount(shown.total)}</span>
                 </p>
-                {inRupiah ? null : (
+                {isInRupiah ? null : (
                   <p className="text-label text-muted">
                     Exact price {formatRupiah(breakdown.totalIdr)}; other currencies follow today's rate.
                   </p>
@@ -244,8 +244,8 @@ export default function MyBookingCart() {
 
             <Button
               full
-              onClick={() => setCheckoutOpen(true)}
-              disabled={blocked || !breakdown || nights < 1}
+              onClick={() => setIsCheckoutOpen(true)}
+              disabled={isBlocked || !breakdown || nights < 1}
               className="mt-6 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               Book now
@@ -254,23 +254,23 @@ export default function MyBookingCart() {
               as="a"
               full
               variant="ghost"
-              href={blocked ? undefined : whatsappLink(message)}
-              aria-disabled={blocked || undefined}
+              href={isBlocked ? undefined : whatsappLink(message)}
+              aria-disabled={isBlocked || undefined}
               target="_blank"
               rel="noopener"
               onClick={(event) => {
-                if (blocked) {
+                if (isBlocked) {
                   event.preventDefault();
                   return;
                 }
-                setSent(true);
+                setIsSent(true);
               }}
-              className={`mt-2 ${blocked ? 'opacity-50 cursor-not-allowed' : ''}`}
+              className={`mt-2 ${isBlocked ? 'opacity-50 cursor-not-allowed' : ''}`}
             >
               <MessageCircle className={ICON} strokeWidth={1.8} aria-hidden="true" />
               Ask on WhatsApp
             </Button>
-            {blocked && (
+            {isBlocked && (
               <p className="mt-3 text-label text-err text-center" role="status">
                 Add a date and time for each extra first.
               </p>
@@ -278,7 +278,7 @@ export default function MyBookingCart() {
             <p className="mt-3 text-label text-muted text-center">
               Book now to pay online and confirm straight away, or ask us first on WhatsApp.
             </p>
-            {sent && (
+            {isSent && (
               <button
                 type="button"
                 onClick={clear}
@@ -291,11 +291,11 @@ export default function MyBookingCart() {
         </div>
       )}
       <CheckoutSheet
-        open={checkoutOpen}
-        onClose={() => setCheckoutOpen(false)}
+        open={isCheckoutOpen}
+        onClose={() => setIsCheckoutOpen(false)}
         cart={cart}
         onPaid={(ref) => {
-          setCheckoutOpen(false);
+          setIsCheckoutOpen(false);
           setWaitingRef(ref);
         }}
       />

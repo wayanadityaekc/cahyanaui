@@ -27,16 +27,16 @@ const FADE = {
 
 export default function InfoDot({ label = 'More information', align = 'start', subtle = false, children }) {
   const tone = subtle ? 'subtle' : 'normal';
-  const [open, setOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
   const ref = useRef(null);
 
   useEffect(() => {
-    if (!open) return undefined;
+    if (!isOpen) return undefined;
     function onDown(event) {
-      if (!ref.current?.contains(event.target)) setOpen(false);
+      if (!ref.current?.contains(event.target)) setIsOpen(false);
     }
     function onKey(event) {
-      if (event.key === 'Escape') setOpen(false);
+      if (event.key === 'Escape') setIsOpen(false);
     }
     document.addEventListener('pointerdown', onDown);
     document.addEventListener('keydown', onKey);
@@ -44,7 +44,7 @@ export default function InfoDot({ label = 'More information', align = 'start', s
       document.removeEventListener('pointerdown', onDown);
       document.removeEventListener('keydown', onKey);
     };
-  }, [open]);
+  }, [isOpen]);
 
   return (
     <span className="relative flex" ref={ref}>
@@ -52,14 +52,14 @@ export default function InfoDot({ label = 'More information', align = 'start', s
         type="button"
         data-infodot
         aria-haspopup="true"
-        aria-expanded={open}
+        aria-expanded={isOpen}
         aria-label={label}
         className={BTN + FADE[tone]}
-        onClick={() => setOpen((wasOpen) => !wasOpen)}
+        onClick={() => setIsOpen((wasOpen) => !wasOpen)}
       >
         <Info strokeWidth={1.7} className={ICON[tone]} aria-hidden="true" />
       </button>
-      <PopMenu open={open}>
+      <PopMenu open={isOpen}>
         <span className={`${PANEL_BASE} ${PANEL_ALIGN[align] || PANEL_ALIGN.start}`} role="note">
           {children}
         </span>

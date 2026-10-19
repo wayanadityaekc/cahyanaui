@@ -93,9 +93,9 @@ export default function PaymentStep({
   const depositIdr = cat && cat.deposit && cat.deposit.idr != null ? cat.deposit.idr : null;
   const options = payOptions({ total, currency, stay, hasReferral, deposit, totalIdr, depositIdr, totalUsd });
   const rail = railFor(railChoice);
-  const inRupiah = rail === 'doku' && String(currency).toUpperCase() !== 'IDR';
-  const inUsd = rail === 'paypal' && String(currency).toUpperCase() === 'IDR';
-  const [openFine, setOpenFine] = useState(false);
+  const isInRupiah = rail === 'doku' && String(currency).toUpperCase() !== 'IDR';
+  const isInUsd = rail === 'paypal' && String(currency).toUpperCase() === 'IDR';
+  const [isFinePrintOpen, setIsFinePrintOpen] = useState(false);
   const railNote = noteFor(currency, rail);
   function money(amount) {
     return withSymbol(symbol + amount.toLocaleString(symbol === 'Rp' ? 'id-ID' : 'en-US'));
@@ -113,13 +113,13 @@ export default function PaymentStep({
   }, [options, option, onOption]);
 
   useEffect(() => {
-    if (!openFine) return undefined;
+    if (!isFinePrintOpen) return undefined;
     function onKey(event) {
-      if (event.key === 'Escape') setOpenFine(false);
+      if (event.key === 'Escape') setIsFinePrintOpen(false);
     }
     document.addEventListener('keydown', onKey);
     return () => document.removeEventListener('keydown', onKey);
-  }, [openFine]);
+  }, [isFinePrintOpen]);
 
   return (
     <div className="my-5">
@@ -140,17 +140,17 @@ export default function PaymentStep({
 
       <div className={METHODS} role="radiogroup" aria-label={PAY_COPY.methodHeading} data-rail-choice>
         {RAIL_CHOICES.map((railChoiceItem) => {
-          const selected = rail === railChoiceItem.id;
+          const isSelected = rail === railChoiceItem.id;
           return (
             <button
               key={railChoiceItem.id}
               type="button"
               role="radio"
-              aria-checked={selected}
+              aria-checked={isSelected}
               data-rail={railChoiceItem.id}
               aria-label={railChoiceItem.label}
               title={railChoiceItem.label}
-              className={`${METHOD} ${selected ? CARD_ON : CARD_OFF}`}
+              className={`${METHOD} ${isSelected ? CARD_ON : CARD_OFF}`}
               onClick={() => onRail && onRail(railChoiceItem.id)}
             >
               {railChoiceItem.id === 'doku' ? (
@@ -165,21 +165,21 @@ export default function PaymentStep({
 
       <div className="flex flex-col gap-2" role="radiogroup" aria-label={PAY_COPY.heading}>
         {options.map((optionItem) => {
-          const selected = option === optionItem.id;
-          const dim = !optionItem.available;
+          const isSelected = option === optionItem.id;
+          const isDimmed = !optionItem.available;
           const isRef = optionItem.id === 'referral';
           return (
-            <div key={optionItem.id} className={`${CARD} ${dim ? CARD_DIM : selected ? CARD_ON : CARD_OFF}`}>
+            <div key={optionItem.id} className={`${CARD} ${isDimmed ? CARD_DIM : isSelected ? CARD_ON : CARD_OFF}`}>
               <button
                 type="button"
                 role="radio"
-                aria-checked={selected}
-                aria-disabled={dim}
-                disabled={dim}
-                className={`${PICK} ${isRef ? PICK_TIGHT : ''} ${dim ? PICK_DIM : ''}`}
-                onClick={() => !dim && onOption(optionItem.id)}
+                aria-checked={isSelected}
+                aria-disabled={isDimmed}
+                disabled={isDimmed}
+                className={`${PICK} ${isRef ? PICK_TIGHT : ''} ${isDimmed ? PICK_DIM : ''}`}
+                onClick={() => !isDimmed && onOption(optionItem.id)}
               >
-                <Radio on={selected} dim={dim} />
+                <Radio on={isSelected} dim={isDimmed} />
                 <span className="flex-1 min-w-0">
                   <span className={LABEL}>
                     {optionItem.label}
@@ -192,12 +192,12 @@ export default function PaymentStep({
                     )}
                   </span>
                 </span>
-                {inRupiah ? (
+                {isInRupiah ? (
                   <span className={AMOUNT} data-amount-idr>
                     {optionItem.amountIdr != null ? rupiah(optionItem.amountIdr) : '-'}
                     {optionItem.amount != null && <span className={APPROX}>≈ {money(optionItem.amount)}</span>}
                   </span>
-                ) : inUsd ? (
+                ) : isInUsd ? (
                   <span className={AMOUNT} data-amount-usd>
                     {optionItem.amountUsd != null ? dollars(optionItem.amountUsd) : '-'}
                     {optionItem.amount != null && <span className={APPROX}>≈ {money(optionItem.amount)}</span>}
@@ -224,7 +224,7 @@ export default function PaymentStep({
                     </button>
                   </div>
                   {refMsg && <small className={refMsgCls(refMsg.ok)}>{refMsg.text}</small>}
-                  {dim && !refMsg && <p className={LOCKED}>{PAY_COPY.referralLocked}</p>}
+                  {isDimmed && !refMsg && <p className={LOCKED}>{PAY_COPY.referralLocked}</p>}
                 </div>
               )}
             </div>
@@ -237,9 +237,9 @@ export default function PaymentStep({
         <button
           type="button"
           className={MORE}
-          aria-expanded={openFine}
+          aria-expanded={isFinePrintOpen}
           aria-haspopup="dialog"
-          onClick={() => setOpenFine((wasFineOpen) => !wasFineOpen)}
+          onClick={() => setIsFinePrintOpen((wasFineOpen) => !wasFineOpen)}
         >
           {PAY_COPY.detailsMore}
           <ChevronDown
@@ -251,8 +251,8 @@ export default function PaymentStep({
       </div>
 
       <ModalPresence
-        open={openFine}
-        onClose={() => setOpenFine(false)}
+        open={isFinePrintOpen}
+        onClose={() => setIsFinePrintOpen(false)}
         label={PAY_COPY.detailsTitle}
         box={FINE_BOX}
         shellClass={FINE_SHELL}
@@ -273,7 +273,7 @@ export default function PaymentStep({
             </a>
           </p>
         </div>
-        <button type="button" className={FINE_CLOSE} onClick={() => setOpenFine(false)}>
+        <button type="button" className={FINE_CLOSE} onClick={() => setIsFinePrintOpen(false)}>
           {PAY_COPY.detailsClose}
         </button>
       </ModalPresence>

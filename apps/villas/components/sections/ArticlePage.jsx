@@ -21,14 +21,14 @@ const ICON = 'w-[var(--icon-sm)] h-[var(--icon-sm)] shrink-0';
 
 function CatList({ activeId, onPick }) {
   return CATEGORIES.map((category) => {
-    const on = category.id === activeId;
+    const isActive = category.id === activeId;
     return (
       <Link
         key={category.id}
         href={`/guide#${category.id}`}
         onClick={onPick}
-        className={onPick ? CAT_ITEM_TAP(on) : CAT_ITEM(on)}
-        aria-current={on || undefined}
+        className={onPick ? CAT_ITEM_TAP(isActive) : CAT_ITEM(isActive)}
+        aria-current={isActive || undefined}
       >
         {category.label}
       </Link>

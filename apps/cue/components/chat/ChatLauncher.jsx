@@ -7,8 +7,8 @@ import { MessageCircle } from 'lucide-react';
 const ChatPanel = dynamic(() => import('./ChatPanel'), { ssr: false });
 
 export default function ChatLauncher({ className, label, iconClass = 'w-5 h-5' }) {
-  const [open, setOpen] = useState(false);
-  const [touched, setTouched] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+  const [isTouched, setIsTouched] = useState(false);
 
   return (
     <>
@@ -16,16 +16,16 @@ export default function ChatLauncher({ className, label, iconClass = 'w-5 h-5' }
         type="button"
         className={className}
         aria-label="Chat with us"
-        aria-expanded={open}
+        aria-expanded={isOpen}
         onClick={() => {
-          setTouched(true);
-          setOpen((wasOpen) => !wasOpen);
+          setIsTouched(true);
+          setIsOpen((wasOpen) => !wasOpen);
         }}
       >
         <MessageCircle className={iconClass} strokeWidth={1.6} aria-hidden="true" />
         {label}
       </button>
-      {touched && <ChatPanel open={open} onClose={() => setOpen(false)} />}
+      {isTouched && <ChatPanel open={isOpen} onClose={() => setIsOpen(false)} />}
     </>
   );
 }

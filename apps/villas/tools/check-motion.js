@@ -143,9 +143,9 @@ pages.forEach((file) => {
         if (!dead.has(key)) dead.set(key, `${page}  <${tag} class="…${cls.slice(0, 90)}…">`);
       }
 
-      const clickable =
+      const isClickable =
         tag === 'button' || /role="button"/.test(attrs) || (tag === 'a' && tokens.includes('rounded-pill'));
-      if (!scope && clickable && !has('scale')) {
+      if (!scope && isClickable && !has('scale')) {
         const key = `${tag} transitions [${list.join(',')}] with no 'scale' - the press feedback will snap`;
         if (!snap.has(key)) snap.set(key, `${page}  <${tag} class="…${cls.slice(0, 90)}…">`);
       }

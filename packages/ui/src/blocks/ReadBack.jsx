@@ -32,7 +32,7 @@ export function ReadBackRows({ label, rows = [] }) {
 }
 
 export function ReadBackList({ label, lines = [], countLabel = (count) => `${count} items` }) {
-  const [open, setOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
   if (!lines.length) return null;
   return (
     <>
@@ -42,18 +42,18 @@ export function ReadBackList({ label, lines = [], countLabel = (count) => `${cou
           <button
             type="button"
             className={DETAILS_TOGGLE}
-            aria-expanded={open}
-            onClick={() => setOpen((value) => !value)}
+            aria-expanded={isOpen}
+            onClick={() => setIsOpen((value) => !value)}
           >
             <span>{countLabel(lines.length)}</span>
             <span
-              className={`text-[1.4rem] text-gold transition-transform duration-[var(--dur-slow)] ease-[ease] ${open ? '[transform:rotate(90deg)]' : ''}`}
+              className={`text-[1.4rem] text-gold transition-transform duration-[var(--dur-slow)] ease-[ease] ${isOpen ? '[transform:rotate(90deg)]' : ''}`}
             >
               &rsaquo;
             </span>
           </button>
           <ul
-            className={`list-none overflow-hidden transition-[max-height] duration-[var(--dur-slow)] ease-[ease] ${open ? 'max-h-[320px]' : 'max-h-0'}`}
+            className={`list-none overflow-hidden transition-[max-height] duration-[var(--dur-slow)] ease-[ease] ${isOpen ? 'max-h-[320px]' : 'max-h-0'}`}
           >
             {lines.map((line, index) => (
               <li className={DETAILS_LI} key={index}>

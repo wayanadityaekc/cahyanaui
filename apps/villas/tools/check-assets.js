@@ -106,11 +106,11 @@ if (missing.length) {
   process.exit(1);
 }
 
-const noIcon = pages.filter((page) => !/rel="icon"/.test(fs.readFileSync(page, 'utf8')));
-console.log(`Pages without a favicon: ${noIcon.length}`);
-if (noIcon.length) {
+const pagesWithoutIcon = pages.filter((page) => !/rel="icon"/.test(fs.readFileSync(page, 'utf8')));
+console.log(`Pages without a favicon: ${pagesWithoutIcon.length}`);
+if (pagesWithoutIcon.length) {
   console.error('\nPAGES MISSING THE FAVICON LINK:');
-  noIcon.slice(0, 10).forEach((page) => {
+  pagesWithoutIcon.slice(0, 10).forEach((page) => {
     console.error(`  ${path.relative(OUT, page)}`);
   });
   process.exit(1);

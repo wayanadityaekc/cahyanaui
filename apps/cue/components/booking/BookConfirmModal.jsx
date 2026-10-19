@@ -63,24 +63,24 @@ export default function BookConfirmModal() {
   const [lineDT, setLineDT] = useState([]);
   const [dtErr, setDtErr] = useState({});
   const [refMsg, setRefMsg] = useState(null);
-  const [detailsOpen, setDetailsOpen] = useState(false);
+  const [isDetailsOpen, setIsDetailsOpen] = useState(false);
   const [errors, setErrors] = useState({});
   const [error, setError] = useState('');
-  const [busy, setBusy] = useState(false);
-  const [done, setDone] = useState(false);
-  const [mounted, setMounted] = useState(false);
+  const [isBusy, setIsBusy] = useState(false);
+  const [isDone, setIsDone] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
 
-  useEffect(() => setMounted(true), []);
+  useEffect(() => setIsMounted(true), []);
 
   useEffect(() => {
     if (!bookingContext) {
       setForm(EMPTY);
       setPriced(null);
-      setDone(false);
+      setIsDone(false);
       setSigninEmail('');
       setOtpCode('');
       setOtpMsg('');
-      setOtpVerified(false);
+      setIsOtpVerified(false);
       setOtpCooldown(0);
       setStep(1);
       setLineDT([]);
@@ -140,8 +140,8 @@ export default function BookConfirmModal() {
   const [signinEmail, setSigninEmail] = useState('');
   const [otpCode, setOtpCode] = useState('');
   const [otpMsg, setOtpMsg] = useState('');
-  const [otpBusy, setOtpBusy] = useState(false);
-  const [otpVerified, setOtpVerified] = useState(false);
+  const [isOtpBusy, setIsOtpBusy] = useState(false);
+  const [isOtpVerified, setIsOtpVerified] = useState(false);
   const [otpCooldown, setOtpCooldown] = useState(0);
   useEffect(() => {
     if (otpCooldown <= 0) return undefined;
@@ -150,11 +150,11 @@ export default function BookConfirmModal() {
   }, [otpCooldown]);
   async function doOtpVerify(code) {
     setOtpMsg('');
-    setOtpBusy(true);
+    setIsOtpBusy(true);
     const result = await verifyCode(signinEmail, code);
-    setOtpBusy(false);
+    setIsOtpBusy(false);
     if (result.ok) {
-      setOtpVerified(true);
+      setIsOtpVerified(true);
       setOtpCode('');
       return;
     }
@@ -162,15 +162,15 @@ export default function BookConfirmModal() {
     setOtpMsg(result.error || 'Sorry, something went wrong. Please try again.');
   }
   async function resendOtp() {
-    if (otpCooldown > 0 || otpBusy) return;
-    setOtpBusy(true);
+    if (otpCooldown > 0 || isOtpBusy) return;
+    setIsOtpBusy(true);
     await requestLogin(signinEmail);
-    setOtpBusy(false);
+    setIsOtpBusy(false);
     setOtpCode('');
     setOtpMsg('');
     setOtpCooldown(RESEND_SECONDS);
   }
-  const [paid, setPaid] = useState(false);
+  const [isPaid, setIsPaid] = useState(false);
   const [payOn, setPayOn] = useState(PAY_DEFAULT);
   useEffect(() => {
     setPayOn(readPayFlag());
@@ -180,7 +180,7 @@ export default function BookConfirmModal() {
 
   if (bookingContext) lastCtx.current = bookingContext;
   const view = bookingContext || lastCtx.current;
-  if (!mounted || !view) return null;
+  if (!isMounted || !view) return null;
 
   function set(fieldName) {
     return (event) => {
@@ -279,7 +279,7 @@ export default function BookConfirmModal() {
       return;
     }
     setError('');
-    setBusy(true);
+    setIsBusy(true);
     try {
       const inquiryResult = await submitInquiry(payload());
       if (!inquiryResult || inquiryResult.status !== 'saved')
@@ -296,11 +296,11 @@ export default function BookConfirmModal() {
         setSigninEmail(inquiryResult.signin_email);
         setOtpCooldown(RESEND_SECONDS);
       } else setSigninEmail('');
-      setDone(true);
+      setIsDone(true);
     } catch (e) {
       setError(e.message || 'Sorry, we could not send your booking. Please try again, or reach us on WhatsApp.');
     } finally {
-      setBusy(false);
+      setIsBusy(false);
     }
   }
 
@@ -339,13 +339,13 @@ export default function BookConfirmModal() {
   const STEP_NAMES = payOn ? ['Your details', 'Check', 'Payment'] : ['Your details', 'Check & book'];
   const signinNote = signinEmail ? (
     <SigninNote
-      otpVerified={otpVerified}
+      otpVerified={isOtpVerified}
       signinEmail={signinEmail}
       otpCode={otpCode}
       setOtpCode={setOtpCode}
       doOtpVerify={doOtpVerify}
       otpMsg={otpMsg}
-      otpBusy={otpBusy}
+      otpBusy={isOtpBusy}
       otpCooldown={otpCooldown}
       resendOtp={resendOtp}
     />
@@ -353,19 +353,19 @@ export default function BookConfirmModal() {
   return createPortal(
     <ModalPresence
       open={!!bookingContext}
-      onClose={paid ? () => {} : closeBooking}
+      onClose={isPaid ? () => {} : closeBooking}
       label="Booking confirmation"
       box={BOX_WIDE}
       shellClass={SHELL_WIDE}
     >
-      {!paid && (
+      {!isPaid && (
         <button className={CLOSE} aria-label="Close" onClick={closeBooking}>
           &times;
         </button>
       )}
       <img className={LOGO} src="/assets/images/logo.webp" alt="The Cahyana Logo" width="1005" height="324" />
 
-      {!done ? (
+      {!isDone ? (
         <div id="modal-form">
           <h3 className={TITLE}>Booking Confirmation</h3>
           <div className={STEPS} aria-hidden="true">
@@ -408,8 +408,8 @@ export default function BookConfirmModal() {
               flightNumberDisplay={flightNumberDisplay}
               displayGuests={displayGuests}
               priced={priced}
-              detailsOpen={detailsOpen}
-              setDetailsOpen={setDetailsOpen}
+              detailsOpen={isDetailsOpen}
+              setDetailsOpen={setIsDetailsOpen}
               f={form}
               price={priceText()}
               payOn={payOn}
@@ -418,7 +418,7 @@ export default function BookConfirmModal() {
                 setStep(3);
               }}
               error={error}
-              busy={busy}
+              busy={isBusy}
               submit={submit}
               openWhatsApp={openWhatsApp}
               onEdit={() => setStep(1)}
@@ -443,7 +443,7 @@ export default function BookConfirmModal() {
                 refMsg={refMsg}
               />
 
-              <BookActions error={error} busy={busy} submit={submit} openWhatsApp={openWhatsApp} />
+              <BookActions error={error} busy={isBusy} submit={submit} openWhatsApp={openWhatsApp} />
               <button type="button" className={BACK_LINK} onClick={() => setStep(2)}>
                 &lsaquo; Back
               </button>
@@ -462,7 +462,7 @@ export default function BookConfirmModal() {
         </div>
       ) : (
         <PaymentScreen
-          paid={paid}
+          paid={isPaid}
           bookingRef={bookingRef}
           closeBooking={closeBooking}
           signinNote={signinNote}
@@ -470,7 +470,7 @@ export default function BookConfirmModal() {
           payOption={payOption}
           currency={currency}
           onPaid={() => {
-            setPaid(true);
+            setIsPaid(true);
             if (bookingContext && typeof bookingContext.onSuccess === 'function') bookingContext.onSuccess();
           }}
         />

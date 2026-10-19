@@ -70,7 +70,7 @@ export default function FooterShell({
                 <h4 className={cn(FOOT_COL_H, featured && 'mt-6')}>{social.heading || 'Follow'}</h4>
                 <div className="flex gap-[0.6rem]">
                   {social.links.map((link) => {
-                    const brand = link.name === 'Airbnb';
+                    const isAirbnb = link.name === 'Airbnb';
                     return (
                       <a
                         key={link.name}
@@ -78,9 +78,9 @@ export default function FooterShell({
                         aria-label={link.name}
                         aria-disabled={link.href ? undefined : 'true'}
                         {...(link.href ? { target: '_blank', rel: 'noopener' } : {})}
-                        className={brand ? FOOT_SOCIAL_A_AIRBNB : FOOT_SOCIAL_A}
+                        className={isAirbnb ? FOOT_SOCIAL_A_AIRBNB : FOOT_SOCIAL_A}
                       >
-                        <BrandIcon name={link.name} className={brand ? FOOT_SOCIAL_ICON_AIRBNB : undefined} />
+                        <BrandIcon name={link.name} className={isAirbnb ? FOOT_SOCIAL_ICON_AIRBNB : undefined} />
                       </a>
                     );
                   })}

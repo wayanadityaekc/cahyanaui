@@ -67,16 +67,16 @@ export default function CurrencyPicker({
   id,
   className,
 }) {
-  const [open, setOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
   const ref = useRef(null);
 
   useEffect(() => {
-    if (!open) return undefined;
+    if (!isOpen) return undefined;
     function onDoc(event) {
-      if (ref.current && !ref.current.contains(event.target)) setOpen(false);
+      if (ref.current && !ref.current.contains(event.target)) setIsOpen(false);
     }
     function onKey(event) {
-      if (event.key === 'Escape') setOpen(false);
+      if (event.key === 'Escape') setIsOpen(false);
     }
     document.addEventListener('click', onDoc);
     document.addEventListener('keydown', onKey);
@@ -84,7 +84,7 @@ export default function CurrencyPicker({
       document.removeEventListener('click', onDoc);
       document.removeEventListener('keydown', onKey);
     };
-  }, [open]);
+  }, [isOpen]);
 
   return (
     <div className={cn(wrap(variant), className)} data-cur ref={ref}>
@@ -94,14 +94,14 @@ export default function CurrencyPicker({
         className={button(variant)}
         aria-label={label}
         aria-haspopup="listbox"
-        aria-expanded={open}
-        onClick={() => setOpen((wasOpen) => !wasOpen)}
+        aria-expanded={isOpen}
+        onClick={() => setIsOpen((wasOpen) => !wasOpen)}
       >
         <Flag code={value} />
         <span className={variant === 'bar' ? undefined : CODE}>{value}</span>
         <ChevronDown className={CARET} aria-hidden="true" />
       </button>
-      <ul className={list(variant, open)} role="listbox" aria-label="Currency">
+      <ul className={list(variant, isOpen)} role="listbox" aria-label="Currency">
         {options.map((option) => {
           const code = typeof option === 'string' ? option : option.code;
           return (
@@ -112,7 +112,7 @@ export default function CurrencyPicker({
               aria-selected={code === value}
               onClick={() => {
                 onChange?.(code);
-                setOpen(false);
+                setIsOpen(false);
               }}
             >
               <Flag code={code} />

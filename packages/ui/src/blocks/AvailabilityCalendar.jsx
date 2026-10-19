@@ -77,7 +77,7 @@ export default function AvailabilityCalendar({
     month: Number(start.slice(5, 7)) - 1,
     dir: 0,
   }));
-  const choosingEnd = !!checkIn && !checkOut;
+  const isChoosingEnd = !!checkIn && !checkOut;
   const nights = nightsBetween(checkIn, checkOut);
 
   const firstMonth = Number(base.slice(0, 4)) * 12 + Number(base.slice(5, 7)) - 1;
@@ -90,17 +90,17 @@ export default function AvailabilityCalendar({
   }
 
   function selectable(day) {
-    if (choosingEnd)
+    if (isChoosingEnd)
       return day > checkIn ? canCheckOut(day, checkIn, { busy, limits }) : canCheckIn(day, { busy, limits });
     return canCheckIn(day, { busy, limits });
   }
 
   function pick(day) {
-    if (choosingEnd && canCheckOut(day, checkIn, { busy, limits })) {
+    if (isChoosingEnd && canCheckOut(day, checkIn, { busy, limits })) {
       onChange({ checkIn, checkOut: day });
       return;
     }
-    if (choosingEnd && day > checkIn) return;
+    if (isChoosingEnd && day > checkIn) return;
     if (canCheckIn(day, { busy, limits })) onChange({ checkIn: day, checkOut: '' });
   }
 
@@ -108,9 +108,9 @@ export default function AvailabilityCalendar({
     if (!day) return <span key={`empty-${index}`} aria-hidden="true" />;
     const ok = !loading && selectable(day);
     const booked = !ok && isBookedNight(busy, day);
-    const edge = day === checkIn || day === checkOut;
+    const isEdgeDay = day === checkIn || day === checkOut;
     const inside = checkIn && checkOut && day > checkIn && day < checkOut;
-    const status = edge ? 'selected' : booked ? 'booked' : ok ? 'available' : 'unavailable';
+    const status = isEdgeDay ? 'selected' : booked ? 'booked' : ok ? 'available' : 'unavailable';
     return (
       <div
         key={day}
@@ -123,19 +123,19 @@ export default function AvailabilityCalendar({
       >
         <button
           type="button"
-          disabled={!ok && !edge}
+          disabled={!ok && !isEdgeDay}
           onClick={() => pick(day)}
-          aria-pressed={edge}
+          aria-pressed={isEdgeDay}
           aria-label={`${longDate(day)}, ${status}`}
           data-day={day}
           data-status={status}
           className={cn(
             DAY,
             'rounded-base',
-            edge ? 'bg-gold text-white' : 'bg-transparent',
-            !edge && ok && 'text-green cursor-pointer hover:[box-shadow:inset_0_0_0_1.5px_var(--color-gold)]',
-            !edge && booked && 'text-muted line-through opacity-50 cursor-not-allowed',
-            !edge && !ok && !booked && 'text-muted opacity-35 cursor-not-allowed',
+            isEdgeDay ? 'bg-gold text-white' : 'bg-transparent',
+            !isEdgeDay && ok && 'text-green cursor-pointer hover:[box-shadow:inset_0_0_0_1.5px_var(--color-gold)]',
+            !isEdgeDay && booked && 'text-muted line-through opacity-50 cursor-not-allowed',
+            !isEdgeDay && !ok && !booked && 'text-muted opacity-35 cursor-not-allowed',
           )}
         >
           {Number(day.slice(8, 10))}

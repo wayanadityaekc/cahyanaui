@@ -26,16 +26,16 @@ const POP_OPEN = 'opacity-100 visible pointer-events-auto';
 const POP_CLOSED = 'opacity-0 invisible pointer-events-none';
 
 export default function InfoPopover({ children, label = 'How to use this form', variant = 'default' }) {
-  const [open, setOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
   const ref = useRef(null);
 
   useEffect(() => {
-    if (!open) return;
+    if (!isOpen) return;
     function onDoc(event) {
-      if (ref.current && !ref.current.contains(event.target)) setOpen(false);
+      if (ref.current && !ref.current.contains(event.target)) setIsOpen(false);
     }
     function onKey(event) {
-      return event.key === 'Escape' && setOpen(false);
+      return event.key === 'Escape' && setIsOpen(false);
     }
     document.addEventListener('click', onDoc);
     document.addEventListener('keydown', onKey);
@@ -43,25 +43,25 @@ export default function InfoPopover({ children, label = 'How to use this form', 
       document.removeEventListener('click', onDoc);
       document.removeEventListener('keydown', onKey);
     };
-  }, [open]);
+  }, [isOpen]);
 
   return (
     <span className={wrap(variant)} ref={ref}>
       <button
         type="button"
         className={BTN}
-        aria-expanded={open}
+        aria-expanded={isOpen}
         aria-label={label}
         onClick={(event) => {
           event.preventDefault();
           event.stopPropagation();
-          setOpen((wasOpen) => !wasOpen);
+          setIsOpen((wasOpen) => !wasOpen);
         }}
       >
         <Info />
       </button>
       <div
-        className={`${POP_BASE} ${POP_POS[variant] || POP_POS.default} ${open ? POP_OPEN : POP_CLOSED}`}
+        className={`${POP_BASE} ${POP_POS[variant] || POP_POS.default} ${isOpen ? POP_OPEN : POP_CLOSED}`}
         role="tooltip"
       >
         {children}

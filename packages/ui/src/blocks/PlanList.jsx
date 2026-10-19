@@ -19,23 +19,23 @@ const ROW_BTN =
 export default function PlanList({ plans = [], label = 'Plans', className = '', value = null, onChange = null }) {
   if (!plans.length)
     return <p className="m-0 text-body text-muted">Sorry, we could not load this information. Please try again.</p>;
-  const pickable = typeof onChange === 'function';
+  const isPickable = typeof onChange === 'function';
   return (
     <ul
-      className={cn('list-none m-0 p-0 flex flex-col gap-3', pickable && 'pt-[9px]', className)}
+      className={cn('list-none m-0 p-0 flex flex-col gap-3', isPickable && 'pt-[9px]', className)}
       aria-label={label}
-      role={pickable ? 'radiogroup' : undefined}
+      role={isPickable ? 'radiogroup' : undefined}
       data-plan-list
     >
       {plans.map(({ id, name = '', badge = '', sub = '', price = null }) => {
-        const picked = pickable && value === id;
-        const Row = pickable ? 'button' : 'div';
-        const rowProps = pickable
+        const picked = isPickable && value === id;
+        const Row = isPickable ? 'button' : 'div';
+        const rowProps = isPickable
           ? { type: 'button', role: 'radio', 'aria-checked': picked, onClick: () => onChange(id) }
           : {};
         return (
           <li key={id} data-plan={id} data-picked={picked ? '' : undefined}>
-            <Row className={cn(picked ? ROW_PICKED : ROW, pickable && ROW_BTN)} {...rowProps}>
+            <Row className={cn(picked ? ROW_PICKED : ROW, isPickable && ROW_BTN)} {...rowProps}>
               {picked ? (
                 <span className={FLAG} data-plan-flag="">
                   Selected

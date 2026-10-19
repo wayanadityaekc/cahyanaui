@@ -20,7 +20,7 @@ import { toursContaining, priceFallbackFor } from '@/lib/tourIndex';
 
 export default function AttractionPage({ data }) {
   const bookType = data.bookDefault || 'tour';
-  const perPerson = bookType === 'experience' || bookType === 'performance';
+  const isPricedPerPerson = bookType === 'experience' || bookType === 'performance';
   const slug = (data.__page || '').replace('attractions/', '');
   const onTours = toursContaining(slug);
   const gallery = galleryFrom(data);
@@ -43,7 +43,11 @@ export default function AttractionPage({ data }) {
         ratingName={data.bookItem}
         belowChips={
           gallery.length && data.bookItem ? (
-            <BookNowRow item={data.bookItem} priceFallback={priceFallbackFor(data.bookItem)} perPerson={perPerson} />
+            <BookNowRow
+              item={data.bookItem}
+              priceFallback={priceFallbackFor(data.bookItem)}
+              perPerson={isPricedPerPerson}
+            />
           ) : null
         }
       />
@@ -85,7 +89,7 @@ export default function AttractionPage({ data }) {
             <BookSidebar
               item={data.bookItem}
               presetType={bookType}
-              perPerson={perPerson}
+              perPerson={isPricedPerPerson}
               facts={data.facts}
               belowPrice={<TourComparisonBox tours={onTours} />}
             />
@@ -93,7 +97,7 @@ export default function AttractionPage({ data }) {
         )}
       </div>
       <BookCta item={data.bookItem} />
-      <BookBar item={data.bookItem} priceFallback={priceFallbackFor(data.bookItem)} perPerson={perPerson} />
+      <BookBar item={data.bookItem} priceFallback={priceFallbackFor(data.bookItem)} perPerson={isPricedPerPerson} />
       <Related href={data.__href} />
       {data.bookItem && <ReviewCtaBand />}
 

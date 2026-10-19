@@ -54,7 +54,7 @@ export default function BookedTrips({ isPast, openRef, setOpenRef, setReview }) 
       : trip.status
         ? trip.status.charAt(0).toUpperCase() + trip.status.slice(1)
         : 'Booked';
-    const open = openRef === trip.ref;
+    const isOpen = openRef === trip.ref;
     const items = trip.lines || [];
     return (
       <div className={MTC_BOOK} key={trip.ref}>
@@ -88,13 +88,13 @@ export default function BookedTrips({ isPast, openRef, setOpenRef, setReview }) 
             <button
               type="button"
               className={MTC_DET_TOGGLE}
-              aria-expanded={open ? 'true' : 'false'}
-              onClick={() => setOpenRef(open ? null : trip.ref)}
+              aria-expanded={isOpen ? 'true' : 'false'}
+              onClick={() => setOpenRef(isOpen ? null : trip.ref)}
             >
-              {open ? 'Hide details' : `View details (${items.length}${items.length > 1 ? ' items)' : ' item)'}`}
+              {isOpen ? 'Hide details' : `View details (${items.length}${items.length > 1 ? ' items)' : ' item)'}`}
               <ChevronDown className={MTC_DET_CHEV} strokeWidth={1.6} aria-hidden="true" />
             </button>
-            {open && (
+            {isOpen && (
               <ul className={MTC_DET_LIST}>
                 {items.map((item, index) => (
                   <li className={MTC_DET_LINE} key={index}>

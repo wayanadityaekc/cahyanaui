@@ -55,17 +55,17 @@ export default function CharterPlans({ value, onChange, area = '', heading }) {
       <div className={ROWS} role="radiogroup" aria-label="Charter length">
         {CHARTER.durations.map((duration) => {
           const tierPrice = tier(duration.dur);
-          const selected = duration.dur === value;
+          const isSelected = duration.dur === value;
           return (
             <button
               type="button"
               key={duration.dur}
               role="radio"
-              aria-checked={selected}
-              className={`${selected ? PLAN_ROW_PICKED : PLAN_ROW} relative items-start min-[993px]:items-center ${ROW_BTN}`}
+              aria-checked={isSelected}
+              className={`${isSelected ? PLAN_ROW_PICKED : PLAN_ROW} relative items-start min-[993px]:items-center ${ROW_BTN}`}
               onClick={() => onChange(duration.dur)}
             >
-              {selected && (
+              {isSelected && (
                 <span className={FLAG} data-plan-flag>
                   Selected
                 </span>

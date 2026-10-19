@@ -17,7 +17,7 @@ export default function LoadingScreen({
   minVisible = 260,
   fadeMs = 450,
 }) {
-  const [out, setOut] = useState(false);
+  const [isFadingOut, setIsFadingOut] = useState(false);
   const elRef = useRef(null);
   const safety = useRef(null);
   const shownAt = useRef(0);
@@ -25,7 +25,7 @@ export default function LoadingScreen({
 
   useEffect(() => {
     function hide() {
-      return setOut(true);
+      return setIsFadingOut(true);
     }
     let cap;
     if (document.readyState === 'complete') {
@@ -47,7 +47,7 @@ export default function LoadingScreen({
       return undefined;
     }
     const waited = Date.now() - shownAt.current;
-    const hideTimer = setTimeout(() => setOut(true), Math.max(0, minVisible - waited));
+    const hideTimer = setTimeout(() => setIsFadingOut(true), Math.max(0, minVisible - waited));
     return () => clearTimeout(hideTimer);
   }, [routeKey, minVisible]);
 
@@ -85,14 +85,14 @@ export default function LoadingScreen({
         element.style.removeProperty('transition');
       }
       shownAt.current = Date.now();
-      setOut(false);
+      setIsFadingOut(false);
 
       clearTimeout(safety.current);
-      safety.current = setTimeout(() => setOut(true), 3000);
+      safety.current = setTimeout(() => setIsFadingOut(true), 3000);
     }
     document.addEventListener('click', onClick, true);
     function onShow() {
-      return setOut(true);
+      return setIsFadingOut(true);
     }
     window.addEventListener('pageshow', onShow);
     return () => {
@@ -105,10 +105,10 @@ export default function LoadingScreen({
   return (
     <div
       ref={elRef}
-      className={cn(BASE, out && OUT)}
+      className={cn(BASE, isFadingOut && OUT)}
       style={{ '--splash-fade': `${fadeMs}ms` }}
       aria-hidden="true"
-      data-loadscreen={out ? 'out' : 'in'}
+      data-loadscreen={isFadingOut ? 'out' : 'in'}
     >
       <img className="w-[min(200px,45vw)] h-auto" src={logo} alt={alt} width={width} height={height} />
       <span className="w-[26px] h-[26px] rounded-[50%] [border:3px_solid_var(--line)] [border-top-color:var(--color-gold)] [animation:cahyana-spin_0.7s_linear_infinite]" />

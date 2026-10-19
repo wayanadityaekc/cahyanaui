@@ -23,10 +23,10 @@ export default function ReviewDetail({ review, onClose, title = 'Guest review' }
   const boxRef = useRef(null);
   const closeRef = useRef(onClose);
   closeRef.current = onClose;
-  const open = !!review;
+  const isOpen = !!review;
 
   useEffect(() => {
-    if (!open) return undefined;
+    if (!isOpen) return undefined;
     const opener = document.activeElement;
     if (boxRef.current) boxRef.current.focus();
     function onKey(event) {
@@ -37,9 +37,9 @@ export default function ReviewDetail({ review, onClose, title = 'Guest review' }
       document.removeEventListener('keydown', onKey);
       if (opener && typeof opener.focus === 'function') opener.focus();
     };
-  }, [open]);
+  }, [isOpen]);
 
-  if (!open || typeof document === 'undefined') return null;
+  if (!isOpen || typeof document === 'undefined') return null;
   const currentReview = review;
   const { n: starCount, stars } = starText(currentReview.rating);
   const trips =

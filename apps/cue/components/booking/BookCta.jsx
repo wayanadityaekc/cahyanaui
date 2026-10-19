@@ -60,13 +60,13 @@ export default function BookCta({ item, perPerson = false }) {
   }
 
   function pick(date, time) {
-    const goto = ask === 'book';
+    const shouldGoToBooking = ask === 'book';
     const probe = { ...state, days: [...(state.days || []), { items: [item], itemModes: ['standard'], date }] };
     if (isFullDay(item) && clashDates(probe, isFullDay).length > 0) {
-      setConfirm({ date, goto, time });
+      setConfirm({ date, goto: shouldGoToBooking, time });
       return;
     }
-    add(date, goto, time);
+    add(date, shouldGoToBooking, time);
   }
 
   function add(date, goto, time) {

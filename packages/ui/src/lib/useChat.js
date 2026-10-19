@@ -36,15 +36,15 @@ export default function useChat({
   const client = useMemo(() => createChatThread({ apiBase, storageKey }), [apiBase, storageKey]);
   const [log, setLog] = useState(() => [{ id: uid(), from: 'bot', text: copy.greeting, chips: suggestions }]);
   const [draft, setDraft] = useState('');
-  const [thinking, setThinking] = useState(false);
+  const [isThinking, setIsThinking] = useState(false);
   const [thread, setThread] = useState(null);
-  const [sending, setSending] = useState(false);
+  const [isSending, setIsSending] = useState(false);
   const [mail, setMail] = useState('idle');
   const [mailDraft, setMailDraft] = useState('');
   const [mailErr, setMailErr] = useState('');
-  const [quiet, setQuiet] = useState(false);
-  const [live, setLive] = useState(false);
-  const [ownerHere, setOwnerHere] = useState(false);
+  const [isQuiet, setIsQuiet] = useState(false);
+  const [isLive, setIsLive] = useState(false);
+  const [isOwnerPresent, setIsOwnerPresent] = useState(false);
   const [typingUntil, setTypingUntil] = useState(0);
   const lastSeen = useRef(0);
   const heard = useRef(false);
@@ -113,10 +113,10 @@ export default function useChat({
       apiBase,
       thread,
       onOpen: catchUp,
-      onLive: setLive,
+      onLive: setIsLive,
       onPresence: (here) => {
         ownerHereRef.current = here;
-        setOwnerHere(here);
+        setIsOwnerPresent(here);
       },
       onTyping: (durationMs) => setTypingUntil(Date.now() + durationMs),
       onMessage: (message) => takeOwner([message]),
@@ -129,11 +129,11 @@ export default function useChat({
   }, [open, thread, apiBase, catchUp, takeOwner]);
 
   useEffect(() => {
-    if (!open || !thread || live) return undefined;
+    if (!open || !thread || isLive) return undefined;
     catchUp();
     const timer = setInterval(catchUp, POLL_MS);
     return () => clearInterval(timer);
-  }, [open, thread, live, catchUp]);
+  }, [open, thread, isLive, catchUp]);
 
   useEffect(() => {
     if (!open || !thread) return undefined;
@@ -144,7 +144,7 @@ export default function useChat({
     return () => document.removeEventListener('visibilitychange', onShow);
   }, [open, thread, catchUp]);
 
-  const ownerTyping = typingUntil > Date.now();
+  const isOwnerTyping = typingUntil > Date.now();
   useEffect(() => {
     const remainingMs = typingUntil - Date.now();
     if (remainingMs <= 0) return undefined;
@@ -154,8 +154,8 @@ export default function useChat({
 
   const connect = useCallback(
     async (question) => {
-      if (sending) return;
-      setSending(true);
+      if (isSending) return;
+      setIsSending(true);
       const words = copyRef.current;
       try {
         const id = await client.start({
@@ -172,15 +172,15 @@ export default function useChat({
       } catch (e) {
         say(e.message || words.reachFailed);
       }
-      setSending(false);
+      setIsSending(false);
     },
-    [sending, account, client, page, isAround],
+    [isSending, account, client, page, isAround],
   );
 
   const ask = useCallback(
     (question) => {
       const text = String(question || '').trim();
-      if (!text || thinking || sending) return;
+      if (!text || isThinking || isSending) return;
       setDraft('');
       setLog((prev) => [...prev, { id: uid(), from: 'me', text }]);
 
@@ -189,7 +189,7 @@ export default function useChat({
         return;
       }
 
-      setThinking(true);
+      setIsThinking(true);
       setTimeout(() => {
         const result = answerFor(text) || { kind: 'handoff' };
         const line = {
@@ -205,10 +205,10 @@ export default function useChat({
           connect(text);
         }
         setLog((prev) => [...prev, line]);
-        setThinking(false);
+        setIsThinking(false);
       }, THINK_MS);
     },
-    [answerFor, thinking, sending, thread, connect, client],
+    [answerFor, isThinking, isSending, thread, connect, client],
   );
 
   useEffect(() => {
@@ -221,13 +221,13 @@ export default function useChat({
       setMail('ask');
       return undefined;
     }
-    const timer = setTimeout(() => setQuiet(true), copyRef.current.quietMs || 120000);
+    const timer = setTimeout(() => setIsQuiet(true), copyRef.current.quietMs || 120000);
     return () => clearTimeout(timer);
   }, [thread, mail, account, isAround]);
 
   useEffect(() => {
-    if (quiet && mail === 'idle' && !heard.current) setMail('ask');
-  }, [quiet, mail]);
+    if (isQuiet && mail === 'idle' && !heard.current) setMail('ask');
+  }, [isQuiet, mail]);
 
   function onDraft(value) {
     setDraft(value);
@@ -257,12 +257,12 @@ export default function useChat({
     draft,
     onDraft,
     ask,
-    thinking,
-    sending,
+    thinking: isThinking,
+    sending: isSending,
     thread,
-    live,
-    ownerHere,
-    ownerTyping,
+    live: isLive,
+    ownerHere: isOwnerPresent,
+    ownerTyping: isOwnerTyping,
     mail,
     mailDraft,
     setMailDraft,

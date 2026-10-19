@@ -120,8 +120,8 @@ function villaAnswer(question, questionWords, chatContext) {
     (candidate) => text.includes(norm(candidate.name)) || text.includes(candidate.slug.split('-')[1]),
   );
   if (!villa) return null;
-  const askedPrice = PRICE_WORDS.some((term) => mentions(term, text, questionWords)) || text.includes('night');
-  if (askedPrice) {
+  const hasAskedPrice = PRICE_WORDS.some((term) => mentions(term, text, questionWords)) || text.includes('night');
+  if (hasAskedPrice) {
     return {
       kind: 'answer',
       text: `${villa.name} is ${chatContext.format(villa.nightlyRateIdr)} a night, as shown on its page, with no service fee on top. The exact total shows once you pick your dates.`,
@@ -174,9 +174,9 @@ export function answerFor(question, chatContext = {}) {
   if (HUMAN_WORDS.some((term) => mentions(term, text, questionWords)))
     return { kind: 'handoff', text: CHAT_COPY.handoff };
 
-  const aboutService = SERVICE_WORDS.some((term) => mentions(term, text, questionWords));
-  const aboutPrice = PRICE_WORDS.some((term) => mentions(term, text, questionWords));
-  if (aboutService && aboutPrice) return { kind: 'handoff', text: CHAT_COPY.handoff };
+  const isAskingAboutService = SERVICE_WORDS.some((term) => mentions(term, text, questionWords));
+  const isAskingAboutPrice = PRICE_WORDS.some((term) => mentions(term, text, questionWords));
+  if (isAskingAboutService && isAskingAboutPrice) return { kind: 'handoff', text: CHAT_COPY.handoff };
 
   const villa = villaAnswer(raw, questionWords, context);
   if (villa) return villa;

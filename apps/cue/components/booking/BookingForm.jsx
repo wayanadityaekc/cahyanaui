@@ -60,7 +60,7 @@ export default function BookingForm({
   const [mode, setMode] = useState('standard');
 
   const catalog = pricing && pricing.catalog;
-  const locked = !!presetItem;
+  const isLocked = !!presetItem;
 
   const itemOptions = useMemo(() => {
     if (!catalog || !type) return [];
@@ -73,9 +73,9 @@ export default function BookingForm({
   }, [catalog, type]);
 
   useEffect(() => {
-    if (locked) return;
+    if (isLocked) return;
     if (itemOptions.length && item && !itemOptions.some((itemOption) => itemOption.value === item)) setItem('');
-  }, [locked, itemOptions, item]);
+  }, [isLocked, itemOptions, item]);
 
   const entry = catalog && item ? catalog.items.find((itemItem) => itemItem.name === item) : null;
   const transferEntry = catalog && item ? catalog.transfers.find((transfer) => transfer.route === item) : null;
@@ -145,7 +145,7 @@ export default function BookingForm({
           <p className="mt-[0.3rem] text-small text-muted">No hidden fees. No surprises.</p>
         </div>
 
-        {!locked && (
+        {!isLocked && (
           <div className="grid gap-[0.6rem] mb-[1.2rem]">
             <Select label="Service" value={type} onChange={setType} options={SERVICE_TYPES} placeholder="Service" />
             <Select label="Select service" value={item} onChange={setItem} options={itemOptions} placeholder="Choose" />

@@ -26,11 +26,11 @@ function pageLabel() {
 export default function ChatWindow({ open = false, onClose = () => {} }) {
   const { account, hydrated } = useAccount();
   const { format } = useCurrency();
-  const [authOpen, setAuthOpen] = useState(false);
+  const [isAuthOpen, setIsAuthOpen] = useState(false);
   const reduced = useReducedMotion();
   const phoneAfterMount = useMobile(PHONE);
   const isMobile = typeof window === 'undefined' ? phoneAfterMount : window.matchMedia(PHONE).matches;
-  useBodyLock(open && !authOpen);
+  useBodyLock(open && !isAuthOpen);
   const dialogRef = useDialog({ shown: open, onClose });
 
   const answer = useCallback((question) => answerFor(question, { format }), [format]);
@@ -83,7 +83,7 @@ export default function ChatWindow({ open = false, onClose = () => {} }) {
               chat={chat}
               copy={CHAT_COPY}
               onClose={onClose}
-              onSignIn={hydrated && !account ? () => setAuthOpen(true) : null}
+              onSignIn={hydrated && !account ? () => setIsAuthOpen(true) : null}
               altLink={{
                 href: WHATSAPP_LINK,
                 label: CHAT_COPY.whatsappLabel,
@@ -94,7 +94,7 @@ export default function ChatWindow({ open = false, onClose = () => {} }) {
           </motionElement.div>
         )}
       </AnimatePresence>
-      <AuthSheet open={authOpen} onClose={() => setAuthOpen(false)} />
+      <AuthSheet open={isAuthOpen} onClose={() => setIsAuthOpen(false)} />
     </LazyMotion>,
     document.body,
   );

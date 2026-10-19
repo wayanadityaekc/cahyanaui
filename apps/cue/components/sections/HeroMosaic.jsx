@@ -33,11 +33,11 @@ const LB_ICON_BTN =
 
 export default function HeroMosaic({ photos = [], title }) {
   const [openIndex, setOpenIndex] = useState(null);
-  const open = openIndex !== null;
-  useBodyLock(open);
+  const isOpen = openIndex !== null;
+  useBodyLock(isOpen);
 
   useEffect(() => {
-    if (!open) return undefined;
+    if (!isOpen) return undefined;
     function onKey(event) {
       if (event.key === 'Escape') setOpenIndex(null);
       else if (event.key === 'ArrowRight') setOpenIndex((currentIndex) => (currentIndex + 1) % photos.length);
@@ -46,7 +46,7 @@ export default function HeroMosaic({ photos = [], title }) {
     }
     document.addEventListener('keydown', onKey);
     return () => document.removeEventListener('keydown', onKey);
-  }, [open, photos.length]);
+  }, [isOpen, photos.length]);
 
   if (!photos.length) return null;
 
@@ -100,7 +100,7 @@ export default function HeroMosaic({ photos = [], title }) {
         )}
       </div>
 
-      {open &&
+      {isOpen &&
         typeof document !== 'undefined' &&
         createPortal(
           <div

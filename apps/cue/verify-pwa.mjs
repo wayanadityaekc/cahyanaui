@@ -79,8 +79,8 @@ function bottomBars(page) {
     while ((match = pattern.exec(css)) !== null) {
       const before = css.slice(Math.max(0, match.index - 260), match.index);
       const isAttr = /html\[data-standalone\]\s$/.test(before);
-      const scoped = before.includes('min-width:993px');
-      (isAttr ? branches.attr : branches.media).push({ decl: match[1], scoped, before });
+      const isScoped = before.includes('min-width:993px');
+      (isAttr ? branches.attr : branches.media).push({ decl: match[1], scoped: isScoped, before });
     }
     const mediaHit = branches.media.find((branch) => branch.before.includes('display-mode:standalone'));
     const attrHit = branches.attr[0];

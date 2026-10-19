@@ -3,21 +3,21 @@
 import { useEffect, useId, useRef, useState } from 'react';
 
 export default function useDisclosure() {
-  const [open, setOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
   const boxRef = useRef(null);
   const triggerRef = useRef(null);
   const panelId = useId();
 
   useEffect(() => {
-    if (!open) return undefined;
+    if (!isOpen) return undefined;
     function onDoc(event) {
       if (event.target.closest && event.target.closest('[data-portal]')) return;
-      if (boxRef.current && !boxRef.current.contains(event.target)) setOpen(false);
+      if (boxRef.current && !boxRef.current.contains(event.target)) setIsOpen(false);
     }
     function onKey(event) {
       if (event.key !== 'Escape') return;
       if (document.querySelector('[data-portal="select"][data-open]')) return;
-      setOpen(false);
+      setIsOpen(false);
       if (triggerRef.current) triggerRef.current.focus();
     }
     document.addEventListener('click', onDoc);
@@ -26,7 +26,7 @@ export default function useDisclosure() {
       document.removeEventListener('click', onDoc);
       document.removeEventListener('keydown', onKey);
     };
-  }, [open]);
+  }, [isOpen]);
 
-  return { open, setOpen, boxRef, triggerRef, panelId };
+  return { open: isOpen, setOpen: setIsOpen, boxRef, triggerRef, panelId };
 }

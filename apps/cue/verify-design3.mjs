@@ -312,9 +312,9 @@ for (const width of [390, 1280]) {
       if (element.querySelector('img')) return;
       if (element.id === 'hamburger') return;
       if (element.matches('[data-desktop-nav], nav')) return;
-      const visSvg = [...element.querySelectorAll('svg')].some((svg) => svg.getBoundingClientRect().width > 0);
+      const hasVisibleSvg = [...element.querySelectorAll('svg')].some((svg) => svg.getBoundingClientRect().width > 0);
       const contentBox =
-        element.matches('[data-account-slot]') && !visSvg
+        element.matches('[data-account-slot]') && !hasVisibleSvg
           ? element.querySelector('button').getBoundingClientRect()
           : ink(element);
       if (contentBox)

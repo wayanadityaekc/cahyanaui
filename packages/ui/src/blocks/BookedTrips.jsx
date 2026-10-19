@@ -76,7 +76,7 @@ export default function BookedTrips({
       {trips.map((trip) => {
         const image = imageFor(trip);
         const lines = trip.lines || [];
-        const open = openRef === trip.ref;
+        const isOpen = openRef === trip.ref;
         const status = past
           ? mergedCopy.completed
           : trip.status
@@ -110,13 +110,13 @@ export default function BookedTrips({
                 <button
                   type="button"
                   className={TRIP_DET_TOGGLE}
-                  aria-expanded={open ? 'true' : 'false'}
-                  onClick={() => onToggle(open ? null : trip.ref)}
+                  aria-expanded={isOpen ? 'true' : 'false'}
+                  onClick={() => onToggle(isOpen ? null : trip.ref)}
                 >
-                  {open ? mergedCopy.hide : mergedCopy.view(lines.length)}
+                  {isOpen ? mergedCopy.hide : mergedCopy.view(lines.length)}
                   <ChevronDown className={TRIP_DET_CHEV} strokeWidth={1.6} aria-hidden="true" />
                 </button>
-                {open && (
+                {isOpen && (
                   <ul className={TRIP_DET_LIST}>
                     {lines.map((line, index) => (
                       <li className={TRIP_DET_LINE} key={index}>

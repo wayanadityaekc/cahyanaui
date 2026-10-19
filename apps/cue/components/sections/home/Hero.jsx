@@ -6,18 +6,18 @@ import HeroSearch from '@/components/search/HeroSearch';
 import useBodyLock from '@/components/ui/useBodyLock';
 
 export default function Hero() {
-  const [sheetOpen, setSheetOpen] = useState(false);
+  const [isSheetOpen, setIsSheetOpen] = useState(false);
 
   useEffect(() => {
-    if (!sheetOpen) return;
+    if (!isSheetOpen) return;
     function onKey(event) {
-      return event.key === 'Escape' && setSheetOpen(false);
+      return event.key === 'Escape' && setIsSheetOpen(false);
     }
     document.addEventListener('keydown', onKey);
     return () => document.removeEventListener('keydown', onKey);
-  }, [sheetOpen]);
+  }, [isSheetOpen]);
 
-  useBodyLock(sheetOpen);
+  useBodyLock(isSheetOpen);
 
   return (
     <section
@@ -33,7 +33,7 @@ export default function Hero() {
       <div
         className={clsx(
           'relative z-[1] w-full max-w-[1200px] mx-auto flex items-center gap-8 min-[993px]:gap-12 max-[992px]:flex-col max-[992px]:items-stretch',
-          sheetOpen && 'max-[992px]:z-[46]',
+          isSheetOpen && 'max-[992px]:z-[46]',
         )}
       >
         <div className="flex-1 min-w-0 text-white max-[992px]:text-center">
@@ -50,21 +50,21 @@ export default function Hero() {
               max-[992px]:w-auto max-[992px]:h-[var(--btn-h)] max-[992px]:py-0 max-[992px]:px-4 max-[992px]:border-none max-[992px]:rounded-sm
               max-[992px]:bg-cta max-[992px]:text-white max-[992px]:font-body max-[992px]:font-semibold max-[992px]:text-small max-[992px]:cursor-pointer
               max-[992px]:[transition:background_var(--dur)_var(--ease),scale_var(--dur-fast)_var(--ease)] max-[992px]:hover:bg-cta-d"
-            onClick={() => setSheetOpen(true)}
+            onClick={() => setIsSheetOpen(true)}
           >
             Plan trip
           </button>
         </div>
 
         <div id="search-placeholder" className="min-h-[470px] max-[992px]:min-h-0">
-          <HeroSearch sheetOpen={sheetOpen} onClose={() => setSheetOpen(false)} />
+          <HeroSearch sheetOpen={isSheetOpen} onClose={() => setIsSheetOpen(false)} />
         </div>
 
         <div
           className={`max-[992px]:fixed max-[992px]:inset-0 max-[992px]:z-[44]
             max-[992px]:bg-[rgba(26,26,26,0.42)] max-[992px]:[transition:opacity_var(--dur-slow)_var(--ease),visibility_var(--dur-slow)]
-            ${sheetOpen ? 'max-[992px]:opacity-100 max-[992px]:visible' : 'max-[992px]:opacity-0 max-[992px]:invisible'}`}
-          onClick={() => setSheetOpen(false)}
+            ${isSheetOpen ? 'max-[992px]:opacity-100 max-[992px]:visible' : 'max-[992px]:opacity-0 max-[992px]:invisible'}`}
+          onClick={() => setIsSheetOpen(false)}
         />
       </div>
     </section>

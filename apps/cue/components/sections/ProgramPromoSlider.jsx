@@ -9,21 +9,21 @@ const AUTO_MS = 3000;
 export default function ProgramPromoSlider() {
   const slides = PROGRAM_PROMO;
   const [current, setCurrent] = useState(0);
-  const [auto, setAuto] = useState(true);
+  const [isAutoPlaying, setIsAutoPlaying] = useState(true);
   const touch = useRef({ x: 0, y: 0 });
 
   const total = slides.length;
 
   useEffect(() => {
-    if (!auto || total < 2) return undefined;
+    if (!isAutoPlaying || total < 2) return undefined;
     const intervalId = setInterval(() => setCurrent((currentSlide) => (currentSlide + 1) % total), AUTO_MS);
     return () => clearInterval(intervalId);
-  }, [auto, total]);
+  }, [isAutoPlaying, total]);
 
   if (!total) return null;
 
   function goTo(slideIndex) {
-    setAuto(false);
+    setIsAutoPlaying(false);
     setCurrent((slideIndex + total) % total);
   }
 

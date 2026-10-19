@@ -182,9 +182,9 @@ function matchItem(question) {
     iw.forEach((word) => {
       if (questionWords.includes(word)) hits += 1;
     });
-    const strong = iw.some((word) => word.length >= 7 && questionWords.includes(word));
-    if (hits >= 2 || (hits === 1 && strong)) {
-      const score = hits + (strong ? 1 : 0);
+    const hasStrongMatch = iw.some((word) => word.length >= 7 && questionWords.includes(word));
+    if (hits >= 2 || (hits === 1 && hasStrongMatch)) {
+      const score = hits + (hasStrongMatch ? 1 : 0);
       if (!best || score > best.score) best = { item, score };
     }
   });
@@ -233,8 +233,10 @@ export function answerFor(question, context = {}) {
 
   const normalizedText = norm(text);
   const qw0 = words(text);
-  const human = HUMAN_WORDS.some((word) => (word.includes(' ') ? normalizedText.includes(word) : qw0.includes(word)));
-  if (human) return { kind: 'handoff', text: CHAT_COPY.handoff };
+  const isAskingForHuman = HUMAN_WORDS.some((word) =>
+    word.includes(' ') ? normalizedText.includes(word) : qw0.includes(word),
+  );
+  if (isAskingForHuman) return { kind: 'handoff', text: CHAT_COPY.handoff };
 
   const item = matchItem(text);
   if (item) {

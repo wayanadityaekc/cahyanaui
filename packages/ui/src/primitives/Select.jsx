@@ -48,42 +48,42 @@ export default function Select({
   icon = null,
   hint = '',
 }) {
-  const rich = !!(icon || hint);
-  const [open, setOpen] = useState(false);
-  const [mounted, setMounted] = useState(false);
+  const hasIconOrHint = !!(icon || hint);
+  const [isOpen, setIsOpen] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
   const isMobile = useMobile();
   const groupRef = useRef(null);
   const autoId = useId();
   const fieldId = id || `sel-${autoId}`;
   const asPortal = isMobile || popup;
 
-  useEffect(() => setMounted(true), []);
+  useEffect(() => setIsMounted(true), []);
 
   useEffect(() => {
-    if (!open || asPortal) return;
+    if (!isOpen || asPortal) return;
     function onDoc(event) {
-      if (groupRef.current && !groupRef.current.contains(event.target)) setOpen(false);
+      if (groupRef.current && !groupRef.current.contains(event.target)) setIsOpen(false);
     }
     document.addEventListener('click', onDoc);
     return () => document.removeEventListener('click', onDoc);
-  }, [open, asPortal]);
+  }, [isOpen, asPortal]);
 
   useEffect(() => {
-    if (!open) return;
+    if (!isOpen) return;
     function onKey(event) {
-      return event.key === 'Escape' && setOpen(false);
+      return event.key === 'Escape' && setIsOpen(false);
     }
     document.addEventListener('keydown', onKey);
     return () => document.removeEventListener('keydown', onKey);
-  }, [open]);
+  }, [isOpen]);
 
   const selected = options.find((option) => String(option.value) === String(value));
 
   const panel = (
-    <div className={panelPopup(open)} data-portal="select" data-open={open ? '' : undefined}>
+    <div className={panelPopup(isOpen)} data-portal="select" data-open={isOpen ? '' : undefined}>
       <div className={PANEL_HEAD}>
         <h3 className={PANEL_HEAD_H3}>{label}</h3>
-        <button type="button" className={PANEL_CLOSE} aria-label="Close" onClick={() => setOpen(false)}>
+        <button type="button" className={PANEL_CLOSE} aria-label="Close" onClick={() => setIsOpen(false)}>
           &times;
         </button>
       </div>
@@ -100,7 +100,7 @@ export default function Select({
             onClick={() => {
               if (option.disabled) return;
               onChange(option.value);
-              setOpen(false);
+              setIsOpen(false);
             }}
           >
             {option.flag && <img className={HS_OPT_FLAG} src={`/assets/flags/${option.flag}.svg`} alt="" />}
@@ -132,17 +132,17 @@ export default function Select({
 
       <button
         type="button"
-        className={rich ? CONTROL_RICH : CONTROL}
+        className={hasIconOrHint ? CONTROL_RICH : CONTROL}
         aria-haspopup="listbox"
-        aria-expanded={open}
-        onClick={() => setOpen((wasOpen) => !wasOpen)}
+        aria-expanded={isOpen}
+        onClick={() => setIsOpen((wasOpen) => !wasOpen)}
       >
         {icon && (
           <span className={CONTROL_IC} aria-hidden="true">
             {icon}
           </span>
         )}
-        {rich ? (
+        {hasIconOrHint ? (
           <span className={CONTROL_STACK}>
             {hint && <span className={CONTROL_HINT}>{hint}</span>}
             <span className={!selected ? CONTROL_VAL_RICH_PLACEHOLDER : CONTROL_VAL_RICH}>
@@ -166,9 +166,9 @@ export default function Select({
         <Chevron />
       </button>
 
-      {mounted && asPortal && createPortal(panel, document.body)}
-      {mounted && asPortal && <Overlay open={open} elevated={popup} onClose={() => setOpen(false)} />}
-      {(!asPortal || !mounted) && panel}
+      {isMounted && asPortal && createPortal(panel, document.body)}
+      {isMounted && asPortal && <Overlay open={isOpen} elevated={popup} onClose={() => setIsOpen(false)} />}
+      {(!asPortal || !isMounted) && panel}
     </div>
   );
 }

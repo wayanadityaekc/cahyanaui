@@ -12,19 +12,19 @@ export default function Breadcrumb({ items = [], linkAs: Link = 'a', className }
     <nav className={cn(CRUMB_NAV, className)} aria-label="Breadcrumb">
       <ol className={CRUMB_OL}>
         {items.map((item, index) => {
-          const last = index === items.length - 1;
+          const isLast = index === items.length - 1;
           return (
             <li key={`${item.label}-${index}`} className="flex items-center">
-              {!last && item.href ? (
+              {!isLast && item.href ? (
                 <Link className={CRUMB_LINK} href={item.href}>
                   {item.label}
                 </Link>
               ) : (
-                <span className={last ? CRUMB_HERE : undefined} aria-current={last ? 'page' : undefined}>
+                <span className={isLast ? CRUMB_HERE : undefined} aria-current={isLast ? 'page' : undefined}>
                   {item.label}
                 </span>
               )}
-              {!last && (
+              {!isLast && (
                 <span className={CRUMB_SEP} aria-hidden="true">
                   ›
                 </span>

@@ -12,7 +12,7 @@ export function TripPrefsProvider({ children }) {
   const [stay, setStayState] = useState('');
   const [dateFrom, setDateFromState] = useState('');
   const [dateTo, setDateToState] = useState('');
-  const [hydrated, setHydrated] = useState(false);
+  const [isHydrated, setIsHydrated] = useState(false);
 
   useEffect(() => {
     const current = readLocal(KEY.currency, DEFAULT_CURRENCY);
@@ -21,7 +21,7 @@ export function TripPrefsProvider({ children }) {
     setStayState(readLocal(KEY.stay, '') || '');
     setDateFromState(readLocal(KEY.dateFrom, '') || '');
     setDateToState(readLocal(KEY.dateTo, '') || '');
-    setHydrated(true);
+    setIsHydrated(true);
   }, []);
 
   function setCurrency(current) {
@@ -72,7 +72,7 @@ export function TripPrefsProvider({ children }) {
         dateFrom,
         dateTo,
         setDateRange,
-        hydrated,
+        hydrated: isHydrated,
       }}
     >
       {children}

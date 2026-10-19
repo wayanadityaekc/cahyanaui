@@ -14,10 +14,10 @@ const GIVE_UP_MS = 120000;
 export default function PayWaiting({ bookingRef, onClose, onConfirmed }) {
   const [phase, setPhase] = useState('waiting');
   const [index, setIndex] = useState(0);
-  const [mounted, setMounted] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
   const timer = useRef(null);
 
-  useEffect(() => setMounted(true), []);
+  useEffect(() => setIsMounted(true), []);
   useBodyLock(true);
 
   useEffect(() => {
@@ -79,9 +79,9 @@ export default function PayWaiting({ bookingRef, onClose, onConfirmed }) {
     };
   }, [bookingRef, onConfirmed]);
 
-  if (!mounted) return null;
+  if (!isMounted) return null;
 
-  const waiting = phase === 'waiting';
+  const isWaiting = phase === 'waiting';
   const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(
     `Hello, I just paid for booking ${bookingRef || ''} and I'd like to check it came through.`,
   )}`;
@@ -139,7 +139,7 @@ export default function PayWaiting({ bookingRef, onClose, onConfirmed }) {
       <div className="absolute inset-0 bg-[rgba(20,19,16,0.62)]" />
 
       <div className="relative z-10 flex flex-col items-center justify-center h-full px-[var(--container-x)] text-center">
-        {waiting && (
+        {isWaiting && (
           <span
             className="w-[26px] h-[26px] mb-5 rounded-[50%] border-[3px] border-solid border-[rgba(255,255,255,0.28)] border-t-white animate-[spin_0.7s_linear_infinite]"
             aria-hidden="true"
@@ -159,7 +159,7 @@ export default function PayWaiting({ bookingRef, onClose, onConfirmed }) {
           </p>
         )}
 
-        {!waiting && (
+        {!isWaiting && (
           <div className="w-full max-w-[320px] mt-6">
             <button type="button" className={BTN} onClick={onClose}>
               Done

@@ -47,30 +47,30 @@ export default function RailLayout({
   linkAs: LinkAs = 'a',
   contentAs: Content = 'div',
 }) {
-  const [ownCollapsed, setOwnCollapsed] = useState(false);
-  const collapsed = collapsedProp ?? ownCollapsed;
+  const [isOwnCollapsed, setIsOwnCollapsed] = useState(false);
+  const collapsed = collapsedProp ?? isOwnCollapsed;
   useEffect(() => {
     if (!storageKey) return;
     try {
-      setOwnCollapsed(window.localStorage.getItem(storageKey) === '1');
+      setIsOwnCollapsed(window.localStorage.getItem(storageKey) === '1');
     } catch (e) {}
   }, [storageKey]);
   function toggleCollapsed() {
-    const next = !collapsed;
-    if (collapsedProp === undefined) setOwnCollapsed(next);
+    const isNextCollapsed = !collapsed;
+    if (collapsedProp === undefined) setIsOwnCollapsed(isNextCollapsed);
     if (storageKey) {
       try {
-        window.localStorage.setItem(storageKey, next ? '1' : '0');
+        window.localStorage.setItem(storageKey, isNextCollapsed ? '1' : '0');
       } catch (e) {}
     }
-    if (onCollapsedChange) onCollapsedChange(next);
+    if (onCollapsedChange) onCollapsedChange(isNextCollapsed);
   }
   const railCollapsed = collapsible && collapsed;
 
   function rows(mobile) {
     return items.map((item) => {
-      const selected = active === item.id;
-      const cls = mobile ? railMobileItem(selected) : railItem(selected, railCollapsed);
+      const isSelected = active === item.id;
+      const cls = mobile ? railMobileItem(isSelected) : railItem(isSelected, railCollapsed);
       const inner = (
         <>
           {item.Icon && <item.Icon strokeWidth={1.7} aria-hidden="true" />}
@@ -83,13 +83,13 @@ export default function RailLayout({
         <div key={item.id} className="contents">
           {item.split && <span className={RAIL_SPLIT} aria-hidden="true" />}
           {item.href ? (
-            <LinkAs href={item.href} className={cls} aria-current={selected ? 'page' : undefined} {...a11y}>
+            <LinkAs href={item.href} className={cls} aria-current={isSelected ? 'page' : undefined} {...a11y}>
               {inner}
             </LinkAs>
           ) : (
             <button
               type="button"
-              aria-current={selected ? 'true' : undefined}
+              aria-current={isSelected ? 'true' : undefined}
               onClick={() => onSelect(item.id)}
               className={cls}
               {...a11y}

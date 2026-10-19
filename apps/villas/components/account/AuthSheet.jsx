@@ -20,7 +20,7 @@ export default function AuthSheet({ open = false, onClose = () => {} }) {
   const [codeEmail, setCodeEmail] = useState('');
   const [code, setCode] = useState('');
   const [errors, setErrors] = useState({});
-  const [busy, setBusy] = useState(false);
+  const [isBusy, setIsBusy] = useState(false);
   const [message, setMessage] = useState('');
   const [note, setNote] = useState('');
   const [cooldown, setCooldown] = useState(0);
@@ -71,9 +71,9 @@ export default function AuthSheet({ open = false, onClose = () => {} }) {
   }
 
   async function sendCode(email) {
-    setBusy(true);
+    setIsBusy(true);
     const sent = await requestLogin(email);
-    setBusy(false);
+    setIsBusy(false);
     if (!sent) {
       setMessage('Sorry, we could not send the code. Please try again, or reach us on WhatsApp.');
       return;
@@ -93,9 +93,9 @@ export default function AuthSheet({ open = false, onClose = () => {} }) {
     reset();
     const data = check(createAccountSchema);
     if (!data) return;
-    setBusy(true);
+    setIsBusy(true);
     const result = await createAccount(data);
-    setBusy(false);
+    setIsBusy(false);
     if (result.ok) {
       close();
       return;
@@ -110,9 +110,9 @@ export default function AuthSheet({ open = false, onClose = () => {} }) {
 
   async function doVerify(fullCode) {
     reset();
-    setBusy(true);
+    setIsBusy(true);
     const result = await verifyCode(codeEmail, fullCode);
-    setBusy(false);
+    setIsBusy(false);
     if (result.ok) {
       close();
       return;
@@ -122,7 +122,7 @@ export default function AuthSheet({ open = false, onClose = () => {} }) {
   }
 
   async function resend() {
-    if (cooldown > 0 || busy) return;
+    if (cooldown > 0 || isBusy) return;
     await sendCode(codeEmail);
   }
 
@@ -171,7 +171,7 @@ export default function AuthSheet({ open = false, onClose = () => {} }) {
               onChange={setCode}
               onComplete={doVerify}
               error={!!message}
-              disabled={busy}
+              disabled={isBusy}
               autoFocus
             />
             {message && (
@@ -184,8 +184,8 @@ export default function AuthSheet({ open = false, onClose = () => {} }) {
                 {note}
               </p>
             )}
-            <Button full onClick={() => doVerify(code)} disabled={busy || code.length < 6}>
-              {busy ? 'Checking...' : 'Verify'}
+            <Button full onClick={() => doVerify(code)} disabled={isBusy || code.length < 6}>
+              {isBusy ? 'Checking...' : 'Verify'}
             </Button>
             <p className="text-center text-small text-muted">
               {cooldown > 0 ? (
@@ -224,8 +224,8 @@ export default function AuthSheet({ open = false, onClose = () => {} }) {
                 {message}
               </p>
             )}
-            <Button full onClick={doSignIn} disabled={busy}>
-              {busy ? 'Sending...' : 'Send code'}
+            <Button full onClick={doSignIn} disabled={isBusy}>
+              {isBusy ? 'Sending...' : 'Send code'}
             </Button>
             <p className="text-center text-small text-muted">
               New here?{' '}
@@ -279,8 +279,8 @@ export default function AuthSheet({ open = false, onClose = () => {} }) {
                 {message}
               </p>
             )}
-            <Button full onClick={doCreate} disabled={busy}>
-              {busy ? 'Creating...' : 'Create account'}
+            <Button full onClick={doCreate} disabled={isBusy}>
+              {isBusy ? 'Creating...' : 'Create account'}
             </Button>
             <p className="text-center text-small text-muted">
               Already have an account?{' '}

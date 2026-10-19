@@ -44,10 +44,10 @@ export default function AirportTransferForm() {
   const totalText = total == null ? '-' : symbol + total.toLocaleString(currency === 'IDR' ? 'id-ID' : 'en-US');
 
   const date = flightTime.slice(0, 10);
-  const ready = !!(date && address && flightNumber);
+  const isReady = !!(date && address && flightNumber);
 
   function book() {
-    if (!ready) return;
+    if (!isReady) return;
     save({
       ...state,
       transfers: [
@@ -139,7 +139,7 @@ export default function AirportTransferForm() {
         </span>
       </div>
 
-      <button className={BTN_BOOK} id="at-book" disabled={!ready} onClick={book}>
+      <button className={BTN_BOOK} id="at-book" disabled={!isReady} onClick={book}>
         Book transfer
       </button>
     </div>

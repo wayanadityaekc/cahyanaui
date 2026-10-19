@@ -53,12 +53,12 @@ export default function CharterBuilder() {
   const { tier, fmt: formatTierPrice } = useCharterTier({ area });
   const catalog = usePricing()?.catalog;
 
-  const ready = !!(area && date && time && guests);
+  const isReady = !!(area && date && time && guests);
   const selected = CHARTER.durations.find((duration) => duration.dur === dur) || CHARTER.durations[0];
   const total = tier(dur);
 
   function book() {
-    if (!ready || total == null) return;
+    if (!isReady || total == null) return;
     save({
       ...state,
       charters: [
@@ -153,11 +153,11 @@ export default function CharterBuilder() {
             </span>
           </div>
 
-          <button className={BTN_BOOK} type="button" disabled={!ready || total == null} onClick={book}>
+          <button className={BTN_BOOK} type="button" disabled={!isReady || total == null} onClick={book}>
             Book charter
           </button>
 
-          {!ready && (
+          {!isReady && (
             <p className="mt-[var(--space-1)] mb-0 text-small text-gold leading-[var(--lh-body)]">
               Pick your area, date, time and guests to book.
             </p>

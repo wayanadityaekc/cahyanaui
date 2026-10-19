@@ -53,9 +53,9 @@ export default function AccountSettings() {
   const { guests, setGuests, stay, setStay } = useTripPrefs();
   const [form, setForm] = useState({ name: '', email: '', phone: '' });
   const [message, setMessage] = useState('');
-  const [busy, setBusy] = useState(false);
-  const [deleteOpen, setDeleteOpen] = useState(false);
-  const [deleted, setDeleted] = useState(false);
+  const [isBusy, setIsBusy] = useState(false);
+  const [isDeleteOpen, setIsDeleteOpen] = useState(false);
+  const [isDeleted, setIsDeleted] = useState(false);
 
   useEffect(() => {
     if (account) setForm({ name: account.name || '', email: account.email || '', phone: account.phone || '' });
@@ -63,11 +63,11 @@ export default function AccountSettings() {
 
   async function confirmDelete() {
     const result = await deleteAccount();
-    if (result.ok) setDeleted(true);
+    if (result.ok) setIsDeleted(true);
     return result;
   }
 
-  if (deleted) {
+  if (isDeleted) {
     return (
       <SettingsShell>
         <div id="settings-root" data-settings>
@@ -97,7 +97,7 @@ export default function AccountSettings() {
   }
 
   async function save() {
-    setBusy(true);
+    setIsBusy(true);
     setMessage('');
     try {
       const response = await fetch(`${API_BASE}/account`, {
@@ -115,7 +115,7 @@ export default function AccountSettings() {
     } catch (e) {
       setMessage('Could not save. Please try again.');
     } finally {
-      setBusy(false);
+      setIsBusy(false);
     }
   }
 
@@ -193,8 +193,8 @@ export default function AccountSettings() {
             {message}
           </small>
         )}
-        <button className={`inline-flex ${BTN_CTA}`} onClick={save} disabled={busy}>
-          {busy ? 'Saving...' : 'Save changes'}
+        <button className={`inline-flex ${BTN_CTA}`} onClick={save} disabled={isBusy}>
+          {isBusy ? 'Saving...' : 'Save changes'}
         </button>
         <button className={BTN_PILL} onClick={logout}>
           Sign out
@@ -209,10 +209,10 @@ export default function AccountSettings() {
         <p className="text-body text-muted m-0 mb-3">
           Delete your account. Your bookings and any reviews you&apos;ve written stay on record.
         </p>
-        <button type="button" className={BTN_DANGER_GHOST} onClick={() => setDeleteOpen(true)}>
+        <button type="button" className={BTN_DANGER_GHOST} onClick={() => setIsDeleteOpen(true)}>
           Delete account
         </button>
-        <DeleteAccountModal open={deleteOpen} onClose={() => setDeleteOpen(false)} onConfirm={confirmDelete} />
+        <DeleteAccountModal open={isDeleteOpen} onClose={() => setIsDeleteOpen(false)} onConfirm={confirmDelete} />
       </div>
     </SettingsShell>
   );

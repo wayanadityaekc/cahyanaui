@@ -42,17 +42,17 @@ function Flag({ code }) {
 
 export default function CurrencyPicker({ variant = 'default', id = 'acct-cur' }) {
   const { currency, setCurrency } = useTripPrefs();
-  const [open, setOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
   const ref = useRef(null);
 
   useEffect(() => {
-    if (!open) return;
+    if (!isOpen) return;
     function onDoc(event) {
-      if (ref.current && !ref.current.contains(event.target)) setOpen(false);
+      if (ref.current && !ref.current.contains(event.target)) setIsOpen(false);
     }
     document.addEventListener('click', onDoc);
     return () => document.removeEventListener('click', onDoc);
-  }, [open]);
+  }, [isOpen]);
 
   return (
     <div className={wrap(variant)} data-cur ref={ref}>
@@ -61,14 +61,14 @@ export default function CurrencyPicker({ variant = 'default', id = 'acct-cur' })
         className={curbtn(variant)}
         id={id}
         aria-haspopup="listbox"
-        aria-expanded={open}
-        onClick={() => setOpen((wasOpen) => !wasOpen)}
+        aria-expanded={isOpen}
+        onClick={() => setIsOpen((wasOpen) => !wasOpen)}
       >
         <Flag code={currency} />
         <span className={CURCODE}>{currency}</span>
         <ChevronDown className={CURCARET} aria-hidden="true" />
       </button>
-      <ul className={curlist(variant, open)} role="listbox" aria-label="Currency">
+      <ul className={curlist(variant, isOpen)} role="listbox" aria-label="Currency">
         {CURRENCIES.map((currencyItem) => (
           <li
             key={currencyItem}
@@ -77,7 +77,7 @@ export default function CurrencyPicker({ variant = 'default', id = 'acct-cur' })
             aria-selected={currencyItem === currency}
             onClick={() => {
               setCurrency(currencyItem);
-              setOpen(false);
+              setIsOpen(false);
             }}
           >
             <Flag code={currencyItem} />

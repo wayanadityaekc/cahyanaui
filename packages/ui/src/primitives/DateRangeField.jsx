@@ -103,29 +103,29 @@ export default function DateRangeField({
   maxDaysAhead = 365,
 }) {
   const { checkIn = '', checkOut = '' } = value || {};
-  const [open, setOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
   const [editing, setEditing] = useState('start');
-  const [mounted, setMounted] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
   const [cursor, setCursor] = useState(() => {
     const base = checkIn ? new Date(checkIn) : new Date();
     return new Date(base.getFullYear(), base.getMonth(), 1);
   });
 
-  useEffect(() => setMounted(true), []);
+  useEffect(() => setIsMounted(true), []);
   useEffect(() => {
-    if (!open) return undefined;
+    if (!isOpen) return undefined;
     function onKey(event) {
-      return event.key === 'Escape' && setOpen(false);
+      return event.key === 'Escape' && setIsOpen(false);
     }
     document.addEventListener('keydown', onKey);
     return () => document.removeEventListener('keydown', onKey);
-  }, [open]);
+  }, [isOpen]);
 
   const minDate = min || iso(new Date());
   const limits = stayLimits({ today: minDate, minNights, maxDaysAhead });
-  const choosingEnd = editing === 'end' && !!checkIn;
+  const isChoosingEnd = editing === 'end' && !!checkIn;
   const nights = nightsBetween(checkIn, checkOut);
-  const single = !!(hint || icon);
+  const hasIconOrHint = !!(hint || icon);
   const rangeLabel = !checkIn
     ? placeholders.start
     : !checkOut
@@ -158,7 +158,7 @@ export default function DateRangeField({
   }
 
   function selectable(isoDate) {
-    if (choosingEnd)
+    if (isChoosingEnd)
       return isoDate > checkIn
         ? canCheckOut(isoDate, checkIn, { busy, limits })
         : canCheckIn(isoDate, { busy, limits });
@@ -166,20 +166,20 @@ export default function DateRangeField({
   }
 
   function pick(isoDate) {
-    if (choosingEnd && canCheckOut(isoDate, checkIn, { busy, limits })) {
+    if (isChoosingEnd && canCheckOut(isoDate, checkIn, { busy, limits })) {
       onChange({ checkIn, checkOut: isoDate });
       setEditing('start');
-      setOpen(false);
+      setIsOpen(false);
       return;
     }
-    if ((choosingEnd && isoDate > checkIn) || !canCheckIn(isoDate, { busy, limits })) return;
+    if ((isChoosingEnd && isoDate > checkIn) || !canCheckIn(isoDate, { busy, limits })) return;
     onChange({ checkIn: isoDate, checkOut: '' });
     setEditing('end');
   }
 
   function openAt(which) {
     setEditing(which);
-    setOpen(true);
+    setIsOpen(true);
   }
 
   function trigger(which, label, valueItem, placeholder) {
@@ -188,7 +188,7 @@ export default function DateRangeField({
         type="button"
         className={CONTROL}
         aria-haspopup="dialog"
-        aria-expanded={open && editing === which}
+        aria-expanded={isOpen && editing === which}
         aria-label={label}
         onClick={() => openAt(which)}
       >
@@ -201,10 +201,10 @@ export default function DateRangeField({
   }
 
   const panel = (
-    <div className={panelRange(open)}>
+    <div className={panelRange(isOpen)}>
       <div className={PANEL_HEAD_RANGE}>
         <h3 className={PANEL_HEAD_H3}>{editing === 'end' && checkIn ? labels.end : labels.start}</h3>
-        <button type="button" className={PANEL_CLOSE} aria-label="Close" onClick={() => setOpen(false)}>
+        <button type="button" className={PANEL_CLOSE} aria-label="Close" onClick={() => setIsOpen(false)}>
           &times;
         </button>
       </div>
@@ -253,15 +253,15 @@ export default function DateRangeField({
                         </span>
                       );
                     const st = stateOf(isoDate);
-                    const disabled = !st && !selectable(isoDate);
-                    const booked = disabled && isBookedNight(busy, isoDate);
+                    const isDisabled = !st && !selectable(isoDate);
+                    const booked = isDisabled && isBookedNight(busy, isoDate);
                     return (
                       <button
                         type="button"
                         key={isoDate}
-                        className={`${rangeDay(disabled, st, false)}${booked ? ' line-through' : ''}`}
+                        className={`${rangeDay(isDisabled, st, false)}${booked ? ' line-through' : ''}`}
                         aria-pressed={st === 'start' || st === 'end'}
-                        disabled={disabled}
+                        disabled={isDisabled}
                         onClick={() => pick(isoDate)}
                       >
                         {date.getDate()}
@@ -278,7 +278,7 @@ export default function DateRangeField({
         <span className="text-small text-muted">
           {nights > 0 ? `${nights} ${nights === 1 ? 'night' : 'nights'}` : 'Pick your dates'}
         </span>
-        <Button variant="ghost" onClick={() => setOpen(false)}>
+        <Button variant="ghost" onClick={() => setIsOpen(false)}>
           Done
         </Button>
       </div>
@@ -309,12 +309,12 @@ export default function DateRangeField({
         aria-hidden="true"
       />
 
-      {single ? (
+      {hasIconOrHint ? (
         <button
           type="button"
           className={CONTROL_RICH}
           aria-haspopup="dialog"
-          aria-expanded={open}
+          aria-expanded={isOpen}
           aria-label={hint || panelLabel}
           onClick={() => openAt(checkIn && !checkOut ? 'end' : 'start')}
         >
@@ -336,8 +336,8 @@ export default function DateRangeField({
         </div>
       )}
 
-      {mounted && createPortal(panel, document.body)}
-      {mounted && <Overlay open={open} onClose={() => setOpen(false)} />}
+      {isMounted && createPortal(panel, document.body)}
+      {isMounted && <Overlay open={isOpen} onClose={() => setIsOpen(false)} />}
     </div>
   );
 }

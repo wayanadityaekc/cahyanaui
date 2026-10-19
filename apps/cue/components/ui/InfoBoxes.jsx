@@ -18,9 +18,9 @@ const ROWS_RULED =
   '[&_li]:[border-bottom:1px_solid_var(--line)] [&_li:last-child]:[border-bottom:none] ' + '[&_li:last-child]:pb-0';
 
 export function InfoBoxList({ items, variant, render }) {
-  const ruled = variant === 'yes' || variant === 'no';
+  const isRuled = variant === 'yes' || variant === 'no';
   return (
-    <ul className={`${ROWS_BASE} ${ruled ? `${ROWS_RULED} ` : ''}${variant === 'no' ? 'text-muted' : 'text-ink'}`}>
+    <ul className={`${ROWS_BASE} ${isRuled ? `${ROWS_RULED} ` : ''}${variant === 'no' ? 'text-muted' : 'text-ink'}`}>
       {items.map((item, index) => (
         <li key={index}>{render ? render(item) : item}</li>
       ))}

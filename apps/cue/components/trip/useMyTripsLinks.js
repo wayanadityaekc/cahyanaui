@@ -23,13 +23,13 @@ export function usePaymentReturn() {
 }
 
 export function useReviewLink({ trips, reviewableItems, account, setTab, setReading, setReview }) {
-  const [wantReview, setWantReview] = useState(false);
+  const [shouldOpenReview, setShouldOpenReview] = useState(false);
 
   useEffect(() => {
     try {
       const searchParams = new URLSearchParams(window.location.search);
       if (searchParams.get('review') !== '1') return;
-      setWantReview(true);
+      setShouldOpenReview(true);
       setTab('past');
       setReading(true);
       searchParams.delete('review');
@@ -39,9 +39,9 @@ export function useReviewLink({ trips, reviewableItems, account, setTab, setRead
   }, []);
 
   useEffect(() => {
-    if (!wantReview || !trips) return;
-    setWantReview(false);
+    if (!shouldOpenReview || !trips) return;
+    setShouldOpenReview(false);
     if (!reviewableItems.length) return;
     setReview({ name: (account && account.name) || '', items: reviewableItems });
-  }, [wantReview, trips, reviewableItems, account]);
+  }, [shouldOpenReview, trips, reviewableItems, account]);
 }

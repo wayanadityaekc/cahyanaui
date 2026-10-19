@@ -20,7 +20,7 @@ const GC_MENU_A =
   'flex items-center gap-[0.6rem] py-[0.7rem] px-4 no-underline text-green font-semibold text-h3 [border-top:1px_solid_var(--line)] first:[border-top:none] hover:bg-[rgba(34,32,28,0.08)] [&_svg]:w-[var(--icon-sm)] [&_svg]:h-[var(--icon-sm)] [&_svg]:text-gold-d [&_svg]:shrink-0';
 
 export default function GuideHub() {
-  const [open, setOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
   const [query, setQuery] = useState('');
 
   const cats = useMemo(() => {
@@ -57,23 +57,23 @@ export default function GuideHub() {
                 className="min-h-[3.15rem] box-border flex items-center gap-[0.35rem] px-[0.95rem] [border:none] [border-radius:0_var(--r-md)_var(--r-md)_0] bg-transparent font-body text-[1rem] font-semibold text-green cursor-pointer whitespace-nowrap [transition:background-color_var(--dur)_ease,scale_var(--dur-fast)_var(--ease)] hover:bg-[rgba(34,32,28,0.08)] [&_span]:hidden"
                 type="button"
                 aria-haspopup="true"
-                aria-expanded={open}
-                onClick={() => setOpen((wasOpen) => !wasOpen)}
+                aria-expanded={isOpen}
+                onClick={() => setIsOpen((wasOpen) => !wasOpen)}
               >
                 <Menu className="w-[var(--icon-md)] h-[var(--icon-md)]" aria-hidden="true" />
                 <span>Categories</span>
                 <ChevronDown
                   className={clsx(
                     'w-4 h-4 shrink-0 text-muted [transition:transform_var(--dur)_ease]',
-                    open && '[transform:rotate(180deg)]',
+                    isOpen && '[transform:rotate(180deg)]',
                   )}
                   aria-hidden="true"
                 />
               </button>
-              <PopMenu open={open}>
+              <PopMenu open={isOpen}>
                 <div className={GC_MENU}>
                   {GUIDE_HUB.navItems.map((navItem) => (
-                    <a className={GC_MENU_A} href={`#${navItem.id}`} key={navItem.id} onClick={() => setOpen(false)}>
+                    <a className={GC_MENU_A} href={`#${navItem.id}`} key={navItem.id} onClick={() => setIsOpen(false)}>
                       <span>
                         <navItem.Icon strokeWidth={1.7} aria-hidden="true" />
                       </span>

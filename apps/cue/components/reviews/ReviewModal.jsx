@@ -35,7 +35,7 @@ function itemKey({ ref, service }) {
 }
 
 export default function ReviewModal({ open = false, prefill = null, onClose = () => {} }) {
-  const [mounted, setMounted] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
   const [name, setName] = useState('');
   const [countryCode, setCountryCode] = useState('');
   const [checked, setChecked] = useState([]);
@@ -43,13 +43,13 @@ export default function ReviewModal({ open = false, prefill = null, onClose = ()
   const [message, setMessage] = useState('');
   const [errors, setErrors] = useState({});
   const [error, setError] = useState('');
-  const [busy, setBusy] = useState(false);
-  const [done, setDone] = useState(false);
+  const [isBusy, setIsBusy] = useState(false);
+  const [isDone, setIsDone] = useState(false);
   const [partial, setPartial] = useState([]);
   const { refreshTrips } = useAccount() || {};
   const sent = useRef(false);
 
-  useEffect(() => setMounted(true), []);
+  useEffect(() => setIsMounted(true), []);
 
   useEffect(() => {
     if (!open || !prefill) return;
@@ -61,7 +61,7 @@ export default function ReviewModal({ open = false, prefill = null, onClose = ()
     setErrors({});
     setError('');
     setPartial([]);
-    setDone(false);
+    setIsDone(false);
     sent.current = false;
   }, [open, prefill]);
 
@@ -70,7 +70,7 @@ export default function ReviewModal({ open = false, prefill = null, onClose = ()
 
   if (prefill) lastPrefill.current = prefill;
   const view = prefill || lastPrefill.current;
-  if (!mounted || !view) return null;
+  if (!isMounted || !view) return null;
 
   function close() {
     if (sent.current && refreshTrips) {
@@ -81,7 +81,7 @@ export default function ReviewModal({ open = false, prefill = null, onClose = ()
   }
 
   const items = view.items || [];
-  const multi = items.length > 1;
+  const hasMultipleItems = items.length > 1;
 
   async function submit() {
     const picked = items.filter((it) => checked.includes(itemKey(it)));
@@ -97,7 +97,7 @@ export default function ReviewModal({ open = false, prefill = null, onClose = ()
     }
     setError('');
     setPartial([]);
-    setBusy(true);
+    setIsBusy(true);
     const token = readLocal(KEY.token, '');
     const country = (COUNTRIES.find((countryItem) => countryItem.code === countryCode) || {}).name || '';
     const results = [];
@@ -125,7 +125,7 @@ export default function ReviewModal({ open = false, prefill = null, onClose = ()
         results.push({ it, ok: false, reason: 'Something went wrong. Please try again.' });
       }
     }
-    setBusy(false);
+    setIsBusy(false);
     if (results.some((result) => result.ok)) sent.current = true;
     const failed = results.filter((result) => !result.ok);
     if (failed.length === results.length) {
@@ -133,7 +133,7 @@ export default function ReviewModal({ open = false, prefill = null, onClose = ()
       return;
     }
     setPartial(failed.map((failure) => ({ service: failure.it.service, reason: failure.reason })));
-    setDone(true);
+    setIsDone(true);
   }
 
   function star(active) {
@@ -151,14 +151,14 @@ export default function ReviewModal({ open = false, prefill = null, onClose = ()
       </button>
       <h3 className={TITLE}>Leave a Review</h3>
 
-      {!done && !items.length ? (
+      {!isDone && !items.length ? (
         <div className="text-center">
           <LoadFallback className="mb-4" />
           <button type="button" className={BTN} onClick={close}>
             Close
           </button>
         </div>
-      ) : !done ? (
+      ) : !isDone ? (
         <div data-step="write">
           <div className={GROUP}>
             <label className={LABEL} htmlFor="rvm-name">
@@ -186,7 +186,7 @@ export default function ReviewModal({ open = false, prefill = null, onClose = ()
             />
           </div>
 
-          {multi && (
+          {hasMultipleItems && (
             <div className={GROUP}>
               <label className={LABEL}>Which trips are you reviewing?</label>
               <div>
@@ -284,8 +284,8 @@ export default function ReviewModal({ open = false, prefill = null, onClose = ()
           </div>
 
           {error && <p className="mt-[-0.4rem] mb-4 text-small text-err">{error}</p>}
-          <button type="button" className={BTN} onClick={submit} disabled={busy}>
-            {busy ? 'Sending...' : 'Submit review'}
+          <button type="button" className={BTN} onClick={submit} disabled={isBusy}>
+            {isBusy ? 'Sending...' : 'Submit review'}
           </button>
         </div>
       ) : (

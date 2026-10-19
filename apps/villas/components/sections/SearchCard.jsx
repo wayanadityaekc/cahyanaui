@@ -18,9 +18,9 @@ export default function SearchCard({ layout = 'bar' }) {
   const [checkIn, setCheckIn] = useState('');
   const [checkOut, setCheckOut] = useState('');
 
-  const panel = layout === 'panel';
+  const isPanelLayout = layout === 'panel';
   const search = (
-    <Button full={panel} onClick={() => openBooking({ checkIn, checkOut, guests })}>
+    <Button full={isPanelLayout} onClick={() => openBooking({ checkIn, checkOut, guests })}>
       <Search className="w-[var(--icon-sm)] h-[var(--icon-sm)]" aria-hidden="true" />
       Search
     </Button>
@@ -66,7 +66,7 @@ export default function SearchCard({ layout = 'bar' }) {
 
   const fields = (
     <>
-      <div className={panel ? 'min-w-0' : 'min-w-0 sm:col-span-2'}>
+      <div className={isPanelLayout ? 'min-w-0' : 'min-w-0 sm:col-span-2'}>
         <label className={SEARCH_LABEL}>Dates</label>
         <DateRangeField
           id="search-checkin"
@@ -96,7 +96,7 @@ export default function SearchCard({ layout = 'bar' }) {
     </>
   );
 
-  if (panel) {
+  if (isPanelLayout) {
     return (
       <div className="w-full bg-surface-raised/92 backdrop-blur-md p-5 sm:p-6 rounded-sm">
         <h2 className="text-h3 font-medium text-gold mb-4">Check your dates</h2>

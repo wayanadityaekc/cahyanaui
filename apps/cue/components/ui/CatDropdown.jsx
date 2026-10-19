@@ -20,16 +20,16 @@ const TRIGGER =
   'font-body text-body font-semibold text-gold';
 
 export default function CatDropdown({ label, ariaLabel, className = '', children }) {
-  const [open, setOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
   const ref = useRef(null);
 
   useEffect(() => {
-    if (!open) return undefined;
+    if (!isOpen) return undefined;
     function onDown(event) {
-      if (!ref.current?.contains(event.target)) setOpen(false);
+      if (!ref.current?.contains(event.target)) setIsOpen(false);
     }
     function onKey(event) {
-      if (event.key === 'Escape') setOpen(false);
+      if (event.key === 'Escape') setIsOpen(false);
     }
     document.addEventListener('pointerdown', onDown);
     document.addEventListener('keydown', onKey);
@@ -37,7 +37,7 @@ export default function CatDropdown({ label, ariaLabel, className = '', children
       document.removeEventListener('pointerdown', onDown);
       document.removeEventListener('keydown', onKey);
     };
-  }, [open]);
+  }, [isOpen]);
 
   return (
     <div className={className}>
@@ -46,22 +46,22 @@ export default function CatDropdown({ label, ariaLabel, className = '', children
           type="button"
           data-catnav
           aria-haspopup="true"
-          aria-expanded={open}
+          aria-expanded={isOpen}
           className={TRIGGER}
-          onClick={() => setOpen((wasOpen) => !wasOpen)}
+          onClick={() => setIsOpen((wasOpen) => !wasOpen)}
         >
           <span className="flex items-center gap-[var(--space-1)]">
             <LayoutGrid className="w-[var(--icon-sm)] h-[var(--icon-sm)] shrink-0" aria-hidden="true" />
             {label}
           </span>
           <ChevronDown
-            className={`w-[var(--icon-sm)] h-[var(--icon-sm)] shrink-0 text-muted transition-[rotate] duration-[var(--dur)] ease-[var(--ease)] ${open ? 'rotate-180' : ''}`}
+            className={`w-[var(--icon-sm)] h-[var(--icon-sm)] shrink-0 text-muted transition-[rotate] duration-[var(--dur)] ease-[var(--ease)] ${isOpen ? 'rotate-180' : ''}`}
             aria-hidden="true"
           />
         </button>
-        <PopMenu open={open}>
+        <PopMenu open={isOpen}>
           <div className={PANEL} aria-label={ariaLabel}>
-            {children(() => setOpen(false))}
+            {children(() => setIsOpen(false))}
           </div>
         </PopMenu>
       </div>

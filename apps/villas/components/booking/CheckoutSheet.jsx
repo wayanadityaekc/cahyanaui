@@ -63,7 +63,7 @@ export default function CheckoutSheet({ open = false, onClose = () => {}, cart =
   const [prepaid, setPrepaid] = useState(null);
   const [rail, setRail] = useState(DEFAULT_RAIL);
   const [option, setOption] = useState('');
-  const [busy, setBusy] = useState(false);
+  const [isBusy, setIsBusy] = useState(false);
   const [message, setMessage] = useState('');
   const [bookingRef, setBookingRef] = useState('');
 
@@ -119,7 +119,7 @@ export default function CheckoutSheet({ open = false, onClose = () => {}, cart =
   }
 
   async function book() {
-    setBusy(true);
+    setIsBusy(true);
     setMessage('');
     try {
       const token = readToken();
@@ -131,7 +131,7 @@ export default function CheckoutSheet({ open = false, onClose = () => {}, cart =
       const data = await response.json().catch(() => ({}));
       if (!response.ok || data.status !== 'saved') {
         setMessage(data.detail || 'We could not save your booking. Please try again, or message us on WhatsApp.');
-        setBusy(false);
+        setIsBusy(false);
         return;
       }
       if (data.token) writeToken(data.token);
@@ -140,7 +140,7 @@ export default function CheckoutSheet({ open = false, onClose = () => {}, cart =
     } catch (e) {
       setMessage('We could not reach our booking server. Please check your connection and try again.');
     }
-    setBusy(false);
+    setIsBusy(false);
   }
 
   const chosen = Array.isArray(quote) ? quote.find((row) => row.id === option) : null;
@@ -160,7 +160,7 @@ export default function CheckoutSheet({ open = false, onClose = () => {}, cart =
   return (
     <SheetPresence
       open={open}
-      onClose={busy ? () => {} : onClose}
+      onClose={isBusy ? () => {} : onClose}
       label={title}
       shell="fixed inset-0 z-[130] flex items-center justify-center p-3 bg-[rgba(0,0,0,0.55)]"
       box="relative w-full max-w-[460px] max-h-[calc(100dvh-24px)] overflow-y-auto p-6 rounded-md bg-white"
@@ -234,8 +234,8 @@ export default function CheckoutSheet({ open = false, onClose = () => {}, cart =
               {message}
             </p>
           )}
-          <Button full onClick={book} disabled={busy || !chosen}>
-            {busy ? 'Booking...' : 'Book now'}
+          <Button full onClick={book} disabled={isBusy || !chosen}>
+            {isBusy ? 'Booking...' : 'Book now'}
           </Button>
           <button
             type="button"

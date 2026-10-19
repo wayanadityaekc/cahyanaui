@@ -16,8 +16,8 @@ export function AccountProvider({ children }) {
   const [account, setAccount] = useState(null);
   const [trips, setTrips] = useState(null);
   const [myReviews, setMyReviews] = useState(null);
-  const [hydrated, setHydrated] = useState(false);
-  const [justSignedIn, setJustSignedIn] = useState(false);
+  const [isHydrated, setIsHydrated] = useState(false);
+  const [isJustSignedIn, setIsJustSignedIn] = useState(false);
 
   const refreshTrips = useCallback(async () => {
     const token = readLocal(KEY.token, '');
@@ -36,7 +36,7 @@ export function AccountProvider({ children }) {
     const magic = params.get('token');
     if (magic) {
       writeLocal(KEY.token, magic);
-      setJustSignedIn(true);
+      setIsJustSignedIn(true);
       params.delete('token');
       const query = params.toString();
       window.history.replaceState({}, '', `${window.location.pathname}${query ? `?${query}` : ''}`);
@@ -44,7 +44,7 @@ export function AccountProvider({ children }) {
 
     const token = readLocal(KEY.token, '');
     if (!token) {
-      setHydrated(true);
+      setIsHydrated(true);
       return;
     }
 
@@ -57,7 +57,7 @@ export function AccountProvider({ children }) {
         else removeLocal(KEY.token);
       } catch (e) {
       } finally {
-        if (!cancelled) setHydrated(true);
+        if (!cancelled) setIsHydrated(true);
       }
     }
     load();
@@ -205,8 +205,8 @@ export function AccountProvider({ children }) {
         requestLogin,
         verifyCode,
         createAccount,
-        hydrated,
-        justSignedIn,
+        hydrated: isHydrated,
+        justSignedIn: isJustSignedIn,
       }}
     >
       {children}

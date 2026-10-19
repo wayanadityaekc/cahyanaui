@@ -41,13 +41,13 @@ export default function NavbarShell({
   className,
 }) {
   const Link = linkAs;
-  const [menuOpen, setMenuOpen] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [openSub, setOpenSub] = useState(null);
   const navRef = useRef(null);
   const burgerRef = useRef(null);
   const headerRef = useRef(null);
   const barRef = useRef(null);
-  const [atTop, setAtTop] = useState(true);
+  const [isAtTop, setIsAtTop] = useState(true);
 
   useEffect(() => {
     const header = headerRef.current;
@@ -83,7 +83,7 @@ export default function NavbarShell({
     function onScroll() {
       const hero = document.querySelector('main > section');
       const barHeight = headerRef.current ? headerRef.current.offsetHeight : 0;
-      setAtTop(hero ? hero.getBoundingClientRect().bottom > barHeight : window.scrollY < 40);
+      setIsAtTop(hero ? hero.getBoundingClientRect().bottom > barHeight : window.scrollY < 40);
     }
     onScroll();
     window.addEventListener('scroll', onScroll, { passive: true });
@@ -91,17 +91,17 @@ export default function NavbarShell({
   }, [overlay]);
 
   useEffect(() => {
-    if (!menuOpen) return undefined;
+    if (!isMenuOpen) return undefined;
     function onDoc(event) {
       const inNav = navRef.current && navRef.current.contains(event.target);
       const onBurger = burgerRef.current && burgerRef.current.contains(event.target);
       const inPopup = event.target.closest && event.target.closest('[data-portal]');
-      if (!inNav && !onBurger && !inPopup) setMenuOpen(false);
+      if (!inNav && !onBurger && !inPopup) setIsMenuOpen(false);
     }
     function onKey(event) {
       if (event.key !== 'Escape') return;
       if (document.querySelector('[data-portal="select"][data-open]')) return;
-      setMenuOpen(false);
+      setIsMenuOpen(false);
     }
     document.addEventListener('click', onDoc);
     document.addEventListener('keydown', onKey);
@@ -109,12 +109,12 @@ export default function NavbarShell({
       document.removeEventListener('click', onDoc);
       document.removeEventListener('keydown', onKey);
     };
-  }, [menuOpen]);
+  }, [isMenuOpen]);
 
-  useBodyLock(menuOpen);
+  useBodyLock(isMenuOpen);
 
   function close() {
-    setMenuOpen(false);
+    setIsMenuOpen(false);
   }
 
   return (
@@ -122,7 +122,7 @@ export default function NavbarShell({
       ref={headerRef}
       className={cn(NAV_HEADER, className)}
       data-overlay={overlay || undefined}
-      data-clear={overlay && atTop && !menuOpen ? '' : undefined}
+      data-clear={overlay && isAtTop && !isMenuOpen ? '' : undefined}
     >
       {topBar ? <div ref={barRef}>{topBar}</div> : null}
       <div className={NAV_ROW}>
@@ -131,14 +131,14 @@ export default function NavbarShell({
           id="hamburger"
           ref={burgerRef}
           className={NAV_BURGER}
-          aria-label={menuOpen ? 'Close menu' : 'Open menu'}
-          aria-expanded={menuOpen}
+          aria-label={isMenuOpen ? 'Close menu' : 'Open menu'}
+          aria-expanded={isMenuOpen}
           aria-controls={drawerId}
-          onClick={() => setMenuOpen((wasOpen) => !wasOpen)}
+          onClick={() => setIsMenuOpen((wasOpen) => !wasOpen)}
         >
-          <span className={cn(NAV_BURGER_BAR, menuOpen && 'translate-y-[6px] rotate-45')} />
-          <span className={cn(NAV_BURGER_BAR, menuOpen ? 'opacity-0' : 'opacity-100')} />
-          <span className={cn(NAV_BURGER_BAR, menuOpen && '-translate-y-[6px] -rotate-45')} />
+          <span className={cn(NAV_BURGER_BAR, isMenuOpen && 'translate-y-[6px] rotate-45')} />
+          <span className={cn(NAV_BURGER_BAR, isMenuOpen ? 'opacity-0' : 'opacity-100')} />
+          <span className={cn(NAV_BURGER_BAR, isMenuOpen && '-translate-y-[6px] -rotate-45')} />
         </button>
 
         {logo}
@@ -151,7 +151,7 @@ export default function NavbarShell({
             id={drawerId}
             className={cn(
               NAV_DRAWER,
-              menuOpen ? 'translate-x-0 pointer-events-auto' : '-translate-x-full pointer-events-none',
+              isMenuOpen ? 'translate-x-0 pointer-events-auto' : '-translate-x-full pointer-events-none',
             )}
           >
             <li className={NAV_DRAWER_HEAD}>
@@ -165,7 +165,7 @@ export default function NavbarShell({
 
             {links.map((link) => {
               if (link.items) {
-                const open = openSub === link.label;
+                const isOpen = openSub === link.label;
                 return (
                   <li key={link.label} className={cn('relative', NAV_LI)}>
                     {link.href ? (
@@ -178,14 +178,14 @@ export default function NavbarShell({
                           type="button"
                           data-submenu
                           className="grid place-items-center w-10 h-10 p-0 border-0 bg-transparent text-gold text-strong cursor-pointer"
-                          aria-expanded={open}
+                          aria-expanded={isOpen}
                           aria-label={`${link.label} list`}
-                          onClick={() => setOpenSub(open ? null : link.label)}
+                          onClick={() => setOpenSub(isOpen ? null : link.label)}
                         >
                           <span
                             className={cn(
                               'inline-block transition-[rotate] duration-200 ease-[ease]',
-                              open && 'rotate-90',
+                              isOpen && 'rotate-90',
                             )}
                           >
                             &rsaquo;
@@ -197,8 +197,8 @@ export default function NavbarShell({
                         type="button"
                         data-submenu
                         className={NAV_SUBTRIGGER}
-                        aria-expanded={open}
-                        onClick={() => setOpenSub(open ? null : link.label)}
+                        aria-expanded={isOpen}
+                        onClick={() => setOpenSub(isOpen ? null : link.label)}
                       >
                         {link.icon}
                         {link.label}
@@ -206,14 +206,14 @@ export default function NavbarShell({
                           className={cn(
                             NAV_ROW_END,
                             'inline-block transition-[rotate] duration-200 ease-[ease]',
-                            open && 'rotate-90',
+                            isOpen && 'rotate-90',
                           )}
                         >
                           &rsaquo;
                         </span>
                       </button>
                     )}
-                    <Collapse open={open}>
+                    <Collapse open={isOpen}>
                       <ul className={NAV_SUBLIST}>
                         {link.items.map((item) => (
                           <li key={item.href} className="py-[0.4rem]">
@@ -247,7 +247,7 @@ export default function NavbarShell({
         {account}
       </div>
 
-      <div className={cn(NAV_SCRIM, menuOpen ? 'opacity-100 visible' : 'opacity-0 invisible')} onClick={close} />
+      <div className={cn(NAV_SCRIM, isMenuOpen ? 'opacity-100 visible' : 'opacity-0 invisible')} onClick={close} />
     </header>
   );
 }

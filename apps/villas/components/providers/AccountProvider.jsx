@@ -25,7 +25,7 @@ function drop() {
 
 export function AccountProvider({ children }) {
   const [account, setAccount] = useState(null);
-  const [hydrated, setHydrated] = useState(false);
+  const [isHydrated, setIsHydrated] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -41,7 +41,7 @@ export function AccountProvider({ children }) {
 
     const token = read();
     if (!token) {
-      setHydrated(true);
+      setIsHydrated(true);
       return undefined;
     }
 
@@ -54,7 +54,7 @@ export function AccountProvider({ children }) {
         else drop();
       } catch (e) {
       } finally {
-        if (!cancelled) setHydrated(true);
+        if (!cancelled) setIsHydrated(true);
       }
     }
     load();
@@ -159,7 +159,16 @@ export function AccountProvider({ children }) {
 
   return (
     <AccountContext.Provider
-      value={{ account, hydrated, requestLogin, verifyCode, createAccount, updateAccount, deleteAccount, logout }}
+      value={{
+        account,
+        hydrated: isHydrated,
+        requestLogin,
+        verifyCode,
+        createAccount,
+        updateAccount,
+        deleteAccount,
+        logout,
+      }}
     >
       {children}
     </AccountContext.Provider>

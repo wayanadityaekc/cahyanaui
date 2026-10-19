@@ -65,7 +65,7 @@ export default function BookingSheet() {
   const villa = VILLAS[booking.villaSlug] || VILLA_LIST[0];
   const breakdown = priceBreakdown(villa.slug, booking.checkIn, booking.checkOut);
   const shown = convert(breakdown);
-  const inRupiah = currency === 'IDR';
+  const isInRupiah = currency === 'IDR';
   const canContinue = booking.checkIn && booking.checkOut && breakdown && breakdown.nights > 0;
 
   const message = breakdown
@@ -75,7 +75,7 @@ export default function BookingSheet() {
         `Check-out: ${booking.checkOut || '-'}`,
         `Guests: ${booking.guests}`,
         `${shown.nights} night(s) x ${formatAmount(shown.nightly)} = ${formatAmount(shown.subtotal)}`,
-        `Total: ${formatAmount(shown.total)}${inRupiah ? '' : ` (exact price ${formatRupiah(breakdown.totalIdr)})`}`,
+        `Total: ${formatAmount(shown.total)}${isInRupiah ? '' : ` (exact price ${formatRupiah(breakdown.totalIdr)})`}`,
       ].join('\n')
     : `Hi! I'd like to ask about booking ${villa.name}.`;
 
@@ -209,7 +209,7 @@ export default function BookingSheet() {
                   <span className="text-h3 font-bold text-amber">{formatAmount(shown.total)}</span>
                 </div>
               </div>
-              {inRupiah ? null : (
+              {isInRupiah ? null : (
                 <p className="text-label text-muted -mt-3">
                   Exact price {formatRupiah(breakdown.totalIdr)}; other currencies follow today's rate.
                 </p>

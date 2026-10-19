@@ -24,7 +24,7 @@ export default function GuideHubHero({
   pop = null,
   labels = {},
 }) {
-  const [open, setOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
   const mergedLabels = { categories: 'Categories', search: 'Search', searchAria: 'Search guides', ...labels };
   return (
     <section
@@ -49,8 +49,8 @@ export default function GuideHubHero({
                 type="button"
                 aria-label={mergedLabels.categories}
                 aria-haspopup="true"
-                aria-expanded={open}
-                onClick={() => setOpen((value) => !value)}
+                aria-expanded={isOpen}
+                onClick={() => setIsOpen((value) => !value)}
                 className="min-h-[3.15rem] box-border flex items-center gap-[0.35rem] px-[0.95rem] [border:none] [border-radius:0_var(--r-md)_var(--r-md)_0] bg-transparent font-body text-[1rem] font-semibold text-green cursor-pointer whitespace-nowrap [transition:background-color_var(--dur)_ease,scale_var(--dur-fast)_var(--ease)] hover:bg-[rgba(34,32,28,0.08)] [&_span]:hidden"
               >
                 <Menu className="w-[var(--icon-md)] h-[var(--icon-md)]" aria-hidden="true" />
@@ -58,14 +58,14 @@ export default function GuideHubHero({
                 <ChevronDown
                   className={cn(
                     'w-4 h-4 shrink-0 text-muted [transition:transform_var(--dur)_ease]',
-                    open && '[transform:rotate(180deg)]',
+                    isOpen && '[transform:rotate(180deg)]',
                   )}
                   aria-hidden="true"
                 />
               </button>
-              <PopPanel pop={pop} open={open} className={MENU}>
+              <PopPanel pop={pop} open={isOpen} className={MENU}>
                 {categories.map(({ id, label, Icon }) => (
-                  <a className={MENU_ROW} href={`#${id}`} key={id} onClick={() => setOpen(false)}>
+                  <a className={MENU_ROW} href={`#${id}`} key={id} onClick={() => setIsOpen(false)}>
                     {Icon && (
                       <span>
                         <Icon strokeWidth={1.7} aria-hidden="true" />

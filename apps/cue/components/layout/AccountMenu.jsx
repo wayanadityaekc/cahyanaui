@@ -28,21 +28,21 @@ export function firstNameOf(name, email) {
 
 export default function AccountMenu({ onLogin }) {
   const { account, hydrated, logout } = useAccount();
-  const [open, setOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
   const boxRef = useRef(null);
   const btnRef = useRef(null);
   const panelId = useId();
 
   useEffect(() => {
-    if (!open) return undefined;
+    if (!isOpen) return undefined;
     function onDoc(event) {
       if (event.target.closest && event.target.closest('[data-portal]')) return;
-      if (boxRef.current && !boxRef.current.contains(event.target)) setOpen(false);
+      if (boxRef.current && !boxRef.current.contains(event.target)) setIsOpen(false);
     }
     function onKey(event) {
       if (event.key !== 'Escape') return;
       if (document.querySelector('[data-portal="select"][data-open]')) return;
-      setOpen(false);
+      setIsOpen(false);
       btnRef.current?.focus();
     }
     document.addEventListener('click', onDoc);
@@ -51,9 +51,9 @@ export default function AccountMenu({ onLogin }) {
       document.removeEventListener('click', onDoc);
       document.removeEventListener('keydown', onKey);
     };
-  }, [open]);
+  }, [isOpen]);
 
-  const pending = !hydrated;
+  const isPending = !hydrated;
 
   const PREFS = (
     <div className="max-[992px]:hidden mt-1">
@@ -69,20 +69,20 @@ export default function AccountMenu({ onLogin }) {
       return typeof window !== 'undefined' && window.matchMedia('(min-width: 993px)').matches;
     }
     return (
-      <div className={`relative ${pending ? 'invisible' : ''}`} ref={boxRef} data-account-slot="out">
+      <div className={`relative ${isPending ? 'invisible' : ''}`} ref={boxRef} data-account-slot="out">
         <button
           type="button"
           ref={btnRef}
-          aria-expanded={open}
+          aria-expanded={isOpen}
           aria-controls={panelId}
           aria-label="Log in"
-          onClick={() => (isDesktop() ? setOpen((wasOpen) => !wasOpen) : onLogin())}
+          onClick={() => (isDesktop() ? setIsOpen((wasOpen) => !wasOpen) : onLogin())}
           className={`inline-flex items-center h-[var(--btn-h)] px-3 rounded-sm border border-line bg-white text-small font-semibold font-body text-gold cursor-pointer whitespace-nowrap [transition:background-color_var(--dur)_var(--ease),scale_var(--dur-fast)_var(--ease)] hover:bg-cream ${PHONE}`}
         >
           <span className="max-[992px]:hidden">Log in</span>
           <UserRound className="min-[993px]:hidden w-5 h-5" strokeWidth={1.6} aria-hidden="true" />
         </button>
-        <PopMenu open={open}>
+        <PopMenu open={isOpen}>
           <div
             id={panelId}
             className="absolute right-0 top-[calc(100%+var(--space-1))] z-[130] w-[18rem] bg-white border border-line rounded-[var(--r-md)] p-[var(--space-1)]"
@@ -94,7 +94,7 @@ export default function AccountMenu({ onLogin }) {
                 type="button"
                 className={`flex w-full ${BTN_CTA}`}
                 onClick={() => {
-                  setOpen(false);
+                  setIsOpen(false);
                   onLogin();
                 }}
               >
@@ -114,10 +114,10 @@ export default function AccountMenu({ onLogin }) {
       <button
         type="button"
         ref={btnRef}
-        aria-expanded={open}
+        aria-expanded={isOpen}
         aria-controls={panelId}
         aria-label={`Account menu for ${first}`}
-        onClick={() => setOpen((wasOpen) => !wasOpen)}
+        onClick={() => setIsOpen((wasOpen) => !wasOpen)}
         className={`inline-flex items-center gap-2 bg-transparent border-none p-0 cursor-pointer font-body text-small font-semibold text-gold [transition:color_var(--dur)_var(--ease),background-color_var(--dur)_var(--ease),scale_var(--dur-fast)_var(--ease)] hover:text-gold-d ${PHONE}`}
       >
         <span
@@ -128,12 +128,12 @@ export default function AccountMenu({ onLogin }) {
         </span>
         <span className="max-[992px]:hidden max-w-[9rem] overflow-hidden text-ellipsis whitespace-nowrap">{first}</span>
         <ChevronDown
-          className={`max-[992px]:hidden w-[var(--icon-sm)] h-[var(--icon-sm)] transition-[rotate] duration-200 ${open ? 'rotate-180' : ''}`}
+          className={`max-[992px]:hidden w-[var(--icon-sm)] h-[var(--icon-sm)] transition-[rotate] duration-200 ${isOpen ? 'rotate-180' : ''}`}
           strokeWidth={1.8}
           aria-hidden="true"
         />
       </button>
-      <PopMenu open={open}>
+      <PopMenu open={isOpen}>
         <div
           id={panelId}
           className="absolute right-0 top-[calc(100%+var(--space-1))] z-[130] min-[993px]:w-[18rem] w-[15rem] bg-white border border-line rounded-[var(--r-md)] p-[var(--space-1)]"
@@ -158,7 +158,7 @@ export default function AccountMenu({ onLogin }) {
               type="button"
               className={ROW}
               onClick={() => {
-                setOpen(false);
+                setIsOpen(false);
                 logout();
               }}
             >

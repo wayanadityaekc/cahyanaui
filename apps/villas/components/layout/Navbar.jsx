@@ -44,7 +44,7 @@ const ACCOUNT_ROWS = [{ href: '/settings', label: 'Settings', icon: <Settings {.
 export default function Navbar() {
   const pathname = usePathname();
   const { account, hydrated, logout } = useAccount();
-  const [authOpen, setAuthOpen] = useState(false);
+  const [isAuthOpen, setIsAuthOpen] = useState(false);
   const { count } = useCart();
 
   function isActive(href) {
@@ -97,7 +97,7 @@ export default function Navbar() {
             account={account}
             hydrated={hydrated}
             linkAs={Link}
-            onLogin={() => setAuthOpen(true)}
+            onLogin={() => setIsAuthOpen(true)}
             onLogout={logout}
             loginTitle="Plan your stay"
             loginNote="Sign in with your email. No password needed."
@@ -106,7 +106,7 @@ export default function Navbar() {
           />
         }
       />
-      <AuthSheet open={authOpen} onClose={() => setAuthOpen(false)} />
+      <AuthSheet open={isAuthOpen} onClose={() => setIsAuthOpen(false)} />
     </>
   );
 }

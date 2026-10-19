@@ -21,7 +21,7 @@ export default function AccountSettings({
 }) {
   const [form, setForm] = useState({ name: '', phone: '' });
   const [message, setMessage] = useState(null);
-  const [busy, setBusy] = useState(false);
+  const [isBusy, setIsBusy] = useState(false);
 
   useEffect(() => {
     if (account) setForm({ name: account.name || '', phone: account.phone || '' });
@@ -31,10 +31,10 @@ export default function AccountSettings({
     return <p className="m-0 text-body text-muted">Sorry, we could not load this information. Please try again.</p>;
 
   async function save() {
-    setBusy(true);
+    setIsBusy(true);
     setMessage(null);
     const result = await onSave(form);
-    setBusy(false);
+    setIsBusy(false);
     setMessage(
       result && result.ok
         ? { ok: true, text: 'Saved.' }
@@ -85,8 +85,8 @@ export default function AccountSettings({
         </p>
       )}
       <div className="flex flex-wrap gap-2 mt-5">
-        <Button onClick={save} disabled={busy}>
-          {busy ? 'Saving...' : 'Save changes'}
+        <Button onClick={save} disabled={isBusy}>
+          {isBusy ? 'Saving...' : 'Save changes'}
         </Button>
         <Button variant="ghost" onClick={onLogout}>
           Sign out

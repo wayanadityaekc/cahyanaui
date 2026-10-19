@@ -54,18 +54,18 @@ export default function ListingPage({ data, page }) {
   const tabs = [{ id: 'all', label: listTitle }, ...chips];
 
   const browseRef = useRef(null);
-  const [heroInView, setHeroInView] = useState(true);
+  const [isHeroInView, setIsHeroInView] = useState(true);
   useEffect(() => {
     const browse = browseRef.current;
     if (!browse) {
-      setHeroInView(true);
+      setIsHeroInView(true);
       return undefined;
     }
-    const observer = new IntersectionObserver(([event]) => setHeroInView(event.isIntersecting));
+    const observer = new IntersectionObserver(([event]) => setIsHeroInView(event.isIntersecting));
     observer.observe(browse);
     return () => observer.disconnect();
   }, [term]);
-  const showStickyNav = !term && !heroInView;
+  const shouldShowStickyNav = !term && !isHeroInView;
 
   return (
     <div className="tourprog pb-20">
@@ -137,7 +137,7 @@ export default function ListingPage({ data, page }) {
           <h2 className={`${SECTION_TITLE} ${ST_LEFT} !text-[1.5rem] max-[768px]:hidden`}>{listTitle}</h2>
         </div>
 
-        {showStickyNav && (
+        {shouldShowStickyNav && (
           <div
             className="fixed left-1/2 [transform:translateX(-50%)] bottom-[1.3rem] z-50 flex items-center gap-[4px] p-[6px] max-w-[calc(100vw-2rem)] bg-white [border:1px_solid_var(--line)] rounded-md overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden max-[768px]:hidden"
             role="tablist"
@@ -156,18 +156,18 @@ export default function ListingPage({ data, page }) {
             ))}
           </div>
         )}
-        {showStickyNav && <SectionSwitcher zones={chips} />}
+        {shouldShowStickyNav && <SectionSwitcher zones={chips} />}
 
         <section className={CATSEC}>
           <div className={LROW_LIST}>
             {shownCards.map(({ card, catId, anchor }) => {
-              const dim = !term && zone !== 'all' && catId !== zone;
+              const isDimmed = !term && zone !== 'all' && catId !== zone;
               return (
                 <ListingRow
                   key={card.href + card.name}
                   {...card}
                   anchorId={anchor || undefined}
-                  dim={dim}
+                  dim={isDimmed}
                   onReset={() => setZone('all')}
                 />
               );

@@ -20,7 +20,7 @@ function readMarker() {
 export function BookingProvider({ children }) {
   const { account, hydrated, justSignedIn } = useAccount();
   const [bookingContext, setBookingContext] = useState(null);
-  const [gate, setGate] = useState(false);
+  const [isGateOpen, setIsGateOpen] = useState(false);
   const held = useRef(null);
 
   const openBooking = useCallback(
@@ -36,7 +36,7 @@ export function BookingProvider({ children }) {
       held.current = options;
       if (!hydrated) return;
       writeLocal(KEY.resumeBook, { path: here(), at: Date.now() });
-      setGate(true);
+      setIsGateOpen(true);
     },
     [account, hydrated],
   );
@@ -44,7 +44,7 @@ export function BookingProvider({ children }) {
   const closeBooking = useCallback(() => setBookingContext(null), []);
 
   const cancelGate = useCallback(() => {
-    setGate(false);
+    setIsGateOpen(false);
     held.current = null;
   }, []);
 
@@ -54,13 +54,13 @@ export function BookingProvider({ children }) {
       const options = held.current;
       held.current = null;
       removeLocal(KEY.resumeBook);
-      setGate(false);
+      setIsGateOpen(false);
       setBookingContext(options);
-    } else if (!gate) {
+    } else if (!isGateOpen) {
       writeLocal(KEY.resumeBook, { path: here(), at: Date.now() });
-      setGate(true);
+      setIsGateOpen(true);
     }
-  }, [account, hydrated, gate]);
+  }, [account, hydrated, isGateOpen]);
 
   useEffect(() => {
     if (!hydrated || !account || !justSignedIn) return;
@@ -69,7 +69,7 @@ export function BookingProvider({ children }) {
   }, [hydrated, account, justSignedIn]);
 
   return (
-    <BookingContext.Provider value={{ ctx: bookingContext, openBooking, closeBooking, gate, cancelGate }}>
+    <BookingContext.Provider value={{ ctx: bookingContext, openBooking, closeBooking, gate: isGateOpen, cancelGate }}>
       {children}
     </BookingContext.Provider>
   );

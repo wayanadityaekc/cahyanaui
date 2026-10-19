@@ -12,8 +12,8 @@ export default function Breadcrumb({ items = [], className = '' }) {
     <nav className={`${CRUMB_NAV} ${className}`} aria-label="Breadcrumb">
       <ol className={CRUMB_OL}>
         {items.map((it, index) => {
-          const last = index === items.length - 1;
-          const linkable = !last && it.href && !isHiddenTour(it.href);
+          const isLast = index === items.length - 1;
+          const linkable = !isLast && it.href && !isHiddenTour(it.href);
           return (
             <li key={`${it.label}-${index}`} className="flex items-center">
               {linkable ? (
@@ -21,11 +21,11 @@ export default function Breadcrumb({ items = [], className = '' }) {
                   {it.label}
                 </a>
               ) : (
-                <span className={last ? CRUMB_HERE : undefined} aria-current={last ? 'page' : undefined}>
+                <span className={isLast ? CRUMB_HERE : undefined} aria-current={isLast ? 'page' : undefined}>
                   {it.label}
                 </span>
               )}
-              {!last && (
+              {!isLast && (
                 <span className={CRUMB_SEP} aria-hidden="true">
                   ›
                 </span>

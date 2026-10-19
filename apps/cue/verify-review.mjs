@@ -69,10 +69,10 @@ for (const width of [390, 1280]) {
       if (url.includes('/reviews') && route.request().method() === 'POST') {
         const body = JSON.parse(route.request().postData() || '{}');
         posted.push(body.service);
-        const refuse = mode === 'partial' && body.booking_ref === 'CUE-103';
-        if (!refuse) reviewed.add(`${body.booking_ref}::${body.service}`);
+        const shouldRefuse = mode === 'partial' && body.booking_ref === 'CUE-103';
+        if (!shouldRefuse) reviewed.add(`${body.booking_ref}::${body.service}`);
         return route.fulfill({
-          json: refuse
+          json: shouldRefuse
             ? { ok: false, reason: "This booking isn't confirmed yet, so there's nothing to review." }
             : { ok: true },
         });

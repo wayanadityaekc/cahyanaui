@@ -47,7 +47,7 @@ export default function ExperienceCard({
   height = 600,
   children,
 }) {
-  const incl = variant === 'incl';
+  const isIncluded = variant === 'incl';
   const body = (
     <>
       <div className={IMG_WRAP} style={image ? undefined : { backgroundImage: PLACEHOLDER_GRADIENT }}>
@@ -56,16 +56,16 @@ export default function ExperienceCard({
         )}
         {badge && <span className={BADGE_POPULAR}>{badge}</span>}
       </div>
-      <div className={incl ? BODY_INCL : BODY}>
+      <div className={isIncluded ? BODY_INCL : BODY}>
         <h3 className={NAME}>{name}</h3>
-        {!incl && priceName && <Rating name={priceName} className={RATING} />}
+        {!isIncluded && priceName && <Rating name={priceName} className={RATING} />}
         {meta && (
           <div className={META}>
             {metaIcon === 'pin' ? <MapPin strokeWidth={1.7} /> : <Clock strokeWidth={1.7} />}
             <span>{meta}</span>
           </div>
         )}
-        {incl && inclText && (
+        {isIncluded && inclText && (
           <div className={INCL}>
             {inclText.split('|')[0]}
             <strong>{inclText.split('|')[1]}</strong>

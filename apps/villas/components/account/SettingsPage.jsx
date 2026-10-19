@@ -10,14 +10,14 @@ import TripPrefsFields from '@/components/layout/TripPrefsFields';
 import { useAccount } from '@/components/providers/AccountProvider';
 
 function DeleteSheet({ open = false, onClose = () => {}, onConfirm = async () => ({ ok: false }) }) {
-  const [busy, setBusy] = useState(false);
+  const [isBusy, setIsBusy] = useState(false);
   const [message, setMessage] = useState('');
 
   async function confirm() {
-    setBusy(true);
+    setIsBusy(true);
     setMessage('');
     const result = await onConfirm();
-    setBusy(false);
+    setIsBusy(false);
     if (!result || !result.ok)
       setMessage((result && result.error) || 'Could not delete your account. Please try again.');
   }
@@ -25,7 +25,7 @@ function DeleteSheet({ open = false, onClose = () => {}, onConfirm = async () =>
   return (
     <SheetPresence
       open={open}
-      onClose={busy ? () => {} : onClose}
+      onClose={isBusy ? () => {} : onClose}
       label="Delete your account?"
       shell="fixed inset-0 z-[130] flex items-center justify-center p-6 bg-[rgba(0,0,0,0.55)]"
       box="relative w-full max-w-[420px] max-h-[90vh] overflow-y-auto p-8 rounded-md bg-white"
@@ -52,11 +52,11 @@ function DeleteSheet({ open = false, onClose = () => {}, onConfirm = async () =>
         </p>
       )}
       <div className="flex gap-2 max-[480px]:flex-col">
-        <Button variant="ghost" onClick={onClose} disabled={busy}>
+        <Button variant="ghost" onClick={onClose} disabled={isBusy}>
           Keep account
         </Button>
-        <Button onClick={confirm} disabled={busy} className="!bg-err hover:!brightness-90">
-          {busy ? 'Deleting...' : 'Delete account'}
+        <Button onClick={confirm} disabled={isBusy} className="!bg-err hover:!brightness-90">
+          {isBusy ? 'Deleting...' : 'Delete account'}
         </Button>
       </div>
     </SheetPresence>
@@ -65,21 +65,21 @@ function DeleteSheet({ open = false, onClose = () => {}, onConfirm = async () =>
 
 export default function SettingsPage() {
   const { account, hydrated, updateAccount, deleteAccount, logout } = useAccount();
-  const [authOpen, setAuthOpen] = useState(false);
-  const [deleteOpen, setDeleteOpen] = useState(false);
-  const [deleted, setDeleted] = useState(false);
+  const [isAuthOpen, setIsAuthOpen] = useState(false);
+  const [isDeleteOpen, setIsDeleteOpen] = useState(false);
+  const [isDeleted, setIsDeleted] = useState(false);
 
   async function confirmDelete() {
     const result = await deleteAccount();
     if (result.ok) {
-      setDeleteOpen(false);
-      setDeleted(true);
+      setIsDeleteOpen(false);
+      setIsDeleted(true);
     }
     return result;
   }
 
   let body = null;
-  if (deleted) {
+  if (isDeleted) {
     body = (
       <p className="m-0 text-body text-green">
         Your account has been deleted. You can close this page, or{' '}
@@ -95,7 +95,7 @@ export default function SettingsPage() {
     body = (
       <div>
         <p className="m-0 mb-4 text-body text-muted">Sign in to manage your name, phone number and account.</p>
-        <Button onClick={() => setAuthOpen(true)}>Sign in</Button>
+        <Button onClick={() => setIsAuthOpen(true)}>Sign in</Button>
       </div>
     );
   } else {
@@ -105,7 +105,7 @@ export default function SettingsPage() {
         prefs={<TripPrefsFields idPrefix="st" />}
         onSave={updateAccount}
         onLogout={logout}
-        onDelete={() => setDeleteOpen(true)}
+        onDelete={() => setIsDeleteOpen(true)}
       />
     );
   }
@@ -118,8 +118,8 @@ export default function SettingsPage() {
         <p className="text-body text-muted m-0 mb-[1.6rem]">Update your details and saved preferences.</p>
         {body}
       </div>
-      <AuthSheet open={authOpen} onClose={() => setAuthOpen(false)} />
-      <DeleteSheet open={deleteOpen} onClose={() => setDeleteOpen(false)} onConfirm={confirmDelete} />
+      <AuthSheet open={isAuthOpen} onClose={() => setIsAuthOpen(false)} />
+      <DeleteSheet open={isDeleteOpen} onClose={() => setIsDeleteOpen(false)} onConfirm={confirmDelete} />
     </Container>
   );
 }

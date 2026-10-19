@@ -92,14 +92,14 @@ function HelpCard({ className = '' }) {
 
 export default function OurCompany() {
   const [tab, setTab] = useState('about');
-  const [reading, setReading] = useState(false);
+  const [isReading, setIsReading] = useState(false);
 
   useEffect(() => {
     function applyHash() {
       const id = idFromHash();
       if (id) {
         setTab(id);
-        setReading(true);
+        setIsReading(true);
       }
     }
     applyHash();
@@ -109,12 +109,12 @@ export default function OurCompany() {
 
   function goTo(id) {
     setTab(id);
-    setReading(true);
+    setIsReading(true);
     window.history.replaceState(null, '', `#${id}`);
   }
 
   function goBack() {
-    setReading(false);
+    setIsReading(false);
     window.history.replaceState(null, '', window.location.pathname);
   }
 
@@ -125,7 +125,7 @@ export default function OurCompany() {
         items={TABS}
         active={tab}
         onSelect={goTo}
-        reading={reading}
+        reading={isReading}
         onBack={goBack}
         help={<HelpCard />}
         collapsible

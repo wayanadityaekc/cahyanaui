@@ -60,11 +60,11 @@ const STAGGER_CAP = 0.2;
 const Entered = createContext(false);
 
 export function Stagger({ children, className }) {
-  const [entered, setEntered] = useState(false);
-  useEffect(() => setEntered(true), []);
+  const [isEntered, setIsEntered] = useState(false);
+  useEffect(() => setIsEntered(true), []);
   return (
     <Shell>
-      <Entered.Provider value={entered}>
+      <Entered.Provider value={isEntered}>
         <div className={className}>{children}</div>
       </Entered.Provider>
     </Shell>

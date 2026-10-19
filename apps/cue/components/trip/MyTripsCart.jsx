@@ -36,13 +36,13 @@ export default function MyTripsCart() {
   const { returnRef, clearReturn } = usePaymentReturn();
 
   const [review, setReview] = useState(null);
-  const [adding, setAdding] = useState(false);
+  const [isAdding, setIsAdding] = useState(false);
   const [editDate, setEditDate] = useState(null);
   const [tab, setTab] = useState('custom');
-  const [reading, setReading] = useState(true);
+  const [isReading, setIsReading] = useState(true);
   const [openRef, setOpenRef] = useState(null);
 
-  useReviewLink({ trips, reviewableItems, account, setTab, setReading, setReview });
+  useReviewLink({ trips, reviewableItems, account, setTab, setReading: setIsReading, setReview });
 
   const rows = useMemo(() => cartRows(state, displayGuests), [state, displayGuests]);
 
@@ -68,7 +68,7 @@ export default function MyTripsCart() {
 
   if (!hydrated) return <div data-mytrips-cart />;
 
-  const undated = rows.some((row) => !row.date);
+  const hasUndatedRow = rows.some((row) => !row.date);
   const totalText = priced ? format(priced.total.display) : '-';
 
   function remove(row) {
@@ -76,7 +76,7 @@ export default function MyTripsCart() {
   }
 
   function checkout() {
-    if (!rows.length || undated) return;
+    if (!rows.length || hasUndatedRow) return;
     const parts = [];
     const dayCount = new Set(rows.filter((row) => row.kind === 'day').map((row) => row.day_no)).size;
     const transferCount = rows.filter((row) => row.kind === 'transfer').length;
@@ -126,10 +126,10 @@ export default function MyTripsCart() {
           active={tab}
           onSelect={(id) => {
             setTab(id);
-            setReading(true);
+            setIsReading(true);
           }}
-          reading={reading}
-          onBack={() => setReading(false)}
+          reading={isReading}
+          onBack={() => setIsReading(false)}
           collapsible
           breadcrumb={crumbsFor('my-trips')}
           scrollContent
@@ -140,8 +140,8 @@ export default function MyTripsCart() {
               priced={priced}
               format={format}
               totalText={totalText}
-              undated={undated}
-              setAdding={setAdding}
+              undated={hasUndatedRow}
+              setAdding={setIsAdding}
               setEditDate={setEditDate}
               remove={remove}
               checkout={checkout}
@@ -162,7 +162,7 @@ export default function MyTripsCart() {
 
         <ReviewModal open={!!review} prefill={review} onClose={() => setReview(null)} />
 
-        <AddItemPicker open={adding} onClose={() => setAdding(false)} />
+        <AddItemPicker open={isAdding} onClose={() => setIsAdding(false)} />
 
         <DatePopup
           open={!!editDate}

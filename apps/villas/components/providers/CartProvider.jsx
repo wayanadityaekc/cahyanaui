@@ -8,16 +8,16 @@ const CartContext = createContext(null);
 
 export function CartProvider({ children }) {
   const [cart, setCart] = useState(EMPTY);
-  const [ready, setReady] = useState(false);
+  const [isReady, setIsReady] = useState(false);
 
   useEffect(() => {
     setCart(readCart());
-    setReady(true);
+    setIsReady(true);
   }, []);
 
   useEffect(() => {
-    if (ready) writeCart(cart);
-  }, [cart, ready]);
+    if (isReady) writeCart(cart);
+  }, [cart, isReady]);
 
   useEffect(() => {
     function onStorage(event) {
@@ -72,7 +72,7 @@ export function CartProvider({ children }) {
   const value = useMemo(
     () => ({
       cart,
-      ready,
+      ready: isReady,
       count: countItems(cart),
       setStay,
       clearStay,
@@ -86,7 +86,7 @@ export function CartProvider({ children }) {
     }),
     [
       cart,
-      ready,
+      isReady,
       setStay,
       clearStay,
       addService,

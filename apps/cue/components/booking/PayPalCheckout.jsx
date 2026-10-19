@@ -42,7 +42,7 @@ const NOTE = 'mt-[0.6rem] text-small leading-[var(--lh-body)]';
 export default function PayPalCheckout({ bookingRef, option, copy, currency = 'USD', onPaid, onError }) {
   const [state, setState] = useState('loading');
   const [message, setMessage] = useState('');
-  const [cardsOn, setCardsOn] = useState(false);
+  const [isCardFormShown, setIsCardFormShown] = useState(false);
   const buttonsRef = useRef(null);
   const cardRef = useRef(null);
   const mounted = useRef(true);
@@ -149,7 +149,7 @@ export default function PayPalCheckout({ bookingRef, option, copy, currency = 'U
           cardFields.ExpiryField().render('#pp-card-expiry');
           cardFields.CVVField().render('#pp-card-cvv');
           cardRef.current = cardFields;
-          setCardsOn(true);
+          setIsCardFormShown(true);
         }
         if (!cancelled) setState('ready');
       } catch (e) {
@@ -185,7 +185,7 @@ export default function PayPalCheckout({ bookingRef, option, copy, currency = 'U
 
   return (
     <div className="mt-4">
-      {cardsOn && (
+      {isCardFormShown && (
         <div className="mb-4">
           <p className={LABEL}>Card details</p>
           <div id="pp-card-number" className={`${FIELD} mb-2`} />

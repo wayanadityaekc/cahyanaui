@@ -14,7 +14,7 @@ export default function VillaAvailability({
 }) {
   if (!villa)
     return <p className="text-body text-muted">Sorry, we could not load this information. Please try again.</p>;
-  const unknown = availability.status === 'unknown';
+  const isUnknown = availability.status === 'unknown';
   return (
     <Section bare id="availability" className="scroll-mt-[var(--header-h,72px)]">
       <Container>
@@ -36,7 +36,7 @@ export default function VillaAvailability({
             maxDaysAhead={STAY_RULES.maxDaysAhead}
             loading={availability.status === 'loading'}
             note={
-              unknown ? (
+              isUnknown ? (
                 <p role="status" className={NOTE} data-availability="unknown">
                   We can&apos;t load {villa.name}&apos;s live calendar right now. You can still pick dates - our team
                   will confirm them by hand on WhatsApp.

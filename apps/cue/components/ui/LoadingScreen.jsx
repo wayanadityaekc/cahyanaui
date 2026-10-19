@@ -4,13 +4,13 @@ import { useEffect, useRef, useState } from 'react';
 import clsx from 'clsx';
 
 export default function LoadingScreen() {
-  const [out, setOut] = useState(false);
+  const [isFadingOut, setIsFadingOut] = useState(false);
   const safety = useRef(null);
   const elRef = useRef(null);
 
   useEffect(() => {
     function hide() {
-      return setOut(true);
+      return setIsFadingOut(true);
     }
     let cap;
     if (document.readyState === 'complete') {
@@ -54,13 +54,13 @@ export default function LoadingScreen() {
         overlay.style.transition = 'none';
         overlay.classList.remove('opacity-0', 'invisible', 'pointer-events-none');
       }
-      setOut(false);
+      setIsFadingOut(false);
       clearTimeout(safety.current);
-      safety.current = setTimeout(() => setOut(true), 3000);
+      safety.current = setTimeout(() => setIsFadingOut(true), 3000);
     }
     document.addEventListener('click', onClick, true);
     function onShow() {
-      return setOut(true);
+      return setIsFadingOut(true);
     }
     window.addEventListener('pageshow', onShow);
     return () => {
@@ -74,7 +74,7 @@ export default function LoadingScreen() {
     'fixed inset-0 z-[9999] flex flex-col items-center justify-center gap-[1.2rem] bg-cream [transition:opacity_0.45s_var(--ease),visibility_0.45s_var(--ease)]';
   const OUT = 'opacity-0 invisible pointer-events-none';
   return (
-    <div ref={elRef} className={clsx(BASE, out && OUT)} aria-hidden="true">
+    <div ref={elRef} className={clsx(BASE, isFadingOut && OUT)} aria-hidden="true">
       <img className="w-[min(200px,45vw)] h-auto" src="/assets/images/logo.webp" alt="" width="1005" height="324" />
       <span className="w-[26px] h-[26px] rounded-[50%] border-[3px] border-solid border-line border-t-gold animate-[spin_0.7s_linear_infinite]" />
     </div>

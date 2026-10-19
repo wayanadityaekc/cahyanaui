@@ -52,7 +52,7 @@ export default function VillaDetail({ villa }) {
   const [checkIn, setCheckIn] = useState('');
   const [checkOut, setCheckOut] = useState('');
   const [guests, setGuests] = useState(Math.min(preferredGuests || 2, villa.guests));
-  const [checkoutOpen, setCheckoutOpen] = useState(false);
+  const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
   const [today, setToday] = useState('');
   useEffect(() => setToday(baliToday()), []);
   const availability = useVillaAvailability(villa.slug);
@@ -60,7 +60,7 @@ export default function VillaDetail({ villa }) {
 
   const limits = stayLimits({ today: today || '0000-00-00', ...STAY_RULES });
   const range = { checkIn, checkOut };
-  const unknown = calendar.status === 'unknown';
+  const isUnknown = calendar.status === 'unknown';
   const ready = calendar.status === 'ready' && stayIsOpen(range, { busy: calendar.busy, limits });
   const stay = ready ? { villaSlug: villa.slug, checkIn, checkOut, guests } : null;
   const askMessage = `Hi! I'd like to book ${villa.name}${checkIn && checkOut ? ` from ${checkIn} to ${checkOut}` : ''} for ${guests} guest${guests > 1 ? 's' : ''}. Your online calendar wasn't loading - could you check these dates for me?`;
@@ -76,7 +76,7 @@ export default function VillaDetail({ villa }) {
       return;
     }
     setStay(stay);
-    setCheckoutOpen(true);
+    setIsCheckoutOpen(true);
   }
 
   function addExtrasFirst() {
@@ -214,7 +214,7 @@ export default function VillaDetail({ villa }) {
               </div>
             }
             cta={
-              unknown ? (
+              isUnknown ? (
                 <div className="flex flex-col gap-2">
                   <p role="status" className="m-0 text-small text-green" data-availability="unknown">
                     We can&apos;t load the live calendar right now, so our team will confirm your dates by hand.
@@ -294,7 +294,7 @@ export default function VillaDetail({ villa }) {
           {ready ? 'Book now' : 'Pick dates'}
         </Button>
       </StickyBar>
-      <StayCheckout stay={stay} open={checkoutOpen} onClose={() => setCheckoutOpen(false)} />
+      <StayCheckout stay={stay} open={isCheckoutOpen} onClose={() => setIsCheckoutOpen(false)} />
     </>
   );
 }

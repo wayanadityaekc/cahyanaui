@@ -49,20 +49,20 @@ export function payOptions({
   totalUsd = null,
 }) {
   const current = String(currency || 'USD').toUpperCase();
-  const known = total != null;
+  const isTotalKnown = total != null;
   const dep = depositIn(current, deposit);
-  const disc = known ? roundDown((total * (100 - REFERRAL_DISCOUNT_PCT)) / 100, current) : null;
-  const idrKnown = totalIdr != null;
+  const disc = isTotalKnown ? roundDown((total * (100 - REFERRAL_DISCOUNT_PCT)) / 100, current) : null;
+  const isIdrKnown = totalIdr != null;
   const idr = {
     deposit: depositIdr != null ? depositIdr : null,
-    full: idrKnown ? totalIdr : null,
-    referral: idrKnown ? roundDown((totalIdr * (100 - REFERRAL_DISCOUNT_PCT)) / 100, 'IDR') : null,
+    full: isIdrKnown ? totalIdr : null,
+    referral: isIdrKnown ? roundDown((totalIdr * (100 - REFERRAL_DISCOUNT_PCT)) / 100, 'IDR') : null,
   };
-  const usdKnown = totalUsd != null;
+  const isUsdKnown = totalUsd != null;
   const usd = {
     deposit: DEPOSIT_USD,
-    full: usdKnown ? totalUsd : null,
-    referral: usdKnown ? roundDown((totalUsd * (100 - REFERRAL_DISCOUNT_PCT)) / 100, 'USD') : null,
+    full: isUsdKnown ? totalUsd : null,
+    referral: isUsdKnown ? roundDown((totalUsd * (100 - REFERRAL_DISCOUNT_PCT)) / 100, 'USD') : null,
   };
 
   return [
@@ -71,10 +71,10 @@ export function payOptions({
       label: 'Pay a deposit',
       sub: 'Holds your date.',
       badge: 'Deposit',
-      amount: known && dep != null ? dep : null,
+      amount: isTotalKnown && dep != null ? dep : null,
       amountIdr: idr.deposit,
       amountUsd: usd.deposit,
-      balance: known && dep != null ? total - dep : null,
+      balance: isTotalKnown && dep != null ? total - dep : null,
       available: true,
     },
     {
@@ -82,7 +82,7 @@ export function payOptions({
       label: 'Pay in full',
       sub: 'Nothing to pay on the day, no cash to carry.',
       badge: null,
-      amount: known ? total : null,
+      amount: isTotalKnown ? total : null,
       amountIdr: idr.full,
       amountUsd: usd.full,
       balance: null,
@@ -93,7 +93,7 @@ export function payOptions({
       label: 'Referral code',
       sub: `${REFERRAL_DISCOUNT_PCT}% off, and no deposit to pay.`,
       badge: `Save ${REFERRAL_DISCOUNT_PCT}%`,
-      amount: known ? disc : null,
+      amount: isTotalKnown ? disc : null,
       amountIdr: idr.referral,
       amountUsd: usd.referral,
       balance: null,

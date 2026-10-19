@@ -45,23 +45,23 @@ export default function RailLayout({
   breadcrumb = null,
   scrollContent = false,
 }) {
-  const [collapsed, setCollapsed] = useState(false);
+  const [isCollapsed, setIsCollapsed] = useState(false);
   useEffect(() => {
-    if (collapsible) setCollapsed(readLocal(KEY.railCollapsed, '') === '1');
+    if (collapsible) setIsCollapsed(readLocal(KEY.railCollapsed, '') === '1');
   }, [collapsible]);
   function toggleCollapsed() {
-    const next = !collapsed;
-    setCollapsed(next);
-    writeLocal(KEY.railCollapsed, next ? '1' : '0');
+    const isNextCollapsed = !isCollapsed;
+    setIsCollapsed(isNextCollapsed);
+    writeLocal(KEY.railCollapsed, isNextCollapsed ? '1' : '0');
   }
-  const railCollapsed = collapsible && collapsed;
+  const railCollapsed = collapsible && isCollapsed;
   const effectiveFrameClass = scrollContent ? RAIL_FRAME_SCROLL : frameClass;
   const effectiveMainClass = scrollContent ? RAIL_MAIN_SCROLL : mainClass;
 
   function rows(mobile) {
     return items.map((item) => {
-      const selected = active === item.id;
-      const cls = mobile ? railMobileItem(selected) : railItem(selected, railCollapsed);
+      const isSelected = active === item.id;
+      const cls = mobile ? railMobileItem(isSelected) : railItem(isSelected, railCollapsed);
       const inner = (
         <>
           {item.Icon && <item.Icon strokeWidth={1.7} aria-hidden="true" />}
@@ -74,13 +74,13 @@ export default function RailLayout({
         <div key={item.id} className="contents">
           {item.split && <span className={RAIL_SPLIT} aria-hidden="true" />}
           {item.href ? (
-            <a href={item.href} className={`${cls} no-underline`} aria-current={selected || undefined} {...a11y}>
+            <a href={item.href} className={`${cls} no-underline`} aria-current={isSelected || undefined} {...a11y}>
               {inner}
             </a>
           ) : (
             <button
               type="button"
-              aria-current={selected ? 'true' : undefined}
+              aria-current={isSelected ? 'true' : undefined}
               onClick={() => onSelect(item.id)}
               className={cls}
               {...a11y}
@@ -121,8 +121,8 @@ export default function RailLayout({
                 type="button"
                 className={RAIL_TRIGGER}
                 onClick={toggleCollapsed}
-                aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
-                aria-expanded={!collapsed}
+                aria-label={isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+                aria-expanded={!isCollapsed}
               >
                 <PanelLeft strokeWidth={1.7} aria-hidden="true" />
               </button>

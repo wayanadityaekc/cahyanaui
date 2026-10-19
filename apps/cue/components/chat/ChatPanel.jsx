@@ -61,24 +61,24 @@ export default function ChatPanel({ open, onClose }) {
   const { account, hydrated } = useAccount();
   const [log, setLog] = useState(() => [{ id: uid(), from: 'bot', text: CHAT_COPY.greeting, chips: SUGGESTIONS }]);
   const [draft, setDraft] = useState('');
-  const [thinking, setThinking] = useState(false);
+  const [isThinking, setIsThinking] = useState(false);
   const bodyRef = useRef(null);
   const inputRef = useRef(null);
 
-  const [authOpen, setAuthOpen] = useState(false);
+  const [isAuthOpen, setIsAuthOpen] = useState(false);
   const greeted = useRef(false);
 
   const [thread, setThread] = useState(null);
-  const [sending, setSending] = useState(false);
+  const [isSending, setIsSending] = useState(false);
   const [mail, setMail] = useState('idle');
   const [mailDraft, setMailDraft] = useState('');
   const [mailErr, setMailErr] = useState('');
-  const [quiet, setQuiet] = useState(false);
+  const [isQuiet, setIsQuiet] = useState(false);
   const lastSeen = useRef(0);
   const heard = useRef(false);
 
-  const [live, setLive] = useState(false);
-  const [ownerHere, setOwnerHere] = useState(false);
+  const [isLive, setIsLive] = useState(false);
+  const [isOwnerPresent, setIsOwnerPresent] = useState(false);
   const [typingUntil, setTypingUntil] = useState(0);
   const sock = useRef(null);
   const seenIds = useRef(new Set());
@@ -136,10 +136,10 @@ export default function ChatPanel({ open, onClose }) {
     if (!open || !thread) return undefined;
     const chatSocket = openChatSocket(thread, {
       onOpen: catchUp,
-      onLive: setLive,
+      onLive: setIsLive,
       onPresence: (isPresent) => {
         ownerHereRef.current = isPresent;
-        setOwnerHere(isPresent);
+        setIsOwnerPresent(isPresent);
       },
       onTyping: (durationMs) => setTypingUntil(Date.now() + durationMs),
       onMessage: (message) => takeOwner([message]),
@@ -152,11 +152,11 @@ export default function ChatPanel({ open, onClose }) {
   }, [open, thread, catchUp, takeOwner]);
 
   useEffect(() => {
-    if (!open || !thread || live) return undefined;
+    if (!open || !thread || isLive) return undefined;
     catchUp();
     const pollTimer = setInterval(catchUp, 5000);
     return () => clearInterval(pollTimer);
-  }, [open, thread, live, catchUp]);
+  }, [open, thread, isLive, catchUp]);
 
   useEffect(() => {
     if (!open || !thread) return undefined;
@@ -167,7 +167,7 @@ export default function ChatPanel({ open, onClose }) {
     return () => document.removeEventListener('visibilitychange', onShow);
   }, [open, thread, catchUp]);
 
-  const wayanTyping = typingUntil > Date.now();
+  const isWayanTyping = typingUntil > Date.now();
   useEffect(() => {
     const remainingMs = typingUntil - Date.now();
     if (remainingMs <= 0) return undefined;
@@ -178,25 +178,25 @@ export default function ChatPanel({ open, onClose }) {
   useEffect(() => {
     const body = bodyRef.current;
     if (body) body.scrollTop = body.scrollHeight;
-  }, [log, thinking]);
+  }, [log, isThinking]);
 
   useEffect(() => {
     if (!open) return undefined;
     const focusTimer = setTimeout(() => inputRef.current && inputRef.current.focus(), 60);
     function onKey(event) {
-      if (event.key === 'Escape' && !authOpen) onClose();
+      if (event.key === 'Escape' && !isAuthOpen) onClose();
     }
     document.addEventListener('keydown', onKey);
     return () => {
       clearTimeout(focusTimer);
       document.removeEventListener('keydown', onKey);
     };
-  }, [open, onClose, authOpen]);
+  }, [open, onClose, isAuthOpen]);
 
   const connect = useCallback(
     async (question) => {
-      if (sending) return;
-      setSending(true);
+      if (isSending) return;
+      setIsSending(true);
       try {
         const id = await startThread({
           question,
@@ -218,15 +218,15 @@ export default function ChatPanel({ open, onClose }) {
       } catch (e) {
         setLog((prev) => [...prev, { id: uid(), from: 'bot', text: e.message || 'Could not reach Wayan just now.' }]);
       }
-      setSending(false);
+      setIsSending(false);
     },
-    [sending, account],
+    [isSending, account],
   );
 
   const ask = useCallback(
     (question) => {
       const text = String(question || '').trim();
-      if (!text || thinking || sending) return;
+      if (!text || isThinking || isSending) return;
       setDraft('');
       setLog((prev) => [...prev, { id: uid(), from: 'me', text: text }]);
 
@@ -237,7 +237,7 @@ export default function ChatPanel({ open, onClose }) {
         return;
       }
 
-      setThinking(true);
+      setIsThinking(true);
 
       setTimeout(() => {
         const result = answerFor(text, pricingContext);
@@ -247,10 +247,10 @@ export default function ChatPanel({ open, onClose }) {
           connect(text);
         }
         setLog((prev) => [...prev, message]);
-        setThinking(false);
+        setIsThinking(false);
       }, THINK_MS);
     },
-    [pricingContext, thinking, sending, thread, connect],
+    [pricingContext, isThinking, isSending, thread, connect],
   );
 
   useEffect(() => {
@@ -263,13 +263,13 @@ export default function ChatPanel({ open, onClose }) {
       setMail('ask');
       return undefined;
     }
-    const quietTimer = setTimeout(() => setQuiet(true), CHAT_COPY.quietMs);
+    const quietTimer = setTimeout(() => setIsQuiet(true), CHAT_COPY.quietMs);
     return () => clearTimeout(quietTimer);
   }, [thread, mail, account]);
 
   useEffect(() => {
-    if (quiet && mail === 'idle' && !heard.current) setMail('ask');
-  }, [quiet, mail]);
+    if (isQuiet && mail === 'idle' && !heard.current) setMail('ask');
+  }, [isQuiet, mail]);
 
   function onDraft(draftText) {
     setDraft(draftText);
@@ -296,12 +296,12 @@ export default function ChatPanel({ open, onClose }) {
 
   return (
     <>
-      <AuthModal open={authOpen} onClose={() => setAuthOpen(false)} />
+      <AuthModal open={isAuthOpen} onClose={() => setIsAuthOpen(false)} />
       <div className={SCRIM(open)} onClick={onClose} aria-hidden="true" />
       <div
         className={PANEL(open)}
         role="dialog"
-        data-live={live ? '1' : '0'}
+        data-live={isLive ? '1' : '0'}
         aria-label={CHAT_COPY.title}
         aria-modal="false"
         {...(open ? {} : { inert: '' })}
@@ -323,7 +323,7 @@ export default function ChatPanel({ open, onClose }) {
           {hydrated && !account && (
             <p className={SIGNIN_BAR}>
               <span className={SIGNIN_TEXT}>{CHAT_COPY.signedOut}</span>
-              <button type="button" className={SIGNIN_BTN} data-cta data-signin onClick={() => setAuthOpen(true)}>
+              <button type="button" className={SIGNIN_BTN} data-cta data-signin onClick={() => setIsAuthOpen(true)}>
                 {CHAT_COPY.signIn}
               </button>
             </p>
@@ -373,7 +373,7 @@ export default function ChatPanel({ open, onClose }) {
             </form>
           )}
 
-          {thinking && (
+          {isThinking && (
             <span className={DOTS} aria-label="Typing">
               <i className={DOT} />
               <i className={DOT} />
@@ -381,7 +381,7 @@ export default function ChatPanel({ open, onClose }) {
             </span>
           )}
 
-          {wayanTyping && (
+          {isWayanTyping && (
             <span className={TYPING_ROW} data-typing aria-live="polite">
               <small className={TYPING_WHO}>{CHAT_COPY.typing}</small>
               <i className={DOT_LIVE(0)} />
@@ -394,7 +394,7 @@ export default function ChatPanel({ open, onClose }) {
         {thread && (
           <p className={CONNECTED}>
             <MessageCircle strokeWidth={2} aria-hidden="true" />
-            {ownerHere ? CHAT_COPY.ownerHere : CHAT_COPY.connectedStrip}
+            {isOwnerPresent ? CHAT_COPY.ownerHere : CHAT_COPY.connectedStrip}
           </p>
         )}
 
@@ -418,7 +418,7 @@ export default function ChatPanel({ open, onClose }) {
             type="submit"
             className={SEND}
             data-cta
-            disabled={!draft.trim() || thinking || sending}
+            disabled={!draft.trim() || isThinking || isSending}
             aria-label="Send"
           >
             <Send strokeWidth={1.8} aria-hidden="true" />

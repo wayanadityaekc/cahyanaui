@@ -13,14 +13,14 @@ import OtpFields from './OtpFields';
 const RESEND_SECONDS = 30;
 
 export default function AuthModal({ open, onClose, reason, onSignedIn }) {
-  const forBook = reason === 'book';
+  const isForBooking = reason === 'book';
   const { requestLogin, verifyCode, createAccount } = useAccount();
   const [view, setView] = useState('signin');
   const [stage, setStage] = useState('email');
   const [form, setForm] = useState({ name: '', email: '', phone: '' });
   const [codeEmail, setCodeEmail] = useState('');
   const [code, setCode] = useState('');
-  const [busy, setBusy] = useState(false);
+  const [isBusy, setIsBusy] = useState(false);
   const [errors, setErrors] = useState({});
   const [message, setMessage] = useState('');
   const [ok, setOk] = useState('');
@@ -55,9 +55,9 @@ export default function AuthModal({ open, onClose, reason, onSignedIn }) {
   }
 
   async function sendCode(email) {
-    setBusy(true);
+    setIsBusy(true);
     const sent = await requestLogin(email);
-    setBusy(false);
+    setIsBusy(false);
     if (!sent) {
       setMessage('Sorry, we could not send the code. Please try again, or reach us on WhatsApp.');
       return;
@@ -82,9 +82,9 @@ export default function AuthModal({ open, onClose, reason, onSignedIn }) {
     const { ok: valid, errors: fieldErrors, data } = validateWith(createAccountSchema, form);
     setErrors(fieldErrors);
     if (!valid) return;
-    setBusy(true);
+    setIsBusy(true);
     const result = await createAccount({ name: data.name, email: data.email, phone: data.phone });
-    setBusy(false);
+    setIsBusy(false);
     if (result.ok) {
       reset();
       setForm({ name: '', email: '', phone: '' });
@@ -104,9 +104,9 @@ export default function AuthModal({ open, onClose, reason, onSignedIn }) {
 
   async function doVerify(fullCode) {
     reset();
-    setBusy(true);
+    setIsBusy(true);
     const result = await verifyCode(codeEmail, fullCode);
-    setBusy(false);
+    setIsBusy(false);
     if (result.ok) {
       reset();
       setForm({ name: '', email: '', phone: '' });
@@ -120,7 +120,7 @@ export default function AuthModal({ open, onClose, reason, onSignedIn }) {
   }
 
   async function resend() {
-    if (cooldown > 0 || busy) return;
+    if (cooldown > 0 || isBusy) return;
     await sendCode(codeEmail);
   }
 
@@ -140,7 +140,7 @@ export default function AuthModal({ open, onClose, reason, onSignedIn }) {
     stage === 'code'
       ? 'Enter your code'
       : view === 'signin'
-        ? forBook
+        ? isForBooking
           ? 'Sign in to book'
           : 'Sign in'
         : 'Create your account';
@@ -158,7 +158,7 @@ export default function AuthModal({ open, onClose, reason, onSignedIn }) {
             onChange={setCode}
             onComplete={doVerify}
             error={!!message}
-            disabled={busy}
+            disabled={isBusy}
             autoFocus
           />
           {message && (
@@ -175,9 +175,9 @@ export default function AuthModal({ open, onClose, reason, onSignedIn }) {
             type="button"
             className={`${BTN} mt-4`}
             onClick={() => doVerify(code)}
-            disabled={busy || code.length < 6}
+            disabled={isBusy || code.length < 6}
           >
-            {busy ? 'Checking...' : 'Verify'}
+            {isBusy ? 'Checking...' : 'Verify'}
           </button>
           <p className="mt-4 text-center text-small text-muted">
             {cooldown > 0 ? (
@@ -204,7 +204,7 @@ export default function AuthModal({ open, onClose, reason, onSignedIn }) {
       ) : view === 'signin' ? (
         <>
           <p className="m-0 mb-[1.1rem] text-muted text-small leading-[1.5]">
-            {forBook ? (
+            {isForBooking ? (
               <>
                 Your trip is saved. Enter your email and we&apos;ll send a 6-digit code to sign in - no password needed.
               </>
@@ -237,8 +237,8 @@ export default function AuthModal({ open, onClose, reason, onSignedIn }) {
               {message}
             </small>
           )}
-          <button type="button" className={BTN} onClick={doSignIn} disabled={busy}>
-            {busy ? 'Sending...' : 'Send code'}
+          <button type="button" className={BTN} onClick={doSignIn} disabled={isBusy}>
+            {isBusy ? 'Sending...' : 'Send code'}
           </button>
           <p className="mt-4 text-center text-small text-muted">
             New here?{' '}
@@ -321,8 +321,8 @@ export default function AuthModal({ open, onClose, reason, onSignedIn }) {
               {message}
             </small>
           )}
-          <button type="button" className={BTN} onClick={doCreate} disabled={busy}>
-            {busy ? 'Creating...' : 'Create Account'}
+          <button type="button" className={BTN} onClick={doCreate} disabled={isBusy}>
+            {isBusy ? 'Creating...' : 'Create Account'}
           </button>
           <p className="mt-4 text-center text-small text-muted">
             Already have an account?{' '}

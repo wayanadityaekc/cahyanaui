@@ -9,8 +9,8 @@ const bad = [];
 function cmp(label, oldMsg, { ok, errors }, field) {
   checked++;
   const newMsg = ok ? '' : errors[field] || '';
-  const oldOk = !oldMsg;
-  if (oldOk !== (newMsg === '')) bad.push(`${label}: old=${JSON.stringify(oldMsg)} new=${JSON.stringify(newMsg)}`);
+  const isOldValid = !oldMsg;
+  if (isOldValid !== (newMsg === '')) bad.push(`${label}: old=${JSON.stringify(oldMsg)} new=${JSON.stringify(newMsg)}`);
   else if (oldMsg && oldMsg !== newMsg)
     bad.push(`${label}: message differs old=${JSON.stringify(oldMsg)} new=${JSON.stringify(newMsg)}`);
 }

@@ -13,7 +13,7 @@ function fmtDate(iso) {
 }
 
 export default function ReviewDetailModal({ review, onClose }) {
-  const open = !!review;
+  const isOpen = !!review;
   const lastRef = useRef(null);
   if (review) lastRef.current = review;
   const currentReview = review || lastRef.current || {};
@@ -21,7 +21,7 @@ export default function ReviewDetailModal({ review, onClose }) {
   const stars = '★'.repeat(starCount) + '☆'.repeat(5 - starCount);
 
   return (
-    <Modal open={open} onClose={onClose} title="Guest review">
+    <Modal open={isOpen} onClose={onClose} title="Guest review">
       <div className="flex items-center justify-between gap-3 mb-1">
         <span className="font-semibold text-body text-green">{currentReview.name}</span>
         {currentReview.created_at && <span className="text-label text-muted">{fmtDate(currentReview.created_at)}</span>}

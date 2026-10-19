@@ -8,7 +8,7 @@ Work order WO-NAMING, branch `refactor/naming-convention` from `main`, 19 Oct 20
 |---|---|---|
 | 1. Short names | 1726 | descriptive names instead of short names and abbreviations; clearer names where a rename had to add Item |
 | 2. Booleans | 306 | boolean names start with is, has, can or should |
-| 3. Functions verb + noun | 421 | function names are verb + noun |
+| 3. Functions verb + noun | 423 | function names are verb + noun; remaining exported helper names are verb + noun; keep the shared cahyanaConfig export name |
 | 4. Event handlers | 66 | event handlers are named handle…; remaining event handlers are handle... |
 | 5. Lists plural | 93 | arrays have plural names |
 | 6. Magic numbers | 409 | magic numbers become named constants |
@@ -67,9 +67,7 @@ Renames were made with the TypeScript language service (rename symbol, run from 
 | 1 | apps/cue/components/booking/BookSidebar.jsx: catalogEntry | collision |
 | 1 | apps/cue/components/booking/BookingForm.jsx: catalogEntry | collision |
 | 1 | apps/cue/components/sections/HeroSlider.jsx: slideIndex | collision |
-| 3 | apps/cue/components/ui/hsClasses.js overlay -> buildOverlayClass | exported and also read by name elsewhere (string or namespace) |
-| 3 | apps/cue/lib/api.js catalog -> fetchCatalog | exported and also read by name elsewhere |
-| 3 | apps/cue/lib/chatAnswers.js itemIndex -> buildItemIndex | exported and also read by name elsewhere |
+| 3 | tools/eslint/cahyana-rules.mjs: cahyanaConfig -> buildCahyanaConfig (reverted) | every repo imports this export from its copy of tools/eslint/cahyana-rules.mjs; renaming it breaks their eslint.config.mjs |
 | 3 | apps/cue/lib/routes.js, apps/villas/lib/routes.js indexablePaths -> listIndexablePaths | read through a dynamic import by name in the gates (check-urls failed when renamed); reverted |
 | 3 | 25 exports of packages/ui (cn, ladder, perIdr, displayFromIdr, isoDay, nightsBetween, stayLimits, stayIsOpen, panelPopup, opt, overlay, panelBookdate, calDay, calRangeDay, navLink, navDeskLink, navPop, navPopLink, railItem, railMobileItem, starText, chatSocketUrl, initialsOf, firstNameOf, chatDotLive) | published library API (@wayanadityaekc/ui): sites import these names; renaming needs a new major version |
 | 3 | Next.js names robots, sitemap, importApp and other exported framework entry points | names fixed by Next.js or by other files |
@@ -2584,9 +2582,11 @@ For the Cahyana name dictionary. Rule 6 rows: number -> constant. Rule 7 rows: c
 | 3 | tools/eslint/cahyana-rules.mjs | `variableScopeBlock` | `findVariableScopeBlock` |
 | 3 | tools/eslint/cahyana-rules.mjs | `lineBounds` | `findLineBounds` |
 | 3 | tools/eslint/cahyana-rules.mjs | `removalFor` | `buildCommentRemoval` |
-| 3 | tools/eslint/cahyana-rules.mjs | `cahyanaConfig` | `buildCahyanaConfig` |
 | 3 | tools/money-parity-test.mjs | `ok` | `recordCheck` |
 | 3 | tools/money-parity-test.mjs | `random` | `nextRandomFraction` |
+| 3 | apps/cue/components/ui/hsClasses.js | `overlay` | `buildOverlayClass` |
+| 3 | apps/cue/lib/api.js | `catalog` | `fetchCatalog` |
+| 3 | apps/cue/lib/chatAnswers.js | `itemIndex` | `buildItemIndex` |
 | 4 | apps/cue/components/account/AuthModal.jsx | `close` | `handleClose` |
 | 4 | apps/cue/components/booking/BookConfirmModal.jsx | `closeBooking` | `handleBookingClose` |
 | 4 | apps/cue/components/booking/BookConfirmModal.jsx | `applyRef` | `handleReferralApply` |

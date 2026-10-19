@@ -23,7 +23,7 @@ export function submitContact({ name, email, message }) {
   return post('/contact', { name, email, message });
 }
 
-export async function catalog({ currency = 'USD', guests = 2, stay = '' } = {}) {
+export async function fetchCatalog({ currency = 'USD', guests = 2, stay = '' } = {}) {
   const query = new URLSearchParams({ currency, guests: String(guests), stay: stay || '' });
   const response = await fetch(`${API_BASE}/pricing/catalog?${query}`);
   return response.ok ? response.json() : null;

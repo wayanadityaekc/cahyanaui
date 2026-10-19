@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import {
-  overlay,
+  buildOverlayClass,
   buildPanelBookdateClass,
   PANEL_HEAD_BOOKDATE,
   PANEL_HEAD_H3,
@@ -92,7 +92,7 @@ export default function DatePopup({
 
   return createPortal(
     <>
-      <div className={overlay(open, false)} onClick={onClose} />
+      <div className={buildOverlayClass(open, false)} onClick={onClose} />
       <div className={buildPanelBookdateClass(open)}>
         <div className={PANEL_HEAD_BOOKDATE}>
           <h3 className={PANEL_HEAD_H3}>{title}</h3>

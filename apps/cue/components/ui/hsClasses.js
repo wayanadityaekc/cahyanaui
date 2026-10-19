@@ -51,7 +51,7 @@ export function buildOptionClass(selector, disabled) {
   }`;
 }
 
-export function overlay(open, elevated) {
+export function buildOverlayClass(open, elevated) {
   return (
     `fixed inset-0 bg-[rgba(26,26,26,0.42)] ${elevated ? 'z-[300]' : 'z-[55]'} ` +
     `transition-opacity duration-[var(--dur-slow)] ease-[var(--ease-out)] motion-reduce:transition-none ` +

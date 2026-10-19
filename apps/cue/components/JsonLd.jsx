@@ -1,14 +1,14 @@
 import { PAGE_SCHEMA } from '@/content/shared/schema';
 import { buildCrumbs } from '@/lib/crumbs';
 import { SITE } from '@/lib/routes';
-import { catalog } from '@/lib/api';
+import { fetchCatalog } from '@/lib/api';
 
 let catalogPromise = null;
 function fetchLivePrices() {
   if (!catalogPromise) {
     catalogPromise = (async () => {
       try {
-        const catalogData = await catalog({ currency: 'USD', guests: 2, stay: '' });
+        const catalogData = await fetchCatalog({ currency: 'USD', guests: 2, stay: '' });
         if (!catalogData || !Array.isArray(catalogData.items)) return null;
         const byName = {};
         catalogData.items.forEach((item) => {

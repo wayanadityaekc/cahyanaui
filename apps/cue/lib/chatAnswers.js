@@ -23,7 +23,7 @@ function findFaqAnswer(question) {
 }
 
 let INDEX = null;
-export function itemIndex() {
+export function buildItemIndex() {
   if (INDEX) return INDEX;
   const indexEntries = [];
   Object.keys(LISTINGS).forEach((section) => {
@@ -119,7 +119,7 @@ function priceOf({ priceName, fallback }, context) {
 }
 
 function buildTourPrices(context) {
-  const picks = itemIndex()
+  const picks = buildItemIndex()
     .filter((item) => item.section === 'tour')
     .slice(0, MAX_ANSWER_MATCHES)
     .map((item) => ({ label: item.name, note: item.meta, price: priceOf(item, context), href: item.href }));
@@ -184,7 +184,7 @@ function matchItem(question) {
   const questionWords = extractWords(question);
   if (!questionWords.length) return null;
   let best = null;
-  itemIndex().forEach((item) => {
+  buildItemIndex().forEach((item) => {
     const iw = extractWords(item.name);
     if (!iw.length) return;
     let hits = 0;

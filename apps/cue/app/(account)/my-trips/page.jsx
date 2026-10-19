@@ -11,9 +11,9 @@ export default function Page() {
   return (
     <div className="tourprog">
       <JsonLd page="my-trips" />
-    <div className={RAIL_PAGE_SCROLL}>
-      <MyTripsCart />
-    </div>
+      <div className={RAIL_PAGE_SCROLL}>
+        <MyTripsCart />
+      </div>
     </div>
   );
 }

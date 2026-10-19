@@ -15,22 +15,36 @@ function extraLine(extra, stay, catalog, formatAmount) {
   return `- ${program ? program.title : extra.key}: ${fmtDate(extra.date)}, ${fmtTime(extra.time)} - ${amount}`;
 }
 
-export function bookingMessage({ stay, villa, nights, shown, breakdown, inRupiah, extras = [], totals = null, catalog = null, services = [], formatAmount }) {
-  const lines = [
-    stay && villa ? `Hi! I'd like to book ${villa.name}.` : "Hi! I'd like to ask about staying with you.",
-  ];
+export function bookingMessage({
+  stay,
+  villa,
+  nights,
+  shown,
+  breakdown,
+  inRupiah,
+  extras = [],
+  totals = null,
+  catalog = null,
+  services = [],
+  formatAmount,
+}) {
+  const lines = [stay && villa ? `Hi! I'd like to book ${villa.name}.` : "Hi! I'd like to ask about staying with you."];
   if (stay) {
     lines.push(`Check-in: ${stay.checkIn || '-'}`, `Check-out: ${stay.checkOut || '-'}`, `Guests: ${stay.guests}`);
   }
   if (breakdown && nights > 0) {
     lines.push(`${nights} night(s) x ${formatAmount(shown.nightly)} = ${formatAmount(shown.subtotal)}`);
-    lines.push(`Stay total (paid in full): ${formatAmount(shown.total)}${inRupiah ? '' : ` (exact price ${formatRupiah(breakdown.totalIdr)})`}`);
+    lines.push(
+      `Stay total (paid in full): ${formatAmount(shown.total)}${inRupiah ? '' : ` (exact price ${formatRupiah(breakdown.totalIdr)})`}`,
+    );
   }
   if (extras.length && stay) {
     lines.push('', 'Cahyana Ubud Experience extras:');
     extras.forEach((extra) => lines.push(extraLine(extra, stay, catalog, formatAmount)));
     if (totals) {
-      lines.push(`Extras total: ${formatAmount(totals.total)} (deposit ${formatAmount(totals.deposit)} now, ${formatAmount(totals.rest)} on the day)`);
+      lines.push(
+        `Extras total: ${formatAmount(totals.total)} (deposit ${formatAmount(totals.deposit)} now, ${formatAmount(totals.rest)} on the day)`,
+      );
     }
   }
   if (services.length) {

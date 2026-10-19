@@ -3,8 +3,7 @@ export const SUBHERO =
   'text-center bg-green bg-cover bg-center ' +
   'bg-[image:linear-gradient(rgba(0,0,0,0.4),rgba(0,0,0,0.55)),url(/assets/images/homepage_hero.webp)]';
 export const SUBHERO_OVERLAP = SUBHERO;
-export const SUBHERO_OVERLAP_NEXT =
-  'relative z-[2] mt-[-5rem] rounded-t-[var(--r-xl)] bg-white';
+export const SUBHERO_OVERLAP_NEXT = 'relative z-[2] mt-[-5rem] rounded-t-[var(--r-xl)] bg-white';
 export const SUBHERO_CONTENT =
   'relative z-[1] w-full max-w-[720px] animate-[heroFadeIn_0.6s_ease_both] motion-reduce:animate-none';
 export const SUBHERO_TITLE =

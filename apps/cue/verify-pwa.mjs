@@ -3,8 +3,11 @@ import { join } from 'node:path';
 import { chromium } from '/home/user/CUE/node_modules/playwright-core/index.mjs';
 
 const BASE = process.env.BASE || 'http://localhost:4000';
-let pass = 0, fail = 0;
-function ok(c, m) { c ? pass++ : (fail++, console.log('  FAIL:', m)); }
+let pass = 0,
+  fail = 0;
+function ok(c, m) {
+  c ? pass++ : (fail++, console.log('  FAIL:', m));
+}
 
 const FREE = ['/', '/bali-guide.html', '/charter.html'];
 const DETAIL = '/ubud-tour.html';
@@ -13,7 +16,9 @@ const FOOTERBAR = ['/my-trips.html', '/our-company.html'];
 
 function appMode(page) {
   return page.addInitScript(() => {
-    function mark() { document.documentElement.dataset.standalone = '1'; }
+    function mark() {
+      document.documentElement.dataset.standalone = '1';
+    }
     if (document.documentElement) mark();
     else document.addEventListener('readystatechange', mark, { once: true });
   });
@@ -30,13 +35,19 @@ function box(page, sel) {
 }
 
 function bottomBars(page) {
-  return page.evaluate(() => [...document.querySelectorAll('[data-appnav], .stickybar, .footerbar')]
-    .filter((element) => {
-      const cs = getComputedStyle(element);
-      const r = element.getBoundingClientRect();
-      return cs.display !== 'none' && cs.visibility !== 'hidden' && r.height > 0
-        && Math.abs(r.bottom - window.innerHeight) < 2;
-    }).length);
+  return page.evaluate(
+    () =>
+      [...document.querySelectorAll('[data-appnav], .stickybar, .footerbar')].filter((element) => {
+        const cs = getComputedStyle(element);
+        const r = element.getBoundingClientRect();
+        return (
+          cs.display !== 'none' &&
+          cs.visibility !== 'hidden' &&
+          r.height > 0 &&
+          Math.abs(r.bottom - window.innerHeight) < 2
+        );
+      }).length,
+  );
 }
 
 {
@@ -47,11 +58,19 @@ function bottomBars(page) {
       return statSync(p).isDirectory() ? walk(p) : [p];
     });
   }
-  const css = walk(root).filter((p) => p.endsWith('.css')).map((p) => readFileSync(p, 'utf8')).join('\n');
-  function esc(s) { return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); }
+  const css = walk(root)
+    .filter((p) => p.endsWith('.css'))
+    .map((p) => readFileSync(p, 'utf8'))
+    .join('\n');
+  function esc(s) {
+    return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  }
   const classes = [...new Set(css.match(/\.standalone\\:[^{\s,]+/g) || [])];
 
-  ok(classes.length >= 3, `css: only ${classes.length} standalone utilities compiled - interpolated class names never reach Tailwind`);
+  ok(
+    classes.length >= 3,
+    `css: only ${classes.length} standalone utilities compiled - interpolated class names never reach Tailwind`,
+  );
 
   classes.forEach((classe) => {
     const re = new RegExp(`${esc(classe)}(?:[^{,]*)\\{([^}]*)\\}`, 'g');
@@ -68,13 +87,21 @@ function bottomBars(page) {
     ok(!!mediaHit, `css ${classe}: no (display-mode: standalone) rule - installed Android/iOS 16.4+ would get nothing`);
     ok(!!attrHit, `css ${classe}: no html[data-standalone] rule - older iPhones would get nothing`);
     if (mediaHit && attrHit) {
-      ok(mediaHit.decl === attrHit.decl, `css ${classe}: branches declare different things ("${mediaHit.decl}" vs "${attrHit.decl}")`);
-      ok(mediaHit.scoped && attrHit.scoped, `css ${classe}: one branch is not width-scoped (media ${mediaHit.scoped}, attr ${attrHit.scoped})`);
+      ok(
+        mediaHit.decl === attrHit.decl,
+        `css ${classe}: branches declare different things ("${mediaHit.decl}" vs "${attrHit.decl}")`,
+      );
+      ok(
+        mediaHit.scoped && attrHit.scoped,
+        `css ${classe}: one branch is not width-scoped (media ${mediaHit.scoped}, attr ${attrHit.scoped})`,
+      );
     }
   });
 }
 
-const browser = await chromium.launch({ executablePath: process.env.PW_BIN || '/opt/pw-browsers/chromium-1194/chrome-linux/chrome' });
+const browser = await chromium.launch({
+  executablePath: process.env.PW_BIN || '/opt/pw-browsers/chromium-1194/chrome-linux/chrome',
+});
 
 {
   const ctx = await browser.newContext({ viewport: { width: 390, height: 844 } });
@@ -86,7 +113,9 @@ const browser = await chromium.launch({ executablePath: process.env.PW_BIN || '/
     const nav = await box(page, '[data-appnav]');
     ok(nav && nav.display === 'none', `tab ${path}: app bar is showing in a browser tab`);
     const navChat = await page.evaluate(() => {
-      const b = [...document.querySelectorAll('button[aria-label="Chat with us"]')].find((element) => !element.closest('[data-appnav]'));
+      const b = [...document.querySelectorAll('button[aria-label="Chat with us"]')].find(
+        (element) => !element.closest('[data-appnav]'),
+      );
       return b ? getComputedStyle(b).display : null;
     });
     ok(navChat && navChat !== 'none', `tab ${path}: navbar chat icon vanished in a browser tab`);
@@ -114,8 +143,20 @@ const browser = await chromium.launch({ executablePath: process.env.PW_BIN || '/
     const response = await fetch('/manifest.webmanifest');
     if (!response.ok) return { status: response.status };
     const j = await response.json();
-    function by(p) { return (j.icons || []).filter((i) => i.purpose === p).map((i) => i.sizes).sort().join(','); }
-    return { status: response.status, display: j.display, start: j.start_url, any: by('any'), maskable: by('maskable') };
+    function by(p) {
+      return (j.icons || [])
+        .filter((i) => i.purpose === p)
+        .map((i) => i.sizes)
+        .sort()
+        .join(',');
+    }
+    return {
+      status: response.status,
+      display: j.display,
+      start: j.start_url,
+      any: by('any'),
+      maskable: by('maskable'),
+    };
   });
   ok(mf.status === 200, `manifest: HTTP ${mf.status}`);
   ok(mf.display === 'standalone', `manifest: display is "${mf.display}"`);
@@ -137,8 +178,10 @@ const browser = await chromium.launch({ executablePath: process.env.PW_BIN || '/
   const swSrc = readFileSync('out/sw.js', 'utf8');
   ok(/mode\s*!==?\s*['"]navigate['"]|mode === 'navigate'/.test(swSrc), 'sw: no navigation branch at all');
   const navBranch = swSrc.slice(swSrc.indexOf("'navigate'"), swSrc.indexOf("'navigate'") + 220);
-  ok(navBranch.includes('fetch(req)') && navBranch.indexOf('fetch(req)') < navBranch.indexOf('caches.match'),
-     'sw: HTML is read from cache before the network - a push would never reach installed guests');
+  ok(
+    navBranch.includes('fetch(req)') && navBranch.indexOf('fetch(req)') < navBranch.indexOf('caches.match'),
+    'sw: HTML is read from cache before the network - a push would never reach installed guests',
+  );
   await page.close();
   await ctx.close();
 }
@@ -160,13 +203,18 @@ for (const w of [390, 768]) {
       ok(nav.bottom === 844, `${w}${path}: app bar bottom ${nav.bottom}, expected flush at 844`);
       const pad = await page.evaluate(() => parseFloat(getComputedStyle(document.body).paddingBottom));
       ok(pad >= nav.h, `${w}${path}: body reserves ${pad}px for a ${nav.h}px bar`);
-      ok(pad - nav.h <= 14, `${w}${path}: ${Math.round(pad - nav.h)}px of reserved space is wasted under a ${nav.h}px bar`);
+      ok(
+        pad - nav.h <= 14,
+        `${w}${path}: ${Math.round(pad - nav.h)}px of reserved space is wasted under a ${nav.h}px bar`,
+      );
       const cells = await page.$$eval('[data-appnav] > *', (els) => els.length);
       ok(cells === 4, `${w}${path}: app bar has ${cells} items, expected 4`);
     }
 
     const navChat = await page.evaluate(() => {
-      const b = [...document.querySelectorAll('button[aria-label="Chat with us"]')].find((element) => !element.closest('[data-appnav]'));
+      const b = [...document.querySelectorAll('button[aria-label="Chat with us"]')].find(
+        (element) => !element.closest('[data-appnav]'),
+      );
       return b ? getComputedStyle(b).display : null;
     });
     ok(navChat === 'none', `${w}${path}: navbar chat icon still visible in app mode (${navChat})`);
@@ -184,7 +232,7 @@ for (const w of [390, 768]) {
     await appMode(page);
     await page.goto(BASE + path, { waitUntil: 'load' });
     await page.waitForTimeout(200);
-    ok(await bottomBars(page) <= 1, `${w}${path}: two bars stuck to the bottom at the top of the page`);
+    ok((await bottomBars(page)) <= 1, `${w}${path}: two bars stuck to the bottom at the top of the page`);
     await page.evaluate(() => window.scrollTo({ top: 1600, behavior: 'instant' }));
     await page.waitForTimeout(600);
     const after = await bottomBars(page);
@@ -208,7 +256,10 @@ for (const w of [390, 768]) {
     if (FOOTERBAR.includes(path)) {
       const footer = await box(page, '.footerbar');
       const nav = await box(page, '[data-appnav]');
-      ok(footer && footer.display !== 'none' && footer.bottom === 844, `${w}${path}: compact footer is not pinned to the bottom (bottom ${footer && footer.bottom})`);
+      ok(
+        footer && footer.display !== 'none' && footer.bottom === 844,
+        `${w}${path}: compact footer is not pinned to the bottom (bottom ${footer && footer.bottom})`,
+      );
       ok(nav && nav.display === 'none', `${w}${path}: app bar did not yield to the compact footer`);
     }
     await page.close();

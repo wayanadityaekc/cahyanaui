@@ -11,8 +11,7 @@ export default function IosZoomFix() {
       const viewport = document.querySelector('meta[name=viewport]');
       if (!viewport || viewport.content.includes('maximum-scale')) return;
       viewport.content = `${viewport.content},maximum-scale=1`;
-    } catch (e) {
-    }
+    } catch (e) {}
   }, []);
   return null;
 }

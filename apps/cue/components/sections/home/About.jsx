@@ -1,7 +1,7 @@
 import { BTN_SM } from '@/components/ui/btnClasses';
 const CLS = {
   section:
-    "relative flex items-center justify-center min-h-[360px] px-[var(--container-x)] py-16 text-center bg-cover bg-center " +
+    'relative flex items-center justify-center min-h-[360px] px-[var(--container-x)] py-16 text-center bg-cover bg-center ' +
     "before:content-[''] before:absolute before:inset-0 before:bg-[linear-gradient(180deg,rgba(0,0,0,0.52),rgba(0,0,0,0.72))]",
   in: 'relative z-[2] max-w-[600px]',
   k: 'block mb-[0.55rem] text-label tracking-[0.14em] uppercase font-medium text-gold-l',
@@ -29,7 +29,9 @@ export default function About({ paired = false }) {
           Tours, driver, activities and villa from one team in Ubud - plan it once, ask one person, and see every price
           before you commit.
         </p>
-        <a className={CLS.btn} href="/our-company.html#about">Our story</a>
+        <a className={CLS.btn} href="/our-company.html#about">
+          Our story
+        </a>
       </div>
     </section>
   );

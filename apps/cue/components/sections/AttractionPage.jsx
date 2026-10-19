@@ -25,7 +25,8 @@ export default function AttractionPage({ data }) {
   const onTours = toursContaining(slug);
   const gallery = galleryFrom(data);
   const crumb = (data.crumb || []).map((p, i, a) =>
-    i === a.length - 1 && p.type === 'text' ? { ...p, text: data.title } : p);
+    i === a.length - 1 && p.type === 'text' ? { ...p, text: data.title } : p,
+  );
   return (
     <>
       <JsonLd page={data.__page} crumbs={itemsFromLegacy(crumb)} />
@@ -48,55 +49,55 @@ export default function AttractionPage({ data }) {
       />
 
       <div className={data.bookItem ? TOUR_LAYOUT_BOOK : undefined}>
-      <div className={data.bookItem ? TOUR_LAYOUT_MAIN : undefined}>
-      <DetailTabs
-        overview={gallery.length ? (
-          <AttractionOverview stops={data.stops} id={data.stopsId} />
-        ) : (
-          <div className={STOPS} id={data.stopsId}>
-            {data.stops.map((s, i) => (
-              <article className={STOP} key={i}>
-                {s.img && (
-                  <div className={STOP_IMAGE}>
-                    <Img src={`/assets/images/${s.img}`} alt={s.alt} width={s.w} height={s.hgt} />
-                  </div>
-                )}
-                <div>
-                  {s.num && <span className={STOP_NUM}>{s.num}</span>}
-                  <h3 className={STOP_NAME}>{s.name}</h3>
-                  <p className={STOP_DESC} dangerouslySetInnerHTML={{ __html: s.descHtml }} />
+        <div className={data.bookItem ? TOUR_LAYOUT_MAIN : undefined}>
+          <DetailTabs
+            overview={
+              gallery.length ? (
+                <AttractionOverview stops={data.stops} id={data.stopsId} />
+              ) : (
+                <div className={STOPS} id={data.stopsId}>
+                  {data.stops.map((s, i) => (
+                    <article className={STOP} key={i}>
+                      {s.img && (
+                        <div className={STOP_IMAGE}>
+                          <Img src={`/assets/images/${s.img}`} alt={s.alt} width={s.w} height={s.hgt} />
+                        </div>
+                      )}
+                      <div>
+                        {s.num && <span className={STOP_NUM}>{s.num}</span>}
+                        <h3 className={STOP_NAME}>{s.name}</h3>
+                        <p className={STOP_DESC} dangerouslySetInnerHTML={{ __html: s.descHtml }} />
+                      </div>
+                    </article>
+                  ))}
                 </div>
-              </article>
-            ))}
-          </div>
-        )}
-        priceItem={data.bookItem}
-        bookType={bookType}
-        included={data.included}
-        excluded={data.excluded}
-        reviewService={data.bookItem || data.title}
-      />
-      </div>
-      {data.bookItem && (
-        <div className={TOUR_LAYOUT_SIDE}>
-          <BookSidebar
-            item={data.bookItem}
-            presetType={bookType}
-            perPerson={perPerson}
-            facts={data.facts}
-            belowPrice={<TourComparisonBox tours={onTours} />}
+              )
+            }
+            priceItem={data.bookItem}
+            bookType={bookType}
+            included={data.included}
+            excluded={data.excluded}
+            reviewService={data.bookItem || data.title}
           />
         </div>
-      )}
+        {data.bookItem && (
+          <div className={TOUR_LAYOUT_SIDE}>
+            <BookSidebar
+              item={data.bookItem}
+              presetType={bookType}
+              perPerson={perPerson}
+              facts={data.facts}
+              belowPrice={<TourComparisonBox tours={onTours} />}
+            />
+          </div>
+        )}
       </div>
       <BookCta item={data.bookItem} />
       <BookBar item={data.bookItem} priceFallback={priceFallbackFor(data.bookItem)} perPerson={perPerson} />
       <Related href={data.__href} />
       {data.bookItem && <ReviewCtaBand />}
 
-      {data.crumb && !gallery.length && (
-        <Breadcrumb items={itemsFromLegacy(data.crumb)} className={CRUMB_FOOT} />
-      )}
+      {data.crumb && !gallery.length && <Breadcrumb items={itemsFromLegacy(data.crumb)} className={CRUMB_FOOT} />}
     </>
   );
 }

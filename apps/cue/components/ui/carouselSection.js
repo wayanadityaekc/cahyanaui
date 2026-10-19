@@ -4,5 +4,4 @@ export const CAROUSEL_SECTION =
   'before:content-[""] before:absolute before:top-0 before:left-1/2 before:[transform:translateX(-50%)] ' +
   'before:w-[min(1100px,90%)] before:h-px before:bg-[rgba(34,32,28,0.4)]';
 
-export const CAROUSEL_TITLE =
-  'font-body font-semibold text-h3 leading-[var(--lh-heading)] text-green m-0 pb-[11px]';
+export const CAROUSEL_TITLE = 'font-body font-semibold text-h3 leading-[var(--lh-heading)] text-green m-0 pb-[11px]';

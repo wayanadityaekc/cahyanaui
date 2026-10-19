@@ -17,13 +17,19 @@ export default function Breadcrumb({ items = [], className = '' }) {
           return (
             <li key={`${it.label}-${i}`} className="flex items-center">
               {linkable ? (
-                <a className={CRUMB_LINK} href={it.href}>{it.label}</a>
+                <a className={CRUMB_LINK} href={it.href}>
+                  {it.label}
+                </a>
               ) : (
                 <span className={last ? CRUMB_HERE : undefined} aria-current={last ? 'page' : undefined}>
                   {it.label}
                 </span>
               )}
-              {!last && <span className={CRUMB_SEP} aria-hidden="true">›</span>}
+              {!last && (
+                <span className={CRUMB_SEP} aria-hidden="true">
+                  ›
+                </span>
+              )}
             </li>
           );
         })}

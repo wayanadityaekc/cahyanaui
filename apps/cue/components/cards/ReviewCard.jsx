@@ -26,7 +26,9 @@ export default function ReviewCard({ name, country, rating, message, service, so
         {country && <span className={CLS.country}>&middot; {country}</span>}
       </div>
       {service && <div className={CLS.service}>{service}</div>}
-      <div className={CLS.stars} aria-label={`${n} out of 5`}>{stars}</div>
+      <div className={CLS.stars} aria-label={`${n} out of 5`}>
+        {stars}
+      </div>
       <p className={CLS.text}>{message}</p>
       <span className={CLS.more}>Read more &rsaquo;</span>
       <img className={CLS.logo} src={logo.src} alt={logo.alt} loading="lazy" />

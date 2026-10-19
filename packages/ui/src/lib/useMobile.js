@@ -7,8 +7,8 @@ export default function useMobile(query = '(max-width: 768px)') {
   useEffect(() => {
     const mq = window.matchMedia(query);
     function on() {
-  return (setIs(mq.matches));
-}
+      return setIs(mq.matches);
+    }
     on();
     mq.addEventListener('change', on);
     return () => mq.removeEventListener('change', on);

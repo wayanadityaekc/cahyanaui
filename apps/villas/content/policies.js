@@ -33,19 +33,34 @@ export const BOOKING_TERMS = [
 
 export const TERMS_BLOCKS = [
   { type: 'heading', html: 'Who you are booking with' },
-  { type: 'para', html: `Stays are booked with <strong>${REGISTRATION.name}</strong> (${REGISTRATION.type}, NIB ${REGISTRATION.nib}), based in ${REGISTRATION.location}. Cahyana House and Cahyana Tibuah are both run by the company.` },
+  {
+    type: 'para',
+    html: `Stays are booked with <strong>${REGISTRATION.name}</strong> (${REGISTRATION.type}, NIB ${REGISTRATION.nib}), based in ${REGISTRATION.location}. Cahyana House and Cahyana Tibuah are both run by the company.`,
+  },
 
   { type: 'heading', html: 'Booking and payment' },
-  { type: 'para', html: `Stays are paid <strong>in full when you book</strong>. There is no deposit-only option, for a villa or for a scooter.` },
+  {
+    type: 'para',
+    html: `Stays are paid <strong>in full when you book</strong>. There is no deposit-only option, for a villa or for a scooter.`,
+  },
   { type: 'para', html: PAYMENT.why },
-  { type: 'para', html: 'You get a confirmation with the dates, the villa and the total. If anything on it is wrong, tell us before you travel and we will fix it.' },
+  {
+    type: 'para',
+    html: 'You get a confirmation with the dates, the villa and the total. If anything on it is wrong, tell us before you travel and we will fix it.',
+  },
 
   { type: 'heading', html: 'Check-in and check-out' },
-  { type: 'para', html: `Check-in is from <strong>${TIMES.checkIn}</strong>. Check-out is by <strong>${TIMES.checkOut}</strong>.` },
+  {
+    type: 'para',
+    html: `Check-in is from <strong>${TIMES.checkIn}</strong>. Check-out is by <strong>${TIMES.checkOut}</strong>.`,
+  },
   { type: 'para', html: TIMES.note },
 
   { type: 'heading', html: 'Who can stay' },
-  { type: 'para', html: 'Each villa is booked as an entire house, for the number of guests on the booking. Cahyana House sleeps up to six, Cahyana Tibuah up to four. If your group changes, tell us - we would rather move you to the right villa than have you arrive and not fit.' },
+  {
+    type: 'para',
+    html: 'Each villa is booked as an entire house, for the number of guests on the booking. Cahyana House sleeps up to six, Cahyana Tibuah up to four. If your group changes, tell us - we would rather move you to the right villa than have you arrive and not fit.',
+  },
 ];
 
 export const CANCELLATION_BLOCKS = [
@@ -56,11 +71,20 @@ export const CANCELLATION_BLOCKS = [
     items: CANCELLATION.bands.map((band) => `<strong>${band.when}:</strong> ${band.label.toLowerCase()}`),
   },
   { type: 'para', html: CANCELLATION.note },
-  { type: 'para', html: 'To cancel, message us on WhatsApp or email - whichever you booked through. We will confirm in writing what is being refunded and when, and the refund goes back the way you paid.' },
+  {
+    type: 'para',
+    html: 'To cancel, message us on WhatsApp or email - whichever you booked through. We will confirm in writing what is being refunded and when, and the refund goes back the way you paid.',
+  },
 
   { type: 'heading', html: 'If we have to cancel' },
-  { type: 'para', html: 'If something on our side makes the villa unusable, you get everything back, whenever it happens. We will also help you find somewhere else in Ubud if you want us to.' },
+  {
+    type: 'para',
+    html: 'If something on our side makes the villa unusable, you get everything back, whenever it happens. We will also help you find somewhere else in Ubud if you want us to.',
+  },
 
   { type: 'heading', html: 'Changing your dates' },
-  { type: 'para', html: 'Moving dates is not a cancellation, and we will always try. If the villa is free on your new dates and you tell us more than 7 days out, we move the booking at no charge. Inside 7 days it depends on whether we can still fill the original nights - ask and we will tell you straight.' },
+  {
+    type: 'para',
+    html: 'Moving dates is not a cancellation, and we will always try. If the villa is free on your new dates and you tell us more than 7 days out, we move the booking at no charge. Inside 7 days it depends on whether we can still fill the original nights - ask and we will tell you straight.',
+  },
 ];

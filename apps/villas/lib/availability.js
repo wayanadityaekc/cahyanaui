@@ -21,12 +21,19 @@ export async function checkStay(villaSlug, checkIn, checkOut) {
 export const STAY_RULES = { minNights: 2, maxNights: 30, maxDaysAhead: 365 };
 
 export function baliToday() {
-  return new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Makassar', year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date());
+  return new Intl.DateTimeFormat('en-CA', {
+    timeZone: 'Asia/Makassar',
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  }).format(new Date());
 }
 
 export async function fetchAvailability(villaSlug) {
   try {
-    const response = await fetch(`${API_BASE}/villas/availability?villa=${encodeURIComponent(villaSlug)}`, { signal: AbortSignal.timeout(8000) });
+    const response = await fetch(`${API_BASE}/villas/availability?villa=${encodeURIComponent(villaSlug)}`, {
+      signal: AbortSignal.timeout(8000),
+    });
     if (!response.ok) return { known: false, busy: [] };
     const data = await response.json();
     const villa = data && data.villas && data.villas[villaSlug];

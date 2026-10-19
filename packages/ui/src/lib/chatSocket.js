@@ -1,4 +1,3 @@
-
 export function chatSocketUrl(apiBase, thread) {
   const url = new URL(apiBase, typeof window === 'undefined' ? 'https://localhost' : window.location.href);
   url.protocol = url.protocol === 'http:' ? 'ws:' : 'wss:';
@@ -39,14 +38,20 @@ export function openChatSocket({ apiBase, thread, onMessage, onTyping, onPresenc
   }
 
   function closeQuietly() {
-    try { ws.close(); } catch (e) {   }
+    try {
+      ws.close();
+    } catch (e) {}
   }
 
   function beat() {
     stopTimers();
     pingTimer = setInterval(() => {
       if (!ws || ws.readyState !== WebSocket.OPEN) return;
-      try { ws.send(JSON.stringify({ type: 'ping' })); } catch (e) { return; }
+      try {
+        ws.send(JSON.stringify({ type: 'ping' }));
+      } catch (e) {
+        return;
+      }
       clearTimeout(pongTimer);
       pongTimer = setTimeout(closeQuietly, PONG_GRACE_MS);
     }, PING_MS);
@@ -62,7 +67,11 @@ export function openChatSocket({ apiBase, thread, onMessage, onTyping, onPresenc
 
   function handleFrame(event) {
     let frame = null;
-    try { frame = JSON.parse(event.data); } catch (e) { return; }
+    try {
+      frame = JSON.parse(event.data);
+    } catch (e) {
+      return;
+    }
     if (!frame || typeof frame.type !== 'string') return;
     if (frame.type === 'pong') {
       clearTimeout(pongTimer);
@@ -118,7 +127,9 @@ export function openChatSocket({ apiBase, thread, onMessage, onTyping, onPresenc
     },
     typing() {
       if (!ws || ws.readyState !== WebSocket.OPEN) return;
-      try { ws.send(JSON.stringify({ type: 'typing' })); } catch (e) {   }
+      try {
+        ws.send(JSON.stringify({ type: 'typing' }));
+      } catch (e) {}
     },
     live: () => live,
   };

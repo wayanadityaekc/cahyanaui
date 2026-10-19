@@ -1,7 +1,12 @@
 import { readFileSync } from 'node:fs';
 
 const MASTER_BASE_URL = 'https://raw.githubusercontent.com/wayanadityaekc/cahyanaui/main';
-const SHARED_FILES = ['CLAUDE-global.md', 'tools/eslint/cahyana-rules.mjs', 'tools/eslint/css-comments.mjs', 'tools/check-global.mjs'];
+const SHARED_FILES = [
+  'CLAUDE-global.md',
+  'tools/eslint/cahyana-rules.mjs',
+  'tools/eslint/css-comments.mjs',
+  'tools/check-global.mjs',
+];
 
 async function fetchMasterText(file) {
   const response = await fetch(`${MASTER_BASE_URL}/${file}`);

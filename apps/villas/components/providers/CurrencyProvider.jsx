@@ -26,23 +26,23 @@ export function CurrencyProvider({ initialFx = null, children }) {
     try {
       const saved = window.localStorage.getItem(CURRENCY_STORAGE_KEY);
       if (saved && CURRENCIES.includes(saved)) setCurrency(saved);
-    } catch (e) {
-    }
+    } catch (e) {}
     let alive = true;
     async function refresh() {
       const live = await fetchRates();
       if (alive && live) setFx(live);
     }
     refresh();
-    return () => { alive = false; };
+    return () => {
+      alive = false;
+    };
   }, []);
 
   function changeCurrency(code) {
     setCurrency(code);
     try {
       window.localStorage.setItem(CURRENCY_STORAGE_KEY, code);
-    } catch (e) {
-    }
+    } catch (e) {}
   }
 
   const value = {

@@ -16,8 +16,7 @@ const BODY =
 const BODY_INCL =
   "grid grid-cols-[1fr] [grid-template-areas:'title''meta''incl'] [flex-direction:column] items-baseline " +
   'gap-x-[0.55rem] gap-y-[0.4rem] pt-[0.6rem] px-[0.9rem] pb-[0.8rem] grow';
-const NAME =
-  '[grid-area:title] m-0 text-strong max-[992px]:text-small font-semibold leading-[1.25] line-clamp-2';
+const NAME = '[grid-area:title] m-0 text-strong max-[992px]:text-small font-semibold leading-[1.25] line-clamp-2';
 const RATING =
   '[grid-area:rating] flex items-center gap-[3px] self-start justify-self-end text-small font-semibold text-amber-d whitespace-nowrap ' +
   '[&>svg]:w-[13px] [&>svg]:h-[13px] [&>svg]:text-amber-d';
@@ -52,7 +51,9 @@ export default function ExperienceCard({
   const body = (
     <>
       <div className={IMG_WRAP} style={img ? undefined : { backgroundImage: PLACEHOLDER_GRADIENT }}>
-        {img && <Img className={CARD_IMG} src={`/assets/images/${img}`} alt={alt || name} width={width} height={height} />}
+        {img && (
+          <Img className={CARD_IMG} src={`/assets/images/${img}`} alt={alt || name} width={width} height={height} />
+        )}
         {badge && <span className={BADGE_POPULAR}>{badge}</span>}
       </div>
       <div className={incl ? BODY_INCL : BODY}>
@@ -74,7 +75,8 @@ export default function ExperienceCard({
         {priceName && (
           <div className={FOOTER}>
             <div className={PRICE}>
-              <span className={PRICE_FROM}>from</span> <Price name={priceName} mode={priceMode} fallback={priceFallback} />
+              <span className={PRICE_FROM}>from</span>{' '}
+              <Price name={priceName} mode={priceMode} fallback={priceFallback} />
             </div>
           </div>
         )}

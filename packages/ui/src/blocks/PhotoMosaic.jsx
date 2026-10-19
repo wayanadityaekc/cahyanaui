@@ -9,8 +9,7 @@ const TILE =
 
 const BIG = `${TILE} flex-[0_0_62%] [scroll-snap-align:start]`;
 
-const PAIR =
-  'flex-[0_0_35%] h-full flex flex-col gap-2 [scroll-snap-align:start] [&>*]:flex-[1_1_0] [&>*]:min-h-0';
+const PAIR = 'flex-[0_0_35%] h-full flex flex-col gap-2 [scroll-snap-align:start] [&>*]:flex-[1_1_0] [&>*]:min-h-0';
 
 const TRACK =
   'flex gap-2 aspect-[1.1/1] min-[769px]:aspect-[1.9/1] ' +
@@ -27,13 +26,7 @@ const MORE_BTN =
   '[border:1px_solid_rgba(255,255,255,0.7)] ' +
   '[transition:background-color_var(--dur)_var(--ease),scale_var(--dur-fast)_var(--ease)] hover:bg-white';
 
-export default function PhotoMosaic({
-  images = [],
-  onOpen,
-  moreLabel = null,
-  bleed = true,
-  className,
-}) {
+export default function PhotoMosaic({ images = [], onOpen, moreLabel = null, bleed = true, className }) {
   if (!images.length) return null;
 
   function tile(i, cls) {

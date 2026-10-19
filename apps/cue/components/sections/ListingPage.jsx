@@ -16,12 +16,24 @@ import { CATSEC, LROW_LIST } from '@/components/ui/listingClasses';
 import { isHiddenTour } from '@/lib/routes';
 import { SECTION_TITLE, ST_LEFT } from '@/components/ui/sectionTitle';
 
-function SearchIcon() { return <Search strokeWidth={1.8} aria-hidden="true" />; }
-function CloseIcon() { return <X aria-hidden="true" />; }
-function CarIcon() { return <Car strokeWidth={1.7} aria-hidden="true" />; }
-function UserIcon() { return <UserRound strokeWidth={1.7} aria-hidden="true" />; }
-function CheckIcon() { return <Check aria-hidden="true" />; }
-function PinIcon() { return <MapPin strokeWidth={1.7} aria-hidden="true" />; }
+function SearchIcon() {
+  return <Search strokeWidth={1.8} aria-hidden="true" />;
+}
+function CloseIcon() {
+  return <X aria-hidden="true" />;
+}
+function CarIcon() {
+  return <Car strokeWidth={1.7} aria-hidden="true" />;
+}
+function UserIcon() {
+  return <UserRound strokeWidth={1.7} aria-hidden="true" />;
+}
+function CheckIcon() {
+  return <Check aria-hidden="true" />;
+}
+function PinIcon() {
+  return <MapPin strokeWidth={1.7} aria-hidden="true" />;
+}
 
 const NOUN = { tours: 'tours', activities: 'experiences', destinations: 'destinations' };
 
@@ -45,7 +57,10 @@ export default function ListingPage({ data, page }) {
   const [heroInView, setHeroInView] = useState(true);
   useEffect(() => {
     const browse = browseRef.current;
-    if (!browse) { setHeroInView(true); return undefined; }
+    if (!browse) {
+      setHeroInView(true);
+      return undefined;
+    }
     const observer = new IntersectionObserver(([e]) => setHeroInView(e.isIntersecting));
     observer.observe(browse);
     return () => observer.disconnect();
@@ -59,9 +74,11 @@ export default function ListingPage({ data, page }) {
           className="min-h-[48vh] bg-green bg-cover bg-center min-[769px]:order-1 min-[769px]:min-h-0 max-[768px]:[.tourprog_&]:relative max-[768px]:[.tourprog_&]:after:content-[''] max-[768px]:[.tourprog_&]:after:absolute max-[768px]:[.tourprog_&]:after:inset-0 max-[768px]:[.tourprog_&]:after:[background:linear-gradient(to_bottom,rgba(0,0,0,0.34)_0%,rgba(0,0,0,0)_32%,rgba(0,0,0,0.58)_100%)]"
           style={{ backgroundImage: `url(/assets/images/${heroBg})` }}
         />
-        <div className="relative z-[1] -mt-7 pt-9 px-[var(--container-x)] pb-3 bg-white rounded-t-[var(--r-xl)] flex flex-col items-start text-left
+        <div
+          className="relative z-[1] -mt-7 pt-9 px-[var(--container-x)] pb-3 bg-white rounded-t-[var(--r-xl)] flex flex-col items-start text-left
           min-[769px]:mt-0 min-[769px]:pt-12 min-[769px]:pr-12 min-[769px]:pb-12 min-[769px]:pl-[max(var(--container-x),calc(50vw_-_var(--container)/2_+_var(--container-x)))]
-          min-[769px]:bg-transparent min-[769px]:rounded-none min-[769px]:justify-center">
+          min-[769px]:bg-transparent min-[769px]:rounded-none min-[769px]:justify-center"
+        >
           {!term && <Breadcrumb items={crumbsFor(page)} className="mb-2 self-start" />}
           {!term && <h1 className={`${SUBHERO_TITLE} mb-3`}>{title}</h1>}
           {!term && <p className="max-w-[460px] m-0 text-[#3d3d3d]">{sub}</p>}
@@ -85,13 +102,33 @@ export default function ListingPage({ data, page }) {
           </div>
           {!term && (
             <ul className="list-none mt-6 p-0 flex flex-col gap-[0.7rem] text-left self-start [&>li]:flex [&>li]:items-center [&>li]:gap-[10px] [&>li]:text-[0.82rem] [&>li]:font-medium [&>li]:leading-[1.3] [&>li]:whitespace-nowrap [&>li]:text-ink [&_svg]:w-[18px] [&_svg]:h-[18px] [&_svg]:text-cta [&_svg]:flex-none">
-              <li><CarIcon />Fixed price per car (standard or exclusive)</li>
-              <li><UserIcon />Private driver, just for your group</li>
-              <li><PinIcon />Free pickup in the Ubud area</li>
-              <li><CheckIcon />Free cancellation up to 24h before your tour</li>
+              <li>
+                <CarIcon />
+                Fixed price per car (standard or exclusive)
+              </li>
+              <li>
+                <UserIcon />
+                Private driver, just for your group
+              </li>
+              <li>
+                <PinIcon />
+                Free pickup in the Ubud area
+              </li>
+              <li>
+                <CheckIcon />
+                Free cancellation up to 24h before your tour
+              </li>
             </ul>
           )}
-          {!term && <a ref={browseRef} href={`#${sectionId}`} className={`inline-flex mt-4 ${BTN_SM} bg-cta text-white no-underline [transition:background-color_var(--dur)_ease,scale_var(--dur-fast)_var(--ease)] hover:bg-cta-d max-[768px]:flex max-[768px]:w-full max-[768px]:mt-[1.25rem]`}>All {noun}</a>}
+          {!term && (
+            <a
+              ref={browseRef}
+              href={`#${sectionId}`}
+              className={`inline-flex mt-4 ${BTN_SM} bg-cta text-white no-underline [transition:background-color_var(--dur)_ease,scale_var(--dur-fast)_var(--ease)] hover:bg-cta-d max-[768px]:flex max-[768px]:w-full max-[768px]:mt-[1.25rem]`}
+            >
+              All {noun}
+            </a>
+          )}
         </div>
       </section>
 
@@ -101,7 +138,11 @@ export default function ListingPage({ data, page }) {
         </div>
 
         {showStickyNav && (
-          <div className="fixed left-1/2 [transform:translateX(-50%)] bottom-[1.3rem] z-50 flex items-center gap-[4px] p-[6px] max-w-[calc(100vw-2rem)] bg-white [border:1px_solid_var(--line)] rounded-md overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden max-[768px]:hidden" role="tablist" aria-label="Filter by area">
+          <div
+            className="fixed left-1/2 [transform:translateX(-50%)] bottom-[1.3rem] z-50 flex items-center gap-[4px] p-[6px] max-w-[calc(100vw-2rem)] bg-white [border:1px_solid_var(--line)] rounded-md overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden max-[768px]:hidden"
+            role="tablist"
+            aria-label="Filter by area"
+          >
             {tabs.map((t) => (
               <button
                 key={t.id}
@@ -133,7 +174,9 @@ export default function ListingPage({ data, page }) {
             })}
           </div>
           {term && shownCards.length === 0 && (
-            <p className="mt-6 text-muted text-center text-[0.9rem]">No {noun} match &ldquo;{query.trim()}&rdquo;.</p>
+            <p className="mt-6 text-muted text-center text-[0.9rem]">
+              No {noun} match &ldquo;{query.trim()}&rdquo;.
+            </p>
           )}
         </section>
       </section>

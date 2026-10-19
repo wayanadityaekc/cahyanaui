@@ -4,7 +4,14 @@ import { WHATSAPP_LINK } from '@/lib/constants';
 import { Button, CAPS, Card } from '@cahyana/ui';
 import LoadFallback from '@/components/ui/LoadFallback';
 
-export default function ServiceAside({ title = '', facts = [], ctaLabel = 'WhatsApp', ctaHref = '', otherServices = [], serviceId = '' }) {
+export default function ServiceAside({
+  title = '',
+  facts = [],
+  ctaLabel = 'WhatsApp',
+  ctaHref = '',
+  otherServices = [],
+  serviceId = '',
+}) {
   return (
     <aside className="lg:sticky lg:top-24 flex flex-col gap-5">
       <Card className="p-6">
@@ -18,10 +25,24 @@ export default function ServiceAside({ title = '', facts = [], ctaLabel = 'Whats
               </li>
             ))}
           </ul>
-        ) : <LoadFallback className="mb-5" />}
-        <Button as={Link} full href="/#villas">See villas</Button>
+        ) : (
+          <LoadFallback className="mb-5" />
+        )}
+        <Button as={Link} full href="/#villas">
+          See villas
+        </Button>
         {serviceId && <AddToBooking serviceId={serviceId} />}
-        <Button as="a" variant="ghost" full href={ctaHref || WHATSAPP_LINK} target="_blank" rel="noopener" className="mt-2">{ctaLabel}</Button>
+        <Button
+          as="a"
+          variant="ghost"
+          full
+          href={ctaHref || WHATSAPP_LINK}
+          target="_blank"
+          rel="noopener"
+          className="mt-2"
+        >
+          {ctaLabel}
+        </Button>
       </Card>
 
       <Card tone="cream" className="p-6">
@@ -37,7 +58,9 @@ export default function ServiceAside({ title = '', facts = [], ctaLabel = 'Whats
               </li>
             ))}
           </ul>
-        ) : <LoadFallback />}
+        ) : (
+          <LoadFallback />
+        )}
       </Card>
     </aside>
   );

@@ -27,9 +27,13 @@ export function itemIndex() {
       (cat.cards || []).forEach((c) => {
         if (!c.name || !c.href) return;
         out.push({
-          name: c.name, href: c.href, meta: c.meta || '',
-          priceName: c.priceName || '', fallback: c.priceFallback || '',
-          stops: c.stops || 0, section,
+          name: c.name,
+          href: c.href,
+          meta: c.meta || '',
+          priceName: c.priceName || '',
+          fallback: c.priceFallback || '',
+          stops: c.stops || 0,
+          section,
         });
       });
     });
@@ -39,21 +43,76 @@ export function itemIndex() {
 }
 
 const STOP = new Set([
-  'the', 'a', 'an', 'is', 'are', 'do', 'does', 'did', 'can', 'i', 'we', 'you',
-  'my', 'me', 'to', 'for', 'of', 'in', 'on', 'at', 'and', 'or', 'it', 'be',
-  'how', 'what', 'when', 'where', 'much', 'many', 'with', 'from', 'your', 'us',
-  'please', 'hi', 'hello', 'there', 'want', 'would', 'like', 'need', 'about',
-  'have', 'has', 'get', 'got', 'this', 'that', 'any', 'all',
+  'the',
+  'a',
+  'an',
+  'is',
+  'are',
+  'do',
+  'does',
+  'did',
+  'can',
+  'i',
+  'we',
+  'you',
+  'my',
+  'me',
+  'to',
+  'for',
+  'of',
+  'in',
+  'on',
+  'at',
+  'and',
+  'or',
+  'it',
+  'be',
+  'how',
+  'what',
+  'when',
+  'where',
+  'much',
+  'many',
+  'with',
+  'from',
+  'your',
+  'us',
+  'please',
+  'hi',
+  'hello',
+  'there',
+  'want',
+  'would',
+  'like',
+  'need',
+  'about',
+  'have',
+  'has',
+  'get',
+  'got',
+  'this',
+  'that',
+  'any',
+  'all',
 ]);
 
-function norm(s) { return String(s || '').toLowerCase().replace(/[^a-z0-9\s]/g, ' ').replace(/\s+/g, ' ').trim(); }
-function words(s) { return norm(s).split(' ').filter((w) => w.length > 2 && !STOP.has(w)); }
+function norm(s) {
+  return String(s || '')
+    .toLowerCase()
+    .replace(/[^a-z0-9\s]/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+function words(s) {
+  return norm(s)
+    .split(' ')
+    .filter((w) => w.length > 2 && !STOP.has(w));
+}
 
 function priceOf({ priceName, fallback }, ctx) {
   const live = priceName && ctx.lookup ? ctx.lookup(priceName) : null;
   return (live && live.standard && live.standard.display) || fallback || '';
 }
-
 
 function tourPrices(ctx) {
   const picks = itemIndex()
@@ -79,10 +138,12 @@ function airportPrice({ catalog }) {
 }
 
 function charterPrices({ catalog }) {
-  const rows = (CHARTER.durations || []).map((d) => {
-    const c = catalog ? (catalog.charters || []).find((x) => x.duration === d.dur) : null;
-    return { label: d.name, note: d.sub, price: (c && c.display) || '', href: '/charter.html' };
-  }).filter((r) => r.price);
+  const rows = (CHARTER.durations || [])
+    .map((d) => {
+      const c = catalog ? (catalog.charters || []).find((x) => x.duration === d.dur) : null;
+      return { label: d.name, note: d.sub, price: (c && c.display) || '', href: '/charter.html' };
+    })
+    .filter((r) => r.price);
   return {
     text: rows.length
       ? 'You can take the car and driver for the day and decide the route as you go:'
@@ -94,14 +155,12 @@ function charterPrices({ catalog }) {
 
 function startTimes() {
   return {
-    text:
-      'Most day tours start at 8:00, 8:30 or 9:00 in the morning. Some are fixed by what you are going to see: Lempuyang runs from 3:00 for the light at the gates, Batur trekking and the sunrise jeep leave at 2:00 or 3:00, and Kecak starts at 19:00. Transfers and charters you can set to any hour.',
+    text: 'Most day tours start at 8:00, 8:30 or 9:00 in the morning. Some are fixed by what you are going to see: Lempuyang runs from 3:00 for the light at the gates, Batur trekking and the sunrise jeep leave at 2:00 or 3:00, and Kecak starts at 19:00. Transfers and charters you can set to any hour.',
     link: { href: '/tour.html', label: 'All tours' },
   };
 }
 
 const BUILDERS = { tourPrices, airportPrice, charterPrices, startTimes };
-
 
 function matchItem(question) {
   const questionWords = words(question);
@@ -111,7 +170,9 @@ function matchItem(question) {
     const iw = words(item.name);
     if (!iw.length) return;
     let hits = 0;
-    iw.forEach((w) => { if (questionWords.includes(w)) hits += 1; });
+    iw.forEach((w) => {
+      if (questionWords.includes(w)) hits += 1;
+    });
     const strong = iw.some((w) => w.length >= 7 && questionWords.includes(w));
     if (hits >= 2 || (hits === 1 && strong)) {
       const score = hits + (strong ? 1 : 0);
@@ -134,12 +195,13 @@ function matchTopic(question) {
       } else if (questionWords.includes(w)) score += 1;
     });
     (t.strong || []).forEach((w) => {
-      if (w.includes(' ') ? n.includes(w) : questionWords.includes(w)) { strong = true; score += 3; }
+      if (w.includes(' ') ? n.includes(w) : questionWords.includes(w)) {
+        strong = true;
+        score += 3;
+      }
     });
     if (!score) return;
-    const better = !best
-      || (strong && !best.strong)
-      || (strong === best.strong && score > best.score);
+    const better = !best || (strong && !best.strong) || (strong === best.strong && score > best.score);
     if (better) best = { topic: t, score, strong };
   });
   return best && best.score >= 2 ? best.topic : null;

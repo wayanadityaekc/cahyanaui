@@ -13,7 +13,16 @@ import { validateWith } from '@/lib/validate';
 import { readLocal, writeLocal } from '@/lib/storage';
 import { KEY, WHATSAPP_NUMBER } from '@/lib/constants';
 import { AIRPORT_ROUTE } from '@/content/shared/timeSlots';
-import { SHELL_WIDE, BOX_WIDE, CLOSE, LOGO, TITLE, BTN, SUCCESS_ICON, SUCCESS_TEXT } from '@/components/ui/modalClasses';
+import {
+  SHELL_WIDE,
+  BOX_WIDE,
+  CLOSE,
+  LOGO,
+  TITLE,
+  BTN,
+  SUCCESS_ICON,
+  SUCCESS_TEXT,
+} from '@/components/ui/modalClasses';
 import PaymentStep from './PaymentStep';
 import { readPayFlag, PAY_DEFAULT } from '@/lib/payFlag';
 import { DEFAULT_RAIL } from '@/lib/rails';
@@ -28,7 +37,17 @@ import { STEPS, stepBar, STEP_LABEL, BACK_LINK } from './bookingModalClasses';
 import ModalPresence from '@/components/ui/ModalPresence';
 import useBodyLock from '@/components/ui/useBodyLock';
 
-const EMPTY = { name: '', phone: '', email: '', pickup: '', dropoff: '', referral: '', time: '', flightNumber: '', flightDatetime: '' };
+const EMPTY = {
+  name: '',
+  phone: '',
+  email: '',
+  pickup: '',
+  dropoff: '',
+  referral: '',
+  time: '',
+  flightNumber: '',
+  flightDatetime: '',
+};
 const RESEND_SECONDS = 30;
 
 export default function BookConfirmModal() {
@@ -93,7 +112,9 @@ export default function BookConfirmModal() {
       } catch (e) {}
     }
     load();
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+    };
   }, [ctx, currency, stay, referral]);
 
   useEffect(() => {
@@ -127,7 +148,11 @@ export default function BookConfirmModal() {
     setOtpBusy(true);
     const result = await verifyCode(signinEmail, code);
     setOtpBusy(false);
-    if (result.ok) { setOtpVerified(true); setOtpCode(''); return; }
+    if (result.ok) {
+      setOtpVerified(true);
+      setOtpCode('');
+      return;
+    }
     setOtpCode('');
     setOtpMsg(result.error || 'Sorry, something went wrong. Please try again.');
   }
@@ -142,7 +167,9 @@ export default function BookConfirmModal() {
   }
   const [paid, setPaid] = useState(false);
   const [payOn, setPayOn] = useState(PAY_DEFAULT);
-  useEffect(() => { setPayOn(readPayFlag()); }, []);
+  useEffect(() => {
+    setPayOn(readPayFlag());
+  }, []);
   const lastCtx = useRef(null);
   useBodyLock(!!ctx);
 
@@ -171,10 +198,14 @@ export default function BookConfirmModal() {
     const c = catalog && catalog.items.find((i) => i.name === service);
     return c ? c.category : type || null;
   }
-  function isAirportLine({ service }) { return service === AIRPORT_ROUTE; }
+  function isAirportLine({ service }) {
+    return service === AIRPORT_ROUTE;
+  }
   const isAirportRoute = !!singleLine && isAirportLine(singleLine);
   const needsFlight = isAirportRoute;
-  function lineDateTime(i) { return lineDT[i] || { date: '', time: '' }; }
+  function lineDateTime(i) {
+    return lineDT[i] || { date: '', time: '' };
+  }
   function setDT(i, k, v) {
     setLineDT((prev) => {
       const next = prev.length ? [...prev] : lines.map((l) => ({ date: l.date || '', time: l.time || '' }));
@@ -183,8 +214,12 @@ export default function BookConfirmModal() {
     });
     setDtErr((prev) => (prev[i] ? { ...prev, [i]: undefined } : prev));
   }
-  function dateOf(l, i) { return (isAirportLine(l) && i === 0 && needsFlight ? (f.flightDatetime || '').slice(0, 10) : lineDateTime(i).date); }
-  function timeOf(l, i) { return (isAirportLine(l) && i === 0 && needsFlight ? (f.flightDatetime || '').slice(11, 16) : lineDateTime(i).time); }
+  function dateOf(l, i) {
+    return isAirportLine(l) && i === 0 && needsFlight ? (f.flightDatetime || '').slice(0, 10) : lineDateTime(i).date;
+  }
+  function timeOf(l, i) {
+    return isAirportLine(l) && i === 0 && needsFlight ? (f.flightDatetime || '').slice(11, 16) : lineDateTime(i).time;
+  }
   const flightNumberDisplay = needsFlight ? f.flightNumber || singleLine.flight_number || '' : '';
 
   function validate() {
@@ -209,10 +244,27 @@ export default function BookConfirmModal() {
   }
 
   function payload() {
-    return bookingPayload({ ctx, f, referral, payOn, payOption, currency, stay, priced, displayGuests, singleLine, needsFlight, dateOf, timeOf });
+    return bookingPayload({
+      ctx,
+      f,
+      referral,
+      payOn,
+      payOption,
+      currency,
+      stay,
+      priced,
+      displayGuests,
+      singleLine,
+      needsFlight,
+      dateOf,
+      timeOf,
+    });
   }
   async function submit() {
-    if (!validate()) { setError(''); return; }
+    if (!validate()) {
+      setError('');
+      return;
+    }
     setError('');
     setBusy(true);
     try {
@@ -226,8 +278,10 @@ export default function BookConfirmModal() {
       }
       if (!payOn && typeof ctx.onSuccess === 'function') ctx.onSuccess();
       setBookingRef(d.ref || '');
-      if (d.signin_sent && d.signin_email) { setSigninEmail(d.signin_email); setOtpCooldown(RESEND_SECONDS); }
-      else setSigninEmail('');
+      if (d.signin_sent && d.signin_email) {
+        setSigninEmail(d.signin_email);
+        setOtpCooldown(RESEND_SECONDS);
+      } else setSigninEmail('');
       setDone(true);
     } catch (e) {
       setError(e.message || 'Sorry, we could not send your booking. Please try again, or reach us on WhatsApp.');
@@ -240,16 +294,21 @@ export default function BookConfirmModal() {
     return whatsappText({ ctx, f, displayGuests, singleLine, flightNumberDisplay, dateOf, timeOf, price: priceText() });
   }
 
-  function priceText() { return quotedPrice(priced); }
+  function priceText() {
+    return quotedPrice(priced);
+  }
 
   async function applyRef() {
     const pct = await apply(f.referral);
     setRefMsg(pct ? { ok: true, text: PAY_COPY.referralOk } : { ok: false, text: PAY_COPY.referralBad });
   }
 
-
   function openWhatsApp() {
-    if (!validate()) { setError(''); setStep(1); return; }
+    if (!validate()) {
+      setError('');
+      setStep(1);
+      return;
+    }
     window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(waText())}`, '_blank');
   }
 
@@ -269,107 +328,130 @@ export default function BookConfirmModal() {
     />
   ) : null;
   return createPortal(
-    <ModalPresence open={!!ctx} onClose={paid ? () => {} : closeBooking} label="Booking confirmation" box={BOX_WIDE} shellClass={SHELL_WIDE}>
-        {!paid && <button className={CLOSE} aria-label="Close" onClick={closeBooking}>&times;</button>}
-        <img className={LOGO} src="/assets/images/logo.webp" alt="The Cahyana Logo" width="1005" height="324" />
+    <ModalPresence
+      open={!!ctx}
+      onClose={paid ? () => {} : closeBooking}
+      label="Booking confirmation"
+      box={BOX_WIDE}
+      shellClass={SHELL_WIDE}
+    >
+      {!paid && (
+        <button className={CLOSE} aria-label="Close" onClick={closeBooking}>
+          &times;
+        </button>
+      )}
+      <img className={LOGO} src="/assets/images/logo.webp" alt="The Cahyana Logo" width="1005" height="324" />
 
-        {!done ? (
-          <div id="modal-form">
-            <h3 className={TITLE}>Booking Confirmation</h3>
-            <div className={STEPS} aria-hidden="true">
-              {STEP_NAMES.map((n, i) => <span className={stepBar(step >= i + 1)} key={n} />)}
-            </div>
-            <p className={STEP_LABEL}>
-              Step {step} of {lastStep} &middot; {STEP_NAMES[step - 1]}
-            </p>
-
-            {step === 1 ? (
-              <DetailsStep
-                f={f}
-                errors={errors}
-                set={set}
-                setValue={setValue}
-                view={view}
-                lines={lines}
-                needsFlight={needsFlight}
-                isAirportLine={isAirportLine}
-                lineDateTime={lineDateTime}
-                setDT={setDT}
-                categoryOfLine={categoryOfLine}
-                dtErr={dtErr}
-                onContinue={() => { if (validate()) { setError(''); setStep(2); } }}
-              />
-            ) : step === 2 ? (
-              <CheckStep
-                view={view}
-                singleLine={singleLine}
-                dateOf={dateOf}
-                timeOf={timeOf}
-                isAirportRoute={isAirportRoute}
-                flightNumberDisplay={flightNumberDisplay}
-                displayGuests={displayGuests}
-                priced={priced}
-                detailsOpen={detailsOpen}
-                setDetailsOpen={setDetailsOpen}
-                f={f}
-                price={priceText()}
-                payOn={payOn}
-                onContinue={() => { setError(''); setStep(3); }}
-                error={error}
-                busy={busy}
-                submit={submit}
-                openWhatsApp={openWhatsApp}
-                onEdit={() => setStep(1)}
-              />
-            ) : (
-              <>
-                <PaymentStep
-                  option={payOption}
-                  onOption={setPayOption}
-                  rail={payRail}
-                  onRail={setPayRail}
-                  totalIdr={baseTotalIdr(priced)}
-                  totalUsd={baseTotalUsd(priced)}
-                  total={baseTotal(priced)}
-                  symbol={(priced && priced.symbol) || '$'}
-                  currency={currency || 'USD'}
-                  stay={stay || ''}
-                  hasReferral={!!(priced && priced.referral)}
-                  referral={f.referral}
-                  onReferral={(v) => setF((x) => ({ ...x, referral: v }))}
-                  onApplyReferral={applyRef}
-                  refMsg={refMsg}
-                />
-
-                <BookActions error={error} busy={busy} submit={submit} openWhatsApp={openWhatsApp} />
-                <button type="button" className={BACK_LINK} onClick={() => setStep(2)}>&lsaquo; Back</button>
-              </>
-            )}
-
+      {!done ? (
+        <div id="modal-form">
+          <h3 className={TITLE}>Booking Confirmation</h3>
+          <div className={STEPS} aria-hidden="true">
+            {STEP_NAMES.map((n, i) => (
+              <span className={stepBar(step >= i + 1)} key={n} />
+            ))}
           </div>
-        ) : !payOn ? (
-          <div className="text-center">
-            <div className={SUCCESS_ICON}>&#10003;</div>
-            <h3 className={TITLE}>Booking Received!</h3>
-            <p className={SUCCESS_TEXT}>Thank you. We will email you shortly to confirm your booking.</p>
-            {signinNote}
-            <button className={BTN} onClick={closeBooking}>Done</button>
-          </div>
-        ) : (
-          <PaymentScreen
-            paid={paid}
-            bookingRef={bookingRef}
-            closeBooking={closeBooking}
-            signinNote={signinNote}
-            payRail={payRail}
-            payOption={payOption}
-            currency={currency}
-            onPaid={() => {
-              setPaid(true);
-              if (ctx && typeof ctx.onSuccess === 'function') ctx.onSuccess();
-            }}
-          />
-        )}
+          <p className={STEP_LABEL}>
+            Step {step} of {lastStep} &middot; {STEP_NAMES[step - 1]}
+          </p>
+
+          {step === 1 ? (
+            <DetailsStep
+              f={f}
+              errors={errors}
+              set={set}
+              setValue={setValue}
+              view={view}
+              lines={lines}
+              needsFlight={needsFlight}
+              isAirportLine={isAirportLine}
+              lineDateTime={lineDateTime}
+              setDT={setDT}
+              categoryOfLine={categoryOfLine}
+              dtErr={dtErr}
+              onContinue={() => {
+                if (validate()) {
+                  setError('');
+                  setStep(2);
+                }
+              }}
+            />
+          ) : step === 2 ? (
+            <CheckStep
+              view={view}
+              singleLine={singleLine}
+              dateOf={dateOf}
+              timeOf={timeOf}
+              isAirportRoute={isAirportRoute}
+              flightNumberDisplay={flightNumberDisplay}
+              displayGuests={displayGuests}
+              priced={priced}
+              detailsOpen={detailsOpen}
+              setDetailsOpen={setDetailsOpen}
+              f={f}
+              price={priceText()}
+              payOn={payOn}
+              onContinue={() => {
+                setError('');
+                setStep(3);
+              }}
+              error={error}
+              busy={busy}
+              submit={submit}
+              openWhatsApp={openWhatsApp}
+              onEdit={() => setStep(1)}
+            />
+          ) : (
+            <>
+              <PaymentStep
+                option={payOption}
+                onOption={setPayOption}
+                rail={payRail}
+                onRail={setPayRail}
+                totalIdr={baseTotalIdr(priced)}
+                totalUsd={baseTotalUsd(priced)}
+                total={baseTotal(priced)}
+                symbol={(priced && priced.symbol) || '$'}
+                currency={currency || 'USD'}
+                stay={stay || ''}
+                hasReferral={!!(priced && priced.referral)}
+                referral={f.referral}
+                onReferral={(v) => setF((x) => ({ ...x, referral: v }))}
+                onApplyReferral={applyRef}
+                refMsg={refMsg}
+              />
+
+              <BookActions error={error} busy={busy} submit={submit} openWhatsApp={openWhatsApp} />
+              <button type="button" className={BACK_LINK} onClick={() => setStep(2)}>
+                &lsaquo; Back
+              </button>
+            </>
+          )}
+        </div>
+      ) : !payOn ? (
+        <div className="text-center">
+          <div className={SUCCESS_ICON}>&#10003;</div>
+          <h3 className={TITLE}>Booking Received!</h3>
+          <p className={SUCCESS_TEXT}>Thank you. We will email you shortly to confirm your booking.</p>
+          {signinNote}
+          <button className={BTN} onClick={closeBooking}>
+            Done
+          </button>
+        </div>
+      ) : (
+        <PaymentScreen
+          paid={paid}
+          bookingRef={bookingRef}
+          closeBooking={closeBooking}
+          signinNote={signinNote}
+          payRail={payRail}
+          payOption={payOption}
+          currency={currency}
+          onPaid={() => {
+            setPaid(true);
+            if (ctx && typeof ctx.onSuccess === 'function') ctx.onSuccess();
+          }}
+        />
+      )}
     </ModalPresence>,
     document.body,
   );

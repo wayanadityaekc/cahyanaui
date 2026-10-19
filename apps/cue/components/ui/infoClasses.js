@@ -1,4 +1,3 @@
-
 export const INFO_SECTION_DETAIL = 'py-9 px-6 bg-cream';
 export const INFO_SECTION_ARTICLE = 'py-9 px-6 bg-white';
 
@@ -7,8 +6,7 @@ export const INFO_CARD =
   'max-[576px]:p-[1.75rem_1.25rem] ' +
   '[&>p]:m-0 [&>p]:mb-4 [&>p]:leading-[var(--lh-body)] [&>p]:text-body [&>p:last-child]:mb-0';
 
-export const INFO_CARD_BODY =
-  '[&_p]:leading-[var(--lh-body)] [&_p]:m-0 [&_p]:mb-4 [&_p]:text-ink [&_p]:text-body';
+export const INFO_CARD_BODY = '[&_p]:leading-[var(--lh-body)] [&_p]:m-0 [&_p]:mb-4 [&_p]:text-ink [&_p]:text-body';
 
 export const INFO_CONTAINER_ARTICLE =
   'mx-auto max-w-[var(--container-read)] text-left ' +
@@ -26,4 +24,6 @@ const LIST_BASE =
   '[&_li]:before:w-[5px] [&_li]:before:h-[5px] [&_li]:before:rounded-[50%]';
 export const INFO_LIST_YES = `${LIST_BASE} [&_li]:text-ink [&_li]:before:bg-gold`;
 export const INFO_LIST_NO = `${LIST_BASE} [&_li]:text-muted [&_li]:before:bg-muted`;
-export function infoList(v) { return (String(v).includes('no') ? INFO_LIST_NO : INFO_LIST_YES); }
+export function infoList(v) {
+  return String(v).includes('no') ? INFO_LIST_NO : INFO_LIST_YES;
+}

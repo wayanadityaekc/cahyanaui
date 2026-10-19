@@ -1,5 +1,6 @@
 import { BTN_SM } from '@/components/ui/btnClasses';
-const SHARED = 'font-body border cursor-pointer no-underline ' +
+const SHARED =
+  'font-body border cursor-pointer no-underline ' +
   'transition-[color,background-color,border-color,scale] duration-200 ease-in-out';
 
 const BASE = `inline-flex ${BTN_SM} gap-2 ${SHARED}`;
@@ -11,13 +12,7 @@ const VARIANTS = {
   plain: 'border-transparent bg-transparent text-gold hover:text-gold-d',
 };
 
-export default function Button({
-  as: Tag = 'button',
-  variant = 'primary',
-  className = '',
-  children,
-  ...rest
-}) {
+export default function Button({ as: Tag = 'button', variant = 'primary', className = '', children, ...rest }) {
   const base = variant === 'plain' ? BASE_LINK : BASE;
   const cls = [base, VARIANTS[variant] || VARIANTS.primary, className].filter(Boolean).join(' ');
   const typeProp = Tag === 'button' && rest.type === undefined ? { type: 'button' } : {};

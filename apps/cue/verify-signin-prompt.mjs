@@ -1,8 +1,13 @@
 import { chromium } from '/home/user/CUE/node_modules/playwright-core/index.mjs';
-const b = await chromium.launch({ executablePath: '/opt/pw-browsers/chromium_headless_shell-1194/chrome-linux/headless_shell' });
+const b = await chromium.launch({
+  executablePath: '/opt/pw-browsers/chromium_headless_shell-1194/chrome-linux/headless_shell',
+});
 
-let pass = 0, fail = 0;
-function ok(c, m) { c ? pass++ : (fail++, console.log('  FAIL:', m)); }
+let pass = 0,
+  fail = 0;
+function ok(c, m) {
+  c ? pass++ : (fail++, console.log('  FAIL:', m));
+}
 
 const PAGES = [
   { path: '/settings.html', lead: 'Sign in to manage your details.', tab: null },
@@ -17,7 +22,8 @@ for (const w of [390, 1280]) {
     return route.fulfill({ json: {} });
   });
   const page = await ctx.newPage();
-  const errs = []; page.on('pageerror', (e) => errs.push(String(e)));
+  const errs = [];
+  page.on('pageerror', (e) => errs.push(String(e)));
 
   for (const { path, lead, tab } of PAGES) {
     await page.goto(`http://127.0.0.1:4000${path}`, { waitUntil: 'networkidle' });
@@ -36,7 +42,7 @@ for (const w of [390, 1280]) {
     ok((await page.locator('body').innerText()).includes(lead), `${w}${path}: expected lead text missing`);
 
     const btn = page.locator('button', { hasText: 'Sign in' }).first();
-    ok(await btn.count() >= 1, `${w}${path}: no "Sign in" button on the page`);
+    ok((await btn.count()) >= 1, `${w}${path}: no "Sign in" button on the page`);
 
     await btn.click();
     await page.waitForTimeout(400);

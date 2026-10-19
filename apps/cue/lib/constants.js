@@ -1,6 +1,5 @@
 export const WHATSAPP_NUMBER = '6285974650011';
-export const API_BASE =
-  process.env.NEXT_PUBLIC_API_BASE || 'https://cahyana-api-production.up.railway.app/api';
+export const API_BASE = process.env.NEXT_PUBLIC_API_BASE || 'https://cahyana-api-production.up.railway.app/api';
 
 export const KEY = {
   currency: 'cue_currency',

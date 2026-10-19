@@ -27,17 +27,16 @@ export default function MediaCard({
     >
       {image ? (
         <div className={cn(CARD_MEDIA, ratio, scrim && CARD_SCRIM, !image.src && MEDIA_FALLBACK)}>
-          {image.src ? <img
-            src={image.src}
-            alt={image.alt}
-            width={image.width}
-            height={image.height}
-            loading={image.eager ? undefined : 'lazy'}
-            className={cn(
-              CARD_IMG,
-              zoom && 'transition-transform duration-500 group-hover:scale-105',
-            )}
-          /> : null}
+          {image.src ? (
+            <img
+              src={image.src}
+              alt={image.alt}
+              width={image.width}
+              height={image.height}
+              loading={image.eager ? undefined : 'lazy'}
+              className={cn(CARD_IMG, zoom && 'transition-transform duration-500 group-hover:scale-105')}
+            />
+          ) : null}
           {badges}
         </div>
       ) : null}
@@ -45,9 +44,7 @@ export default function MediaCard({
       <div className={cn('p-5 flex flex-col gap-3 flex-1', bodyClassName)}>
         {children}
         {footer ? (
-          <div className="mt-auto pt-3 flex items-end justify-between [border-top:1px_solid_var(--line)]">
-            {footer}
-          </div>
+          <div className="mt-auto pt-3 flex items-end justify-between [border-top:1px_solid_var(--line)]">{footer}</div>
         ) : null}
       </div>
     </Card>

@@ -21,19 +21,27 @@ export default function PhotoGrid({ images = [], open, onClose, startAt = 0, lab
 
   useEffect(() => {
     if (!open) return undefined;
-    function onKey(e) { if (e.key === 'Escape') onClose(); }
+    function onKey(e) {
+      if (e.key === 'Escape') onClose();
+    }
     document.addEventListener('keydown', onKey);
     return () => document.removeEventListener('keydown', onKey);
   }, [open, onClose]);
 
   useEffect(() => {
     if (!open) {
-      if (pushed.current) { pushed.current = false; history.back(); }
+      if (pushed.current) {
+        pushed.current = false;
+        history.back();
+      }
       return undefined;
     }
     history.pushState({ photoGrid: true }, '');
     pushed.current = true;
-    function onPop() { pushed.current = false; onClose(); }
+    function onPop() {
+      pushed.current = false;
+      onClose();
+    }
     window.addEventListener('popstate', onPop);
     return () => window.removeEventListener('popstate', onPop);
   }, [open, onClose]);
@@ -58,12 +66,23 @@ export default function PhotoGrid({ images = [], open, onClose, startAt = 0, lab
         aria-label="Close photos"
         className="fixed z-[310] right-4 [top:max(1rem,env(safe-area-inset-top))] w-10 h-10 rounded-base bg-black/45 text-white grid place-items-center cursor-pointer backdrop-blur-[2px] hover:bg-black/65"
       >
-        <svg viewBox="0 0 24 24" className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
+        <svg
+          viewBox="0 0 24 24"
+          className="w-5 h-5"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          aria-hidden="true"
+        >
           <path d="M6 6l12 12M18 6L6 18" />
         </svg>
       </button>
 
-      <div ref={scroller} className="h-full overflow-y-auto overscroll-contain [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+      <div
+        ref={scroller}
+        className="h-full overflow-y-auto overscroll-contain [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+      >
         <div className="grid grid-cols-1 min-[768px]:grid-cols-2 gap-2 p-2 pb-16">
           {images.map((img, i) => (
             <figure key={img.src + i} data-photo={i} className="m-0 scroll-mt-1">

@@ -26,7 +26,12 @@ export default function Page() {
         alt="A plane reflected in the glass facade of Bali's Ngurah Rai airport terminal"
         photoPos="[&>img]:object-[80%_50%]"
         half
-        details={<Prose blocks={detailBlocks('Airport Transfer Details', AIRPORT.tinfo, AIRPORT.info)} headingVariant="company" />}
+        details={
+          <Prose
+            blocks={detailBlocks('Airport Transfer Details', AIRPORT.tinfo, AIRPORT.info)}
+            headingVariant="company"
+          />
+        }
       >
         <AirportTransferForm />
       </FormHero>

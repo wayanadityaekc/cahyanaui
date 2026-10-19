@@ -17,9 +17,11 @@ export default function FaqAccordion({ title, groups = [], answerHtml = false })
                 {item.q}
                 <ChevronDown className={FAQ_CHEV} strokeWidth={1.7} aria-hidden="true" />
               </summary>
-              {answerHtml && typeof item.a === 'string'
-                ? <div className={FAQ_A} dangerouslySetInnerHTML={{ __html: item.a }} />
-                : <div className={FAQ_A}>{typeof item.a === 'string' ? <p>{item.a}</p> : item.a}</div>}
+              {answerHtml && typeof item.a === 'string' ? (
+                <div className={FAQ_A} dangerouslySetInnerHTML={{ __html: item.a }} />
+              ) : (
+                <div className={FAQ_A}>{typeof item.a === 'string' ? <p>{item.a}</p> : item.a}</div>
+              )}
             </details>
           ))}
         </div>

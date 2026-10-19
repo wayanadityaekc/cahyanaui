@@ -1,15 +1,24 @@
 import { chromium } from 'playwright-core';
 const B = 'http://127.0.0.1:4000';
-let pass = 0, fail = 0;
-function ok(c, m) { c ? pass++ : fail++; console.log(`${c ? 'ok  ' : 'FAIL'} ${m}`); }
-function near(a, b) { return Math.abs(a - b) < 0.5; }
+let pass = 0,
+  fail = 0;
+function ok(c, m) {
+  c ? pass++ : fail++;
+  console.log(`${c ? 'ok  ' : 'FAIL'} ${m}`);
+}
+function near(a, b) {
+  return Math.abs(a - b) < 0.5;
+}
 
-const br = await chromium.launch({ executablePath: '/opt/pw-browsers/chromium_headless_shell-1194/chrome-linux/headless_shell' });
+const br = await chromium.launch({
+  executablePath: '/opt/pw-browsers/chromium_headless_shell-1194/chrome-linux/headless_shell',
+});
 
 function tokens(p) {
   return p.evaluate(() => {
     const d = document.createElement('div');
-    d.style.cssText = 'position:absolute;height:var(--btn-h);font-size:var(--fs-small);border-radius:var(--r-sm);color:var(--color-cta)';
+    d.style.cssText =
+      'position:absolute;height:var(--btn-h);font-size:var(--fs-small);border-radius:var(--r-sm);color:var(--color-cta)';
     document.body.appendChild(d);
     const c = getComputedStyle(d);
     const t = { h: parseFloat(c.height), font: c.fontSize, radius: c.borderTopLeftRadius, cta: c.color };
@@ -20,20 +29,31 @@ function tokens(p) {
 
 function shot(element) {
   return element.evaluate((n) => {
-    const c = getComputedStyle(n), r = n.getBoundingClientRect();
+    const c = getComputedStyle(n),
+      r = n.getBoundingClientRect();
     return {
-      h: Math.round(r.height * 10) / 10, bg: c.backgroundColor, color: c.color,
-      radius: c.borderTopLeftRadius, font: c.fontSize,
-      family: c.fontFamily.split(',')[0].replace(/["']/g, ''), weight: c.fontWeight,
-      display: c.display, align: c.alignItems, justify: c.justifyContent,
-      textAlign: c.textAlign, padTop: c.paddingTop, padBottom: c.paddingBottom,
+      h: Math.round(r.height * 10) / 10,
+      bg: c.backgroundColor,
+      color: c.color,
+      radius: c.borderTopLeftRadius,
+      font: c.fontSize,
+      family: c.fontFamily.split(',')[0].replace(/["']/g, ''),
+      weight: c.fontWeight,
+      display: c.display,
+      align: c.alignItems,
+      justify: c.justifyContent,
+      textAlign: c.textAlign,
+      padTop: c.paddingTop,
+      padBottom: c.paddingBottom,
       oneLine: n.scrollWidth <= n.clientWidth + 1,
     };
   });
 }
 
 const acc = { name: 'Wayan', email: 'w@example.com', phone: '' };
-function json(body) { return ({ status: 200, contentType: 'application/json', body: JSON.stringify(body) }); }
+function json(body) {
+  return { status: 200, contentType: 'application/json', body: JSON.stringify(body) };
+}
 function api(r) {
   const u = r.request().url();
   if (u.includes('/account/session')) return r.fulfill(json({ account: acc }));
@@ -60,11 +80,12 @@ for (const w of [320, 390, 768, 1280]) {
   const save = acts.filter({ hasText: 'Save changes' });
   const out = acts.filter({ hasText: 'Sign out' });
   const del = acts.filter({ hasText: 'Delete account' });
-  ok(await save.count() === 1, `${w}: ketemu tepat 1 tombol Save changes`);
-  ok(await out.count() === 1, `${w}: ketemu tepat 1 tombol Sign out`);
-  ok(await del.count() === 1, `${w}: ketemu tepat 1 tombol Delete account`);
+  ok((await save.count()) === 1, `${w}: ketemu tepat 1 tombol Save changes`);
+  ok((await out.count()) === 1, `${w}: ketemu tepat 1 tombol Sign out`);
+  ok((await del.count()) === 1, `${w}: ketemu tepat 1 tombol Delete account`);
 
-  const s = await shot(save), o = await shot(out);
+  const s = await shot(save),
+    o = await shot(out);
   console.log(`     save=${JSON.stringify(s)}`);
   console.log(`     out =${JSON.stringify(o)}`);
 
@@ -75,8 +96,10 @@ for (const w of [320, 390, 768, 1280]) {
   ok(s.color === 'rgb(255, 255, 255)', `${w}: Save teksnya putih (dapet ${s.color})`);
   ok(s.weight === '600', `${w}: Save bobot 600 (dapet ${s.weight})`);
   ok(s.family === 'Inter', `${w}: Save font Inter, bukan font browser (dapet ${s.family})`);
-  ok(s.align === 'center' && s.justify === 'center' && s.textAlign === 'center',
-    `${w}: Save ke-center dua arah (${s.align}/${s.justify}/${s.textAlign})`);
+  ok(
+    s.align === 'center' && s.justify === 'center' && s.textAlign === 'center',
+    `${w}: Save ke-center dua arah (${s.align}/${s.justify}/${s.textAlign})`,
+  );
   ok(s.padTop === '0px' && s.padBottom === '0px', `${w}: Save py-0`);
   ok(s.display.includes('flex'), `${w}: Save display flex (dapet ${s.display})`);
   ok(s.oneLine, `${w}: label Save 1 baris`);
@@ -94,17 +117,21 @@ for (const w of [320, 390, 768, 1280]) {
   ok(d.font === T.font, `${w}: Delete font --fs-small (${T.font})`);
   ok(d.family === 'Inter', `${w}: Delete font Inter, bukan font browser (dapet ${d.family})`);
   ok(d.weight === '600', `${w}: Delete bobot 600 (dapet ${d.weight})`);
-  ok(d.align === 'center' && d.justify === 'center' && d.textAlign === 'center',
-    `${w}: Delete ke-center dua arah (${d.align}/${d.justify}/${d.textAlign})`);
+  ok(
+    d.align === 'center' && d.justify === 'center' && d.textAlign === 'center',
+    `${w}: Delete ke-center dua arah (${d.align}/${d.justify}/${d.textAlign})`,
+  );
   ok(d.oneLine, `${w}: label Delete 1 baris`);
   ok(d.bg !== s.bg, `${w}: warna latar Delete != Save (${d.bg})`);
   ok(d.color !== o.color, `${w}: warna teks Delete != Sign out (${d.color})`);
 
-  const bs = await save.boundingBox(), bo = await out.boundingBox();
-  ok(bo.x >= bs.x + bs.width - 0.5 || bo.y >= bs.y + bs.height - 0.5,
-    `${w}: dua tombol gak ketumpuk`);
-  ok(await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth) <= 0,
-    `${w}: /settings gak melar`);
+  const bs = await save.boundingBox(),
+    bo = await out.boundingBox();
+  ok(bo.x >= bs.x + bs.width - 0.5 || bo.y >= bs.y + bs.height - 0.5, `${w}: dua tombol gak ketumpuk`);
+  ok(
+    (await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth)) <= 0,
+    `${w}: /settings gak melar`,
+  );
   ok(errs.length === 0, `${w}: /settings nol page error${errs[0] ? ` :: ${errs[0]}` : ''}`);
   await ctx.close();
 }
@@ -115,9 +142,21 @@ for (const w of [320, 390, 768, 1280]) {
   const errs = [];
   page.on('pageerror', (e) => errs.push(String(e)));
   await page.route('**/api/**', api);
-  const pages = ['/', '/index.html', '/tour.html', '/ubud-tour.html', '/charter.html', '/transfer.html',
-    '/airport-transfer.html', '/our-company.html', '/my-trips.html', '/bali-guide.html',
-    '/settings.html', '/activities.html', '/destinations.html'];
+  const pages = [
+    '/',
+    '/index.html',
+    '/tour.html',
+    '/ubud-tour.html',
+    '/charter.html',
+    '/transfer.html',
+    '/airport-transfer.html',
+    '/our-company.html',
+    '/my-trips.html',
+    '/bali-guide.html',
+    '/settings.html',
+    '/activities.html',
+    '/destinations.html',
+  ];
   let seen = 0;
   const odd = [];
   for (const p of pages) {
@@ -132,12 +171,17 @@ for (const w of [320, 390, 768, 1280]) {
         const c = getComputedStyle(b);
         if (c.visibility === 'hidden' || c.display === 'none') return;
         if (Math.round(parseFloat(c.height)) !== 34 || c.fontWeight !== '600') return;
-        out.push({ fam: c.fontFamily.split(',')[0].replace(/["']/g, ''), t: (b.textContent || '').trim().slice(0, 24) });
+        out.push({
+          fam: c.fontFamily.split(',')[0].replace(/["']/g, ''),
+          t: (b.textContent || '').trim().slice(0, 24),
+        });
       });
       return out;
     });
     seen += rows.length;
-    rows.forEach((x) => { if (x.fam !== 'Inter') odd.push(`${p} "${x.t}" -> ${x.fam}`); });
+    rows.forEach((x) => {
+      if (x.fam !== 'Inter') odd.push(`${p} "${x.t}" -> ${x.fam}`);
+    });
   }
   ok(seen > 40, `sweep: ada tombol aksi yang ke-ukur (${seen})`);
   ok(odd.length === 0, `sweep: nol tombol aksi pakai font browser${odd.length ? ` :: ${odd.join(' | ')}` : ''}`);

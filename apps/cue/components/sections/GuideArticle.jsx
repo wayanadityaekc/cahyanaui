@@ -49,11 +49,13 @@ export default function GuideArticle({ data }) {
         </RailLayout>
       </div>
 
-      {data.more.map((m, i) => (
-        m.kind
-          ? <GuideMore block={m} key={i} />
-          : <section className={m.cls} key={i} dangerouslySetInnerHTML={{ __html: m.html }} />
-      ))}
+      {data.more.map((m, i) =>
+        m.kind ? (
+          <GuideMore block={m} key={i} />
+        ) : (
+          <section className={m.cls} key={i} dangerouslySetInnerHTML={{ __html: m.html }} />
+        ),
+      )}
     </div>
   );
 }

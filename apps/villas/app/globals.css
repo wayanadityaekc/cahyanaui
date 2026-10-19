@@ -1,5 +1,5 @@
-@import "tailwindcss";
-@import "@cahyana/ui/tokens.css";
+@import 'tailwindcss';
+@import '@cahyana/ui/tokens.css';
 @source "../../../packages/ui/src";
 @layer base {
   html {
@@ -17,50 +17,61 @@
     overflow-x: clip;
   }
 
-  img { display: block; max-width: 100%; }
-  a { text-decoration: none; color: inherit; }
+  img {
+    display: block;
+    max-width: 100%;
+  }
+  a {
+    text-decoration: none;
+    color: inherit;
+  }
 
   :focus-visible {
     outline: 2px solid var(--color-cta);
     outline-offset: 3px;
   }
 
-  h1, h2, h3 {
+  h1,
+  h2,
+  h3 {
     font-family: var(--font-head);
     color: var(--color-gold);
   }
-  h1, h2 {
+  h1,
+  h2 {
     line-height: 1.15;
     letter-spacing: -0.01em;
   }
 }
 @layer components {
-
-
 }
-.hs-locked { overflow: hidden !important; }
+.hs-locked {
+  overflow: hidden !important;
+}
 @keyframes navbarIn {
-  from { opacity: 0; }
+  from {
+    opacity: 0;
+  }
 }
 @layer base {
   button,
-  [role="button"],
-  a[class~="rounded-pill"] {
+  [role='button'],
+  a[class~='rounded-pill'] {
     transition-property: scale;
     transition-duration: var(--dur-fast);
     transition-timing-function: var(--ease);
   }
 
   button:not(:disabled):active,
-  [role="button"]:active,
-  a[class~="rounded-pill"]:active {
+  [role='button']:active,
+  a[class~='rounded-pill']:active {
     scale: 0.97;
   }
 
   @media (prefers-reduced-motion: reduce) {
     button:not(:disabled):active,
-    [role="button"]:active,
-    a[class~="rounded-pill"]:active {
+    [role='button']:active,
+    a[class~='rounded-pill']:active {
       scale: 1;
     }
   }

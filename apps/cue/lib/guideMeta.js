@@ -3,7 +3,10 @@ import { GUIDE_HUB } from '@/content/shared/guide-hub';
 const CARD = {};
 (function collect(node) {
   if (!node || typeof node !== 'object') return;
-  if (Array.isArray(node)) { node.forEach(collect); return; }
+  if (Array.isArray(node)) {
+    node.forEach(collect);
+    return;
+  }
   if (node.href && node.img) CARD[node.href] = { img: node.img, tag: node.tag };
   Object.values(node).forEach(collect);
 })(GUIDE_HUB);

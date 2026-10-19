@@ -5,9 +5,12 @@ import { API_BASE } from '@/lib/constants';
 import { chargeCurrency } from '@/lib/rails';
 import { CONTROL } from '@cahyana/ui';
 
-
-function sdkId(cur) { return `paypal-sdk-${cur}`; }
-function sdkNs(cur) { return `paypal_${cur}`; }
+function sdkId(cur) {
+  return `paypal-sdk-${cur}`;
+}
+function sdkNs(cur) {
+  return `paypal_${cur}`;
+}
 
 function loadSdk({ clientId, currency }) {
   const id = sdkId(currency);
@@ -44,7 +47,12 @@ export default function PayPalCheckout({ bookingRef, option, copy, currency = 'U
   const cardRef = useRef(null);
   const mounted = useRef(true);
 
-  useEffect(() => () => { mounted.current = false; }, []);
+  useEffect(
+    () => () => {
+      mounted.current = false;
+    },
+    [],
+  );
 
   useEffect(() => {
     let cancelled = false;
@@ -103,8 +111,19 @@ export default function PayPalCheckout({ bookingRef, option, copy, currency = 'U
           .Buttons({
             style: { layout: 'vertical', shape: 'pill', height: 46 },
             createOrder,
-            onApprove: async (data) => { try { succeed(await capture(data.orderID)); } catch (e) { fail(e); } },
-            onCancel: () => { if (!cancelled) { setState('ready'); setMsg(copy.cancelled); } },
+            onApprove: async (data) => {
+              try {
+                succeed(await capture(data.orderID));
+              } catch (e) {
+                fail(e);
+              }
+            },
+            onCancel: () => {
+              if (!cancelled) {
+                setState('ready');
+                setMsg(copy.cancelled);
+              }
+            },
             onError: (e) => fail(e instanceof Error ? e : new Error(copy.failed)),
           })
           .render(buttonsRef.current);
@@ -112,7 +131,13 @@ export default function PayPalCheckout({ bookingRef, option, copy, currency = 'U
         const cardFields = sdk.CardFields
           ? sdk.CardFields({
               createOrder,
-              onApprove: async (data) => { try { succeed(await capture(data.orderID)); } catch (e) { fail(e); } },
+              onApprove: async (data) => {
+                try {
+                  succeed(await capture(data.orderID));
+                } catch (e) {
+                  fail(e);
+                }
+              },
               onError: (e) => fail(e instanceof Error ? e : new Error(copy.failed)),
             })
           : null;
@@ -126,11 +151,16 @@ export default function PayPalCheckout({ bookingRef, option, copy, currency = 'U
         }
         if (!cancelled) setState('ready');
       } catch (e) {
-        if (!cancelled) { setState('error'); setMsg(e.message); }
+        if (!cancelled) {
+          setState('error');
+          setMsg(e.message);
+        }
       }
     })();
 
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+    };
   }, [bookingRef, option, copy, currency, onPaid, onError]);
 
   async function payByCard() {
@@ -140,7 +170,10 @@ export default function PayPalCheckout({ bookingRef, option, copy, currency = 'U
     try {
       await cardRef.current.submit();
     } catch (e) {
-      if (mounted.current) { setState('ready'); setMsg(copy.declined); }
+      if (mounted.current) {
+        setState('ready');
+        setMsg(copy.declined);
+      }
     }
   }
 

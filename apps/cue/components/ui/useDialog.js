@@ -2,13 +2,14 @@
 
 import { useEffect, useRef } from 'react';
 
-
 const FOCUSABLE =
   'a[href], button:not([disabled]), input:not([disabled]):not([type="hidden"]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
 
 const stack = [];
 
-function visible(node) { return node.getClientRects().length > 0 && getComputedStyle(node).visibility !== 'hidden'; }
+function visible(node) {
+  return node.getClientRects().length > 0 && getComputedStyle(node).visibility !== 'hidden';
+}
 
 export default function useDialog({ shown, onClose, escape = true }) {
   const ref = useRef(null);
@@ -25,11 +26,16 @@ export default function useDialog({ shown, onClose, escape = true }) {
     stack.push(token);
 
     if (!node.hasAttribute('tabindex')) node.setAttribute('tabindex', '-1');
-    function focusBox() { node.focus({ preventScroll: true }); return document.activeElement === node; }
+    function focusBox() {
+      node.focus({ preventScroll: true });
+      return document.activeElement === node;
+    }
     let raf = 0;
     let timer = 0;
     if (!focusBox()) {
-      raf = requestAnimationFrame(() => { if (!focusBox()) timer = setTimeout(focusBox, 120); });
+      raf = requestAnimationFrame(() => {
+        if (!focusBox()) timer = setTimeout(focusBox, 120);
+      });
     }
 
     function onKey(e) {

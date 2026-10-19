@@ -9,11 +9,10 @@ export default function BookActions({ error, busy, submit, openWhatsApp }) {
 
       {error && <small className="block mt-[0.4rem] text-small text-err">{error}</small>}
 
-      <button className={BTN} onClick={submit} disabled={busy}>{busy ? 'Sending...' : 'Book Now'}</button>
-      <button
-        className={`${BTN_WA} ${STACK}`}
-        onClick={openWhatsApp}
-      >
+      <button className={BTN} onClick={submit} disabled={busy}>
+        {busy ? 'Sending...' : 'Book Now'}
+      </button>
+      <button className={`${BTN_WA} ${STACK}`} onClick={openWhatsApp}>
         Discuss via WhatsApp
       </button>
     </>

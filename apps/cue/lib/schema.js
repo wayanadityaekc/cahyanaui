@@ -26,7 +26,10 @@ export function faqPage(items) {
       name: i.q,
       acceptedAnswer: {
         '@type': 'Answer',
-        text: i.a.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim(),
+        text: i.a
+          .replace(/<[^>]+>/g, ' ')
+          .replace(/\s+/g, ' ')
+          .trim(),
       },
     })),
   };

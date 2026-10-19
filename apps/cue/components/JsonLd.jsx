@@ -11,8 +11,12 @@ function livePrices() {
         const d = await catalog({ currency: 'USD', guests: 2, stay: '' });
         if (!d || !Array.isArray(d.items)) return null;
         const byName = {};
-        d.items.forEach((i) => { byName[i.name] = i.standard.usd; });
-        (d.transfers || []).forEach((t) => { byName[t.route] = t.usd; });
+        d.items.forEach((i) => {
+          byName[i.name] = i.standard.usd;
+        });
+        (d.transfers || []).forEach((t) => {
+          byName[t.route] = t.usd;
+        });
         const transfers = (d.transfers || []).map((t) => t.usd).filter((n) => n > 0);
         return { byName, transfers };
       } catch (e) {
@@ -46,7 +50,9 @@ function withLivePrice({ json, priceGroup, priceKey }, prices) {
   return { ...node, offers: { ...node.offers, price: String(usd) } };
 }
 
-function isCrumb(n) { return n && n['@type'] === 'BreadcrumbList'; }
+function isCrumb(n) {
+  return n && n['@type'] === 'BreadcrumbList';
+}
 function stripCrumb(b) {
   if (Array.isArray(b.json)) {
     const kept = b.json.filter((n) => !isCrumb(n));
@@ -61,21 +67,24 @@ export default async function JsonLd({ page, crumbs }) {
   const blocks = given ? raw.map(stripCrumb).filter(Boolean) : raw;
   const hasCrumb = blocks.some((b) => (Array.isArray(b.json) ? b.json.some(isCrumb) : isCrumb(b.json)));
   const trail = given || (hasCrumb ? [] : crumbsFor(page));
-  const extra = trail.length > 1
-    ? [{
-        id: null,
-        json: {
-          '@context': 'https://schema.org',
-          '@type': 'BreadcrumbList',
-          itemListElement: trail.map((t, i) => ({
-            '@type': 'ListItem',
-            position: i + 1,
-            name: t.label,
-            item: SITE + (t.href || `/${page}.html`),
-          })),
-        },
-      }]
-    : [];
+  const extra =
+    trail.length > 1
+      ? [
+          {
+            id: null,
+            json: {
+              '@context': 'https://schema.org',
+              '@type': 'BreadcrumbList',
+              itemListElement: trail.map((t, i) => ({
+                '@type': 'ListItem',
+                position: i + 1,
+                name: t.label,
+                item: SITE + (t.href || `/${page}.html`),
+              })),
+            },
+          },
+        ]
+      : [];
   const all = [...(blocks || []), ...extra];
   if (!all.length) return null;
   const prices = await livePrices();

@@ -14,17 +14,34 @@ const MENU_ROW =
   'first:[border-top:none] hover:bg-[rgba(34,32,28,0.08)] [&_svg]:w-[var(--icon-sm)] [&_svg]:h-[var(--icon-sm)] [&_svg]:text-gold-d [&_svg]:shrink-0';
 
 export default function GuideHubHero({
-  image, crumb = null, title, text, categories = [], query = '', onQuery = () => {}, pop = null,
+  image,
+  crumb = null,
+  title,
+  text,
+  categories = [],
+  query = '',
+  onQuery = () => {},
+  pop = null,
   labels = {},
 }) {
   const [open, setOpen] = useState(false);
   const t = { categories: 'Categories', search: 'Search', searchAria: 'Search guides', ...labels };
   return (
-    <section className={BAND} style={{ backgroundImage: `linear-gradient(rgba(0,0,0,0.4),rgba(0,0,0,0.55)),url(${image})`, backgroundPosition: 'center 60%' }}>
+    <section
+      className={BAND}
+      style={{
+        backgroundImage: `linear-gradient(rgba(0,0,0,0.4),rgba(0,0,0,0.55)),url(${image})`,
+        backgroundPosition: 'center 60%',
+      }}
+    >
       <div className="relative z-[1] w-full mx-auto max-w-[calc(var(--container)_-_2_*_var(--container-x))]">
         {crumb}
-        <h1 className="font-head text-[length:var(--fs-display)] leading-[var(--lh-heading)] text-white font-bold tracking-[-0.01em]">{title}</h1>
-        <p className="mt-4 max-w-[var(--container-read)] text-cream font-body text-body leading-[var(--lh-body)]">{text}</p>
+        <h1 className="font-head text-[length:var(--fs-display)] leading-[var(--lh-heading)] text-white font-bold tracking-[-0.01em]">
+          {title}
+        </h1>
+        <p className="mt-4 max-w-[var(--container-read)] text-cream font-body text-body leading-[var(--lh-body)]">
+          {text}
+        </p>
         <div className="flex items-stretch max-w-[640px] mt-6 [border:1.5px_solid_var(--color-gold)] rounded-lg bg-surface-raised">
           {categories.length > 0 && (
             <div className="relative flex-[0_0_auto] flex order-2 [border-left:1px_solid_var(--line)]">
@@ -38,12 +55,22 @@ export default function GuideHubHero({
               >
                 <Menu className="w-[var(--icon-md)] h-[var(--icon-md)]" aria-hidden="true" />
                 <span>{t.categories}</span>
-                <ChevronDown className={cn('w-4 h-4 shrink-0 text-muted [transition:transform_var(--dur)_ease]', open && '[transform:rotate(180deg)]')} aria-hidden="true" />
+                <ChevronDown
+                  className={cn(
+                    'w-4 h-4 shrink-0 text-muted [transition:transform_var(--dur)_ease]',
+                    open && '[transform:rotate(180deg)]',
+                  )}
+                  aria-hidden="true"
+                />
               </button>
               <PopPanel pop={pop} open={open} className={MENU}>
                 {categories.map(({ id, label, Icon }) => (
                   <a className={MENU_ROW} href={`#${id}`} key={id} onClick={() => setOpen(false)}>
-                    {Icon && <span><Icon strokeWidth={1.7} aria-hidden="true" /></span>}
+                    {Icon && (
+                      <span>
+                        <Icon strokeWidth={1.7} aria-hidden="true" />
+                      </span>
+                    )}
                     {label}
                   </a>
                 ))}

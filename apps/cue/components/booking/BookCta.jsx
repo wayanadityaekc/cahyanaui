@@ -32,8 +32,14 @@ export default function BookCta({ item, perPerson = false }) {
     if (!root) return;
     const bookBtn = root.querySelector('.program-cta__btn--book');
     const addBtn = root.querySelector('.program-cta__btn--add');
-    function onBook(e) { e.preventDefault(); setAsk('book'); }
-    function onAdd(e) { e.preventDefault(); setAsk('add'); }
+    function onBook(e) {
+      e.preventDefault();
+      setAsk('book');
+    }
+    function onAdd(e) {
+      e.preventDefault();
+      setAsk('add');
+    }
     if (bookBtn) bookBtn.addEventListener('click', onBook);
     if (addBtn) addBtn.addEventListener('click', onAdd);
     return () => {
@@ -64,7 +70,13 @@ export default function BookCta({ item, perPerson = false }) {
   }
 
   function add(date, goto, time) {
-    save({ ...state, days: [...(state.days || []), { items: [item], itemModes: ['standard'], itemTimes: [time || ''], date, guests: '' }] });
+    save({
+      ...state,
+      days: [
+        ...(state.days || []),
+        { items: [item], itemModes: ['standard'], itemTimes: [time || ''], date, guests: '' },
+      ],
+    });
     if (goto) window.location.href = '/my-trips.html';
     else setToast('Added to My Trips');
   }
@@ -88,19 +100,35 @@ export default function BookCta({ item, perPerson = false }) {
       <ModalPresence open={!!confirm} onClose={() => setConfirm(null)} label="Two full-day tours?" box={BOX_SM}>
         {confirm && (
           <>
-            <button className={CLOSE} aria-label="Close" onClick={() => setConfirm(null)}>&times;</button>
+            <button className={CLOSE} aria-label="Close" onClick={() => setConfirm(null)}>
+              &times;
+            </button>
             <h3 className={TITLE}>Two full-day tours?</h3>
             <p className={SUB}>You already have a full-day tour on that date. Add another anyway?</p>
-            <button type="button" className={BTN} onClick={() => { const c = confirm; setConfirm(null); add(c.date, c.goto, c.time); }}>
+            <button
+              type="button"
+              className={BTN}
+              onClick={() => {
+                const c = confirm;
+                setConfirm(null);
+                add(c.date, c.goto, c.time);
+              }}
+            >
               Add anyway
             </button>
-            <button type="button" className={BTN_GHOST} onClick={() => setConfirm(null)}>Cancel</button>
+            <button type="button" className={BTN_GHOST} onClick={() => setConfirm(null)}>
+              Cancel
+            </button>
           </>
         )}
       </ModalPresence>
 
       <LiveRegion>{toast}</LiveRegion>
-      {toast && <div className={CART_TOAST} aria-hidden="true">{toast}</div>}
+      {toast && (
+        <div className={CART_TOAST} aria-hidden="true">
+          {toast}
+        </div>
+      )}
     </>
   );
 }

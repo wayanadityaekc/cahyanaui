@@ -11,7 +11,11 @@ export default function Field({ label, htmlFor, error, hint, className, children
       )}
       {children}
       {hint && !error && <p className="mt-1 font-body text-label text-muted">{hint}</p>}
-      {error && <p role="alert" className="mt-1 font-body text-label text-err">{error}</p>}
+      {error && (
+        <p role="alert" className="mt-1 font-body text-label text-err">
+          {error}
+        </p>
+      )}
     </div>
   );
 }

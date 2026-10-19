@@ -18,11 +18,24 @@ import FlagDefs from '@/components/layout/FlagDefs';
 import InfoPopover from '@/components/ui/InfoPopover';
 import Select from '@/components/ui/Select';
 import PickupAreaSelect from '@/components/ui/PickupAreaSelect';
-import { CONTROL, CHEV, CONTROL_VAL, CONTROL_VAL_PLACEHOLDER, panelMenu, PANEL_HEAD_MENU, PANEL_HEAD_H3, PANEL_CLOSE_SHEET, PANEL_BODY_MENU, optMenu, HS_OPT_IC, HS_OPT_NM, HS_OPT_PR } from '@/components/ui/hsClasses';
+import {
+  CONTROL,
+  CHEV,
+  CONTROL_VAL,
+  CONTROL_VAL_PLACEHOLDER,
+  panelMenu,
+  PANEL_HEAD_MENU,
+  PANEL_HEAD_H3,
+  PANEL_CLOSE_SHEET,
+  PANEL_BODY_MENU,
+  optMenu,
+  HS_OPT_IC,
+  HS_OPT_NM,
+  HS_OPT_PR,
+} from '@/components/ui/hsClasses';
 import { EXPLORE_OPTIONS } from '@/content/shared/explore-options';
 
 const GUESTS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
-
 
 export default function HeroSearch({ onClose, sheetOpen = false }) {
   const { guests, setGuests, currency } = useTripPrefs();
@@ -56,8 +69,12 @@ export default function HeroSearch({ onClose, sheetOpen = false }) {
     if (!catalog) return out;
     const isIdr = currency === 'IDR';
     const loc = isIdr ? 'id-ID' : 'en-US';
-    function fmt(n) { return withSymbol(symbol + n.toLocaleString(loc)); }
-    function byCat(cats) { return catalog.items.filter((i) => cats.includes(i.category)).map((i) => i.standard.display); }
+    function fmt(n) {
+      return withSymbol(symbol + n.toLocaleString(loc));
+    }
+    function byCat(cats) {
+      return catalog.items.filter((i) => cats.includes(i.category)).map((i) => i.standard.display);
+    }
     const sets = {
       tour: byCat(['tour', 'combo']),
       experience: byCat(['experience']),
@@ -70,7 +87,14 @@ export default function HeroSearch({ onClose, sheetOpen = false }) {
       const low = Math.min(...arr);
       const high = Math.max(...arr);
       const hiText = isIdr ? withDeemphasizedThousands(high.toLocaleString(loc)) : high.toLocaleString(loc);
-      out[cat] = low === high ? <>from {fmt(low)}</> : <>{fmt(low)}–{hiText}</>;
+      out[cat] =
+        low === high ? (
+          <>from {fmt(low)}</>
+        ) : (
+          <>
+            {fmt(low)}–{hiText}
+          </>
+        );
     });
     return out;
   }, [catalog, symbol, currency]);
@@ -88,7 +112,9 @@ export default function HeroSearch({ onClose, sheetOpen = false }) {
     <div className={panelMenu(open)}>
       <div className={PANEL_HEAD_MENU}>
         <h3 className={PANEL_HEAD_H3}>How to explore</h3>
-        <button type="button" className={PANEL_CLOSE_SHEET} aria-label="Close" onClick={() => setOpen(false)}>&times;</button>
+        <button type="button" className={PANEL_CLOSE_SHEET} aria-label="Close" onClick={() => setOpen(false)}>
+          &times;
+        </button>
       </div>
       <div className={PANEL_BODY_MENU}>
         {EXPLORE_OPTIONS.map((o) => (
@@ -105,7 +131,9 @@ export default function HeroSearch({ onClose, sheetOpen = false }) {
               setOpen(false);
             }}
           >
-            <span className={HS_OPT_IC}><o.Icon strokeWidth={1.6} /></span>
+            <span className={HS_OPT_IC}>
+              <o.Icon strokeWidth={1.6} />
+            </span>
             <span className={HS_OPT_NM}>
               {o.name}
               <small>{o.sub}</small>
@@ -145,7 +173,9 @@ export default function HeroSearch({ onClose, sheetOpen = false }) {
           &times;
         </button>
       )}
-      <h2 className="font-head text-h3 font-medium tracking-[-0.01em] leading-[1.15] text-center text-gold mb-6">Plan your trip</h2>
+      <h2 className="font-head text-h3 font-medium tracking-[-0.01em] leading-[1.15] text-center text-gold mb-6">
+        Plan your trip
+      </h2>
 
       <div className="mb-[0.8rem] relative" ref={ddRef}>
         <label className={FIELD_LABEL}>
@@ -174,7 +204,9 @@ export default function HeroSearch({ onClose, sheetOpen = false }) {
       </div>
 
       <div className="mb-[0.8rem]">
-        <label className={FIELD_LABEL} htmlFor="hs-referral">Referral code</label>
+        <label className={FIELD_LABEL} htmlFor="hs-referral">
+          Referral code
+        </label>
         <div className="flex gap-2">
           <input
             type="text"
@@ -204,7 +236,9 @@ export default function HeroSearch({ onClose, sheetOpen = false }) {
 
       <div className="grid grid-cols-[1fr_1fr] gap-[0.8rem]">
         <div className="mb-[0.8rem]">
-          <label className={FIELD_LABEL} htmlFor="hs-guests">Guests</label>
+          <label className={FIELD_LABEL} htmlFor="hs-guests">
+            Guests
+          </label>
           <Select
             id="hs-guests"
             label="Guests"
@@ -214,7 +248,9 @@ export default function HeroSearch({ onClose, sheetOpen = false }) {
           />
         </div>
         <div className="mb-[0.8rem]">
-          <label className={FIELD_LABEL} htmlFor="hs-stay">Pickup area</label>
+          <label className={FIELD_LABEL} htmlFor="hs-stay">
+            Pickup area
+          </label>
           <PickupAreaSelect id="hs-stay" />
         </div>
       </div>

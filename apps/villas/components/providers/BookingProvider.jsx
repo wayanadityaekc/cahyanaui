@@ -24,15 +24,21 @@ export function BookingProvider({ children }) {
     setIsOpen(true);
   }
 
-  function closeBooking() { return setIsOpen(false); }
+  function closeBooking() {
+    return setIsOpen(false);
+  }
 
   function updateBooking(patch) {
     setBooking((prev) => ({ ...prev, ...patch }));
     if (patch.guests != null) setGuests(patch.guests);
   }
 
-  function goToSummary() { return setStep('summary'); }
-  function goToDetails() { return setStep('details'); }
+  function goToSummary() {
+    return setStep('summary');
+  }
+  function goToDetails() {
+    return setStep('details');
+  }
 
   const value = {
     isOpen,

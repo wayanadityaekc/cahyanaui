@@ -1,5 +1,4 @@
-const HOVER_LIFT =
-  '[transition:transform_var(--dur-slow)_var(--ease-out)]';
+const HOVER_LIFT = '[transition:transform_var(--dur-slow)_var(--ease-out)]';
 
 export const CARD_FRAMED =
   'relative overflow-hidden rounded-base [border:1px_solid_var(--line)] ' +
@@ -12,8 +11,7 @@ export const CARD_TONES = {
 };
 
 export const CARD_INSET =
-  'relative p-[5px] overflow-hidden bg-surface-raised ' +
-  '[box-shadow:var(--shadow-md)] no-underline text-inherit';
+  'relative p-[5px] overflow-hidden bg-surface-raised ' + '[box-shadow:var(--shadow-md)] no-underline text-inherit';
 
 export const CARD_SHAPES = { framed: CARD_FRAMED, inset: CARD_INSET };
 

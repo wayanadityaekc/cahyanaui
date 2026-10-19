@@ -16,4 +16,6 @@ const ICONS = {
   'Meet & greet': UserCheck,
   Language: Languages,
 };
-export function chipIcon(label) { return ICONS[label] || Info; }
+export function chipIcon(label) {
+  return ICONS[label] || Info;
+}

@@ -15,7 +15,6 @@ export const SECTION_TONES = {
   dark: 'bg-gold',
 };
 
-
 export const ICON_CIRCLE =
   'inline-flex items-center justify-center w-11 h-11 rounded-pill bg-cream text-gold flex-none';
 

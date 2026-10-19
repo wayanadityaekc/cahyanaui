@@ -1,4 +1,9 @@
-function FILE(s) { return String(s || '').replace(/^\/?assets\/images\//, '').replace(/^images\//, '').trim(); }
+function FILE(s) {
+  return String(s || '')
+    .replace(/^\/?assets\/images\//, '')
+    .replace(/^images\//, '')
+    .trim();
+}
 
 export function galleryFrom(data) {
   if (!data) return [];

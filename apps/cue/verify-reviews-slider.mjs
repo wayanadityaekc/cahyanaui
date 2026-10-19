@@ -1,17 +1,25 @@
 import { chromium } from '/home/user/CUE/node_modules/playwright-core/index.mjs';
-const b = await chromium.launch({ executablePath: '/opt/pw-browsers/chromium_headless_shell-1194/chrome-linux/headless_shell' });
+const b = await chromium.launch({
+  executablePath: '/opt/pw-browsers/chromium_headless_shell-1194/chrome-linux/headless_shell',
+});
 
 const REVIEWS = Array.from({ length: 8 }, (_, i) => ({
   name: `Guest ${i + 1}`,
   service: 'Ubud Tour',
   rating: 5 - (i % 2),
-  message: (i % 2 === 0 ? 'Great trip, our driver was on time and friendly.' : 'This trip was absolutely fantastic from start to finish. Our driver was on time, friendly, and knew all the best spots to stop for photos. The itinerary was well paced and never felt rushed. We saw waterfalls, rice terraces, and a beautiful temple. Highly recommend booking with Cahyana - communication was clear and pricing was upfront the whole way through, no surprises at the end of the day.'),
+  message:
+    i % 2 === 0
+      ? 'Great trip, our driver was on time and friendly.'
+      : 'This trip was absolutely fantastic from start to finish. Our driver was on time, friendly, and knew all the best spots to stop for photos. The itinerary was well paced and never felt rushed. We saw waterfalls, rice terraces, and a beautiful temple. Highly recommend booking with Cahyana - communication was clear and pricing was upfront the whole way through, no surprises at the end of the day.',
   country: 'Australia',
   created_at: `2026-09-${10 + i}`,
 }));
 
-let pass = 0, fail = 0;
-function ok(c, m) { c ? pass++ : (fail++, console.log('  FAIL:', m)); }
+let pass = 0,
+  fail = 0;
+function ok(c, m) {
+  c ? pass++ : (fail++, console.log('  FAIL:', m));
+}
 
 for (const w of [390, 1280]) {
   const ctx = await b.newContext({ viewport: { width: w, height: 1000 } });
@@ -23,7 +31,8 @@ for (const w of [390, 1280]) {
     return route.fulfill({ json: {} });
   });
   const page = await ctx.newPage();
-  const errs = []; page.on('pageerror', (e) => errs.push(String(e)));
+  const errs = [];
+  page.on('pageerror', (e) => errs.push(String(e)));
   await page.goto('http://127.0.0.1:4000/', { waitUntil: 'networkidle' });
   await page.locator('#reviews').scrollIntoViewIfNeeded();
   await page.waitForTimeout(500);
@@ -66,14 +75,18 @@ for (const w of [390, 1280]) {
     return route.fulfill({ json: {} });
   });
   const page = await ctx.newPage();
-  const errs = []; page.on('pageerror', (e) => errs.push(String(e)));
+  const errs = [];
+  page.on('pageerror', (e) => errs.push(String(e)));
   const resp = await page.goto('http://127.0.0.1:4000/all-reviews.html', { waitUntil: 'networkidle' });
   ok(resp.status() === 200, `all-reviews.html: status ${resp.status()}`);
   const cards = page.locator('[data-reviews-track] button');
-  ok(await cards.count() === 8, `all-reviews.html: expected 8 cards, got ${await cards.count()}`);
+  ok((await cards.count()) === 8, `all-reviews.html: expected 8 cards, got ${await cards.count()}`);
   await cards.nth(0).click();
   await page.waitForTimeout(400);
-  ok(await page.locator('[role="dialog"][aria-label="Guest review"]').isVisible(), `all-reviews.html: click did not open modal`);
+  ok(
+    await page.locator('[role="dialog"][aria-label="Guest review"]').isVisible(),
+    `all-reviews.html: click did not open modal`,
+  );
   await page.screenshot({ path: 'shots/all-reviews-page-1280.png', fullPage: true });
   ok(errs.length === 0, `all-reviews.html: page errors ${errs.join(' | ')}`);
   await ctx.close();

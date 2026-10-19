@@ -1,8 +1,6 @@
 import { FAQ } from '@/content/company';
 import { VILLAS } from '@/lib/villas';
-import {
-  TOPICS, HUMAN_WORDS, SERVICE_WORDS, PRICE_WORDS, GREETINGS, THANKS, CHAT_COPY,
-} from '@/content/chat';
+import { TOPICS, HUMAN_WORDS, SERVICE_WORDS, PRICE_WORDS, GREETINGS, THANKS, CHAT_COPY } from '@/content/chat';
 
 const FAQ_ITEMS = FAQ.flatMap((group) => group.items);
 
@@ -12,18 +10,76 @@ function faqAnswer(question) {
   return hit[1];
 }
 
-TOPICS.forEach((topic) => { if (topic.faq) faqAnswer(topic.faq); });
+TOPICS.forEach((topic) => {
+  if (topic.faq) faqAnswer(topic.faq);
+});
 
 const STOP = new Set([
-  'the', 'a', 'an', 'is', 'are', 'do', 'does', 'did', 'can', 'i', 'we', 'you',
-  'my', 'me', 'to', 'for', 'of', 'in', 'on', 'at', 'and', 'or', 'it', 'be',
-  'how', 'what', 'when', 'where', 'much', 'many', 'with', 'from', 'your', 'us',
-  'please', 'hi', 'hello', 'there', 'want', 'would', 'like', 'need', 'about',
-  'have', 'has', 'get', 'got', 'this', 'that', 'any', 'all',
+  'the',
+  'a',
+  'an',
+  'is',
+  'are',
+  'do',
+  'does',
+  'did',
+  'can',
+  'i',
+  'we',
+  'you',
+  'my',
+  'me',
+  'to',
+  'for',
+  'of',
+  'in',
+  'on',
+  'at',
+  'and',
+  'or',
+  'it',
+  'be',
+  'how',
+  'what',
+  'when',
+  'where',
+  'much',
+  'many',
+  'with',
+  'from',
+  'your',
+  'us',
+  'please',
+  'hi',
+  'hello',
+  'there',
+  'want',
+  'would',
+  'like',
+  'need',
+  'about',
+  'have',
+  'has',
+  'get',
+  'got',
+  'this',
+  'that',
+  'any',
+  'all',
 ]);
 
-function norm(text) { return String(text || '').toLowerCase().replace(/[^a-z0-9\s]/g, ' ').replace(/\s+/g, ' ').trim(); }
-function words(text) { return norm(text).split(' ').filter((word) => word.length > 2 && !STOP.has(word)); }
+function norm(text) {
+  return String(text || '')
+    .toLowerCase()
+    .replace(/[^a-z0-9\s]/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+function words(text) {
+  return norm(text)
+    .split(' ')
+    .filter((word) => word.length > 2 && !STOP.has(word));
+}
 
 function mentions(term, text, questionWords) {
   return term.includes(' ') ? text.includes(term) : questionWords.includes(term);
@@ -41,7 +97,6 @@ function villaRow(villa, format) {
     href: `/villas/${villa.slug}`,
   };
 }
-
 
 function villaPrices({ format }) {
   return {
@@ -61,7 +116,9 @@ const BUILDERS = { villaPrices, liveDinner };
 
 function villaAnswer(question, questionWords, ctx) {
   const text = norm(question);
-  const villa = Object.values(VILLAS).find((candidate) => text.includes(norm(candidate.name)) || text.includes(candidate.slug.split('-')[1]));
+  const villa = Object.values(VILLAS).find(
+    (candidate) => text.includes(norm(candidate.name)) || text.includes(candidate.slug.split('-')[1]),
+  );
   if (!villa) return null;
   const askedPrice = PRICE_WORDS.some((term) => mentions(term, text, questionWords)) || text.includes('night');
   if (askedPrice) {
@@ -85,7 +142,10 @@ function matchTopic(question) {
       if (mentions(term, text, questionWords)) score += term.includes(' ') ? 3 : 1;
     });
     (topic.strong || []).forEach((term) => {
-      if (mentions(term, text, questionWords)) { strong = true; score += 3; }
+      if (mentions(term, text, questionWords)) {
+        strong = true;
+        score += 3;
+      }
     });
     if (!score) return;
     const better = !best || (strong && !best.strong) || (strong === best.strong && score > best.score);
@@ -111,7 +171,8 @@ export function answerFor(question, ctx = {}) {
   if (THANKS.includes(text)) return { kind: 'answer', text: CHAT_COPY.thanks };
 
   const questionWords = words(raw);
-  if (HUMAN_WORDS.some((term) => mentions(term, text, questionWords))) return { kind: 'handoff', text: CHAT_COPY.handoff };
+  if (HUMAN_WORDS.some((term) => mentions(term, text, questionWords)))
+    return { kind: 'handoff', text: CHAT_COPY.handoff };
 
   const aboutService = SERVICE_WORDS.some((term) => mentions(term, text, questionWords));
   const aboutPrice = PRICE_WORDS.some((term) => mentions(term, text, questionWords));

@@ -19,12 +19,13 @@ const GUESTS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
 const TIMES = (() => {
   const out = [];
-  [...Array(23).keys()].map((k) => 6 * 60 + k * 30).forEach((m) => {
-    out.push(`${String(Math.floor(m / 60)).padStart(2, '0')}:${String(m % 60).padStart(2, '0')}`);
-  });
+  [...Array(23).keys()]
+    .map((k) => 6 * 60 + k * 30)
+    .forEach((m) => {
+      out.push(`${String(Math.floor(m / 60)).padStart(2, '0')}:${String(m % 60).padStart(2, '0')}`);
+    });
   return out;
 })();
-
 
 export default function CharterBuilder() {
   const { setGuests } = useTripPrefs();
@@ -42,7 +43,10 @@ export default function CharterBuilder() {
     if (CHARTER.durations.some((x) => x.dur === d.dur)) setDur(d.dur);
   }, []);
 
-  function pick(d) { setDur(d); saveCharterDraft({ dur: d }); }
+  function pick(d) {
+    setDur(d);
+    saveCharterDraft({ dur: d });
+  }
 
   const { tier, fmt } = useCharterTier({ area });
   const catalog = usePricing()?.catalog;
@@ -55,13 +59,16 @@ export default function CharterBuilder() {
     if (!ready || total == null) return;
     save({
       ...state,
-      charters: [...(state.charters || []), {
-        date,
-        time,
-        guests,
-        area,
-        dur,
-      }],
+      charters: [
+        ...(state.charters || []),
+        {
+          date,
+          time,
+          guests,
+          area,
+          dur,
+        },
+      ],
     });
     window.location.href = '/my-trips.html';
   }
@@ -70,10 +77,11 @@ export default function CharterBuilder() {
 
   return (
     <div className="bg-white rounded-xl p-[var(--space-2)] text-left" id={CHARTER.boxId}>
-      <h2 className="font-head text-h2 font-semibold text-gold text-center m-0 mb-[var(--space-2)]">{CHARTER.boxTitle}</h2>
+      <h2 className="font-head text-h2 font-semibold text-gold text-center m-0 mb-[var(--space-2)]">
+        {CHARTER.boxTitle}
+      </h2>
 
       <div className="flex flex-col gap-[var(--space-2)] min-[993px]:grid min-[993px]:grid-cols-[1fr_340px] min-[993px]:gap-[var(--space-3)] min-[993px]:items-start">
-
         <CharterPlans value={dur} onChange={pick} area={area} heading="How long do you need the car?" />
 
         <div>
@@ -85,7 +93,9 @@ export default function CharterBuilder() {
           </div>
           <div className="grid grid-cols-2 gap-[var(--space-1)]">
             <div className="col-span-2">
-              <label className={FIELD_LABEL} htmlFor="ch-pickup">Pick-up area</label>
+              <label className={FIELD_LABEL} htmlFor="ch-pickup">
+                Pick-up area
+              </label>
               <Select
                 id="ch-pickup"
                 label="Pick-up area"
@@ -96,11 +106,15 @@ export default function CharterBuilder() {
               />
             </div>
             <div>
-              <label className={FIELD_LABEL} htmlFor="ch-date">Date</label>
+              <label className={FIELD_LABEL} htmlFor="ch-date">
+                Date
+              </label>
               <DateField id="ch-date" label="Date" value={date} onChange={setDate} />
             </div>
             <div>
-              <label className={FIELD_LABEL} htmlFor="ch-time">Pick-up time</label>
+              <label className={FIELD_LABEL} htmlFor="ch-time">
+                Pick-up time
+              </label>
               <Select
                 id="ch-time"
                 label="Pick-up time"
@@ -111,12 +125,17 @@ export default function CharterBuilder() {
               />
             </div>
             <div className="col-span-2">
-              <label className={FIELD_LABEL} htmlFor="ch-guests">Guests</label>
+              <label className={FIELD_LABEL} htmlFor="ch-guests">
+                Guests
+              </label>
               <Select
                 id="ch-guests"
                 label="Guests"
                 value={guests}
-                onChange={(v) => { setLocalGuests(v); setGuests(v); }}
+                onChange={(v) => {
+                  setLocalGuests(v);
+                  setGuests(v);
+                }}
                 options={GUESTS.map((n) => ({ value: String(n), label: String(n) }))}
                 placeholder="How many of you?"
               />
@@ -130,12 +149,7 @@ export default function CharterBuilder() {
             </span>
           </div>
 
-          <button
-            className={BTN_BOOK}
-            type="button"
-            disabled={!ready || total == null}
-            onClick={book}
-          >
+          <button className={BTN_BOOK} type="button" disabled={!ready || total == null} onClick={book}>
             Book charter
           </button>
 

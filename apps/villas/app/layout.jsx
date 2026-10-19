@@ -26,7 +26,10 @@ const inter = localFont({
 });
 
 function assetV(...rel) {
-  return createHash('sha1').update(readFileSync(join(process.cwd(), 'public', ...rel))).digest('hex').slice(0, 8);
+  return createHash('sha1')
+    .update(readFileSync(join(process.cwd(), 'public', ...rel)))
+    .digest('hex')
+    .slice(0, 8);
 }
 
 export const metadata = {
@@ -36,7 +39,12 @@ export const metadata = {
       { url: `/assets/icons/favicon.svg?v=${assetV('assets', 'icons', 'favicon.svg')}`, type: 'image/svg+xml' },
       { url: `/assets/icons/favicon.ico?v=${assetV('assets', 'icons', 'favicon.ico')}`, sizes: 'any' },
     ],
-    apple: [{ url: `/assets/icons/apple-touch-icon.png?v=${assetV('assets', 'icons', 'apple-touch-icon.png')}`, sizes: '180x180' }],
+    apple: [
+      {
+        url: `/assets/icons/apple-touch-icon.png?v=${assetV('assets', 'icons', 'apple-touch-icon.png')}`,
+        sizes: '180x180',
+      },
+    ],
   },
   manifest: '/manifest.webmanifest',
 };
@@ -61,18 +69,18 @@ export default async function RootLayout({ children }) {
         <LoadingScreen />
         <CurrencyProvider initialFx={initialFx}>
           <AccountProvider>
-          <TripPrefsProvider>
-          <CartProvider>
-          <SavedVillasProvider>
-          <BookingProvider>
-            <Navbar />
-            <main className="pt-[var(--header-h-max,53px)]">{children}</main>
-            <Footer />
-            <BookingSheet />
-          </BookingProvider>
-          </SavedVillasProvider>
-          </CartProvider>
-          </TripPrefsProvider>
+            <TripPrefsProvider>
+              <CartProvider>
+                <SavedVillasProvider>
+                  <BookingProvider>
+                    <Navbar />
+                    <main className="pt-[var(--header-h-max,53px)]">{children}</main>
+                    <Footer />
+                    <BookingSheet />
+                  </BookingProvider>
+                </SavedVillasProvider>
+              </CartProvider>
+            </TripPrefsProvider>
           </AccountProvider>
         </CurrencyProvider>
       </body>

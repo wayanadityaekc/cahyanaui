@@ -1,7 +1,14 @@
 import { chromium } from 'playwright-core';
 const BASE = process.argv[2];
-let pass = 0, fail = 0;
-function ok(c, m) { if (c) pass++; else { fail++; console.log('  FAIL', m); } }
+let pass = 0,
+  fail = 0;
+function ok(c, m) {
+  if (c) pass++;
+  else {
+    fail++;
+    console.log('  FAIL', m);
+  }
+}
 
 const browser = await chromium.launch({ executablePath: '/opt/pw-browsers/chromium-1194/chrome-linux/chrome' });
 
@@ -12,7 +19,7 @@ for (const w of [390, 1280]) {
   page.on('pageerror', (e) => errs.push(String(e)));
   console.log(`\n@${w}`);
 
-  await page.goto(`${BASE  }/our-company/`, { waitUntil: 'load' });
+  await page.goto(`${BASE}/our-company/`, { waitUntil: 'load' });
   await page.waitForTimeout(400);
   const tabs = await page.$$eval('button, a', (els) => els.map((e) => e.textContent.trim()));
   ok(tabs.includes('Booking Terms'), `${w} Our Company has a Booking Terms tab`);
@@ -22,7 +29,7 @@ for (const w of [390, 1280]) {
   for (const h of ['terms', 'cancellation']) {
     await page.goto(`${BASE}/our-company/#${h}`, { waitUntil: 'load' });
     await page.waitForTimeout(350);
-    text += `\n${  await page.evaluate(() => document.body.innerText)}`;
+    text += `\n${await page.evaluate(() => document.body.innerText)}`;
   }
   ok(/full when you book|in full when you book/i.test(text), `${w} it says payment is in full`);
   ok(/no deposit-only option/i.test(text), `${w} and that there is no deposit-only option`);
@@ -42,7 +49,7 @@ for (const w of [390, 1280]) {
   const extra = [...seen].filter((n) => !['7', '30'].includes(n));
   ok(extra.length === 0, `${w} only 7 and 30 day windows appear anywhere (${JSON.stringify([...seen])})`);
 
-  await page.goto(`${BASE  }/villas/cahyana-house/`, { waitUntil: 'load' });
+  await page.goto(`${BASE}/villas/cahyana-house/`, { waitUntil: 'load' });
   await page.waitForTimeout(400);
   const aside = await page.locator('aside').first().innerText();
   ok(/Paid in full at booking/i.test(aside), `${w} the booking panel states payment in full`);
@@ -56,7 +63,7 @@ for (const w of [390, 1280]) {
   ok(cueLinks >= 5, `${w} the tour links point at the sister site (${cueLinks})`);
   ok(!/Kecak|Rafting|Mount Batur|Bali Zoo/i.test(aside), `${w} and not the whole catalog`);
 
-  await page.goto(`${BASE  }/`, { waitUntil: 'load' });
+  await page.goto(`${BASE}/`, { waitUntil: 'load' });
   await page.waitForTimeout(400);
   const home = await page.evaluate(() => document.body.innerText);
   ok(/Add to your reservation/i.test(home), `${w} the homepage frames add-ons as part of the reservation`);
@@ -65,11 +72,11 @@ for (const w of [390, 1280]) {
   }
   ok(/More to do in Bali/i.test(home), `${w} homepage has the explore-more band`);
 
-  await page.goto(`${BASE  }/villas/cahyana-house/`, { waitUntil: 'load' });
+  await page.goto(`${BASE}/villas/cahyana-house/`, { waitUntil: 'load' });
   await page.waitForTimeout(400);
   const grid = page.locator('[data-photogrid]');
-  ok(await grid.count() === 1, `${w} the photo grid is mounted once`);
-  ok(await grid.getAttribute('data-photogrid') === 'closed', `${w} and starts closed`);
+  ok((await grid.count()) === 1, `${w} the photo grid is mounted once`);
+  ok((await grid.getAttribute('data-photogrid')) === 'closed', `${w} and starts closed`);
   await page.locator('[data-mosaic-tile]:visible').first().click();
   await page.waitForTimeout(500);
   const state = await page.evaluate(() => {
@@ -94,7 +101,7 @@ for (const w of [390, 1280]) {
   ok(state.bodyLocked, `${w} the page behind it does not`);
   await page.keyboard.press('Escape');
   await page.waitForTimeout(400);
-  ok(await grid.getAttribute('data-photogrid') === 'closed', `${w} Escape closes it`);
+  ok((await grid.getAttribute('data-photogrid')) === 'closed', `${w} Escape closes it`);
 
   ok(errs.length === 0, `${w} no page errors: ${errs.join(' | ')}`);
   await ctx.close();

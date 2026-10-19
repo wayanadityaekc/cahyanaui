@@ -1,7 +1,6 @@
 import { BTN_SM } from '../primitives/btnClasses.js';
 import { MENU_ROW_BOX } from './navbarClasses.js';
 
-
 export const PAGE_WIDE = 'max-w-[1800px] mx-auto px-[var(--container-x)]';
 export const RAIL_PAGE = `${PAGE_WIDE} pb-[var(--space-5)] pt-[calc(var(--header-h-max,104px)+1.9rem)]`;
 export const RAIL_PAGE_SCROLL = `${PAGE_WIDE} pb-[var(--space-3)] pt-[calc(var(--header-h-max,104px)+var(--space-3))]`;
@@ -35,16 +34,18 @@ export const RAIL_STICK_COLLAPSED =
   'sticky top-[var(--header-h,104px)] flex flex-col items-center p-[1.35rem_0.5rem] ' +
   'max-h-[calc(100vh-var(--header-h,104px))] overflow-y-auto';
 
-export const RAIL_LABEL =
-  'font-body text-small font-medium text-muted m-0 mb-[var(--space-2)] px-[0.75rem]';
+export const RAIL_LABEL = 'font-body text-small font-medium text-muted m-0 mb-[var(--space-2)] px-[0.75rem]';
 
 export function railItem(active, collapsed = false) {
-  return `flex items-center ${collapsed ? 'justify-center w-9 h-9 p-0' : 'w-full text-left p-[0.55rem_0.75rem] gap-[0.65rem]'} ` +
+  return (
+    `flex items-center ${collapsed ? 'justify-center w-9 h-9 p-0' : 'w-full text-left p-[0.55rem_0.75rem] gap-[0.65rem]'} ` +
     `rounded-[var(--r-md)] bg-transparent border-none cursor-pointer font-body font-medium text-body leading-[1.35] no-underline ` +
-    `[&>svg]:w-[var(--icon-sm)] [&>svg]:h-[var(--icon-sm)] [&>svg]:shrink-0 ${ 
-    active
-      ? `text-gold bg-surface-raised [border:1px_solid_var(--line)] ${collapsed ? '' : 'p-[calc(0.55rem-1px)_calc(0.75rem-1px)]'}`
-      : 'text-muted [&>svg]:opacity-75 hover:text-gold'}`;
+    `[&>svg]:w-[var(--icon-sm)] [&>svg]:h-[var(--icon-sm)] [&>svg]:shrink-0 ${
+      active
+        ? `text-gold bg-surface-raised [border:1px_solid_var(--line)] ${collapsed ? '' : 'p-[calc(0.55rem-1px)_calc(0.75rem-1px)]'}`
+        : 'text-muted [&>svg]:opacity-75 hover:text-gold'
+    }`
+  );
 }
 
 export const RAIL_HEADER =
@@ -70,11 +71,12 @@ export const RAIL_SCROLL_BODY =
 export const RAIL_READ = 'max-w-[var(--container-read)]';
 
 export const RAIL_MLIST = 'min-[993px]:hidden';
-export const RAIL_MLABEL =
-  'font-body text-small font-medium text-muted m-0 mb-[var(--space-1)] px-[0.75rem]';
+export const RAIL_MLABEL = 'font-body text-small font-medium text-muted m-0 mb-[var(--space-1)] px-[0.75rem]';
 export function railMobileItem(active) {
-  return `${MENU_ROW_BOX} no-underline bg-transparent border-none cursor-pointer font-body text-body leading-[1.35] ` +
-    `font-medium ${  active ? 'text-gold bg-cream' : 'text-muted [&>svg]:opacity-75'}`;
+  return (
+    `${MENU_ROW_BOX} no-underline bg-transparent border-none cursor-pointer font-body text-body leading-[1.35] ` +
+    `font-medium ${active ? 'text-gold bg-cream' : 'text-muted [&>svg]:opacity-75'}`
+  );
 }
 export const RAIL_MCHEV = 'ml-auto w-[var(--icon-sm)] h-[var(--icon-sm)] shrink-0 text-muted opacity-70';
 export const RAIL_BACK =

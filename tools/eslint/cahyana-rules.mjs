@@ -1,6 +1,16 @@
 const ABBREVIATION_RENAMES = { el: 'element', err: 'error' };
 const BANNED_SHORT_NAMES = ['el', 'dt', 'q', 'r', 'd', 'c', 'p', 'res', 'err'];
-const ARRAY_CALLBACK_METHODS = new Set(['map', 'filter', 'forEach', 'find', 'findIndex', 'some', 'every', 'flatMap', 'findLast']);
+const ARRAY_CALLBACK_METHODS = new Set([
+  'map',
+  'filter',
+  'forEach',
+  'find',
+  'findIndex',
+  'some',
+  'every',
+  'flatMap',
+  'findLast',
+]);
 const FUNCTION_TYPES = new Set(['FunctionDeclaration', 'FunctionExpression', 'ArrowFunctionExpression']);
 
 function isFunctionNode(node) {
@@ -130,7 +140,8 @@ function collectIdentifiers(variable) {
 }
 
 function isExportedOrImported(variable) {
-  return variable.defs.some((definition) => definition.type === 'ImportBinding') ||
+  return (
+    variable.defs.some((definition) => definition.type === 'ImportBinding') ||
     variable.references.some((reference) => {
       const parent = reference.identifier.parent;
       return parent && (parent.type === 'ExportSpecifier' || parent.type === 'ExportDefaultDeclaration');
@@ -138,7 +149,8 @@ function isExportedOrImported(variable) {
     variable.defs.some((definition) => {
       const declaration = definition.parent;
       return declaration && declaration.parent && declaration.parent.type === 'ExportNamedDeclaration';
-    });
+    })
+  );
 }
 
 const catchParamRule = {
@@ -182,15 +194,19 @@ function singularOf(pluralName) {
 
 function collectionNameOf(node) {
   if (node.type === 'Identifier') return node.name;
-  if (node.type === 'MemberExpression' && !node.computed && node.property.type === 'Identifier') return node.property.name;
+  if (node.type === 'MemberExpression' && !node.computed && node.property.type === 'Identifier')
+    return node.property.name;
   return null;
 }
 
 function unwrapCall(node) {
   let call = node && node.type === 'AwaitExpression' ? node.argument : node;
   const isCatchWrapper =
-    call && call.type === 'CallExpression' && call.callee.type === 'MemberExpression' &&
-    !call.callee.computed && call.callee.property.name === 'catch';
+    call &&
+    call.type === 'CallExpression' &&
+    call.callee.type === 'MemberExpression' &&
+    !call.callee.computed &&
+    call.callee.property.name === 'catch';
   if (isCatchWrapper) call = call.callee.object;
   return call;
 }
@@ -208,8 +224,12 @@ function suggestNameFor(variable) {
   const definition = variable.defs[0];
   if (!definition) return null;
   if (variable.name === 'res') {
-    const isFetchResult = definition.type === 'Variable' && (isCallTo(definition.node.init, 'fetch') || isCallTo(definition.node.init, 'apiFetch'));
-    const isHandlerParam = definition.type === 'Parameter' && definition.node.params.some((param) => param.type === 'Identifier' && param.name === 'req');
+    const isFetchResult =
+      definition.type === 'Variable' &&
+      (isCallTo(definition.node.init, 'fetch') || isCallTo(definition.node.init, 'apiFetch'));
+    const isHandlerParam =
+      definition.type === 'Parameter' &&
+      definition.node.params.some((param) => param.type === 'Identifier' && param.name === 'req');
     return isFetchResult || isHandlerParam ? 'response' : 'result';
   }
   if (definition.type === 'Variable' && definition.node.id.type === 'Identifier') {
@@ -224,8 +244,11 @@ function suggestNameFor(variable) {
   if (fn.params[0] !== definition.name) return null;
   const call = fn.parent;
   const isArrayCallback =
-    call && call.type === 'CallExpression' && call.arguments[0] === fn &&
-    call.callee.type === 'MemberExpression' && !call.callee.computed &&
+    call &&
+    call.type === 'CallExpression' &&
+    call.arguments[0] === fn &&
+    call.callee.type === 'MemberExpression' &&
+    !call.callee.computed &&
     ARRAY_CALLBACK_METHODS.has(call.callee.property.name);
   if (!isArrayCallback) return null;
   const collectionName = collectionNameOf(call.callee.object);
@@ -253,7 +276,10 @@ const descriptiveNamesRule = {
         if (!variable.identifiers.length) return;
         if (variable.defs.some((definition) => definition.type === 'CatchClause')) return;
         const newName = suggestNameFor(variable);
-        const report = { node: variable.identifiers[0], message: `Use a descriptive name instead of ${variable.name}.` };
+        const report = {
+          node: variable.identifiers[0],
+          message: `Use a descriptive name instead of ${variable.name}.`,
+        };
         const block = variableScopeBlock(variable);
         const isSafe =
           newName &&
@@ -265,7 +291,9 @@ const descriptiveNamesRule = {
           });
         if (isSafe) {
           report.fix = (fixer) =>
-            collectIdentifiers(variable).map((identifier) => renameIdentifierFix(fixer, identifier, variable.name, newName));
+            collectIdentifiers(variable).map((identifier) =>
+              renameIdentifierFix(fixer, identifier, variable.name, newName),
+            );
         }
         context.report(report);
       });

@@ -1,4 +1,3 @@
-
 export const RAILS = ['doku', 'paypal'];
 export const DEFAULT_RAIL = 'doku';
 

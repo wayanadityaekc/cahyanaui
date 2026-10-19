@@ -16,7 +16,8 @@ export const HOOK_UL =
   'tour-hook list-none flex justify-center mt-6 mx-0 mb-0 p-0 [&>li]:flex [&>li]:flex-col [&>li]:px-4 ' +
   'min-[769px]:[&>li]:px-[22px] [&>li+li]:[border-left:1px_solid_var(--line)]';
 export const HOOK_LABEL = 'text-small font-normal tracking-[0] normal-case text-muted';
-export const HOOK_VALUE = 'mt-[0.2rem] text-small font-medium text-ink min-[769px]:text-h3 min-[769px]:whitespace-nowrap';
+export const HOOK_VALUE =
+  'mt-[0.2rem] text-small font-medium text-ink min-[769px]:text-h3 min-[769px]:whitespace-nowrap';
 
 export const HERO_CRUMB = 'm-0 mb-2';
 export const HERO_CRUMB_LINK = 'text-muted no-underline hover:underline';
@@ -38,11 +39,12 @@ function Chip({ icon: Icon, text, ok }) {
   );
 }
 
-
 function HeroBody({ title, desc, hooks, cta, ctaHref, crumb }) {
   return (
     <>
-      {crumb && <Breadcrumb items={crumb[0] && crumb[0].type ? itemsFromLegacy(crumb) : crumb} className={HERO_CRUMB} />}
+      {crumb && (
+        <Breadcrumb items={crumb[0] && crumb[0].type ? itemsFromLegacy(crumb) : crumb} className={HERO_CRUMB} />
+      )}
       <h1 className={`${SUBHERO_TITLE} mb-3`}>{title}</h1>
       <p className={HERO_DESC}>{desc}</p>
       <ul className={HOOK_UL}>
@@ -53,12 +55,29 @@ function HeroBody({ title, desc, hooks, cta, ctaHref, crumb }) {
           </li>
         ))}
       </ul>
-      {cta && <a href={ctaHref} className={HERO_CTA}>{cta}</a>}
+      {cta && (
+        <a href={ctaHref} className={HERO_CTA}>
+          {cta}
+        </a>
+      )}
     </>
   );
 }
 
-export default function DetailHero({ heroBg, heroSlides, gallery, title, desc, hooks = [], cta, ctaHref, crumb, stops, ratingName, belowChips }) {
+export default function DetailHero({
+  heroBg,
+  heroSlides,
+  gallery,
+  title,
+  desc,
+  hooks = [],
+  cta,
+  ctaHref,
+  crumb,
+  stops,
+  ratingName,
+  belowChips,
+}) {
   if (gallery && gallery.length) {
     const chips = [];
     hooks.forEach((h, i) => {
@@ -96,9 +115,11 @@ export default function DetailHero({ heroBg, heroSlides, gallery, title, desc, h
           style={{ backgroundImage: `url(/assets/images/${heroBg})` }}
         />
       )}
-      <div className="relative z-[1] -mt-7 pt-9 px-[var(--container-x)] pb-3 bg-white rounded-t-[var(--r-xl)] flex flex-col items-start text-left
+      <div
+        className="relative z-[1] -mt-7 pt-9 px-[var(--container-x)] pb-3 bg-white rounded-t-[var(--r-xl)] flex flex-col items-start text-left
         min-[769px]:mt-0 min-[769px]:pt-12 min-[769px]:pr-12 min-[769px]:pb-12 min-[769px]:pl-[max(1.5rem,calc((100vw-1280px)/2))]
-        min-[769px]:bg-transparent min-[769px]:rounded-none min-[769px]:justify-center">
+        min-[769px]:bg-transparent min-[769px]:rounded-none min-[769px]:justify-center"
+      >
         <HeroBody title={title} desc={desc} hooks={hooks} cta={cta} ctaHref={ctaHref} crumb={crumb} />
       </div>
     </section>

@@ -43,7 +43,10 @@ export function bookingLines(cart) {
   const stay = cart.stay;
   if (!stay || nightsBetween(stay.checkIn, stay.checkOut) < 1) return [];
   const villaName = villaCatalogName(stay.villaSlug);
-  const requests = cart.services.map(serviceById).filter(Boolean).map((service) => service.label);
+  const requests = cart.services
+    .map(serviceById)
+    .filter(Boolean)
+    .map((service) => service.label);
   return [
     {
       type: 'villa',

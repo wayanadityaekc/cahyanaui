@@ -36,7 +36,9 @@ export default function MyReviews() {
               <span className="font-semibold text-small text-green">{myReview.service}</span>
               <span className="text-label text-muted">{fmtDate(myReview.created_at)}</span>
             </div>
-            <div className="text-amber tracking-[2px] my-1" aria-label={`${n} out of 5`}>{stars}</div>
+            <div className="text-amber tracking-[2px] my-1" aria-label={`${n} out of 5`}>
+              {stars}
+            </div>
             <p className="m-0 text-body text-green leading-[var(--lh-body)]">{myReview.message}</p>
             {myReview.status !== 'approved' && (
               <span className="inline-block mt-1 text-label text-muted italic">Not currently shown on the site</span>

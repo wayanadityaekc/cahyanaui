@@ -6,13 +6,21 @@ import { API_BASE, API_SITE, TOKEN_KEY } from '@/lib/constants';
 const AccountContext = createContext(null);
 
 function read() {
-  try { return window.localStorage.getItem(TOKEN_KEY) || ''; } catch (e) { return ''; }
+  try {
+    return window.localStorage.getItem(TOKEN_KEY) || '';
+  } catch (e) {
+    return '';
+  }
 }
 function write(token) {
-  try { window.localStorage.setItem(TOKEN_KEY, token); } catch (e) {   }
+  try {
+    window.localStorage.setItem(TOKEN_KEY, token);
+  } catch (e) {}
 }
 function drop() {
-  try { window.localStorage.removeItem(TOKEN_KEY); } catch (e) {   }
+  try {
+    window.localStorage.removeItem(TOKEN_KEY);
+  } catch (e) {}
 }
 
 export function AccountProvider({ children }) {
@@ -32,7 +40,10 @@ export function AccountProvider({ children }) {
     }
 
     const token = read();
-    if (!token) { setHydrated(true); return undefined; }
+    if (!token) {
+      setHydrated(true);
+      return undefined;
+    }
 
     async function load() {
       try {
@@ -48,7 +59,9 @@ export function AccountProvider({ children }) {
     }
     load();
 
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   async function requestLogin(email) {
@@ -123,7 +136,10 @@ export function AccountProvider({ children }) {
 
   async function deleteAccount() {
     try {
-      const response = await fetch(`${API_BASE}/account`, { method: 'DELETE', headers: { Authorization: `Bearer ${read()}` } });
+      const response = await fetch(`${API_BASE}/account`, {
+        method: 'DELETE',
+        headers: { Authorization: `Bearer ${read()}` },
+      });
       const data = await response.json().catch(() => ({}));
       if (response.ok && data.status === 'ok') {
         drop();
@@ -136,10 +152,15 @@ export function AccountProvider({ children }) {
     }
   }
 
-  function logout() { drop(); setAccount(null); }
+  function logout() {
+    drop();
+    setAccount(null);
+  }
 
   return (
-    <AccountContext.Provider value={{ account, hydrated, requestLogin, verifyCode, createAccount, updateAccount, deleteAccount, logout }}>
+    <AccountContext.Provider
+      value={{ account, hydrated, requestLogin, verifyCode, createAccount, updateAccount, deleteAccount, logout }}
+    >
       {children}
     </AccountContext.Provider>
   );

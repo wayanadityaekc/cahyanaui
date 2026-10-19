@@ -9,7 +9,9 @@ const BookingContext = createContext(null);
 
 const RESUME_MS = 60 * 60 * 1000;
 
-function here() { return window.location.pathname; }
+function here() {
+  return window.location.pathname;
+}
 function readMarker() {
   const m = readLocalJSON(KEY.resumeBook, null);
   return m && m.path && Date.now() - (m.at || 0) < RESUME_MS ? m : null;
@@ -21,18 +23,30 @@ export function BookingProvider({ children }) {
   const [gate, setGate] = useState(false);
   const held = useRef(null);
 
-  const openBooking = useCallback((opts) => {
-    if (!opts) { setCtx(null); return; }
-    if (hydrated && account) { setCtx(opts); return; }
-    held.current = opts;
-    if (!hydrated) return;
-    writeLocal(KEY.resumeBook, { path: here(), at: Date.now() });
-    setGate(true);
-  }, [account, hydrated]);
+  const openBooking = useCallback(
+    (opts) => {
+      if (!opts) {
+        setCtx(null);
+        return;
+      }
+      if (hydrated && account) {
+        setCtx(opts);
+        return;
+      }
+      held.current = opts;
+      if (!hydrated) return;
+      writeLocal(KEY.resumeBook, { path: here(), at: Date.now() });
+      setGate(true);
+    },
+    [account, hydrated],
+  );
 
   const closeBooking = useCallback(() => setCtx(null), []);
 
-  const cancelGate = useCallback(() => { setGate(false); held.current = null; }, []);
+  const cancelGate = useCallback(() => {
+    setGate(false);
+    held.current = null;
+  }, []);
 
   useEffect(() => {
     if (!hydrated || !held.current) return;

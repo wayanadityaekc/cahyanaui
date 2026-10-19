@@ -1,20 +1,45 @@
 import { chromium } from '/home/user/CUE/node_modules/playwright-core/index.mjs';
 
 const BASE = 'http://127.0.0.1:4000';
-let pass = 0, fail = 0;
-function ok(c, m) { c ? pass++ : (fail++, console.log('  FAIL:', m)); }
+let pass = 0,
+  fail = 0;
+function ok(c, m) {
+  c ? pass++ : (fail++, console.log('  FAIL:', m));
+}
 
-const b = await chromium.launch({ executablePath: '/opt/pw-browsers/chromium_headless_shell-1194/chrome-linux/headless_shell' });
+const b = await chromium.launch({
+  executablePath: '/opt/pw-browsers/chromium_headless_shell-1194/chrome-linux/headless_shell',
+});
 
 const MINE = {
   upcoming: [],
   history: [
-    { ref: 'CUE-100', name: 'Ubud Tour', start_date: '2026-08-20', end_date: '2026-08-20',
-      guests: '2', price_usd: 40, price_idr: 700000, status: 'new', upcoming: false,
-      review_items: ['Ubud Tour'], lines: [{ type: 'tour', service: 'Ubud Tour', date: '2026-08-20', guests: '2' }] },
-    { ref: 'CUE-103', name: 'Kecak Dance', start_date: '2026-08-18', end_date: '2026-08-18',
-      guests: '2', price_usd: 12, price_idr: 200000, status: 'paid', upcoming: false,
-      review_items: ['Kecak Dance'], lines: [{ type: 'tour', service: 'Kecak Dance', date: '2026-08-18', guests: '2' }] },
+    {
+      ref: 'CUE-100',
+      name: 'Ubud Tour',
+      start_date: '2026-08-20',
+      end_date: '2026-08-20',
+      guests: '2',
+      price_usd: 40,
+      price_idr: 700000,
+      status: 'new',
+      upcoming: false,
+      review_items: ['Ubud Tour'],
+      lines: [{ type: 'tour', service: 'Ubud Tour', date: '2026-08-20', guests: '2' }],
+    },
+    {
+      ref: 'CUE-103',
+      name: 'Kecak Dance',
+      start_date: '2026-08-18',
+      end_date: '2026-08-18',
+      guests: '2',
+      price_usd: 12,
+      price_idr: 200000,
+      status: 'paid',
+      upcoming: false,
+      review_items: ['Kecak Dance'],
+      lines: [{ type: 'tour', service: 'Kecak Dance', date: '2026-08-18', guests: '2' }],
+    },
   ],
 };
 
@@ -35,8 +60,10 @@ for (const w of [390, 1280]) {
       }
       if (url.includes('/bookings/mine')) {
         mineHits += 1;
-        const history = MINE.history.map((t) => ({ ...t,
-          review_items: t.review_items.filter((svc) => !reviewed.has(`${t.ref}::${svc}`)) }));
+        const history = MINE.history.map((t) => ({
+          ...t,
+          review_items: t.review_items.filter((svc) => !reviewed.has(`${t.ref}::${svc}`)),
+        }));
         return route.fulfill({ json: { ...MINE, history } });
       }
       if (url.includes('/reviews') && route.request().method() === 'POST') {
@@ -44,12 +71,15 @@ for (const w of [390, 1280]) {
         posted.push(body.service);
         const refuse = mode === 'partial' && body.booking_ref === 'CUE-103';
         if (!refuse) reviewed.add(`${body.booking_ref}::${body.service}`);
-        return route.fulfill({ json: refuse
-          ? { ok: false, reason: "This booking isn't confirmed yet, so there's nothing to review." }
-          : { ok: true } });
+        return route.fulfill({
+          json: refuse
+            ? { ok: false, reason: "This booking isn't confirmed yet, so there's nothing to review." }
+            : { ok: true },
+        });
       }
       if (url.includes('/reviews')) return route.fulfill({ json: [] });
-      if (url.includes('/pricing/catalog')) return route.fulfill({ json: { currency: 'USD', symbol: '$', catalog: {} } });
+      if (url.includes('/pricing/catalog'))
+        return route.fulfill({ json: { currency: 'USD', symbol: '$', catalog: {} } });
       return route.fulfill({ json: {} });
     });
 
@@ -66,22 +96,28 @@ for (const w of [390, 1280]) {
     const pastTab = page.locator('button:visible', { hasText: 'Past' }).first();
     if (await pastTab.count()) await pastTab.click();
     const trigger = page.locator('button:visible', { hasText: /Write review|Leave a Review/i }).first();
-    ok(await trigger.count() > 0, `${w}/${mode}: no review trigger on Past trips`);
-    if (!(await trigger.count())) { await ctx.close(); continue; }
+    ok((await trigger.count()) > 0, `${w}/${mode}: no review trigger on Past trips`);
+    if (!(await trigger.count())) {
+      await ctx.close();
+      continue;
+    }
     await trigger.click();
 
     const modal = page.locator('#modal-form, [data-step="write"]').first();
     await page.locator('[data-step="write"]').waitFor({ timeout: 10000 });
 
     const boxes = page.locator('[data-step="write"] input[type=checkbox]');
-    ok(await boxes.count() === 2, `${w}/${mode}: expected 2 trips ticked, got ${await boxes.count()}`);
+    ok((await boxes.count()) === 2, `${w}/${mode}: expected 2 trips ticked, got ${await boxes.count()}`);
 
     await page.locator('[data-step="write"] button[aria-label="5 stars"]').click();
     await page.fill('#rvm-message', 'Driver was early and the day ran exactly as described.');
     await page.locator('[data-step="write"] button', { hasText: /Submit review/ }).click();
 
-    await page.waitForFunction(() => !document.querySelector('[data-step="write"]') ||
-      !!document.querySelector('[data-step="write"] p.text-err'), { timeout: 10000 });
+    await page.waitForFunction(
+      () =>
+        !document.querySelector('[data-step="write"]') || !!document.querySelector('[data-step="write"] p.text-err'),
+      { timeout: 10000 },
+    );
 
     const shell = page.locator('div.fixed.inset-0').filter({ hasText: 'Leave a Review' }).last();
     const txt = await shell.innerText();
@@ -98,8 +134,10 @@ for (const w of [390, 1280]) {
       ok(/could not be included/.test(txt), `${w}/${mode}: the refused trip is not mentioned at all`);
       ok(/Kecak Dance/.test(txt), `${w}/${mode}: the refused trip is not named`);
       ok(/isn't confirmed yet/.test(txt), `${w}/${mode}: the server's reason is not passed on`);
-      ok(!/Ubud Tour/.test(txt.split('could not be included')[1] || ''),
-         `${w}/${mode}: the trip that SUCCEEDED is listed as a failure`);
+      ok(
+        !/Ubud Tour/.test(txt.split('could not be included')[1] || ''),
+        `${w}/${mode}: the trip that SUCCEEDED is listed as a failure`,
+      );
     }
 
     const hitsBefore = mineHits;
@@ -109,9 +147,9 @@ for (const w of [390, 1280]) {
     ok(mineHits > hitsBefore, `${w}/${mode}: closing the popup did not re-read My Trips`);
     const again = page.locator('button:visible', { hasText: /Write review|Leave a Review/i }).first();
     if (mode === 'all-ok') {
-      ok(await again.count() === 0, `${w}/${mode}: every trip is reviewed but the review button is still there`);
+      ok((await again.count()) === 0, `${w}/${mode}: every trip is reviewed but the review button is still there`);
     } else {
-      ok(await again.count() > 0, `${w}/${mode}: the trip that was NOT reviewed lost its button`);
+      ok((await again.count()) > 0, `${w}/${mode}: the trip that was NOT reviewed lost its button`);
       if (await again.count()) {
         await again.click();
         await page.locator('[data-step="write"]').waitFor({ timeout: 10000 });
@@ -122,7 +160,10 @@ for (const w of [390, 1280]) {
         await page.waitForTimeout(800);
         const sentNow = posted.slice(n);
         ok(!sentNow.includes('Ubud Tour'), `${w}/${mode}: THE TRIP JUST REVIEWED WAS SENT AGAIN`);
-        ok(sentNow.length === 1 && sentNow[0] === 'Kecak Dance', `${w}/${mode}: second submit sent ${JSON.stringify(sentNow)}`);
+        ok(
+          sentNow.length === 1 && sentNow[0] === 'Kecak Dance',
+          `${w}/${mode}: second submit sent ${JSON.stringify(sentNow)}`,
+        );
       }
     }
 

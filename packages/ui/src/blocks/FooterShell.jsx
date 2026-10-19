@@ -37,9 +37,13 @@ export default function FooterShell({
               {col.items.map((it) => (
                 <li key={it.href + it.label} className={FOOT_COL_LI}>
                   {it.external ? (
-                    <a href={it.href} target="_blank" rel="noopener" className={FOOT_COL_A}>{it.label}</a>
+                    <a href={it.href} target="_blank" rel="noopener" className={FOOT_COL_A}>
+                      {it.label}
+                    </a>
                   ) : (
-                    <Link href={it.href} className={FOOT_COL_A}>{it.label}</Link>
+                    <Link href={it.href} className={FOOT_COL_A}>
+                      {it.label}
+                    </Link>
                   )}
                 </li>
               ))}
@@ -53,7 +57,11 @@ export default function FooterShell({
               <>
                 <h4 className={FOOT_COL_H}>{featured.heading || 'Featured On'}</h4>
                 <ul className="list-none flex flex-wrap items-center gap-x-4 gap-y-1">
-                  {featured.names.map((name) => <li key={name} className={FOOT_FEATURED}>{name}</li>)}
+                  {featured.names.map((name) => (
+                    <li key={name} className={FOOT_FEATURED}>
+                      {name}
+                    </li>
+                  ))}
                 </ul>
               </>
             ) : null}
@@ -89,4 +97,3 @@ export default function FooterShell({
     </footer>
   );
 }
-

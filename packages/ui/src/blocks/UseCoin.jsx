@@ -4,11 +4,13 @@ import Coin from '../primitives/Coin.jsx';
 const STYLES = {
   row: {
     use: 'inline-flex items-center gap-[0.35rem] text-left mt-[0.45rem] py-[0.2rem] pl-[0.25rem] pr-[0.6rem] rounded-pill border',
-    stepper: 'inline-flex items-center gap-[0.4rem] mt-[0.45rem] py-[0.2rem] px-[0.3rem] rounded-pill border border-amber bg-[rgba(201,164,92,0.1)]',
+    stepper:
+      'inline-flex items-center gap-[0.4rem] mt-[0.45rem] py-[0.2rem] px-[0.3rem] rounded-pill border border-amber bg-[rgba(201,164,92,0.1)]',
   },
   cta: {
     use: 'flex w-full min-w-0 items-center justify-center gap-[0.4rem] h-[var(--btn-h)] px-3 rounded-sm border whitespace-nowrap overflow-hidden',
-    stepper: 'flex w-full min-w-0 items-center justify-between h-[var(--btn-h)] px-[4px] rounded-sm border border-amber bg-[rgba(201,164,92,0.1)]',
+    stepper:
+      'flex w-full min-w-0 items-center justify-between h-[var(--btn-h)] px-[4px] rounded-sm border border-amber bg-[rgba(201,164,92,0.1)]',
   },
 };
 const USE_TEXT =
@@ -44,17 +46,40 @@ export default function UseCoin({
   if (toggle) {
     const label = countText ? `${useLabel} · ${countText}` : useLabel;
     return (
-      <button type="button" className={`${style.use} ${USE_TEXT} ${on ? USE_ON : USE_OFF} ${variant === 'cta' ? CTA_BOX : ''}`} aria-pressed={on} aria-label={label} onClick={onToggle} disabled={!on && !canAdd} data-use-coin-toggle>
+      <button
+        type="button"
+        className={`${style.use} ${USE_TEXT} ${on ? USE_ON : USE_OFF} ${variant === 'cta' ? CTA_BOX : ''}`}
+        aria-pressed={on}
+        aria-label={label}
+        onClick={onToggle}
+        disabled={!on && !canAdd}
+        data-use-coin-toggle
+      >
         <Coin size="sm" still src={coinSrc} />
-        {variant === 'cta' && countText
-          ? <><span className={LONG} aria-hidden="true">{label}</span><span className={SHORT} aria-hidden="true">{countText}</span></>
-          : <span className={LABEL}>{label}</span>}
+        {variant === 'cta' && countText ? (
+          <>
+            <span className={LONG} aria-hidden="true">
+              {label}
+            </span>
+            <span className={SHORT} aria-hidden="true">
+              {countText}
+            </span>
+          </>
+        ) : (
+          <span className={LABEL}>{label}</span>
+        )}
       </button>
     );
   }
   if (!coins) {
     return (
-      <button type="button" className={`${style.use} ${USE_TEXT} ${USE_OFF}`} onClick={() => onChange(1)} disabled={!canAdd} data-use-coin>
+      <button
+        type="button"
+        className={`${style.use} ${USE_TEXT} ${USE_OFF}`}
+        onClick={() => onChange(1)}
+        disabled={!canAdd}
+        data-use-coin
+      >
         <Coin size="sm" still src={coinSrc} />
         <span className={LABEL}>{useLabel}</span>
       </button>
@@ -65,8 +90,16 @@ export default function UseCoin({
       <button type="button" className={STEP_BTN} aria-label={lessLabel} onClick={() => onChange(coins - 1)}>
         <Minus className={ICON} strokeWidth={2} aria-hidden="true" />
       </button>
-      <span className={STEP_TEXT} aria-live="polite">{countText}</span>
-      <button type="button" className={STEP_BTN} aria-label={moreLabel} disabled={!canAdd} onClick={() => onChange(coins + 1)}>
+      <span className={STEP_TEXT} aria-live="polite">
+        {countText}
+      </span>
+      <button
+        type="button"
+        className={STEP_BTN}
+        aria-label={moreLabel}
+        disabled={!canAdd}
+        onClick={() => onChange(coins + 1)}
+      >
         <Plus className={ICON} strokeWidth={2} aria-hidden="true" />
       </button>
     </span>

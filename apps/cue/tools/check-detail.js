@@ -9,10 +9,7 @@ function list(name) {
   return m ? [...m[1].matchAll(/'([^']+)'/g)].map((x) => x[1]) : [];
 }
 
-const pages = [
-  ...list('TOURS').map((s) => `${s}.html`),
-  ...list('ATTRACTIONS').map((s) => `attractions/${s}.html`),
-];
+const pages = [...list('TOURS').map((s) => `${s}.html`), ...list('ATTRACTIONS').map((s) => `attractions/${s}.html`)];
 
 const MUST_HAVE = [
   ['booksidebar', 'booking sidebar card'],
@@ -39,8 +36,12 @@ pages.forEach((page) => {
   }
   const html = fs.readFileSync(f, 'utf8');
   const problems = [];
-  MUST_HAVE.forEach(([needle, label]) => { if (!html.includes(needle)) problems.push(`missing ${label}`); });
-  MUST_NOT.forEach(([needle, label]) => { if (html.includes(needle)) problems.push(`still has ${label}`); });
+  MUST_HAVE.forEach(([needle, label]) => {
+    if (!html.includes(needle)) problems.push(`missing ${label}`);
+  });
+  MUST_NOT.forEach(([needle, label]) => {
+    if (html.includes(needle)) problems.push(`still has ${label}`);
+  });
   if (html.includes('hero-slider__dots')) sliders++;
   if (html.includes('related__title')) related++;
   if (problems.length) {

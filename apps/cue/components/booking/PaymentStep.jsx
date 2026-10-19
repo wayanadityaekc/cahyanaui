@@ -14,8 +14,7 @@ const CARD = 'rounded-md bg-white [transition:border-color_var(--dur)_ease,backg
 const CARD_ON = '[border:1.5px_solid_var(--color-cta)] bg-cream';
 const CARD_OFF = '[border:1.5px_solid_var(--line)] hover:[border-color:var(--color-gold)]';
 const CARD_DIM = '[border:1.5px_solid_var(--line)] opacity-55';
-const PICK =
-  'w-full flex items-start gap-3 text-left bg-transparent border-none p-[0.85rem] cursor-pointer';
+const PICK = 'w-full flex items-start gap-3 text-left bg-transparent border-none p-[0.85rem] cursor-pointer';
 const PICK_TIGHT = 'pb-[0.35rem]';
 const PICK_DIM = 'cursor-not-allowed';
 const FOOT = 'px-[0.85rem] pb-[0.6rem] pl-[calc(0.85rem+30px)]';
@@ -72,9 +71,21 @@ function Radio({ on, dim }) {
 }
 
 export default function PaymentStep({
-  option, onOption, rail: railChoice, onRail,
-  total, totalIdr = null, totalUsd = null, symbol = '$', currency = 'USD', stay = '', hasReferral = false,
-  referral, onReferral, onApplyReferral, refMsg,
+  option,
+  onOption,
+  rail: railChoice,
+  onRail,
+  total,
+  totalIdr = null,
+  totalUsd = null,
+  symbol = '$',
+  currency = 'USD',
+  stay = '',
+  hasReferral = false,
+  referral,
+  onReferral,
+  onApplyReferral,
+  refMsg,
 }) {
   const pricing = usePricing();
   const cat = pricing && pricing.catalog;
@@ -86,9 +97,15 @@ export default function PaymentStep({
   const inUsd = rail === 'paypal' && String(currency).toUpperCase() === 'IDR';
   const [openFine, setOpenFine] = useState(false);
   const railNote = noteFor(currency, rail);
-  function money(v) { return withSymbol(symbol + v.toLocaleString(symbol === 'Rp' ? 'id-ID' : 'en-US')); }
-  function rupiah(v) { return withSymbol(`Rp${v.toLocaleString('id-ID')}`); }
-  function dollars(v) { return withSymbol(`$${v.toLocaleString('en-US')}`); }
+  function money(v) {
+    return withSymbol(symbol + v.toLocaleString(symbol === 'Rp' ? 'id-ID' : 'en-US'));
+  }
+  function rupiah(v) {
+    return withSymbol(`Rp${v.toLocaleString('id-ID')}`);
+  }
+  function dollars(v) {
+    return withSymbol(`$${v.toLocaleString('en-US')}`);
+  }
 
   useEffect(() => {
     const picked = options.find((o) => o.id === option);
@@ -97,7 +114,9 @@ export default function PaymentStep({
 
   useEffect(() => {
     if (!openFine) return undefined;
-    function onKey(e) { if (e.key === 'Escape') setOpenFine(false); }
+    function onKey(e) {
+      if (e.key === 'Escape') setOpenFine(false);
+    }
     document.addEventListener('keydown', onKey);
     return () => document.removeEventListener('keydown', onKey);
   }, [openFine]);
@@ -198,7 +217,9 @@ export default function PaymentStep({
                       onChange={(e) => onReferral(e.target.value)}
                       aria-label={PAY_COPY.referralLabel}
                     />
-                    <button className={REFERRAL_BTN} type="button" onClick={onApplyReferral}>Apply</button>
+                    <button className={REFERRAL_BTN} type="button" onClick={onApplyReferral}>
+                      Apply
+                    </button>
                   </div>
                   {refMsg && <small className={refMsgCls(refMsg.ok)}>{refMsg.text}</small>}
                   {dim && !refMsg && <p className={LOCKED}>{PAY_COPY.referralLocked}</p>}
@@ -237,7 +258,9 @@ export default function PaymentStep({
         <h4 className={FINE_TITLE}>{PAY_COPY.detailsTitle}</h4>
         <ol className="m-0 pl-5 flex flex-col gap-[0.4rem]">
           {(rail === 'doku' ? PAY_COPY.whatHappensDoku : PAY_COPY.whatHappens).map((line) => (
-            <li key={line} className={FINE_DIM}>{line}</li>
+            <li key={line} className={FINE_DIM}>
+              {line}
+            </li>
           ))}
         </ol>
         <div className="mt-4 flex flex-col gap-[0.5rem]">

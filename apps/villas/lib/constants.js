@@ -8,8 +8,7 @@ export function whatsappLink(message) {
   return `${WHATSAPP_LINK}?text=${encodeURIComponent(message)}`;
 }
 
-export const API_BASE =
-  process.env.NEXT_PUBLIC_API_BASE || 'https://cahyana-api-production.up.railway.app/api';
+export const API_BASE = process.env.NEXT_PUBLIC_API_BASE || 'https://cahyana-api-production.up.railway.app/api';
 
 export const API_SITE = 'villas';
 

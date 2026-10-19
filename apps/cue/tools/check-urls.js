@@ -38,7 +38,7 @@ if (missing.length) {
 console.log(`URL check passed - all ${expected.length} live URLs present in out/.`);
 
 (function checkRelativeUrls() {
-  const path = require("path");
+  const path = require('path');
   const files = [];
   (function w(d) {
     fs.readdirSync(d, { withFileTypes: true }).forEach((e) => {
@@ -46,10 +46,10 @@ console.log(`URL check passed - all ${expected.length} live URLs present in out/
       if (e.isDirectory()) w(p);
       else if (/\.jsx?$/.test(e.name)) files.push(p);
     });
-  })("content");
+  })('content');
   const bad = [];
   files.forEach((file) => {
-    const src = fs.readFileSync(file, "utf8");
+    const src = fs.readFileSync(file, 'utf8');
     [...src.matchAll(/(src|href)=(\\?")([^"\\]+)/g)].forEach((m) => {
       const u = m[3];
       if (/^(https?:|\/|#|mailto:|tel:|data:|\{)/.test(u)) return;
@@ -62,71 +62,71 @@ console.log(`URL check passed - all ${expected.length} live URLs present in out/
     });
   });
   if (bad.length) {
-    console.error("\nRELATIVE URLS IN EXTRACTED HTML (must be root-absolute):");
+    console.error('\nRELATIVE URLS IN EXTRACTED HTML (must be root-absolute):');
     bad.slice(0, 20).forEach((b) => console.error(`  ${b}`));
     if (bad.length > 20) console.error(`  ... and ${bad.length - 20} more`);
     process.exitCode = 1;
   } else {
-    console.log("Relative URLs in extracted HTML : none");
+    console.log('Relative URLs in extracted HTML : none');
   }
 })();
 
 (function checkSitemap() {
-  const path = require("path");
-  const OUT = path.join(__dirname, "..", "out");
-  const SITEMAP = path.join(__dirname, "..", "sitemap.xml");
+  const path = require('path');
+  const OUT = path.join(__dirname, '..', 'out');
+  const SITEMAP = path.join(__dirname, '..', 'sitemap.xml');
   if (!fs.existsSync(OUT) || !fs.existsSync(SITEMAP)) return;
-  const sitemap = fs.readFileSync(SITEMAP, "utf8");
+  const sitemap = fs.readFileSync(SITEMAP, 'utf8');
   const pages = [];
   (function w(d, rel) {
     fs.readdirSync(d, { withFileTypes: true }).forEach((e) => {
-      if (e.name === "_next" || e.name === "assets") return;
+      if (e.name === '_next' || e.name === 'assets') return;
       const p = path.join(d, e.name);
       if (e.isDirectory()) w(p, `${rel}${e.name}/`);
-      else if (e.name.endsWith(".html")) pages.push(rel + e.name);
+      else if (e.name.endsWith('.html')) pages.push(rel + e.name);
     });
-  })(OUT, "");
+  })(OUT, '');
   const missing = [];
   pages.forEach((page) => {
     if (/^(404|_not-found)\.html$/.test(page)) return;
-    const html = fs.readFileSync(path.join(OUT, page), "utf8");
+    const html = fs.readFileSync(path.join(OUT, page), 'utf8');
     if (/name="robots"[^>]*noindex/.test(html)) return;
-    if (page === "index.html") {
+    if (page === 'index.html') {
       if (!/<loc>https:\/\/cahyanaubudexperience\.com\/<\/loc>/.test(sitemap)) missing.push(`${page} (homepage)`);
       return;
     }
     if (!sitemap.includes(`/${page}<`)) missing.push(page);
   });
   if (missing.length) {
-    console.error("\nINDEXABLE PAGES MISSING FROM sitemap.xml:");
+    console.error('\nINDEXABLE PAGES MISSING FROM sitemap.xml:');
     missing.forEach((m) => console.error(`  ${m}`));
     process.exitCode = 1;
   } else {
-    console.log("Indexable pages missing from sitemap : none");
+    console.log('Indexable pages missing from sitemap : none');
   }
 })();
 
 (function checkSitemapsAgree() {
-  const path = require("path");
-  const root = path.join(__dirname, "..", "sitemap.xml");
-  const built = path.join(__dirname, "..", "out", "sitemap.xml");
+  const path = require('path');
+  const root = path.join(__dirname, '..', 'sitemap.xml');
+  const built = path.join(__dirname, '..', 'out', 'sitemap.xml');
   if (!fs.existsSync(root) || !fs.existsSync(built)) return;
   function locs(file) {
     return new Set(
-        [
-          ...fs
-            .readFileSync(file, "utf8")
-            .replace(/<!--[\s\S]*?-->/g, "")
-            .matchAll(/<loc>([^<]+)<\/loc>/g),
-        ].map((m) => m[1].trim()),
-      );
+      [
+        ...fs
+          .readFileSync(file, 'utf8')
+          .replace(/<!--[\s\S]*?-->/g, '')
+          .matchAll(/<loc>([^<]+)<\/loc>/g),
+      ].map((m) => m[1].trim()),
+    );
   }
   const rootLocs = locs(root);
   const builtLocs = locs(built);
   const onlyBuilt = [...builtLocs].filter((u) => !rootLocs.has(u));
   const onlyRoot = [...rootLocs].filter((u) => !builtLocs.has(u));
   if (onlyBuilt.length || onlyRoot.length) {
-    console.error("\nSITEMAP MISMATCH - sitemap.xml and out/sitemap.xml disagree:");
+    console.error('\nSITEMAP MISMATCH - sitemap.xml and out/sitemap.xml disagree:');
     onlyBuilt.forEach((u) => console.error(`  shipped but not in the root checklist: ${u}`));
     onlyRoot.forEach((u) => console.error(`  in the root checklist but not shipped: ${u}`));
     process.exitCode = 1;

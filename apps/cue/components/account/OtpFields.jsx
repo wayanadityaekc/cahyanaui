@@ -31,8 +31,16 @@ export default function OtpFields({ length = 6, value, onChange, onComplete, err
   function handleChange(i) {
     return (e) => {
       const raw = e.target.value.replace(/\D/g, '');
-      if (!raw) { const next = digits.slice(); next[i] = ''; commit(next); return; }
-      if (raw.length > 1) { spread(i, raw); return; }
+      if (!raw) {
+        const next = digits.slice();
+        next[i] = '';
+        commit(next);
+        return;
+      }
+      if (raw.length > 1) {
+        spread(i, raw);
+        return;
+      }
       const next = digits.slice();
       next[i] = raw;
       commit(next);
@@ -71,7 +79,9 @@ export default function OtpFields({ length = 6, value, onChange, onComplete, err
       {digits.map((digit, i) => (
         <input
           key={i}
-          ref={(input) => { refs.current[i] = input; }}
+          ref={(input) => {
+            refs.current[i] = input;
+          }}
           type="text"
           inputMode="numeric"
           pattern="[0-9]*"
@@ -84,11 +94,11 @@ export default function OtpFields({ length = 6, value, onChange, onComplete, err
           onKeyDown={handleKeyDown(i)}
           onPaste={handlePaste(i)}
           className={
-            'flex-1 min-w-0 max-w-[2.6rem] h-[2.8rem] text-center font-body text-h3 font-semibold rounded-md '
-            + '[border:1.5px_solid_var(--line)] bg-white text-green '
-            + 'focus:outline-none focus:[border-color:var(--color-gold)] focus:[box-shadow:var(--focus-ring)] '
-            + 'aria-[invalid=true]:[border-color:var(--color-err)] aria-[invalid=true]:[box-shadow:0_0_0_3px_rgba(154,74,63,0.14)] '
-            + 'disabled:opacity-50'
+            'flex-1 min-w-0 max-w-[2.6rem] h-[2.8rem] text-center font-body text-h3 font-semibold rounded-md ' +
+            '[border:1.5px_solid_var(--line)] bg-white text-green ' +
+            'focus:outline-none focus:[border-color:var(--color-gold)] focus:[box-shadow:var(--focus-ring)] ' +
+            'aria-[invalid=true]:[border-color:var(--color-err)] aria-[invalid=true]:[box-shadow:0_0_0_3px_rgba(154,74,63,0.14)] ' +
+            'disabled:opacity-50'
           }
         />
       ))}

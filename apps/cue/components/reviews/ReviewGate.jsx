@@ -15,8 +15,14 @@ export default function ReviewGate({ className, children = 'Write review' }) {
 
   function onClick() {
     if (!hydrated) return;
-    if (!account) { setAuthOpen(true); return; }
-    if (!reviewableItems.length) { setBlockedOpen(true); return; }
+    if (!account) {
+      setAuthOpen(true);
+      return;
+    }
+    if (!reviewableItems.length) {
+      setBlockedOpen(true);
+      return;
+    }
     setReviewOpen(true);
   }
 

@@ -3,7 +3,7 @@ import Price from '@/components/Price';
 
 const CLS = {
   section:
-    "relative overflow-hidden bg-cover bg-center py-8 text-white " +
+    'relative overflow-hidden bg-cover bg-center py-8 text-white ' +
     "after:content-[''] after:absolute after:inset-0 " +
     'after:bg-[linear-gradient(90deg,rgba(20,19,15,0.86)_0%,rgba(20,19,15,0.62)_55%,rgba(20,19,15,0.35)_100%)] ' +
     'max-[560px]:after:bg-[linear-gradient(180deg,rgba(20,19,15,0.72)_0%,rgba(20,19,15,0.82)_100%)]',

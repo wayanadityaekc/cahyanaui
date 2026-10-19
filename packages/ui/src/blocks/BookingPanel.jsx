@@ -4,7 +4,6 @@ import { cn } from '../lib/cn.js';
 import Card from './Card.jsx';
 import { BTN_SM } from '../primitives/btnClasses.js';
 
-
 export const SECONDARY_BTN =
   `flex w-full gap-2 ${BTN_SM} [border:1px_solid_var(--line)] bg-transparent text-gold font-body ` +
   'no-underline cursor-pointer transition-[color,border-color,scale] duration-200 ease-in-out ' +
@@ -25,10 +24,7 @@ export default function BookingPanel({
   ...rest
 }) {
   return (
-    <aside
-      className={cn('flex flex-col gap-5', sticky && 'lg:sticky lg:top-24', className)}
-      {...rest}
-    >
+    <aside className={cn('flex flex-col gap-5', sticky && 'lg:sticky lg:top-24', className)} {...rest}>
       <Card as={as} ref={panelRef} className="p-6">
         {title ? <h2 className="m-0 mb-2 text-strong font-semibold text-gold">{title}</h2> : null}
         {price}

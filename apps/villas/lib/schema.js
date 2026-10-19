@@ -61,7 +61,12 @@ export function villaSchema(villa) {
       '@type': 'Offer',
       price: villa.nightlyRateIdr,
       priceCurrency: 'IDR',
-      priceSpecification: { '@type': 'UnitPriceSpecification', price: villa.nightlyRateIdr, priceCurrency: 'IDR', unitText: 'night' },
+      priceSpecification: {
+        '@type': 'UnitPriceSpecification',
+        price: villa.nightlyRateIdr,
+        priceCurrency: 'IDR',
+        unitText: 'night',
+      },
       url: `${SITE}/villas/${villa.slug}/`,
     },
   };

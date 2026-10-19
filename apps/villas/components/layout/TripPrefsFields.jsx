@@ -14,17 +14,24 @@ export default function TripPrefsFields({ idPrefix = 'acct' }) {
   return (
     <div className="grid grid-cols-2 gap-[10px]">
       <div className={FIELD_CELL}>
-        <label className={FIELD_LABEL} htmlFor={`${idPrefix}-guests`}>Guests</label>
+        <label className={FIELD_LABEL} htmlFor={`${idPrefix}-guests`}>
+          Guests
+        </label>
         <Select
           id={`${idPrefix}-guests`}
           label="Guests"
           value={String(guests)}
           onChange={(value) => setGuests(Number(value))}
-          options={GUEST_OPTIONS.map((count) => ({ value: String(count), label: `${count} guest${count > 1 ? 's' : ''}` }))}
+          options={GUEST_OPTIONS.map((count) => ({
+            value: String(count),
+            label: `${count} guest${count > 1 ? 's' : ''}`,
+          }))}
         />
       </div>
       <div className={FIELD_CELL}>
-        <label className={FIELD_LABEL} htmlFor={`${idPrefix}-cur`}>Currency</label>
+        <label className={FIELD_LABEL} htmlFor={`${idPrefix}-cur`}>
+          Currency
+        </label>
         <CurrencyPicker id={`${idPrefix}-cur`} />
       </div>
     </div>

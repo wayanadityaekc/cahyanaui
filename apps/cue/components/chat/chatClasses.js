@@ -7,9 +7,7 @@ export function PANEL(open) {
     '[@media(min-width:769px)]:top-0 [@media(min-width:769px)]:right-0 [@media(min-width:769px)]:bottom-0',
     '[@media(min-width:769px)]:h-[100dvh] [@media(min-width:769px)]:w-[38%] [@media(min-width:769px)]:max-w-[420px] [@media(min-width:769px)]:min-w-[340px]',
     '[@media(min-width:769px)]:[transition:translate_300ms_var(--ease),visibility_300ms]',
-    open
-      ? '[@media(min-width:769px)]:translate-x-0'
-      : '[@media(min-width:769px)]:translate-x-full',
+    open ? '[@media(min-width:769px)]:translate-x-0' : '[@media(min-width:769px)]:translate-x-full',
     '[@media(max-width:768px)]:left-0 [@media(max-width:768px)]:right-0 [@media(max-width:768px)]:bottom-0 [@media(max-width:768px)]:top-auto',
     '[@media(max-width:768px)]:h-[86dvh] [@media(max-width:768px)]:[border-radius:var(--r-xl)_var(--r-xl)_0_0]',
     '[@media(max-width:768px)]:[transition:opacity_var(--dur)_var(--ease-out),transform_var(--dur)_var(--ease-out),visibility_var(--dur)]',
@@ -21,13 +19,15 @@ export function PANEL(open) {
 }
 
 export function SCRIM(open) {
-  return `fixed inset-0 z-[125] bg-[rgba(26,26,26,0.45)] ` +
-    `[transition:opacity_300ms_var(--ease),visibility_300ms] motion-reduce:transition-none ${ 
-    open ? 'opacity-100 visible pointer-events-auto' : 'opacity-0 invisible pointer-events-none'}`;
+  return (
+    `fixed inset-0 z-[125] bg-[rgba(26,26,26,0.45)] ` +
+    `[transition:opacity_300ms_var(--ease),visibility_300ms] motion-reduce:transition-none ${
+      open ? 'opacity-100 visible pointer-events-auto' : 'opacity-0 invisible pointer-events-none'
+    }`
+  );
 }
 
-export const HEAD =
-  'flex items-center gap-[0.7rem] flex-none pt-4 px-4 pb-3 [border-bottom:1px_solid_var(--line)]';
+export const HEAD = 'flex items-center gap-[0.7rem] flex-none pt-4 px-4 pb-3 [border-bottom:1px_solid_var(--line)]';
 export const HEAD_AVATAR =
   'flex-none w-9 h-9 rounded-[50%] bg-cream [border:1px_solid_var(--line)] flex items-center justify-center ' +
   '[&>svg]:w-[var(--icon-md)] [&>svg]:h-[var(--icon-md)] [&>svg]:text-gold';
@@ -69,19 +69,21 @@ export const CHIP_Q =
   '[transition:background-color_var(--dur)_var(--ease),border-color_var(--dur)_var(--ease),scale_var(--dur-fast)_var(--ease)] ' +
   'hover:bg-cream hover:[border-color:var(--color-gold)]';
 
-export const FOOT =
-  'flex-none flex items-center gap-[0.5rem] px-4 py-3 [border-top:1px_solid_var(--line)] bg-white';
+export const FOOT = 'flex-none flex items-center gap-[0.5rem] px-4 py-3 [border-top:1px_solid_var(--line)] bg-white';
 export const SEND =
   'flex-none inline-flex items-center justify-center w-[var(--btn-h)] h-[var(--btn-h)] rounded-[var(--r-sm)] text-small ' +
   'bg-cta text-white border-none cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed ' +
   '[&>svg]:w-[var(--icon-sm)] [&>svg]:h-[var(--icon-sm)] ' +
   '[transition:background-color_var(--dur)_var(--ease),scale_var(--dur-fast)_var(--ease)] hover:bg-cta-d';
 
-export const DOTS = 'self-start flex gap-[4px] px-[0.85rem] py-[0.7rem] rounded-[var(--r-md)] bg-cream [border:1px_solid_var(--line)]';
+export const DOTS =
+  'self-start flex gap-[4px] px-[0.85rem] py-[0.7rem] rounded-[var(--r-md)] bg-cream [border:1px_solid_var(--line)]';
 export const DOT = 'w-[5px] h-[5px] rounded-[50%] bg-muted';
 export const TYPING_ROW = `${DOTS} items-center gap-[0.45rem]`;
 export const TYPING_WHO = 'font-body text-label font-medium tracking-[0.06em] uppercase text-cta';
-export function DOT_LIVE(i) { return `${DOT} motion-safe:animate-[chatdot_1.1s_ease-in-out_infinite] [animation-delay:${i * 0.15}s]`; }
+export function DOT_LIVE(i) {
+  return `${DOT} motion-safe:animate-[chatdot_1.1s_ease-in-out_infinite] [animation-delay:${i * 0.15}s]`;
+}
 
 export const BUBBLE_WAYAN =
   'self-start max-w-[86%] px-[0.85rem] py-[0.6rem] rounded-[var(--r-md)] bg-white ' +

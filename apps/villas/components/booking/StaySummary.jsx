@@ -24,12 +24,16 @@ export default function StaySummary({ villaSlug = '', checkIn = '', checkOut = '
             data-stay-summary
           >
             <div className="flex justify-between py-2">
-              <span className="text-muted">{formatAmount(shown.nightly)} x {shown.nights} night{shown.nights === 1 ? '' : 's'}</span>
+              <span className="text-muted">
+                {formatAmount(shown.nightly)} x {shown.nights} night{shown.nights === 1 ? '' : 's'}
+              </span>
               <span className="text-gold">{formatAmount(shown.subtotal)}</span>
             </div>
             <div className="flex justify-between py-2.5">
               <span className="font-semibold text-gold">Total</span>
-              <span className="font-bold text-amber" data-stay-total>{formatAmount(shown.total)}</span>
+              <span className="font-bold text-amber" data-stay-total>
+                {formatAmount(shown.total)}
+              </span>
             </div>
           </m.div>
         )}

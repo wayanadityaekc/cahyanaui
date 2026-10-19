@@ -1,6 +1,16 @@
 import Button from '../primitives/Button.jsx';
 
-export default function PhotoBand({ image = '', eyebrow = '', title = '', text = '', cta = '', href = '#', external = false, paired = false, id }) {
+export default function PhotoBand({
+  image = '',
+  eyebrow = '',
+  title = '',
+  text = '',
+  cta = '',
+  href = '#',
+  external = false,
+  paired = false,
+  id,
+}) {
   const linkProps = external ? { target: '_blank', rel: 'noopener' } : {};
   return (
     <section
@@ -12,7 +22,9 @@ export default function PhotoBand({ image = '', eyebrow = '', title = '', text =
         <span className="block mb-[0.55rem] text-small font-medium text-gold-l">{eyebrow}</span>
         <h2 className="mt-0 mb-[0.8rem] text-h2 font-medium tracking-[-0.01em] leading-[1.15] text-white">{title}</h2>
         <p className="mx-auto mt-0 mb-[1.4rem] max-w-[520px] text-body leading-[1.6] text-white/90">{text}</p>
-        <Button as="a" href={href} variant="primary" {...linkProps}>{cta}</Button>
+        <Button as="a" href={href} variant="primary" {...linkProps}>
+          {cta}
+        </Button>
       </div>
     </section>
   );

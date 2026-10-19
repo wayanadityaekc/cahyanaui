@@ -5,7 +5,8 @@ import { COMPANY_CRUMBS, breadcrumbList } from '@/lib/schema';
 
 export const metadata = pageMeta({
   title: 'Our Company | Ubud Private Villas',
-  description: 'The Ubud family behind Cahyana House and Cahyana Tibuah - who we are, how to reach us, answers to common questions, and how we handle your data.',
+  description:
+    'The Ubud family behind Cahyana House and Cahyana Tibuah - who we are, how to reach us, answers to common questions, and how we handle your data.',
   path: '/our-company/',
 });
 

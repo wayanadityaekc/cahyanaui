@@ -13,7 +13,8 @@ function StatusTag({ status }) {
   if (status === 'free') {
     return (
       <span className={cn(CAPS, 'inline-flex items-center gap-1 text-gold')}>
-        <Check className="w-3.5 h-3.5" aria-hidden="true" />Available
+        <Check className="w-3.5 h-3.5" aria-hidden="true" />
+        Available
       </span>
     );
   }
@@ -28,30 +29,39 @@ export default function StayResults({ items = [], linkAs = 'a', className }) {
   }
   return (
     <ul className={cn('grid gap-5 sm:grid-cols-2', className)}>
-      {items.map(({ key, image, alt = '', name, meta, status, price, priceNote, note, detailsHref, onReserve, help }) => {
-        const dim = status === 'taken' || status === 'small';
-        const line = status === 'small' ? note : STATUS_LINE[status];
-        return (
-          <li key={key} className="flex flex-col" data-stay={key} data-status={status}>
-            <img src={image} alt={alt} className={cn('w-full aspect-[16/10] object-cover', dim && 'opacity-55')} />
-            <div className="mt-3 flex items-center justify-between gap-3">
-              <h3 className={cn('text-h3 font-semibold text-gold', dim && 'text-muted')}>{name}</h3>
-              <StatusTag status={status} />
-            </div>
-            <p className="text-small text-muted">{meta}</p>
-            <p className="text-small mt-1 mb-3" aria-live="polite">
-              {status === 'free'
-                ? (<><span className="text-amber font-semibold">{price}</span><span className="text-muted"> · {priceNote}</span></>)
-                : <span className="text-muted">{line}</span>}
-            </p>
-            <div className="mt-auto flex gap-2 [&>*]:flex-1">
-              <Button as={linkAs} variant="ghost" href={detailsHref}>Details</Button>
-              {status === 'free' ? <Button onClick={onReserve}>Reserve</Button> : null}
-              {status === 'unknown' && help ? help : null}
-            </div>
-          </li>
-        );
-      })}
+      {items.map(
+        ({ key, image, alt = '', name, meta, status, price, priceNote, note, detailsHref, onReserve, help }) => {
+          const dim = status === 'taken' || status === 'small';
+          const line = status === 'small' ? note : STATUS_LINE[status];
+          return (
+            <li key={key} className="flex flex-col" data-stay={key} data-status={status}>
+              <img src={image} alt={alt} className={cn('w-full aspect-[16/10] object-cover', dim && 'opacity-55')} />
+              <div className="mt-3 flex items-center justify-between gap-3">
+                <h3 className={cn('text-h3 font-semibold text-gold', dim && 'text-muted')}>{name}</h3>
+                <StatusTag status={status} />
+              </div>
+              <p className="text-small text-muted">{meta}</p>
+              <p className="text-small mt-1 mb-3" aria-live="polite">
+                {status === 'free' ? (
+                  <>
+                    <span className="text-amber font-semibold">{price}</span>
+                    <span className="text-muted"> · {priceNote}</span>
+                  </>
+                ) : (
+                  <span className="text-muted">{line}</span>
+                )}
+              </p>
+              <div className="mt-auto flex gap-2 [&>*]:flex-1">
+                <Button as={linkAs} variant="ghost" href={detailsHref}>
+                  Details
+                </Button>
+                {status === 'free' ? <Button onClick={onReserve}>Reserve</Button> : null}
+                {status === 'unknown' && help ? help : null}
+              </div>
+            </li>
+          );
+        },
+      )}
     </ul>
   );
 }

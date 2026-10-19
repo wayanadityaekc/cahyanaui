@@ -9,7 +9,9 @@ export default function Related({ href }) {
   const current = RELATED_ITEMS.find((it) => it.href === href);
   if (!current) return null;
 
-  const pool = RELATED_ITEMS.filter((it) => it.type === current.type && it.href !== current.href && !isHiddenTour(it.href));
+  const pool = RELATED_ITEMS.filter(
+    (it) => it.type === current.type && it.href !== current.href && !isHiddenTour(it.href),
+  );
   const sameZone = pool.filter((it) => it.zone === current.zone);
   const rest = pool
     .filter((it) => it.zone !== current.zone)
@@ -38,7 +40,9 @@ export default function Related({ href }) {
       </Slider>
       {all && (
         <p className="mt-[1.6rem]">
-          <a href={all[0]} className="text-gold-d font-medium text-h3 no-underline hover:underline">{all[1]} &rsaquo;</a>
+          <a href={all[0]} className="text-gold-d font-medium text-h3 no-underline hover:underline">
+            {all[1]} &rsaquo;
+          </a>
         </p>
       )}
     </section>

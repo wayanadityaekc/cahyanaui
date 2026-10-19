@@ -11,11 +11,13 @@ export function usePaymentReturn() {
         return;
       }
       setReturnRef(r);
-    } catch (e) {   }
+    } catch (e) {}
   }, []);
   function clearReturn() {
     setReturnRef('');
-    try { window.history.replaceState(null, '', window.location.pathname); } catch (e) {}
+    try {
+      window.history.replaceState(null, '', window.location.pathname);
+    } catch (e) {}
   }
   return { returnRef, clearReturn };
 }
@@ -33,7 +35,7 @@ export function useReviewLink({ trips, reviewableItems, account, setTab, setRead
       p.delete('review');
       const search = p.toString();
       window.history.replaceState(null, '', `${window.location.pathname}${search ? `?${search}` : ''}`);
-    } catch (e) {   }
+    } catch (e) {}
   }, []);
 
   useEffect(() => {

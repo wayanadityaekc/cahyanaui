@@ -7,7 +7,7 @@ import { ATTRACTION_CONTENT } from '@/content/attractions';
 export const metadata = {
   title: 'Bali Attractions & Destinations from Ubud',
   description:
-    'Explore Bali\'s temples, waterfalls, rice terraces, and beaches - the individual destinations behind our private day tours, each visitable from Ubud.',
+    "Explore Bali's temples, waterfalls, rice terraces, and beaches - the individual destinations behind our private day tours, each visitable from Ubud.",
   alternates: { canonical: '/destinations.html' },
 };
 

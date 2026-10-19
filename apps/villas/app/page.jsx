@@ -8,14 +8,29 @@ import CheckAvailabilityButton from '@/components/booking/CheckAvailabilityButto
 import CharterCard from '@/components/sections/CharterCard';
 import { VILLA_LIST } from '@/lib/villas';
 import { OVERALL_RATING, OVERALL_REVIEW_COUNT, REVIEW_CARDS } from '@/lib/reviews';
-import { Button, CAPS, EYEBROW_LINE, GRID_PAIR, GRID_TRIO, Hero, ICON_CIRCLE, JsonLd, MediaCard, STARS, Section, SectionHeading, SplitFeature } from '@cahyana/ui';
+import {
+  Button,
+  CAPS,
+  EYEBROW_LINE,
+  GRID_PAIR,
+  GRID_TRIO,
+  Hero,
+  ICON_CIRCLE,
+  JsonLd,
+  MediaCard,
+  STARS,
+  Section,
+  SectionHeading,
+  SplitFeature,
+} from '@cahyana/ui';
 import { EXPLORE_MORE, STAY_ADDONS } from '@/content/crossSell';
 import { pageMeta } from '@/lib/seo';
 import { siteSchema } from '@/lib/schema';
 
 export const metadata = pageMeta({
   title: 'Private Pool Villas in Ubud, Bali | Ubud Private Villas',
-  description: 'Two private pool villas in north Ubud, Bali: a 3-bedroom family house and a 2-bedroom ricefield villa. Both rated 4.96 on Airbnb, 10 minutes from Ubud Palace.',
+  description:
+    'Two private pool villas in north Ubud, Bali: a 3-bedroom family house and a 2-bedroom ricefield villa. Both rated 4.96 on Airbnb, 10 minutes from Ubud Palace.',
   path: '/',
 });
 
@@ -70,12 +85,12 @@ export default function HomePage() {
         <div className="grid md:grid-cols-[1fr_1fr] gap-8 items-end mb-9">
           <div>
             <p className={EYEBROW_LINE}>Our Villas</p>
-            <h2 className="text-h2 font-medium text-gold">
-              Two private villas in north Ubud
-            </h2>
+            <h2 className="text-h2 font-medium text-gold">Two private villas in north Ubud</h2>
           </div>
           <p className="text-small leading-[1.45] text-green">
-            Each villa is thoughtfully designed with a private pool, open living space and a calming view of the tropical gardens. Whether you&apos;re here for a romantic escape or a family getaway, you&apos;ll find your place in Ubud.
+            Each villa is thoughtfully designed with a private pool, open living space and a calming view of the
+            tropical gardens. Whether you&apos;re here for a romantic escape or a family getaway, you&apos;ll find your
+            place in Ubud.
           </p>
         </div>
         <div className={GRID_PAIR}>
@@ -97,7 +112,7 @@ export default function HomePage() {
 
           <VillaCard villa={VILLA_LIST[1]} className="min-[993px]:order-2" />
         </div>
-</Section>
+      </Section>
 
       <Hero
         size="band"
@@ -108,13 +123,12 @@ export default function HomePage() {
         eyebrow={EXPLORE_MORE.eyebrow}
         title={EXPLORE_MORE.title}
         lede={EXPLORE_MORE.lede}
-        actions={(
+        actions={
           <Button as="a" variant="light" href={EXPLORE_MORE.href} target="_blank" rel="noopener">
             {EXPLORE_MORE.cta}
           </Button>
-        )}
+        }
       />
-
 
       {SERVICES_HOME.map((service, i) => (
         <SplitFeature
@@ -126,7 +140,11 @@ export default function HomePage() {
           eyebrow={service.eyebrow}
           title={service.title}
           lede={service.lede}
-          actions={<Button as={Link} href={service.href}>{service.cta}</Button>}
+          actions={
+            <Button as={Link} href={service.href}>
+              {service.cta}
+            </Button>
+          }
         />
       ))}
 
@@ -145,8 +163,7 @@ export default function HomePage() {
             <ReviewCard key={i} card={card} />
           ))}
         </div>
-</Section>
-
+      </Section>
 
       <Section>
         <SectionHeading
@@ -163,12 +180,12 @@ export default function HomePage() {
               href={addon.href}
               {...(addon.external ? { target: '_blank', rel: 'noopener' } : {})}
               image={{ src: addon.img, alt: addon.alt, width: 700, height: 525, ratio: 'aspect-[4/3]' }}
-              footer={(
+              footer={
                 <span className={`${CAPS} text-cta`}>
                   {addon.cta}
                   <span aria-hidden="true"> &rsaquo;</span>
                 </span>
-              )}
+              }
             >
               <p className={`${CAPS} text-muted`}>{addon.eyebrow}</p>
               <h3 className="text-h3 font-semibold text-gold">{addon.label}</h3>
@@ -177,7 +194,6 @@ export default function HomePage() {
           ))}
         </div>
       </Section>
-
 
       <Section tone="cream" id="private-driver">
         <div className="max-w-[44rem]">
@@ -192,9 +208,11 @@ export default function HomePage() {
         </p>
         <div className="flex flex-wrap justify-center gap-3 mt-6">
           <CheckAvailabilityButton variant="onDark" />
-          <Button as={Link} variant="light" href="/services/scooter-rental">Scooter rental</Button>
+          <Button as={Link} variant="light" href="/services/scooter-rental">
+            Scooter rental
+          </Button>
         </div>
-</Section>
+      </Section>
     </>
   );
 }

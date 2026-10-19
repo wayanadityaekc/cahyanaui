@@ -48,10 +48,22 @@ export default function SectionSwitcher({ zones = [] }) {
     <div className={`${BAR_SHELL} ${BAR_UPTO_MD}`} role="navigation" aria-label="Jump to category">
       <span className="flex-1 min-w-0 truncate font-semibold text-[0.8rem] text-ink">{zones[idx].label}</span>
       <div className="flex-none flex items-center gap-1">
-        <button type="button" className={arrow} onClick={() => step(-1)} disabled={idx === 0} aria-label="Previous category">
+        <button
+          type="button"
+          className={arrow}
+          onClick={() => step(-1)}
+          disabled={idx === 0}
+          aria-label="Previous category"
+        >
           <Chevron dir="left" />
         </button>
-        <button type="button" className={arrow} onClick={() => step(1)} disabled={idx === zones.length - 1} aria-label="Next category">
+        <button
+          type="button"
+          className={arrow}
+          onClick={() => step(1)}
+          disabled={idx === zones.length - 1}
+          aria-label="Next category"
+        >
           <Chevron dir="right" />
         </button>
       </div>

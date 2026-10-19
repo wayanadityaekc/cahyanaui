@@ -15,7 +15,10 @@ export default function ChatLauncher({ className = '' }) {
       <LauncherButton
         className={className}
         open={open}
-        onClick={() => { setTouched(true); setOpen((wasOpen) => !wasOpen); }}
+        onClick={() => {
+          setTouched(true);
+          setOpen((wasOpen) => !wasOpen);
+        }}
       />
       {touched && <ChatWindow open={open} onClose={() => setOpen(false)} />}
     </>

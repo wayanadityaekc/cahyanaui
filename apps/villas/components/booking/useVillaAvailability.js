@@ -15,7 +15,9 @@ export default function useVillaAvailability(villaSlug) {
       if (alive) setState({ status: result.known ? 'ready' : 'unknown', busy: result.busy });
     }
     load();
-    return () => { alive = false; };
+    return () => {
+      alive = false;
+    };
   }, [villaSlug]);
 
   return state;

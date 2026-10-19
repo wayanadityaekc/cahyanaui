@@ -1,4 +1,3 @@
-
 const THREAD_ID = /^[a-f0-9]{48}$/;
 
 export function createChatThread({ apiBase, storageKey }) {
@@ -15,8 +14,7 @@ export function createChatThread({ apiBase, storageKey }) {
     try {
       if (id) localStorage.setItem(storageKey, id);
       else localStorage.removeItem(storageKey);
-    } catch (e) {
-    }
+    } catch (e) {}
   }
 
   async function post(path, payload, fallback) {

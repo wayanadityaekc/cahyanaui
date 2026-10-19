@@ -6,8 +6,15 @@ const TOURS = JSON.parse(fs.readFileSync('content/tours/tours.json', 'utf8'));
 const MSG = 'Our driver knew every quiet corner of Ubud.';
 const REVIEW = { name: 'Andras', country: 'Hungary', rating: 5, message: MSG, service: 'Ubud Tour', source: 'cahyana' };
 
-let pass = 0, fail = 0;
-function ok(cond, msg) { if (cond) pass++; else { fail++; process.stdout.write(`FAIL ${msg}\n`); } }
+let pass = 0,
+  fail = 0;
+function ok(cond, msg) {
+  if (cond) pass++;
+  else {
+    fail++;
+    process.stdout.write(`FAIL ${msg}\n`);
+  }
+}
 
 const browser = await chromium.launch({ executablePath: '/opt/pw-browsers/chromium-1194/chrome-linux/chrome' });
 
@@ -16,9 +23,11 @@ async function open(path, w) {
   const asked = [];
   await ctx.route('**/api/**', (r) => {
     const u = new URL(r.request().url());
-    if (u.pathname.endsWith('/reviews/summary')) return r.fulfill({ json: [{ service: 'Ubud Tour', avg_rating: 5, count: 1 }] });
+    if (u.pathname.endsWith('/reviews/summary'))
+      return r.fulfill({ json: [{ service: 'Ubud Tour', avg_rating: 5, count: 1 }] });
     if (u.pathname.endsWith('/reviews')) {
-      const svc = u.searchParams.get('service'), grp = u.searchParams.get('group');
+      const svc = u.searchParams.get('service'),
+        grp = u.searchParams.get('group');
       asked.push(svc ?? (grp ? `group:${grp}` : '(all)'));
       return r.fulfill({ json: !svc && !grp ? [REVIEW] : svc === 'Ubud Tour' ? [REVIEW] : [] });
     }
@@ -34,11 +43,15 @@ async function open(path, w) {
 }
 
 function writeButtons(page) {
-  return page.evaluate(() => [...document.querySelectorAll('button, a')].filter((b) => {
-    if (b.textContent.trim() !== 'Write review') return false;
-    const r = b.getBoundingClientRect(); const cs = getComputedStyle(b);
-    return r.width > 0 && r.height > 0 && cs.visibility !== 'hidden';
-  }).length);
+  return page.evaluate(
+    () =>
+      [...document.querySelectorAll('button, a')].filter((b) => {
+        if (b.textContent.trim() !== 'Write review') return false;
+        const r = b.getBoundingClientRect();
+        const cs = getComputedStyle(b);
+        return r.width > 0 && r.height > 0 && cs.visibility !== 'hidden';
+      }).length,
+  );
 }
 
 for (const [slug, t] of Object.entries(TOURS)) {
@@ -57,10 +70,15 @@ for (const w of [390, 1280]) {
     const body = await page.evaluate(() => document.body.innerText);
     ok(body.includes(MSG), `${w} ubud-tour: review text not on its own page`);
     ok(!/No reviews yet for this program/.test(body), `${w} ubud-tour: empty state shown despite a review`);
-    const hero = await page.evaluate(() => (document.querySelector('[data-rating="Ubud Tour"]') || {}).textContent || '');
+    const hero = await page.evaluate(
+      () => (document.querySelector('[data-rating="Ubud Tour"]') || {}).textContent || '',
+    );
     ok(/5\.0/.test(hero), `${w} ubud-tour: hero stars read "${hero}"`);
-    ok(await writeButtons(page) === 1, `${w} ubud-tour: ${await writeButtons(page)} Write review buttons`);
-    ok(await page.evaluate(() => document.documentElement.scrollWidth - innerWidth) <= 0, `${w} ubud-tour: page overflows`);
+    ok((await writeButtons(page)) === 1, `${w} ubud-tour: ${await writeButtons(page)} Write review buttons`);
+    ok(
+      (await page.evaluate(() => document.documentElement.scrollWidth - innerWidth)) <= 0,
+      `${w} ubud-tour: page overflows`,
+    );
     await ctx.close();
   }
   {
@@ -71,11 +89,20 @@ for (const w of [390, 1280]) {
   }
   {
     const { ctx, page } = await open('/tour.html', w);
-    const card = await page.evaluate(() => (document.querySelector('[data-rating="Ubud Tour"]') || {}).textContent || '');
+    const card = await page.evaluate(
+      () => (document.querySelector('[data-rating="Ubud Tour"]') || {}).textContent || '',
+    );
     ok(/5\.0/.test(card), `${w} tour listing: card stars read "${card}"`);
     await ctx.close();
   }
-  for (const path of ['/east-bali-tour-lempuyang.html', '/transfer.html', '/charter.html', '/airport-transfer.html', '/attractions/atv-ride.html', '/lempuyang-tirta-gangga.html']) {
+  for (const path of [
+    '/east-bali-tour-lempuyang.html',
+    '/transfer.html',
+    '/charter.html',
+    '/airport-transfer.html',
+    '/attractions/atv-ride.html',
+    '/lempuyang-tirta-gangga.html',
+  ]) {
     if (!fs.existsSync(`out${path}`)) continue;
     const { ctx, page, status } = await open(path, w);
     ok(status === 200, `${w} ${path}: HTTP ${status}`);

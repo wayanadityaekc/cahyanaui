@@ -43,12 +43,17 @@ export default function PromoSlider({ slides = [], label = 'Other Cahyana progra
           style={near(i) ? { backgroundImage: `url(${slide.img})` } : undefined}
           aria-hidden={i !== cur}
         >
-          <span aria-hidden="true" className="absolute inset-0 pointer-events-none mix-blend-multiply [background:linear-gradient(180deg,rgba(214,178,120,0.18),rgba(120,80,40,0.30))]" />
+          <span
+            aria-hidden="true"
+            className="absolute inset-0 pointer-events-none mix-blend-multiply [background:linear-gradient(180deg,rgba(214,178,120,0.18),rgba(120,80,40,0.30))]"
+          />
           <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(20,19,15,0.55),rgba(20,19,15,0.74))]" />
           <div className="relative z-[1] flex flex-col items-center justify-center h-full text-center px-6 py-12">
             <div className="max-w-[560px]">
               <span className="block mb-[0.55rem] text-small font-medium text-white">{slide.kicker}</span>
-              <h2 className="mt-0 mb-[0.7rem] font-head text-h2 font-medium text-white tracking-[-0.01em] leading-[1.15]">{slide.title}</h2>
+              <h2 className="mt-0 mb-[0.7rem] font-head text-h2 font-medium text-white tracking-[-0.01em] leading-[1.15]">
+                {slide.title}
+              </h2>
               <p className="mx-auto mt-0 mb-[1.3rem] max-w-[46ch] text-body leading-[1.6] text-white">{slide.text}</p>
               <a
                 href={slide.href}

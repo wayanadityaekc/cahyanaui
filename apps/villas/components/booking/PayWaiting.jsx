@@ -21,7 +21,9 @@ const COPY = {
   },
   paid: {
     title: 'Booking confirmed',
-    lines: ['The payment cleared. Your confirmation email is on its way, with your stay and every extra we have booked for you.'],
+    lines: [
+      'The payment cleared. Your confirmation email is on its way, with your stay and every extra we have booked for you.',
+    ],
   },
   mismatch: {
     title: 'We need to check this payment',
@@ -47,7 +49,11 @@ const COPY = {
 };
 
 function readToken() {
-  try { return window.localStorage.getItem(TOKEN_KEY) || ''; } catch (e) { return ''; }
+  try {
+    return window.localStorage.getItem(TOKEN_KEY) || '';
+  } catch (e) {
+    return '';
+  }
 }
 
 export default function PayWaiting({ bookingRef = '', onClose = () => {}, onConfirmed = null }) {
@@ -69,14 +75,22 @@ export default function PayWaiting({ bookingRef = '', onClose = () => {}, onConf
 
   useEffect(() => {
     const token = readToken();
-    if (!bookingRef || !token) { setPhase('blind'); return undefined; }
+    if (!bookingRef || !token) {
+      setPhase('blind');
+      return undefined;
+    }
     let stop = false;
     const started = Date.now();
     async function ask() {
       try {
-        const response = await fetch(`${API_BASE}/booking-status/${encodeURIComponent(bookingRef)}`, { headers: { Authorization: `Bearer ${token}` } });
+        const response = await fetch(`${API_BASE}/booking-status/${encodeURIComponent(bookingRef)}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
         if (stop) return;
-        if (response.status === 401 || response.status === 404) { setPhase('blind'); return; }
+        if (response.status === 401 || response.status === 404) {
+          setPhase('blind');
+          return;
+        }
         const data = await response.json().catch(() => null);
         if (stop) return;
         if (data && data.payment === 'paid') {
@@ -84,15 +98,23 @@ export default function PayWaiting({ bookingRef = '', onClose = () => {}, onConf
           if (typeof onConfirmed === 'function') onConfirmed();
           return;
         }
-        if (data && data.payment === 'mismatch') { setPhase('mismatch'); return; }
-      } catch (e) {
-      }
+        if (data && data.payment === 'mismatch') {
+          setPhase('mismatch');
+          return;
+        }
+      } catch (e) {}
       if (stop) return;
-      if (Date.now() - started > GIVE_UP_MS) { setPhase('slow'); return; }
+      if (Date.now() - started > GIVE_UP_MS) {
+        setPhase('slow');
+        return;
+      }
       timer.current = setTimeout(ask, POLL_MS);
     }
     timer.current = setTimeout(ask, POLL_MS);
-    return () => { stop = true; clearTimeout(timer.current); };
+    return () => {
+      stop = true;
+      clearTimeout(timer.current);
+    };
   }, [bookingRef, onConfirmed]);
 
   if (!mounted) return null;
@@ -100,7 +122,14 @@ export default function PayWaiting({ bookingRef = '', onClose = () => {}, onConf
   const copy = COPY[phase];
 
   return createPortal(
-    <div className="fixed inset-0 z-[300] overflow-hidden" role="dialog" aria-modal="true" aria-label={copy.title} aria-live="polite" data-pay-waiting={phase}>
+    <div
+      className="fixed inset-0 z-[300] overflow-hidden"
+      role="dialog"
+      aria-modal="true"
+      aria-label={copy.title}
+      aria-live="polite"
+      data-pay-waiting={phase}
+    >
       {photos.map((photo, index) => (
         <img
           key={photo.src}
@@ -113,18 +142,42 @@ export default function PayWaiting({ bookingRef = '', onClose = () => {}, onConf
       <div className="absolute inset-0 bg-[rgba(20,19,16,0.62)]" />
       <div className="relative z-10 flex flex-col items-center justify-center h-full px-[var(--container-x)] text-center">
         {waiting && (
-          <span className="w-[26px] h-[26px] mb-5 rounded-[50%] border-[3px] border-solid border-[rgba(255,255,255,0.28)] border-t-white animate-[spin_0.7s_linear_infinite]" aria-hidden="true" />
+          <span
+            className="w-[26px] h-[26px] mb-5 rounded-[50%] border-[3px] border-solid border-[rgba(255,255,255,0.28)] border-t-white animate-[spin_0.7s_linear_infinite]"
+            aria-hidden="true"
+          />
         )}
         <h2 className="mb-3 font-body text-h2 font-semibold text-white">{copy.title}</h2>
         <div className="max-w-[420px]">
-          {copy.lines.map((line) => <p className="mb-2 text-body leading-[var(--lh-body,1.6)] text-[rgba(255,255,255,0.86)]" key={line}>{line}</p>)}
+          {copy.lines.map((line) => (
+            <p className="mb-2 text-body leading-[var(--lh-body,1.6)] text-[rgba(255,255,255,0.86)]" key={line}>
+              {line}
+            </p>
+          ))}
         </div>
-        {bookingRef && <p className="mt-2 text-small font-semibold tracking-[0.08em] uppercase text-[rgba(255,255,255,0.72)]">Booking {bookingRef}</p>}
+        {bookingRef && (
+          <p className="mt-2 text-small font-semibold tracking-[0.08em] uppercase text-[rgba(255,255,255,0.72)]">
+            Booking {bookingRef}
+          </p>
+        )}
         {!waiting && (
           <div className="w-full max-w-[320px] mt-6 flex flex-col gap-2">
-            <Button full onClick={onClose}>Done</Button>
+            <Button full onClick={onClose}>
+              Done
+            </Button>
             {(phase === 'mismatch' || phase === 'slow') && (
-              <Button as="a" full variant="onDark" href={whatsappLink(`Hello, I just paid for booking ${bookingRef} and I'd like to check it came through.`)} target="_blank" rel="noopener">WhatsApp</Button>
+              <Button
+                as="a"
+                full
+                variant="onDark"
+                href={whatsappLink(
+                  `Hello, I just paid for booking ${bookingRef} and I'd like to check it came through.`,
+                )}
+                target="_blank"
+                rel="noopener"
+              >
+                WhatsApp
+              </Button>
             )}
           </div>
         )}

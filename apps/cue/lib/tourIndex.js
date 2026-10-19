@@ -3,7 +3,9 @@ import { LISTINGS } from '@/content/shared/listings';
 import { HIDDEN_TOURS, tourPath } from '@/lib/routes';
 
 const parked = new Set(HIDDEN_TOURS);
-function isPackage({ items }) { return (items || []).some((i) => i.type === 'sub'); }
+function isPackage({ items }) {
+  return (items || []).some((i) => i.type === 'sub');
+}
 
 const INDEX = {};
 Object.entries(TOUR_CONTENT).forEach(([slug, t]) => {
@@ -30,7 +32,9 @@ export function withAttractionCards(listing, attractions = {}) {
     if (Array.isArray(node)) return node.map(walk);
     if (!node || typeof node !== 'object') return node;
     const next = {};
-    Object.entries(node).forEach(([k, v]) => { next[k] = walk(v); });
+    Object.entries(node).forEach(([k, v]) => {
+      next[k] = walk(v);
+    });
     const m = /^\/attractions\/(.+)\.html$/.exec(next.href || '');
     if (next.variant === 'incl') {
       const label = m ? inclLabel(m[1]) : undefined;
@@ -42,9 +46,11 @@ export function withAttractionCards(listing, attractions = {}) {
       if (place) {
         if (next.metaIcon === 'pin' || !next.meta) {
           if (next.metaIcon === 'pin' && next.meta && !next.area) next.area = next.meta;
-          const timeHere = ((place.hooks || []).find((h) => /time here|duration/i.test(h.label))
-            || (place.facts || []).find((f) => /time here|duration/i.test(f.label))
-            || {}).value;
+          const timeHere = (
+            (place.hooks || []).find((h) => /time here|duration/i.test(h.label)) ||
+            (place.facts || []).find((f) => /time here|duration/i.test(f.label)) ||
+            {}
+          ).value;
           if (timeHere) {
             next.meta = timeHere;
             next.metaIcon = 'clock';
@@ -119,7 +125,9 @@ export function tourDestinations(tourSlug, attractions) {
       name: a.title,
       img: it.img || a.heroBg,
       alt: it.alt || a.title,
-      meta: ((a.hooks || []).find((h) => h.label === 'Area') || (a.facts || []).find((f) => f.label === 'Area') || {}).value || '',
+      meta:
+        ((a.hooks || []).find((h) => h.label === 'Area') || (a.facts || []).find((f) => f.label === 'Area') || {})
+          .value || '',
     });
   });
   return out;

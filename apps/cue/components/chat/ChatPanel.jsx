@@ -12,24 +12,54 @@ import { readThread, startThread, sendToThread, pollThread, setContact } from '@
 import { openChatSocket } from '@/lib/chatSocket';
 import { answerFor } from '@/lib/chatAnswers';
 import {
-  PANEL, SCRIM, HEAD, HEAD_AVATAR, HEAD_STACK, HEAD_TITLE, HEAD_SUB, BODY,
-  BUBBLE_BOT, BUBBLE_ME, ROW, ROW_NAME, ROW_NOTE, ROW_PRICE, LINK, HANDOFF_BTN,
-  CHIPS, CHIP_Q, FOOT, SEND, DOTS, DOT, TYPING_ROW, TYPING_WHO, DOT_LIVE,
-  HANDOFF_FORM, HANDOFF_ROW, NOTE, ALT_LINK, BUBBLE_WAYAN, WHO, CONNECTED,
-  SIGNIN_BAR, SIGNIN_TEXT, SIGNIN_BTN,
+  PANEL,
+  SCRIM,
+  HEAD,
+  HEAD_AVATAR,
+  HEAD_STACK,
+  HEAD_TITLE,
+  HEAD_SUB,
+  BODY,
+  BUBBLE_BOT,
+  BUBBLE_ME,
+  ROW,
+  ROW_NAME,
+  ROW_NOTE,
+  ROW_PRICE,
+  LINK,
+  HANDOFF_BTN,
+  CHIPS,
+  CHIP_Q,
+  FOOT,
+  SEND,
+  DOTS,
+  DOT,
+  TYPING_ROW,
+  TYPING_WHO,
+  DOT_LIVE,
+  HANDOFF_FORM,
+  HANDOFF_ROW,
+  NOTE,
+  ALT_LINK,
+  BUBBLE_WAYAN,
+  WHO,
+  CONNECTED,
+  SIGNIN_BAR,
+  SIGNIN_TEXT,
+  SIGNIN_BTN,
 } from './chatClasses';
 
 const THINK_MS = 400;
 
 let seq = 0;
-function uid() { return `m${(seq += 1)}`; }
+function uid() {
+  return `m${(seq += 1)}`;
+}
 
 export default function ChatPanel({ open, onClose }) {
   const pricing = usePricing();
   const { account, hydrated } = useAccount();
-  const [log, setLog] = useState(() => [
-    { id: uid(), from: 'bot', text: CHAT_COPY.greeting, chips: SUGGESTIONS },
-  ]);
+  const [log, setLog] = useState(() => [{ id: uid(), from: 'bot', text: CHAT_COPY.greeting, chips: SUGGESTIONS }]);
   const [draft, setDraft] = useState('');
   const [thinking, setThinking] = useState(false);
   const bodyRef = useRef(null);
@@ -55,19 +85,18 @@ export default function ChatPanel({ open, onClose }) {
   const ownerHereRef = useRef(false);
   const lastTyped = useRef(0);
 
-  const ctx = useMemo(
-    () => ({ catalog: pricing && pricing.catalog, lookup: pricing && pricing.lookup }),
-    [pricing],
-  );
+  const ctx = useMemo(() => ({ catalog: pricing && pricing.catalog, lookup: pricing && pricing.lookup }), [pricing]);
 
   useEffect(() => {
-    const name = account && String(account.name || '').trim().split(/\s+/)[0];
+    const name =
+      account &&
+      String(account.name || '')
+        .trim()
+        .split(/\s+/)[0];
     if (!name || greeted.current) return;
     greeted.current = true;
     const line = { id: uid(), from: 'bot', text: CHAT_COPY.hello.replace('{name}', name), chips: SUGGESTIONS };
-    setLog((prev) => (
-      prev.length === 1 && prev[0].from === 'bot' ? [line] : [...prev, line]
-    ));
+    setLog((prev) => (prev.length === 1 && prev[0].from === 'bot' ? [line] : [...prev, line]));
   }, [account]);
 
   useEffect(() => {
@@ -97,8 +126,7 @@ export default function ChatPanel({ open, onClose }) {
         return;
       }
       takeOwner(messages);
-    } catch (e) {
-    }
+    } catch (e) {}
   }, [thread, takeOwner]);
 
   useEffect(() => {
@@ -106,12 +134,18 @@ export default function ChatPanel({ open, onClose }) {
     const s = openChatSocket(thread, {
       onOpen: catchUp,
       onLive: setLive,
-      onPresence: (v) => { ownerHereRef.current = v; setOwnerHere(v); },
+      onPresence: (v) => {
+        ownerHereRef.current = v;
+        setOwnerHere(v);
+      },
       onTyping: (durationMs) => setTypingUntil(Date.now() + durationMs),
       onMessage: (m) => takeOwner([m]),
     });
     sock.current = s;
-    return () => { sock.current = null; s.close(); };
+    return () => {
+      sock.current = null;
+      s.close();
+    };
   }, [open, thread, catchUp, takeOwner]);
 
   useEffect(() => {
@@ -123,7 +157,9 @@ export default function ChatPanel({ open, onClose }) {
 
   useEffect(() => {
     if (!open || !thread) return undefined;
-    function onShow() { if (document.visibilityState === 'visible') catchUp(); }
+    function onShow() {
+      if (document.visibilityState === 'visible') catchUp();
+    }
     document.addEventListener('visibilitychange', onShow);
     return () => document.removeEventListener('visibilitychange', onShow);
   }, [open, thread, catchUp]);
@@ -144,63 +180,86 @@ export default function ChatPanel({ open, onClose }) {
   useEffect(() => {
     if (!open) return undefined;
     const t = setTimeout(() => inputRef.current && inputRef.current.focus(), 60);
-    function onKey(e) { if (e.key === 'Escape' && !authOpen) onClose(); }
+    function onKey(e) {
+      if (e.key === 'Escape' && !authOpen) onClose();
+    }
     document.addEventListener('keydown', onKey);
-    return () => { clearTimeout(t); document.removeEventListener('keydown', onKey); };
+    return () => {
+      clearTimeout(t);
+      document.removeEventListener('keydown', onKey);
+    };
   }, [open, onClose, authOpen]);
 
-  const connect = useCallback(async (question) => {
-    if (sending) return;
-    setSending(true);
-    try {
-      const id = await startThread({
-        question,
-        name: (account && account.name) || '',
-        email: (account && account.email) || '',
-        page: typeof window !== 'undefined' ? window.location.pathname : '',
-      });
-      setThread(id);
-      setLog((prev) => [...prev, {
-        id: uid(), from: 'bot',
-        text: `${CHAT_COPY.connected} ${
-          ownerHereRef.current ? CHAT_COPY.hoursHere
-            : wayanIsAround() ? CHAT_COPY.hoursOpen : CHAT_COPY.hoursClosed
-        }`,
-      }]);
-    } catch (e) {
-      setLog((prev) => [...prev, { id: uid(), from: 'bot', text: e.message || 'Could not reach Wayan just now.' }]);
-    }
-    setSending(false);
-  }, [sending, account]);
+  const connect = useCallback(
+    async (question) => {
+      if (sending) return;
+      setSending(true);
+      try {
+        const id = await startThread({
+          question,
+          name: (account && account.name) || '',
+          email: (account && account.email) || '',
+          page: typeof window !== 'undefined' ? window.location.pathname : '',
+        });
+        setThread(id);
+        setLog((prev) => [
+          ...prev,
+          {
+            id: uid(),
+            from: 'bot',
+            text: `${CHAT_COPY.connected} ${
+              ownerHereRef.current ? CHAT_COPY.hoursHere : wayanIsAround() ? CHAT_COPY.hoursOpen : CHAT_COPY.hoursClosed
+            }`,
+          },
+        ]);
+      } catch (e) {
+        setLog((prev) => [...prev, { id: uid(), from: 'bot', text: e.message || 'Could not reach Wayan just now.' }]);
+      }
+      setSending(false);
+    },
+    [sending, account],
+  );
 
-  const ask = useCallback((question) => {
-    const text = String(question || '').trim();
-    if (!text || thinking || sending) return;
-    setDraft('');
-    setLog((prev) => [...prev, { id: uid(), from: 'me', text: text }]);
+  const ask = useCallback(
+    (question) => {
+      const text = String(question || '').trim();
+      if (!text || thinking || sending) return;
+      setDraft('');
+      setLog((prev) => [...prev, { id: uid(), from: 'me', text: text }]);
 
-    if (thread) {
-      sendToThread(thread, text).catch(() => {
-        setLog((prev) => [...prev, { id: uid(), from: 'bot', text: 'That did not send. Try again in a moment.' }]);
-      });
-      return;
-    }
+      if (thread) {
+        sendToThread(thread, text).catch(() => {
+          setLog((prev) => [...prev, { id: uid(), from: 'bot', text: 'That did not send. Try again in a moment.' }]);
+        });
+        return;
+      }
 
-    setThinking(true);
+      setThinking(true);
 
-    setTimeout(() => {
-      const result = answerFor(text, ctx);
-      const msg = { id: uid(), from: 'bot', text: result.text, rows: result.rows, link: result.link };
-      if (result.kind === 'handoff') { msg.text = CHAT_COPY.connecting; connect(text); }
-      setLog((prev) => [...prev, msg]);
-      setThinking(false);
-    }, THINK_MS);
-  }, [ctx, thinking, sending, thread, connect]);
+      setTimeout(() => {
+        const result = answerFor(text, ctx);
+        const msg = { id: uid(), from: 'bot', text: result.text, rows: result.rows, link: result.link };
+        if (result.kind === 'handoff') {
+          msg.text = CHAT_COPY.connecting;
+          connect(text);
+        }
+        setLog((prev) => [...prev, msg]);
+        setThinking(false);
+      }, THINK_MS);
+    },
+    [ctx, thinking, sending, thread, connect],
+  );
 
   useEffect(() => {
     if (!thread || mail !== 'idle') return undefined;
-    if (account && account.email) { setMail('skip'); return undefined; }
-    if (!wayanIsAround()) { setMail('ask'); return undefined; }
+    if (account && account.email) {
+      setMail('skip');
+      return undefined;
+    }
+    if (!wayanIsAround()) {
+      setMail('ask');
+      return undefined;
+    }
     const t = setTimeout(() => setQuiet(true), CHAT_COPY.quietMs);
     return () => clearTimeout(t);
   }, [thread, mail, account]);
@@ -245,12 +304,16 @@ export default function ChatPanel({ open, onClose }) {
         {...(open ? {} : { inert: '' })}
       >
         <div className={HEAD}>
-          <span className={HEAD_AVATAR} aria-hidden="true"><MessageCircle strokeWidth={1.6} /></span>
+          <span className={HEAD_AVATAR} aria-hidden="true">
+            <MessageCircle strokeWidth={1.6} />
+          </span>
           <span className={HEAD_STACK}>
             <span className={HEAD_TITLE}>{CHAT_COPY.title}</span>
             <span className={HEAD_SUB}>{CHAT_COPY.sub}</span>
           </span>
-          <button type="button" className={PANEL_CLOSE} onClick={onClose} aria-label="Close chat">×</button>
+          <button type="button" className={PANEL_CLOSE} onClick={onClose} aria-label="Close chat">
+            ×
+          </button>
         </div>
 
         <div className={BODY} ref={bodyRef}>
@@ -264,7 +327,12 @@ export default function ChatPanel({ open, onClose }) {
           )}
 
           {log.map((m) => {
-            if (m.from === 'me') return <p key={m.id} className={BUBBLE_ME}>{m.text}</p>;
+            if (m.from === 'me')
+              return (
+                <p key={m.id} className={BUBBLE_ME}>
+                  {m.text}
+                </p>
+              );
             if (m.from === 'wayan') {
               return (
                 <p key={m.id} className={BUBBLE_WAYAN}>
@@ -304,14 +372,18 @@ export default function ChatPanel({ open, onClose }) {
 
           {thinking && (
             <span className={DOTS} aria-label="Typing">
-              <i className={DOT} /><i className={DOT} /><i className={DOT} />
+              <i className={DOT} />
+              <i className={DOT} />
+              <i className={DOT} />
             </span>
           )}
 
           {wayanTyping && (
             <span className={TYPING_ROW} data-typing aria-live="polite">
               <small className={TYPING_WHO}>{CHAT_COPY.typing}</small>
-              <i className={DOT_LIVE(0)} /><i className={DOT_LIVE(1)} /><i className={DOT_LIVE(2)} />
+              <i className={DOT_LIVE(0)} />
+              <i className={DOT_LIVE(1)} />
+              <i className={DOT_LIVE(2)} />
             </span>
           )}
         </div>
@@ -325,7 +397,10 @@ export default function ChatPanel({ open, onClose }) {
 
         <form
           className={FOOT}
-          onSubmit={(e) => { e.preventDefault(); ask(draft); }}
+          onSubmit={(e) => {
+            e.preventDefault();
+            ask(draft);
+          }}
         >
           <input
             ref={inputRef}
@@ -336,7 +411,13 @@ export default function ChatPanel({ open, onClose }) {
             aria-label="Your question"
             maxLength={300}
           />
-          <button type="submit" className={SEND} data-cta disabled={!draft.trim() || thinking || sending} aria-label="Send">
+          <button
+            type="submit"
+            className={SEND}
+            data-cta
+            disabled={!draft.trim() || thinking || sending}
+            aria-label="Send"
+          >
             <Send strokeWidth={1.8} aria-hidden="true" />
           </button>
         </form>
@@ -350,24 +431,31 @@ function BotReply({ m, onAsk }) {
     <>
       <p className={BUBBLE_BOT}>{m.text}</p>
 
-      {m.rows && m.rows.map((row) => (
-        <a key={row.label} className={ROW} data-pricerow href={row.href}>
-          <span className={ROW_NAME}>
-            {row.label}
-            {row.note && <small className={ROW_NOTE}>{row.note}</small>}
-          </span>
-          {row.price && <span className={ROW_PRICE}>{row.price}</span>}
-        </a>
-      ))}
+      {m.rows &&
+        m.rows.map((row) => (
+          <a key={row.label} className={ROW} data-pricerow href={row.href}>
+            <span className={ROW_NAME}>
+              {row.label}
+              {row.note && <small className={ROW_NOTE}>{row.note}</small>}
+            </span>
+            {row.price && <span className={ROW_PRICE}>{row.price}</span>}
+          </a>
+        ))}
 
-      {m.link && <a className={LINK} data-cta href={m.link.href}>{m.link.label}</a>}
+      {m.link && (
+        <a className={LINK} data-cta href={m.link.href}>
+          {m.link.label}
+        </a>
+      )}
 
       {m.nudge && <p className={BUBBLE_BOT}>{m.nudge}</p>}
 
       {m.chips && (
         <span className={CHIPS}>
           {m.chips.map((chip) => (
-            <button key={chip} type="button" className={CHIP_Q} data-chip onClick={() => onAsk(chip)}>{chip}</button>
+            <button key={chip} type="button" className={CHIP_Q} data-chip onClick={() => onAsk(chip)}>
+              {chip}
+            </button>
           ))}
         </span>
       )}

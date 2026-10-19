@@ -1,15 +1,22 @@
 'use client';
 
 import {
-  PLAN_PRICE_KICK, PLAN_PRICE_LEAD,
-  PLAN_ROW, PLAN_ROW_PICKED, PLAN_NAME, PLAN_SUB, PLAN_BADGE,
-  PLAN_GRID, PLAN_CELL_NAME, PLAN_CELL_PRICE, PLAN_CELL_SUB,
+  PLAN_PRICE_KICK,
+  PLAN_PRICE_LEAD,
+  PLAN_ROW,
+  PLAN_ROW_PICKED,
+  PLAN_NAME,
+  PLAN_SUB,
+  PLAN_BADGE,
+  PLAN_GRID,
+  PLAN_CELL_NAME,
+  PLAN_CELL_PRICE,
+  PLAN_CELL_SUB,
 } from '@/components/ui/charterPlanClasses';
 import { useTripPrefs } from '@/state/TripPrefsProvider';
 import { usePricing } from '@/state/PricingProvider';
 import { CHARTER } from '@/content/shared/charter';
 import { withSymbol } from '@/components/Price';
-
 
 const FLAG =
   'absolute -top-[9px] left-[14px] px-2 py-[2px] rounded-sm bg-cta text-white ' +
@@ -26,7 +33,9 @@ export function useCharterTier({ area = '' } = {}) {
   const symbol = (catalog && catalog.symbol) || '$';
   const isIdr = currency === 'IDR';
 
-  function fmt(n) { return symbol + n.toLocaleString(isIdr ? 'id-ID' : 'en-US'); }
+  function fmt(n) {
+    return symbol + n.toLocaleString(isIdr ? 'id-ID' : 'en-US');
+  }
   function tier(d) {
     if (!catalog) return null;
     const base = catalog.charters.find((charter) => charter.duration === d);
@@ -56,7 +65,11 @@ export default function CharterPlans({ value, onChange, area = '', heading }) {
               className={`${selected ? PLAN_ROW_PICKED : PLAN_ROW} relative items-start min-[993px]:items-center ${ROW_BTN}`}
               onClick={() => onChange(duration.dur)}
             >
-              {selected && <span className={FLAG} data-plan-flag>Selected</span>}
+              {selected && (
+                <span className={FLAG} data-plan-flag>
+                  Selected
+                </span>
+              )}
               <span className={PLAN_GRID} data-plan-grid>
                 <span className={`${PLAN_CELL_NAME} flex flex-wrap items-center gap-x-[6px]`}>
                   <span className={`${PLAN_NAME} whitespace-nowrap`}>{duration.name}</span>

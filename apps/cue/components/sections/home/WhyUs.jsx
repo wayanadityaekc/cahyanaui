@@ -24,7 +24,9 @@ export default function WhyUs() {
         <div className={CLS.grid}>
           {WHY_US.map((c) => (
             <div className={CLS.col} key={c.title}>
-              <span className={CLS.ic}><c.Icon strokeWidth={1.6} /></span>
+              <span className={CLS.ic}>
+                <c.Icon strokeWidth={1.6} />
+              </span>
               <h3 className={CLS.h3}>{c.title}</h3>
               <p className={CLS.p}>{c.text}</p>
             </div>

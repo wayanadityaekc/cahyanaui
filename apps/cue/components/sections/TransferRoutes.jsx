@@ -12,7 +12,10 @@ const CARD =
 function Face({ r }) {
   return (
     <>
-      <span className="w-[46px] h-[46px] rounded-md bg-cover bg-center shrink-0" style={{ backgroundImage: `url(/assets/images/${r.bg})` }} />
+      <span
+        className="w-[46px] h-[46px] rounded-md bg-cover bg-center shrink-0"
+        style={{ backgroundImage: `url(/assets/images/${r.bg})` }}
+      />
       <span className="flex flex-col">
         <span className="font-semibold text-green text-h3">{r.name}</span>
         <span className="text-muted text-small mt-[0.1rem]">{r.meta}</span>

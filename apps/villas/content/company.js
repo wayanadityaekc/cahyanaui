@@ -1,66 +1,159 @@
 export const ABOUT = [
   { type: 'heading', html: 'Who we are' },
-  { type: 'para', html: 'Cahyana Ubud is a family operation in north Ubud. Cahyana House came first - three bedrooms around a private pool, inside the family compound. Wayan, born and raised here, followed with Cahyana Tibuah out in the rice fields. Both villas are run by PT Cahyana Ubud Experience, the company behind Cahyana Ubud Experience.' },
-  { type: 'para', html: 'Between them the two villas have collected over 300 reviews and a 4.96 average, and both carry Airbnb&rsquo;s Superhost and Guest Favourite badges. We still answer the messages ourselves.' },
+  {
+    type: 'para',
+    html: 'Cahyana Ubud is a family operation in north Ubud. Cahyana House came first - three bedrooms around a private pool, inside the family compound. Wayan, born and raised here, followed with Cahyana Tibuah out in the rice fields. Both villas are run by PT Cahyana Ubud Experience, the company behind Cahyana Ubud Experience.',
+  },
+  {
+    type: 'para',
+    html: 'Between them the two villas have collected over 300 reviews and a 4.96 average, and both carry Airbnb&rsquo;s Superhost and Guest Favourite badges. We still answer the messages ourselves.',
+  },
   { type: 'heading', html: 'How we host' },
-  { type: 'para', html: 'There&rsquo;s no reception and no uniform. At Cahyana House you&rsquo;re welcomed through the family compound; at Tibuah you let yourself in. Either way you get a phone number that answers, usually within the hour.' },
-  { type: 'para', html: 'Breakfast is cooked in your kitchen. Massage comes to your pool. Housekeeping, fresh linens, airport pickup, a scooter if you need one - ask and we&rsquo;ll sort it. If you want a driver for the day, that&rsquo;s us as well: the same team runs Cahyana Ubud Experience.' },
+  {
+    type: 'para',
+    html: 'There&rsquo;s no reception and no uniform. At Cahyana House you&rsquo;re welcomed through the family compound; at Tibuah you let yourself in. Either way you get a phone number that answers, usually within the hour.',
+  },
+  {
+    type: 'para',
+    html: 'Breakfast is cooked in your kitchen. Massage comes to your pool. Housekeeping, fresh linens, airport pickup, a scooter if you need one - ask and we&rsquo;ll sort it. If you want a driver for the day, that&rsquo;s us as well: the same team runs Cahyana Ubud Experience.',
+  },
   { type: 'heading', html: 'Where we&rsquo;re going' },
-  { type: 'para', html: 'Two villas today. The plan is to look after other people&rsquo;s villas the same way - owners in Ubud who want their place hosted properly rather than listed and forgotten. If that&rsquo;s you, get in touch.' },
+  {
+    type: 'para',
+    html: 'Two villas today. The plan is to look after other people&rsquo;s villas the same way - owners in Ubud who want their place hosted properly rather than listed and forgotten. If that&rsquo;s you, get in touch.',
+  },
 ];
 
 export const FAQ = [
   {
     cat: 'The villas',
     items: [
-      ['How many people can each villa sleep?', 'Cahyana House has three bedrooms and sleeps up to six. Cahyana Tibuah has two bedrooms and sleeps up to four. Both are booked as an entire house - you never share with other guests.'],
-      ['Does each villa really have its own pool?', 'Yes. Each house has a private pool used only by the guests staying in it, with the garden around it.'],
-      ['Is there a kitchen?', 'Both villas have a full kitchen, so you can cook for yourself. It is also where breakfast gets made if you order it.'],
-      ['What is the difference between the two?', 'Cahyana House is the larger one, inside the family compound, and suits families or two couples. Cahyana Tibuah is smaller and sits out by the rice fields, which makes it quieter. The villas page compares them side by side.'],
+      [
+        'How many people can each villa sleep?',
+        'Cahyana House has three bedrooms and sleeps up to six. Cahyana Tibuah has two bedrooms and sleeps up to four. Both are booked as an entire house - you never share with other guests.',
+      ],
+      [
+        'Does each villa really have its own pool?',
+        'Yes. Each house has a private pool used only by the guests staying in it, with the garden around it.',
+      ],
+      [
+        'Is there a kitchen?',
+        'Both villas have a full kitchen, so you can cook for yourself. It is also where breakfast gets made if you order it.',
+      ],
+      [
+        'What is the difference between the two?',
+        'Cahyana House is the larger one, inside the family compound, and suits families or two couples. Cahyana Tibuah is smaller and sits out by the rice fields, which makes it quieter. The villas page compares them side by side.',
+      ],
     ],
   },
   {
     cat: 'Booking and payment',
     items: [
-      ['How do I book?', 'Pick your dates on any villa page and add them to your booking. When you are ready, the booking opens a WhatsApp message with your dates, guests and the price already filled in, and we confirm from there.'],
-      ['Is the price on the site what I pay?', 'Yes. The nightly rate is the whole price, with no service fee on top, and the total for your dates is shown before you send anything.'],
-      ['Can I pay in my own currency?', 'Our prices are set in rupiah. The currency picker shows them in 12 currencies at today\'s exchange rate, the same rates Cahyana Ubud Experience uses. The rupiah figure is the exact price, and the amount actually charged is settled in the conversation.'],
-      ['Do you take bookings outside Airbnb?', 'Yes, and booking direct with us is why this site exists. Both villas are also on Airbnb if you would rather book there.'],
-      ['Do I pay a deposit, or the whole thing?', 'The whole thing, when you book. There is no deposit-only option, for a villa or for a scooter. We only have two villas, so a held date that does not turn up costs us the whole booking - paying in full is what keeps the calendar honest.'],
-      ['What if I need to cancel?', 'Cancel 30 days or more before check-in and you get everything back. Between 7 and 30 days, half. Inside 7 days there is no refund. That is the same as the Airbnb "Firm" policy, on purpose - booking direct should not be stricter than booking through the listing.'],
-      ['Can I move my dates instead of cancelling?', 'Usually yes, and it is not treated as a cancellation. If the villa is free on your new dates and you tell us more than 7 days out, we move it at no charge. Inside 7 days it depends on whether we can still fill the original nights - ask and we will tell you straight.'],
-      ['What time is check-in and check-out?', 'Check-in is from 2:00 PM and check-out is by 11:00 AM, Bali time. Earlier or later is sometimes possible - ask, and we will tell you honestly whether the villa is free.'],
+      [
+        'How do I book?',
+        'Pick your dates on any villa page and add them to your booking. When you are ready, the booking opens a WhatsApp message with your dates, guests and the price already filled in, and we confirm from there.',
+      ],
+      [
+        'Is the price on the site what I pay?',
+        'Yes. The nightly rate is the whole price, with no service fee on top, and the total for your dates is shown before you send anything.',
+      ],
+      [
+        'Can I pay in my own currency?',
+        "Our prices are set in rupiah. The currency picker shows them in 12 currencies at today's exchange rate, the same rates Cahyana Ubud Experience uses. The rupiah figure is the exact price, and the amount actually charged is settled in the conversation.",
+      ],
+      [
+        'Do you take bookings outside Airbnb?',
+        'Yes, and booking direct with us is why this site exists. Both villas are also on Airbnb if you would rather book there.',
+      ],
+      [
+        'Do I pay a deposit, or the whole thing?',
+        'The whole thing, when you book. There is no deposit-only option, for a villa or for a scooter. We only have two villas, so a held date that does not turn up costs us the whole booking - paying in full is what keeps the calendar honest.',
+      ],
+      [
+        'What if I need to cancel?',
+        'Cancel 30 days or more before check-in and you get everything back. Between 7 and 30 days, half. Inside 7 days there is no refund. That is the same as the Airbnb "Firm" policy, on purpose - booking direct should not be stricter than booking through the listing.',
+      ],
+      [
+        'Can I move my dates instead of cancelling?',
+        'Usually yes, and it is not treated as a cancellation. If the villa is free on your new dates and you tell us more than 7 days out, we move it at no charge. Inside 7 days it depends on whether we can still fill the original nights - ask and we will tell you straight.',
+      ],
+      [
+        'What time is check-in and check-out?',
+        'Check-in is from 2:00 PM and check-out is by 11:00 AM, Bali time. Earlier or later is sometimes possible - ask, and we will tell you honestly whether the villa is free.',
+      ],
     ],
   },
   {
     cat: 'During your stay',
     items: [
-      ['What time can I check in?', 'Tell us your arrival time in the booking message and we will confirm it. There is no front desk, so somebody meets you - we would rather agree a time than have you waiting at a gate.'],
-      ['Is breakfast included?', 'It is a service you can add, not something bundled into the rate. It is cooked in your own kitchen. The breakfast page has what is on offer.'],
-      ['Can I get a massage at the villa?', 'Yes - the therapist comes to you, poolside or indoors. Ask on the day with some notice. It is for staying guests only.'],
-      ['Can you arrange a driver or airport pickup?', 'Yes. The same family runs Cahyana Ubud Experience, which does airport transfers, day tours and car charter with the prices published up front.'],
-      ['Can I rent a scooter?', 'We can arrange one. Bring a licence that covers you to ride in Indonesia, and wear the helmet - the scooter rental page covers what to expect.'],
+      [
+        'What time can I check in?',
+        'Tell us your arrival time in the booking message and we will confirm it. There is no front desk, so somebody meets you - we would rather agree a time than have you waiting at a gate.',
+      ],
+      [
+        'Is breakfast included?',
+        'It is a service you can add, not something bundled into the rate. It is cooked in your own kitchen. The breakfast page has what is on offer.',
+      ],
+      [
+        'Can I get a massage at the villa?',
+        'Yes - the therapist comes to you, poolside or indoors. Ask on the day with some notice. It is for staying guests only.',
+      ],
+      [
+        'Can you arrange a driver or airport pickup?',
+        'Yes. The same family runs Cahyana Ubud Experience, which does airport transfers, day tours and car charter with the prices published up front.',
+      ],
+      [
+        'Can I rent a scooter?',
+        'We can arrange one. Bring a licence that covers you to ride in Indonesia, and wear the helmet - the scooter rental page covers what to expect.',
+      ],
     ],
   },
   {
     cat: 'Getting here',
     items: [
-      ['Where exactly are the villas?', 'North Ubud, in Gianyar. Ubud Palace, the Monkey Forest and Tegallalang are all around ten minutes away by car.'],
-      ['How far is the airport?', 'Ngurah Rai (DPS) to Ubud is roughly an hour and a half, longer in afternoon traffic. We can have a driver meet you.'],
-      ['Do I need a scooter or car to stay here?', 'Not strictly - but north Ubud is not a walk-everywhere location. Most guests either ride, or have us drive them. There are cafes and warungs within a short walk of both villas.'],
+      [
+        'Where exactly are the villas?',
+        'North Ubud, in Gianyar. Ubud Palace, the Monkey Forest and Tegallalang are all around ten minutes away by car.',
+      ],
+      [
+        'How far is the airport?',
+        'Ngurah Rai (DPS) to Ubud is roughly an hour and a half, longer in afternoon traffic. We can have a driver meet you.',
+      ],
+      [
+        'Do I need a scooter or car to stay here?',
+        'Not strictly - but north Ubud is not a walk-everywhere location. Most guests either ride, or have us drive them. There are cafes and warungs within a short walk of both villas.',
+      ],
     ],
   },
 ];
 
 export const PRIVACY = [
   { type: 'heading', html: 'What this site collects' },
-  { type: 'para', html: 'This site has no tracking pixels. If you create an account or sign in, your name, email and phone number are sent to our booking server, run by PT Cahyana Ubud Experience, so we can keep your account and send you sign-in codes.' },
-  { type: 'para', html: 'The dates, guest count, currency and booking you build are saved in your own browser&rsquo;s local storage so the site remembers them if you come back. That data never leaves your device, and clearing your browser data removes it.' },
+  {
+    type: 'para',
+    html: 'This site has no tracking pixels. If you create an account or sign in, your name, email and phone number are sent to our booking server, run by PT Cahyana Ubud Experience, so we can keep your account and send you sign-in codes.',
+  },
+  {
+    type: 'para',
+    html: 'The dates, guest count, currency and booking you build are saved in your own browser&rsquo;s local storage so the site remembers them if you come back. That data never leaves your device, and clearing your browser data removes it.',
+  },
   { type: 'heading', html: 'What happens when you book' },
-  { type: 'para', html: 'Sending a booking opens WhatsApp with a message already written out - your villa, dates, guests and the total. Nothing is transmitted until you press send in WhatsApp yourself. From that point the conversation is covered by WhatsApp&rsquo;s own privacy terms as well as ours.' },
-  { type: 'para', html: 'What you send us - your name, your phone number and whatever you tell us about your stay - we keep only to arrange and host that stay. We do not sell it, and we do not pass it to anyone who is not part of hosting you.' },
+  {
+    type: 'para',
+    html: 'Sending a booking opens WhatsApp with a message already written out - your villa, dates, guests and the total. Nothing is transmitted until you press send in WhatsApp yourself. From that point the conversation is covered by WhatsApp&rsquo;s own privacy terms as well as ours.',
+  },
+  {
+    type: 'para',
+    html: 'What you send us - your name, your phone number and whatever you tell us about your stay - we keep only to arrange and host that stay. We do not sell it, and we do not pass it to anyone who is not part of hosting you.',
+  },
   { type: 'heading', html: 'Other companies' },
-  { type: 'para', html: 'If you book through Airbnb instead, Airbnb handles your data under its own policy and we see only what it shows a host. If you book a driver or a transfer, that is arranged through Cahyana Ubud Experience, run by the same family.' },
+  {
+    type: 'para',
+    html: 'If you book through Airbnb instead, Airbnb handles your data under its own policy and we see only what it shows a host. If you book a driver or a transfer, that is arranged through Cahyana Ubud Experience, run by the same family.',
+  },
   { type: 'heading', html: 'Asking us about your data' },
-  { type: 'para', html: 'Message us on WhatsApp or email hello@ubudprivatevillas.com and ask what we hold or ask us to delete it. It is a small family operation - you will be talking to the person who has the information.' },
+  {
+    type: 'para',
+    html: 'Message us on WhatsApp or email hello@ubudprivatevillas.com and ask what we hold or ask us to delete it. It is a small family operation - you will be talking to the person who has the information.',
+  },
 ];

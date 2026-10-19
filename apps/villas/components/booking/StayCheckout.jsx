@@ -22,7 +22,10 @@ export default function StayCheckout({ stay = null, open = false, onClose = () =
           open={open}
           onClose={onClose}
           cart={booking}
-          onPaid={(ref) => { onClose(); setWaitingRef(ref); }}
+          onPaid={(ref) => {
+            onClose();
+            setWaitingRef(ref);
+          }}
         />
       )}
       {waitingRef && <PayWaiting bookingRef={waitingRef} onClose={() => setWaitingRef('')} onConfirmed={clear} />}

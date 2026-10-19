@@ -9,7 +9,9 @@ const isFixMode = process.argv.includes('--fix');
 const IGNORED_PATHS = /(^|\/)(node_modules|public|out|\.next)\//;
 
 function listCssFiles() {
-  const output = execFileSync('git', ['ls-files', '--cached', '--others', '--exclude-standard', '*.css'], { encoding: 'utf8' });
+  const output = execFileSync('git', ['ls-files', '--cached', '--others', '--exclude-standard', '*.css'], {
+    encoding: 'utf8',
+  });
   return output.split('\n').filter((file) => file && !IGNORED_PATHS.test(file));
 }
 

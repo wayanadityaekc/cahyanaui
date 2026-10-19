@@ -4,7 +4,9 @@ import { useEffect, useRef, useState } from 'react';
 import { ChevronDown } from 'lucide-react';
 import { cn } from '../lib/cn.js';
 
-function wrap(variant) { return cn('relative', variant === 'navbar' && 'ml-auto flex-none', variant === 'bar' && 'flex-none'); }
+function wrap(variant) {
+  return cn('relative', variant === 'navbar' && 'ml-auto flex-none', variant === 'bar' && 'flex-none');
+}
 
 const BTN_BASE =
   'flex items-center gap-[0.45rem] w-full bg-surface-raised font-body text-field text-green cursor-pointer';
@@ -73,7 +75,9 @@ export default function CurrencyPicker({
     function onDoc(e) {
       if (ref.current && !ref.current.contains(e.target)) setOpen(false);
     }
-    function onKey(e) { if (e.key === 'Escape') setOpen(false); }
+    function onKey(e) {
+      if (e.key === 'Escape') setOpen(false);
+    }
     document.addEventListener('click', onDoc);
     document.addEventListener('keydown', onKey);
     return () => {

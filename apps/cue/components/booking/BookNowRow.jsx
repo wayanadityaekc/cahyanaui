@@ -7,7 +7,8 @@ import { useTripPrefs } from '@/state/TripPrefsProvider';
 import { scrollToBookCard } from './bookScroll';
 
 const KICKER = 'text-[0.6rem] font-medium tracking-[0.12em] uppercase text-muted leading-none';
-const AMOUNT = 'price font-head text-[1.6rem] max-[360px]:text-[1.25rem] font-bold leading-[1.05] tracking-[-0.02em] text-gold';
+const AMOUNT =
+  'price font-head text-[1.6rem] max-[360px]:text-[1.25rem] font-bold leading-[1.05] tracking-[-0.02em] text-gold';
 const UNIT = 'text-small text-muted';
 const CTA =
   `flex-none flex ${BTN_SM} max-[360px]:px-3 bg-cta text-white font-body ` +

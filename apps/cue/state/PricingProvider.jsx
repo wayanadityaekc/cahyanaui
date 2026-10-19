@@ -43,7 +43,8 @@ export function PricingProvider({ children, initialCatalog = null }) {
     const item = catalog.items.find((i) => i.name === name);
     if (item) return item;
     const transfer = catalog.transfers.find((t) => t.route === name);
-    if (transfer) return { name: transfer.route, standard: { display: transfer.display }, exclusive: null, hasExclusive: false };
+    if (transfer)
+      return { name: transfer.route, standard: { display: transfer.display }, exclusive: null, hasExclusive: false };
     return null;
   }
 

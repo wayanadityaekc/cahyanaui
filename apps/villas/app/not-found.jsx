@@ -12,8 +12,12 @@ export default function NotFound() {
       <h1 className="text-h2 font-semibold text-gold">Page not found</h1>
       <p className="mt-3 text-body text-muted">That page does not exist or has moved.</p>
       <div className="mt-6 flex flex-wrap justify-center gap-3">
-        <Button as={Link} href="/">Home</Button>
-        <Button as={Link} variant="ghost" href="/guide/">Ubud guide</Button>
+        <Button as={Link} href="/">
+          Home
+        </Button>
+        <Button as={Link} variant="ghost" href="/guide/">
+          Ubud guide
+        </Button>
       </div>
     </Container>
   );

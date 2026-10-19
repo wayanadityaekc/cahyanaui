@@ -6,7 +6,7 @@ import { API_BASE } from '@/lib/constants';
 
 const CLS = {
   base:
-    "max-w-[1100px] mx-auto mt-0 mb-6 py-9 px-[var(--container-x)] text-center flex flex-wrap items-center justify-center " +
+    'max-w-[1100px] mx-auto mt-0 mb-6 py-9 px-[var(--container-x)] text-center flex flex-wrap items-center justify-center ' +
     'gap-y-8 gap-x-[4.5rem] before:content-none',
   stat: 'basis-full grow-0 shrink-0 m-0 text-[1rem] text-green',
   statStrong: 'text-gold text-h2 font-semibold',
@@ -47,17 +47,58 @@ export default function Trust({ showStat = true, showSocials = false, cream = fa
       <div className={CLS.group}>
         <p className={CLS.label}>Featured On</p>
         <div className={CLS.logos}>
-          <img className={CLS.logoImg} src="/assets/images/viator.webp" alt="Viator" width="245" height="256" loading="lazy" />
-          <img className={CLS.logoImg} src="/assets/images/tripadvisor.webp" alt="Tripadvisor" width="280" height="176" loading="lazy" />
+          <img
+            className={CLS.logoImg}
+            src="/assets/images/viator.webp"
+            alt="Viator"
+            width="245"
+            height="256"
+            loading="lazy"
+          />
+          <img
+            className={CLS.logoImg}
+            src="/assets/images/tripadvisor.webp"
+            alt="Tripadvisor"
+            width="280"
+            height="176"
+            loading="lazy"
+          />
         </div>
       </div>
       {showSocials && (
         <div className={CLS.group}>
           <p className={CLS.label}>Follow Us</p>
           <div className={CLS.socials}>
-            <a className={CLS.socialLink} href="#" aria-label="Instagram"><img className={CLS.socialImg} src="/assets/images/instagram-transparent.webp" alt="Instagram" width="256" height="256" loading="lazy" /></a>
-            <a className={CLS.socialLink} href="#" aria-label="WhatsApp"><img className={CLS.socialImg} src="/assets/images/whatsapp.webp" alt="WhatsApp" width="256" height="256" loading="lazy" /></a>
-            <a className={CLS.socialLink} href="#" aria-label="Facebook"><img className={CLS.socialImg} src="/assets/images/facebook.webp" alt="Facebook" width="256" height="256" loading="lazy" /></a>
+            <a className={CLS.socialLink} href="#" aria-label="Instagram">
+              <img
+                className={CLS.socialImg}
+                src="/assets/images/instagram-transparent.webp"
+                alt="Instagram"
+                width="256"
+                height="256"
+                loading="lazy"
+              />
+            </a>
+            <a className={CLS.socialLink} href="#" aria-label="WhatsApp">
+              <img
+                className={CLS.socialImg}
+                src="/assets/images/whatsapp.webp"
+                alt="WhatsApp"
+                width="256"
+                height="256"
+                loading="lazy"
+              />
+            </a>
+            <a className={CLS.socialLink} href="#" aria-label="Facebook">
+              <img
+                className={CLS.socialImg}
+                src="/assets/images/facebook.webp"
+                alt="Facebook"
+                width="256"
+                height="256"
+                loading="lazy"
+              />
+            </a>
           </div>
         </div>
       )}

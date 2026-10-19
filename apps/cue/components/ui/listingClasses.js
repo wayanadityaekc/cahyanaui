@@ -1,4 +1,3 @@
-
 export const CATSEC =
   'relative max-w-[calc(var(--container)-2*var(--container-x))] mx-auto pt-[var(--space-5)] pb-[var(--space-2)] text-left scroll-mt-[120px]';
 

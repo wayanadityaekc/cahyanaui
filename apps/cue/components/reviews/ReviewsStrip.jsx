@@ -12,7 +12,11 @@ import { groupReviews } from '@/lib/groupReviews';
 const GRID = 'grid grid-cols-3 max-[768px]:grid-cols-1 gap-5 max-w-[1100px] mx-auto mt-6';
 
 export default function ReviewsStrip({
-  service, group, emptyText, showEmpty = true, emptyCta = false,
+  service,
+  group,
+  emptyText,
+  showEmpty = true,
+  emptyCta = false,
   variant = 'slider',
   limit,
 }) {
@@ -21,8 +25,11 @@ export default function ReviewsStrip({
 
   useEffect(() => {
     let cancelled = false;
-    const query = group ? `?group=${encodeURIComponent(group)}`
-      : (service ? `?service=${encodeURIComponent(service)}` : "");
+    const query = group
+      ? `?group=${encodeURIComponent(group)}`
+      : service
+        ? `?service=${encodeURIComponent(service)}`
+        : '';
     const url = `${API_BASE}/reviews${query}`;
     async function load() {
       try {
@@ -54,16 +61,16 @@ export default function ReviewsStrip({
     );
   }
 
-  const cards = list.map((r, i) => (
-    <ReviewCard key={i} {...r} onClick={() => setSelected(r)} />
-  ));
+  const cards = list.map((r, i) => <ReviewCard key={i} {...r} onClick={() => setSelected(r)} />);
 
   return (
     <>
       {variant === 'slider' ? (
         <Slider gridClassName={GRID_REVIEWS}>{cards}</Slider>
       ) : (
-        <div className={GRID} data-reviews-track>{cards}</div>
+        <div className={GRID} data-reviews-track>
+          {cards}
+        </div>
       )}
       <ReviewDetailModal review={selected} onClose={() => setSelected(null)} />
     </>

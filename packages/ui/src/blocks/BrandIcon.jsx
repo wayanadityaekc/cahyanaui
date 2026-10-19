@@ -10,7 +10,18 @@ const PATHS = {
   Booking: (
     <>
       <rect x="3" y="3" width="18" height="18" rx="4" />
-      <text x="12" y="17.2" textAnchor="middle" fontSize="14" fontWeight="700" fontFamily="Inter, sans-serif" fill="#fff" stroke="none">B</text>
+      <text
+        x="12"
+        y="17.2"
+        textAnchor="middle"
+        fontSize="14"
+        fontWeight="700"
+        fontFamily="Inter, sans-serif"
+        fill="#fff"
+        stroke="none"
+      >
+        B
+      </text>
     </>
   ),
   Instagram: (
@@ -24,8 +35,14 @@ const PATHS = {
   Facebook: <path d="M14 9h2V6h-2c-1.7 0-3 1.3-3 3v2H9v3h2v6h3v-6h2.2l.8-3H14V9.6c0-.3.3-.6.6-.6H16" />,
   PayPal: (
     <>
-      <path fill="#003087" d="M7.3 21.4H3.9a.5.5 0 0 1-.5-.6L6.2 3a.7.7 0 0 1 .7-.6h6.4c3.4 0 5.4 1.7 4.9 4.9-.6 3.7-3.1 5.5-6.7 5.5H9.6a.7.7 0 0 0-.7.6z" />
-      <path fill="#009cde" d="M18.9 7.7c.6.8.8 1.9.6 3.3-.6 3.6-3 5.3-6.4 5.3h-1.4a.7.7 0 0 0-.7.6l-.8 4.8a.5.5 0 0 1-.5.4H7.3l.3-1.6 1.3-8.1a.7.7 0 0 1 .7-.6h1.9c3.6 0 6.1-1.8 6.7-5.5l.1-.7c.3.6.5 1.3.6 2.1z" />
+      <path
+        fill="#003087"
+        d="M7.3 21.4H3.9a.5.5 0 0 1-.5-.6L6.2 3a.7.7 0 0 1 .7-.6h6.4c3.4 0 5.4 1.7 4.9 4.9-.6 3.7-3.1 5.5-6.7 5.5H9.6a.7.7 0 0 0-.7.6z"
+      />
+      <path
+        fill="#009cde"
+        d="M18.9 7.7c.6.8.8 1.9.6 3.3-.6 3.6-3 5.3-6.4 5.3h-1.4a.7.7 0 0 0-.7.6l-.8 4.8a.5.5 0 0 1-.5.4H7.3l.3-1.6 1.3-8.1a.7.7 0 0 1 .7-.6h1.9c3.6 0 6.1-1.8 6.7-5.5l.1-.7c.3.6.5 1.3.6 2.1z"
+      />
     </>
   ),
 };

@@ -1,7 +1,6 @@
 import { cn } from '../lib/cn.js';
 import { BTN_SM } from '../primitives/btnClasses.js';
 
-
 const SCRIM =
   'absolute inset-0 [background:linear-gradient(to_top,rgba(34,32,28,0.93)_0%,rgba(34,32,28,0.86)_22%,rgba(34,32,28,0.55)_44%,rgba(34,32,28,0.10)_70%,rgba(34,32,28,0.34)_100%)]';
 
@@ -37,7 +36,12 @@ export default function VillaCard({
   className,
 }) {
   return (
-    <div className={cn('group relative isolate overflow-hidden bg-gold min-h-[27rem] min-[560px]:min-h-[30rem]', className)}>
+    <div
+      className={cn(
+        'group relative isolate overflow-hidden bg-gold min-h-[27rem] min-[560px]:min-h-[30rem]',
+        className,
+      )}
+    >
       <img
         src={villa.cardImg}
         alt={`${villa.name} private pool and garden`}
@@ -105,19 +109,24 @@ export default function VillaCard({
                 >
                   {f.icon}
                   <span className="leading-[1.25]">
-                    {f.short ? (
-                      <span className="block whitespace-nowrap min-[560px]:hidden">{f.short}</span>
-                    ) : null}
-                    <span className={f.short ? 'max-[559px]:hidden' : undefined} aria-hidden={f.short ? 'true' : undefined}>
+                    {f.short ? <span className="block whitespace-nowrap min-[560px]:hidden">{f.short}</span> : null}
+                    <span
+                      className={f.short ? 'max-[559px]:hidden' : undefined}
+                      aria-hidden={f.short ? 'true' : undefined}
+                    >
                       {(f.lines || [f.label]).map((l) => (
-                        <span key={l} className="block whitespace-nowrap">{l}</span>
+                        <span key={l} className="block whitespace-nowrap">
+                          {l}
+                        </span>
                       ))}
                     </span>
                   </span>
                 </li>
               ))}
             </ul>
-          ) : <span />}
+          ) : (
+            <span />
+          )}
 
           <div className="flex items-center justify-between gap-4 min-[560px]:flex-col min-[560px]:items-end min-[560px]:gap-3">
             {price ? (
@@ -126,9 +135,16 @@ export default function VillaCard({
                 <span className="font-semibold text-[1.75rem] text-amber">{price}</span>
                 <span className="ml-1.5 text-small text-white/80">{unit}</span>
               </p>
-            ) : <span />}
+            ) : (
+              <span />
+            )}
 
-            <Link href={href || `/villas/${villa.slug}`} className={cn(CTA, 'pointer-events-auto')} tabIndex={-1} aria-hidden="true">
+            <Link
+              href={href || `/villas/${villa.slug}`}
+              className={cn(CTA, 'pointer-events-auto')}
+              tabIndex={-1}
+              aria-hidden="true"
+            >
               {cta}
               {ctaIcon}
             </Link>

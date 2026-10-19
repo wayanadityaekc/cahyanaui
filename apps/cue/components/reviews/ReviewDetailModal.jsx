@@ -32,7 +32,9 @@ export default function ReviewDetailModal({ review, onClose }) {
           {r.services && r.services.length > 1 ? r.services.join(' · ') : r.service}
         </div>
       )}
-      <div className="mb-3 text-amber tracking-[2px]" aria-label={`${n} out of 5`}>{stars}</div>
+      <div className="mb-3 text-amber tracking-[2px]" aria-label={`${n} out of 5`}>
+        {stars}
+      </div>
       <p className="m-0 text-body text-green leading-[var(--lh-body)] whitespace-pre-line">{r.message}</p>
     </Modal>
   );

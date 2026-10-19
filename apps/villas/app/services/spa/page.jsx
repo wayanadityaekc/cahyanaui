@@ -5,7 +5,8 @@ import { breadcrumbList, serviceCrumbs } from '@/lib/schema';
 
 export const metadata = pageMeta({
   title: 'In-Villa Spa & Massage in Ubud',
-  description: 'Balinese massage, aromatherapy, couples treatments and flower baths, delivered to your private villa in Ubud. Prices upfront.',
+  description:
+    'Balinese massage, aromatherapy, couples treatments and flower baths, delivered to your private villa in Ubud. Prices upfront.',
   path: '/services/spa/',
 });
 
@@ -45,7 +46,12 @@ export default function SpaPage() {
         ]}
         aside={{
           title: 'Spa at your villa',
-          facts: ['Therapist comes to you', 'Poolside or indoors', 'Book on the day, with notice', 'For staying guests'],
+          facts: [
+            'Therapist comes to you',
+            'Poolside or indoors',
+            'Book on the day, with notice',
+            'For staying guests',
+          ],
           ctaLabel: 'Book massage',
           otherServices: [
             { href: '/services/breakfast', label: 'Breakfast' },

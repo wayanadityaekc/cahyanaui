@@ -14,28 +14,26 @@ export function SavedVillasProvider({ children }) {
       const raw = window.localStorage.getItem(KEY);
       const parsed = raw ? JSON.parse(raw) : null;
       if (Array.isArray(parsed)) setSlugs(parsed.filter((entry) => typeof entry === 'string'));
-    } catch (e) {
-    }
+    } catch (e) {}
   }, []);
 
   function write(next) {
     setSlugs(next);
     try {
       window.localStorage.setItem(KEY, JSON.stringify(next));
-    } catch (e) {
-    }
+    } catch (e) {}
   }
 
-  function isSaved(slug) { return slugs.includes(slug); }
+  function isSaved(slug) {
+    return slugs.includes(slug);
+  }
 
   function toggleSave(slug) {
     if (!slug) return;
     write(slugs.includes(slug) ? slugs.filter((savedSlug) => savedSlug !== slug) : [...slugs, slug]);
   }
 
-  return (
-    <SavedContext.Provider value={{ slugs, isSaved, toggleSave }}>{children}</SavedContext.Provider>
-  );
+  return <SavedContext.Provider value={{ slugs, isSaved, toggleSave }}>{children}</SavedContext.Provider>;
 }
 
 export function useSavedVillas() {

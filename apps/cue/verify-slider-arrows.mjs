@@ -2,11 +2,26 @@ import { chromium } from 'playwright-core';
 
 const SITE = process.env.BASE || 'http://127.0.0.1:4000';
 function review(i) {
-  return ({ name: `Guest ${i}`, country: 'Spain', rating: 5, message: `Review ${i}, on time and friendly.`, service: 'Ubud Tour', source: 'cahyana', created_at: `2026-09-${10 + i}` });
+  return {
+    name: `Guest ${i}`,
+    country: 'Spain',
+    rating: 5,
+    message: `Review ${i}, on time and friendly.`,
+    service: 'Ubud Tour',
+    source: 'cahyana',
+    created_at: `2026-09-${10 + i}`,
+  };
 }
 
-let pass = 0, fail = 0;
-function ok(cond, msg) { if (cond) pass++; else { fail++; process.stdout.write(`FAIL ${msg}\n`); } }
+let pass = 0,
+  fail = 0;
+function ok(cond, msg) {
+  if (cond) pass++;
+  else {
+    fail++;
+    process.stdout.write(`FAIL ${msg}\n`);
+  }
+}
 
 const browser = await chromium.launch({ executablePath: '/opt/pw-browsers/chromium-1194/chrome-linux/chrome' });
 
@@ -15,7 +30,8 @@ async function open(path, w, count) {
   await ctx.route('**/api/**', (r) => {
     const u = new URL(r.request().url());
     if (u.pathname.endsWith('/reviews/summary')) return r.fulfill({ json: [] });
-    if (u.pathname.endsWith('/reviews')) return r.fulfill({ json: Array.from({ length: count }, (_, i) => review(i + 1)) });
+    if (u.pathname.endsWith('/reviews'))
+      return r.fulfill({ json: Array.from({ length: count }, (_, i) => review(i + 1)) });
     return r.fulfill({ status: 503, body: '{}' });
   });
   await ctx.routeWebSocket(/.*/, (ws) => ws.close());
@@ -36,11 +52,12 @@ async function arrows(page, sel) {
     const t = document.querySelector(s);
     const holder = t.parentElement;
     function shown(label) {
-  return ([...holder.querySelectorAll(`:scope > button[aria-label="${label}"]`)].some((b) => {
-      const cs = getComputedStyle(b); const r = b.getBoundingClientRect();
-      return cs.display !== 'none' && cs.visibility !== 'hidden' && +cs.opacity > 0.5 && r.width > 0;
-    }));
-}
+      return [...holder.querySelectorAll(`:scope > button[aria-label="${label}"]`)].some((b) => {
+        const cs = getComputedStyle(b);
+        const r = b.getBoundingClientRect();
+        return cs.display !== 'none' && cs.visibility !== 'hidden' && +cs.opacity > 0.5 && r.width > 0;
+      });
+    }
     return {
       canPrev: t.scrollLeft > 4,
       canNext: t.scrollLeft + t.clientWidth < t.scrollWidth - 4,
@@ -50,14 +67,20 @@ async function arrows(page, sel) {
   }, sel);
 }
 
-for (const [path, sel] of [['/', '#reviews [class*="overflow-x-auto"]'], ['/ubud-tour.html', '#dsec-reviews [class*="overflow-x-auto"]']]) {
+for (const [path, sel] of [
+  ['/', '#reviews [class*="overflow-x-auto"]'],
+  ['/ubud-tour.html', '#dsec-reviews [class*="overflow-x-auto"]'],
+]) {
   for (const count of [2, 8]) {
     const { ctx, page, errors } = await open(path, 1280, count);
     const a = await arrows(page, sel);
     ok(a.prev === a.canPrev, `${path} ${count} reviews: Previous shown=${a.prev} but can scroll back=${a.canPrev}`);
     ok(a.next === a.canNext, `${path} ${count} reviews: Next shown=${a.next} but can scroll on=${a.canNext}`);
     if (count === 8) {
-      await page.evaluate((s) => { const t = document.querySelector(s); t.scrollLeft = t.scrollWidth; }, sel);
+      await page.evaluate((s) => {
+        const t = document.querySelector(s);
+        t.scrollLeft = t.scrollWidth;
+      }, sel);
       await page.waitForTimeout(500);
       const end = await arrows(page, sel);
       ok(!end.next && end.prev, `${path} at the end: next=${end.next} prev=${end.prev}`);
@@ -71,7 +94,10 @@ for (const path of ['/', '/ubud-tour.html', '/attractions/atv-ride.html']) {
   const { ctx, page, errors } = await open(path, 1280, 8);
   const n = await page.evaluate(() => {
     let k = 0;
-    document.querySelectorAll('.group.relative').forEach((h) => { const t = [...h.children].find((c) => c.tagName === 'DIV' && /overflow-x-auto/.test(c.className)); if (t) t.setAttribute('data-sweep', String(k++)); });
+    document.querySelectorAll('.group.relative').forEach((h) => {
+      const t = [...h.children].find((c) => c.tagName === 'DIV' && /overflow-x-auto/.test(c.className));
+      if (t) t.setAttribute('data-sweep', String(k++));
+    });
     return document.querySelectorAll('[data-sweep]').length;
   });
   ok(n > 0, `${path}: no sliders found`);
@@ -98,8 +124,11 @@ for (const path of ['/', '/ubud-tour.html', '/attractions/atv-ride.html']) {
 
 {
   const { ctx, page } = await open('/', 390, 8);
-  const shown = await page.evaluate(() => [...document.querySelectorAll('button[aria-label="Next"], button[aria-label="Previous"]')]
-    .some((b) => getComputedStyle(b).display !== 'none' && b.getBoundingClientRect().width > 0));
+  const shown = await page.evaluate(() =>
+    [...document.querySelectorAll('button[aria-label="Next"], button[aria-label="Previous"]')].some(
+      (b) => getComputedStyle(b).display !== 'none' && b.getBoundingClientRect().width > 0,
+    ),
+  );
   ok(!shown, '390: an arrow is displayed on a phone');
   await ctx.close();
 }

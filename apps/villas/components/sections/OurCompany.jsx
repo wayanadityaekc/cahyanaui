@@ -32,7 +32,6 @@ const HEADING = 'font-head text-h2 font-bold text-gold mb-4';
 const FAQ_CARD = 'mb-3 border border-line p-4';
 const FAQ_Q = 'font-body text-[1rem] font-semibold text-green cursor-pointer';
 
-
 const CONTACT_H = 'flex items-center gap-2 text-h3 font-semibold text-gold';
 const CONTACT_IC = 'w-[var(--icon-sm)] h-[var(--icon-sm)] shrink-0 text-gold';
 
@@ -43,19 +42,40 @@ function ContactBody() {
       <p>One family, two villas, and the person who answers is the person who hosts you.</p>
       <div className="grid sm:grid-cols-3 gap-5 mt-6">
         <Card className="p-6">
-          <h2 className={CONTACT_H}><MessageCircle className={CONTACT_IC} strokeWidth={1.8} aria-hidden="true" />WhatsApp</h2>
-          <p className="text-small text-muted my-3">Fastest way to reach us. Dates, questions, or a photo of the road if you&rsquo;re lost.</p>
-          <Button as="a" href={WHATSAPP_LINK} target="_blank" rel="noopener">Message us</Button>
+          <h2 className={CONTACT_H}>
+            <MessageCircle className={CONTACT_IC} strokeWidth={1.8} aria-hidden="true" />
+            WhatsApp
+          </h2>
+          <p className="text-small text-muted my-3">
+            Fastest way to reach us. Dates, questions, or a photo of the road if you&rsquo;re lost.
+          </p>
+          <Button as="a" href={WHATSAPP_LINK} target="_blank" rel="noopener">
+            Message us
+          </Button>
         </Card>
         <Card className="p-6">
-          <h2 className={CONTACT_H}><Mail className={CONTACT_IC} strokeWidth={1.8} aria-hidden="true" />Email</h2>
-          <p className="text-small text-muted my-3">Longer questions, long stays, or if you own a villa and want it managed.</p>
-          <Button as="a" variant="ghost" href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</Button>
+          <h2 className={CONTACT_H}>
+            <Mail className={CONTACT_IC} strokeWidth={1.8} aria-hidden="true" />
+            Email
+          </h2>
+          <p className="text-small text-muted my-3">
+            Longer questions, long stays, or if you own a villa and want it managed.
+          </p>
+          <Button as="a" variant="ghost" href={`mailto:${CONTACT_EMAIL}`}>
+            {CONTACT_EMAIL}
+          </Button>
         </Card>
         <Card className="p-6">
-          <h2 className={CONTACT_H}><MapPin className={CONTACT_IC} strokeWidth={1.8} aria-hidden="true" />Where we are</h2>
-          <p className="text-small text-muted my-3">North Ubud, Gianyar, Bali. Ten minutes from Ubud Palace, Monkey Forest and Tegallalang.</p>
-          <Button as="a" variant="ghost" href={CUE_LINK} target="_blank" rel="noopener">Arrange a transfer</Button>
+          <h2 className={CONTACT_H}>
+            <MapPin className={CONTACT_IC} strokeWidth={1.8} aria-hidden="true" />
+            Where we are
+          </h2>
+          <p className="text-small text-muted my-3">
+            North Ubud, Gianyar, Bali. Ten minutes from Ubud Palace, Monkey Forest and Tegallalang.
+          </p>
+          <Button as="a" variant="ghost" href={CUE_LINK} target="_blank" rel="noopener">
+            Arrange a transfer
+          </Button>
         </Card>
       </div>
     </div>
@@ -74,7 +94,9 @@ function FAQBody() {
           {group.items.map(([question, answer], i) => (
             <details className={FAQ_CARD} key={i} name="faq">
               <summary className={FAQ_Q}>{question}</summary>
-              <div className="mt-2 [&_p]:text-body [&_p]:leading-[var(--lh-body)]"><p>{answer}</p></div>
+              <div className="mt-2 [&_p]:text-body [&_p]:leading-[var(--lh-body)]">
+                <p>{answer}</p>
+              </div>
             </details>
           ))}
         </div>
@@ -142,7 +164,10 @@ export default function OurCompany() {
                 key={item.id}
                 type="button"
                 aria-current={tab === item.id || undefined}
-                onClick={() => { goTo(item.id); close(); }}
+                onClick={() => {
+                  goTo(item.id);
+                  close();
+                }}
                 className={`p-0 bg-transparent border-none cursor-pointer ${CAT_ITEM_TAP(tab === item.id)}`}
               >
                 {item.label}

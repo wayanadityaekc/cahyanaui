@@ -32,7 +32,11 @@ export default function Price({ name, mode = 'standard', fallback, className = `
   const item = ctx && ctx.lookup ? ctx.lookup(name) : null;
 
   if (!item) {
-    return <Tag className={className} data-price={name}>{fallback ? withSymbol(fallback) : fallback}</Tag>;
+    return (
+      <Tag className={className} data-price={name}>
+        {fallback ? withSymbol(fallback) : fallback}
+      </Tag>
+    );
   }
 
   const band = mode === 'exclusive' && item.exclusive ? item.exclusive : item.standard;
@@ -53,7 +57,8 @@ export default function Price({ name, mode = 'standard', fallback, className = `
           {isIdr ? withDeemphasizedThousands(wasNum) : wasNum}
         </span>
       )}
-      <span className={`${PRICE_SYM} price__sym`}>{symbol}</span>{isIdr ? withDeemphasizedThousands(num) : num}
+      <span className={`${PRICE_SYM} price__sym`}>{symbol}</span>
+      {isIdr ? withDeemphasizedThousands(num) : num}
     </Tag>
   );
 }

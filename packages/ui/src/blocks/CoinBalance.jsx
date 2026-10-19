@@ -22,7 +22,11 @@ export default function CoinBalance({ lead = '', countText = '', notes = [], var
       <div className="min-w-0">
         {lead ? <p className={LEAD}>{lead}</p> : null}
         <p className={COUNT}>{countText}</p>
-        {notes.filter(Boolean).map((note) => <p key={note} className={NOTE}>{note}</p>)}
+        {notes.filter(Boolean).map((note) => (
+          <p key={note} className={NOTE}>
+            {note}
+          </p>
+        ))}
       </div>
     </div>
   );

@@ -14,7 +14,9 @@ export function ReferralProvider({ children }) {
   }, []);
 
   async function apply(code) {
-    const clean = String(code || '').trim().toUpperCase();
+    const clean = String(code || '')
+      .trim()
+      .toUpperCase();
     if (!clean) return 0;
     try {
       const response = await fetch(`${API_BASE}/referral/validate`, {

@@ -3,10 +3,27 @@
 import { useEffect, useState } from 'react';
 import { ChevronRight, ChevronLeft, PanelLeft } from 'lucide-react';
 import {
-  RAIL_FRAME, RAIL_FRAME_SCROLL, RAIL_ASIDE, RAIL_ASIDE_COLLAPSED, RAIL_STICK, RAIL_STICK_COLLAPSED,
-  RAIL_LABEL, railItem, RAIL_SPLIT, RAIL_MAIN, RAIL_MAIN_SCROLL, RAIL_SCROLL_BODY,
-  RAIL_MLIST, RAIL_MLABEL, railMobileItem, RAIL_MCHEV, RAIL_BACK,
-  RAIL_HEADER, RAIL_HEADER_PAD, RAIL_TRIGGER, RAIL_HEADER_SEP,
+  RAIL_FRAME,
+  RAIL_FRAME_SCROLL,
+  RAIL_ASIDE,
+  RAIL_ASIDE_COLLAPSED,
+  RAIL_STICK,
+  RAIL_STICK_COLLAPSED,
+  RAIL_LABEL,
+  railItem,
+  RAIL_SPLIT,
+  RAIL_MAIN,
+  RAIL_MAIN_SCROLL,
+  RAIL_SCROLL_BODY,
+  RAIL_MLIST,
+  RAIL_MLABEL,
+  railMobileItem,
+  RAIL_MCHEV,
+  RAIL_BACK,
+  RAIL_HEADER,
+  RAIL_HEADER_PAD,
+  RAIL_TRIGGER,
+  RAIL_HEADER_SEP,
 } from './railClasses.js';
 
 export default function RailLayout({
@@ -34,13 +51,17 @@ export default function RailLayout({
   const collapsed = collapsedProp ?? ownCollapsed;
   useEffect(() => {
     if (!storageKey) return;
-    try { setOwnCollapsed(window.localStorage.getItem(storageKey) === '1'); } catch (e) {   }
+    try {
+      setOwnCollapsed(window.localStorage.getItem(storageKey) === '1');
+    } catch (e) {}
   }, [storageKey]);
   function toggleCollapsed() {
     const next = !collapsed;
     if (collapsedProp === undefined) setOwnCollapsed(next);
     if (storageKey) {
-      try { window.localStorage.setItem(storageKey, next ? '1' : '0'); } catch (e) {   }
+      try {
+        window.localStorage.setItem(storageKey, next ? '1' : '0');
+      } catch (e) {}
     }
     if (onCollapsedChange) onCollapsedChange(next);
   }
@@ -62,9 +83,17 @@ export default function RailLayout({
         <div key={t.id} className="contents">
           {t.split && <span className={RAIL_SPLIT} aria-hidden="true" />}
           {t.href ? (
-            <LinkAs href={t.href} className={cls} aria-current={selected ? 'page' : undefined} {...a11y}>{inner}</LinkAs>
+            <LinkAs href={t.href} className={cls} aria-current={selected ? 'page' : undefined} {...a11y}>
+              {inner}
+            </LinkAs>
           ) : (
-            <button type="button" aria-current={selected ? 'true' : undefined} onClick={() => onSelect(t.id)} className={cls} {...a11y}>
+            <button
+              type="button"
+              aria-current={selected ? 'true' : undefined}
+              onClick={() => onSelect(t.id)}
+              className={cls}
+              {...a11y}
+            >
               {inner}
             </button>
           )}
@@ -78,7 +107,9 @@ export default function RailLayout({
       <aside className={railCollapsed ? RAIL_ASIDE_COLLAPSED : RAIL_ASIDE} aria-label={label}>
         <div className={railCollapsed ? RAIL_STICK_COLLAPSED : RAIL_STICK}>
           {!railCollapsed && <p className={RAIL_LABEL}>{label}</p>}
-          <nav className="flex flex-col" aria-label={label}>{rows(false)}</nav>
+          <nav className="flex flex-col" aria-label={label}>
+            {rows(false)}
+          </nav>
           {!railCollapsed && help}
         </div>
       </aside>
@@ -91,7 +122,10 @@ export default function RailLayout({
         </div>
       )}
 
-      <Content data-rail-content className={`${scrollContent ? RAIL_MAIN_SCROLL : mainClass} ${mobileNav || reading ? '' : 'max-[992px]:hidden'}`}>
+      <Content
+        data-rail-content
+        className={`${scrollContent ? RAIL_MAIN_SCROLL : mainClass} ${mobileNav || reading ? '' : 'max-[992px]:hidden'}`}
+      >
         {(collapsible || breadcrumb) && (
           <div className={scrollContent ? `${RAIL_HEADER} ${RAIL_HEADER_PAD}` : RAIL_HEADER}>
             {collapsible && (

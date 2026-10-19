@@ -18,7 +18,14 @@ export default function GuideMore({ block }) {
           : b.cards.map((card, i) => (
               <a className={`${CARD_FRAME} flex flex-col`} href={card.href} key={i}>
                 <div className={CARD_IMAGE}>
-                  <img className={CARD_IMG} src={`/assets/images/${card.img}`} alt={card.alt} loading="lazy" width={card.w} height={card.hgt} />
+                  <img
+                    className={CARD_IMG}
+                    src={`/assets/images/${card.img}`}
+                    alt={card.alt}
+                    loading="lazy"
+                    width={card.w}
+                    height={card.hgt}
+                  />
                 </div>
                 <div className="flex flex-col grow p-4">
                   <span className="text-label font-medium tracking-[0.14em] uppercase text-muted">{card.tag}</span>

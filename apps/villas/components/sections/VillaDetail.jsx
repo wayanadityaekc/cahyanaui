@@ -10,7 +10,26 @@ import StaySummary from '@/components/booking/StaySummary';
 import StayCheckout from '@/components/booking/StayCheckout';
 import useVillaAvailability from '@/components/booking/useVillaAvailability';
 import Select from '@/components/ui/Select';
-import { BookingPanel, Button, CAPS, Card, Container, DateRangeField, EYEBROW_LINE, LinkList, PROSE_COPY, PriceBlock, SECONDARY_BTN, STARS, Section, StickyBar, useRevealWhenAway, SourceMark, stayIsOpen, stayLimits } from '@cahyana/ui';
+import {
+  BookingPanel,
+  Button,
+  CAPS,
+  Card,
+  Container,
+  DateRangeField,
+  EYEBROW_LINE,
+  LinkList,
+  PROSE_COPY,
+  PriceBlock,
+  SECONDARY_BTN,
+  STARS,
+  Section,
+  StickyBar,
+  useRevealWhenAway,
+  SourceMark,
+  stayIsOpen,
+  stayLimits,
+} from '@cahyana/ui';
 import { useCurrency } from '@/components/providers/CurrencyProvider';
 import { useCart } from '@/components/providers/CartProvider';
 import { useTripPrefs } from '@/components/providers/TripPrefsProvider';
@@ -46,10 +65,16 @@ export default function VillaDetail({ villa }) {
   const stay = ready ? { villaSlug: villa.slug, checkIn, checkOut, guests } : null;
   const askMessage = `Hi! I'd like to book ${villa.name}${checkIn && checkOut ? ` from ${checkIn} to ${checkOut}` : ''} for ${guests} guest${guests > 1 ? 's' : ''}. Your online calendar wasn't loading - could you check these dates for me?`;
 
-  function setRange(next) { setCheckIn(next.checkIn || ''); setCheckOut(next.checkOut || ''); }
+  function setRange(next) {
+    setCheckIn(next.checkIn || '');
+    setCheckOut(next.checkOut || '');
+  }
 
   function bookNow() {
-    if (!stay) { scrollToCalendar(); return; }
+    if (!stay) {
+      scrollToCalendar();
+      return;
+    }
     setStay(stay);
     setCheckoutOpen(true);
   }
@@ -76,7 +101,9 @@ export default function VillaDetail({ villa }) {
         <Container className="grid lg:grid-cols-[1.7fr_1fr] gap-10 items-start">
           <div className={PROSE_COPY}>
             <p className={EYEBROW_LINE}>{villa.tagline}</p>
-            <h1 ref={titleRef} className="text-display font-bold text-gold">{villa.name}</h1>
+            <h1 ref={titleRef} className="text-display font-bold text-gold">
+              {villa.name}
+            </h1>
             <div className="flex flex-wrap items-center gap-x-4 gap-y-1 mt-2 text-small text-muted">
               <span>Up to {villa.guests} guests</span>
               <span>·</span>
@@ -90,15 +117,22 @@ export default function VillaDetail({ villa }) {
 
             <div className="mt-6 flex items-center gap-3 flex-wrap">
               {villa.amenities.map((amenity) => (
-                <span key={amenity} className="flex items-center gap-2 px-3.5 py-2 rounded-full border border-line text-small text-gold">
-                  <span className="text-cta"><AmenityIcon name={amenity} /></span>
+                <span
+                  key={amenity}
+                  className="flex items-center gap-2 px-3.5 py-2 rounded-full border border-line text-small text-gold"
+                >
+                  <span className="text-cta">
+                    <AmenityIcon name={amenity} />
+                  </span>
                   {amenity}
                 </span>
               ))}
             </div>
 
             <h2 className="text-h2 font-medium mt-10 mb-3 text-gold">About the villa</h2>
-            {villa.about.map((para, i) => <p key={i}>{para}</p>)}
+            {villa.about.map((para, i) => (
+              <p key={i}>{para}</p>
+            ))}
 
             <h2 className="text-h2 font-medium mt-10 mb-3 text-gold">The space</h2>
             <ul className="grid sm:grid-cols-2 gap-x-8">
@@ -141,7 +175,10 @@ export default function VillaDetail({ villa }) {
             <h2 className="text-h2 font-medium mt-10 mb-3 text-gold">Good to know</h2>
             <ul className="border-t border-line">
               {villa.goodToKnow.map((note) => (
-                <li key={note.label} className="flex flex-col sm:flex-row sm:gap-6 py-3 border-b border-line text-small">
+                <li
+                  key={note.label}
+                  className="flex flex-col sm:flex-row sm:gap-6 py-3 border-b border-line text-small"
+                >
                   <span className={`${CAPS} min-w-[120px] text-muted`}>{note.label}</span>
                   <span className="text-gold">{note.value}</span>
                 </li>
@@ -152,7 +189,7 @@ export default function VillaDetail({ villa }) {
           <BookingPanel
             panelRef={cardRef}
             price={<PriceBlock amount={format(villa.nightlyRateIdr)} unit="/ night" />}
-            fields={(
+            fields={
               <div className="flex flex-col gap-3">
                 <DateRangeField
                   id={`${villa.slug}-dates`}
@@ -168,30 +205,51 @@ export default function VillaDetail({ villa }) {
                   label="Guests"
                   value={String(guests)}
                   onChange={(value) => setGuests(Number(value))}
-                  options={Array.from({ length: villa.guests }, (_, index) => index + 1).map((count) => ({ value: String(count), label: `${count} guest${count > 1 ? 's' : ''}` }))}
+                  options={Array.from({ length: villa.guests }, (_, index) => index + 1).map((count) => ({
+                    value: String(count),
+                    label: `${count} guest${count > 1 ? 's' : ''}`,
+                  }))}
                 />
                 <StaySummary villaSlug={villa.slug} checkIn={checkIn} checkOut={checkOut} />
               </div>
-            )}
-            cta={unknown ? (
-              <div className="flex flex-col gap-2">
-                <p role="status" className="m-0 text-small text-green" data-availability="unknown">We can&apos;t load the live calendar right now, so our team will confirm your dates by hand.</p>
-                <Button as="a" full href={whatsappLink(askMessage)} target="_blank" rel="noopener">Ask on WhatsApp</Button>
-              </div>
-            ) : (
-              <div className="flex flex-col gap-2">
-                <Button full onClick={bookNow} disabled={calendar.status === 'loading'} data-book-now>Book now</Button>
-                {!ready && <p className="m-0 text-label text-muted text-center">{calendar.status === 'loading' ? 'Loading availability...' : 'Pick your check-in and check-out to book.'}</p>}
-              </div>
-            )}
-            secondary={(
+            }
+            cta={
+              unknown ? (
+                <div className="flex flex-col gap-2">
+                  <p role="status" className="m-0 text-small text-green" data-availability="unknown">
+                    We can&apos;t load the live calendar right now, so our team will confirm your dates by hand.
+                  </p>
+                  <Button as="a" full href={whatsappLink(askMessage)} target="_blank" rel="noopener">
+                    Ask on WhatsApp
+                  </Button>
+                </div>
+              ) : (
+                <div className="flex flex-col gap-2">
+                  <Button full onClick={bookNow} disabled={calendar.status === 'loading'} data-book-now>
+                    Book now
+                  </Button>
+                  {!ready && (
+                    <p className="m-0 text-label text-muted text-center">
+                      {calendar.status === 'loading'
+                        ? 'Loading availability...'
+                        : 'Pick your check-in and check-out to book.'}
+                    </p>
+                  )}
+                </div>
+              )
+            }
+            secondary={
               <>
                 {ready && (
-                  <button type="button" onClick={addExtrasFirst} className={SECONDARY_BTN}>Add tours or a transfer first</button>
+                  <button type="button" onClick={addExtrasFirst} className={SECONDARY_BTN}>
+                    Add tours or a transfer first
+                  </button>
                 )}
-                <a href={WHATSAPP_LINK} target="_blank" rel="noopener" className={SECONDARY_BTN}>WhatsApp</a>
+                <a href={WHATSAPP_LINK} target="_blank" rel="noopener" className={SECONDARY_BTN}>
+                  WhatsApp
+                </a>
               </>
-            )}
+            }
             note={<BookingTerms />}
           >
             <Card tone="cream" className="p-6">
@@ -205,7 +263,12 @@ export default function VillaDetail({ villa }) {
                 Run by Cahyana Ubud Experience - the same family, every price upfront.
               </p>
               <LinkList items={CUE_TOURS.map((tour) => ({ ...tour, external: true }))} />
-              <a href={CUE_LINK} target="_blank" rel="noopener" className="inline-block mt-3 text-label text-gold underline">
+              <a
+                href={CUE_LINK}
+                target="_blank"
+                rel="noopener"
+                className="inline-block mt-3 text-label text-gold underline"
+              >
                 Explore more tours in Bali
               </a>
             </Card>
@@ -219,7 +282,9 @@ export default function VillaDetail({ villa }) {
         <h2 className="text-h2 font-medium text-white">{villa.name}, your dates</h2>
         <p className="mt-2 text-small text-white/75">See if the villa is free when you are.</p>
         <div className="flex justify-center mt-6">
-          <Button variant="onDark" onClick={ready ? bookNow : scrollToCalendar}>{ready ? 'Book now' : 'See availability'}</Button>
+          <Button variant="onDark" onClick={ready ? bookNow : scrollToCalendar}>
+            {ready ? 'Book now' : 'See availability'}
+          </Button>
         </div>
       </Section>
 

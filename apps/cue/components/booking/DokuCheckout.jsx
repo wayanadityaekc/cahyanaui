@@ -16,7 +16,10 @@ function loadScript(src) {
     script.src = src;
     script.async = true;
     script.dataset.doku = src;
-    script.addEventListener('load', () => { script.dataset.ready = '1'; resolve(); });
+    script.addEventListener('load', () => {
+      script.dataset.ready = '1';
+      resolve();
+    });
     script.addEventListener('error', () => reject(new Error('script failed')));
     document.head.appendChild(script);
   });
@@ -78,8 +81,7 @@ export default function DokuCheckout({ bookingRef, option, amountText }) {
             setBusy(false);
             return;
           }
-        } catch (e) {
-        }
+        } catch (e) {}
       }
       window.location.href = data.url;
     } catch (e) {

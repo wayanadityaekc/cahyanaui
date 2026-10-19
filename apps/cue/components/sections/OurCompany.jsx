@@ -50,8 +50,7 @@ const FAQ_CHEV =
   'ml-auto w-[var(--icon-sm)] h-[var(--icon-sm)] shrink-0 text-muted ' +
   'transition-[rotate] duration-[var(--dur)] ease-[var(--ease)] group-open:rotate-180';
 
-const FAQ_ROW =
-  'group [border-bottom:1px_solid_var(--line)] first-of-type:[border-top:1px_solid_var(--line)]';
+const FAQ_ROW = 'group [border-bottom:1px_solid_var(--line)] first-of-type:[border-top:1px_solid_var(--line)]';
 
 const FAQ_A =
   'pb-[var(--space-2)] pr-[var(--space-4)] [&_p]:m-0 [&_p]:text-body ' +
@@ -83,12 +82,7 @@ function HelpCard({ className = '' }) {
   return (
     <div className={`${RAIL_HELP} ${className}`}>
       <p className={RAIL_HELP_TEXT}>Still not sure about something?</p>
-      <a
-        className={RAIL_HELP_BTN}
-        href={`https://wa.me/${WHATSAPP_NUMBER}`}
-        target="_blank"
-        rel="noopener"
-      >
+      <a className={RAIL_HELP_BTN} href={`https://wa.me/${WHATSAPP_NUMBER}`} target="_blank" rel="noopener">
         <MessageCircle strokeWidth={1.7} aria-hidden="true" />
         WhatsApp
       </a>
@@ -103,7 +97,10 @@ export default function OurCompany() {
   useEffect(() => {
     function applyHash() {
       const id = idFromHash();
-      if (id) { setTab(id); setReading(true); }
+      if (id) {
+        setTab(id);
+        setReading(true);
+      }
     }
     applyHash();
     window.addEventListener('hashchange', applyHash);

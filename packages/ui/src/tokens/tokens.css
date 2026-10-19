@@ -15,8 +15,8 @@
   --color-muted: #7a7466;
   --color-surface: var(--surface);
   --color-surface-raised: var(--surface-raised);
-  --font-body: "Inter", system-ui, sans-serif;
-  --font-head: "Inter", system-ui, sans-serif;
+  --font-body: 'Inter', system-ui, sans-serif;
+  --font-head: 'Inter', system-ui, sans-serif;
 
   --text-display: clamp(2rem, 4.2vw, 3.25rem);
   --text-h2: clamp(1.625rem, 2.8vw, 2.25rem);
@@ -91,7 +91,9 @@
   --focus-ring: 0 0 0 3px rgba(34, 32, 28, 0.18);
 }
 @media (max-width: 992px) {
-  :root { --container-x: 1rem; }
+  :root {
+    --container-x: 1rem;
+  }
 }
 @layer components {
   .prose-copy p {
@@ -100,18 +102,33 @@
     font-size: var(--text-body);
     line-height: var(--lh-body, 1.6);
   }
-  .prose-copy p:last-child { margin-bottom: 0; }
+  .prose-copy p:last-child {
+    margin-bottom: 0;
+  }
 }
 @keyframes cahyana-spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 @keyframes cahyana-chatdot {
-  0%, 80%, 100% { opacity: 0.3; }
-  40% { opacity: 1; }
+  0%,
+  80%,
+  100% {
+    opacity: 0.3;
+  }
+  40% {
+    opacity: 1;
+  }
 }
 @keyframes cahyana-coinroll {
-  0% { transform: rotate(0deg); }
-  30%, 100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  30%,
+  100% {
+    transform: rotate(360deg);
+  }
 }
 @layer components {
   .cahyana-coin-shine {
@@ -122,23 +139,38 @@
     clip-path: circle(47% at 50% 50%);
   }
   .cahyana-coin-shine::before {
-    content: "";
+    content: '';
     position: absolute;
     top: -20%;
     bottom: -20%;
     left: -60%;
     width: 35%;
-    background: linear-gradient(105deg, rgba(255, 255, 255, 0) 0%, rgba(255, 236, 190, 0.15) 32%, rgba(255, 246, 222, 0.95) 50%, rgba(255, 236, 190, 0.15) 68%, rgba(255, 255, 255, 0) 100%);
+    background: linear-gradient(
+      105deg,
+      rgba(255, 255, 255, 0) 0%,
+      rgba(255, 236, 190, 0.15) 32%,
+      rgba(255, 246, 222, 0.95) 50%,
+      rgba(255, 236, 190, 0.15) 68%,
+      rgba(255, 255, 255, 0) 100%
+    );
     transform: skewX(-12deg);
     mix-blend-mode: plus-lighter;
     animation: coinShine 3s ease-in-out infinite;
   }
   @media (prefers-reduced-motion: reduce) {
-    .cahyana-coin-shine::before { animation: none; display: none; }
+    .cahyana-coin-shine::before {
+      animation: none;
+      display: none;
+    }
   }
 }
 
 @keyframes coinShine {
-  0% { left: -60%; }
-  50%, 100% { left: 130%; }
+  0% {
+    left: -60%;
+  }
+  50%,
+  100% {
+    left: 130%;
+  }
 }

@@ -17,5 +17,9 @@ export default function ItemIcon({ row }) {
   if (row.kind === 'transfer') glyph = <Car strokeWidth={1.7} />;
   else if (row.kind === 'charter') glyph = <Clock strokeWidth={1.7} />;
   else glyph = <MapPin strokeWidth={1.7} />;
-  return <span className={MTC_ITEM_ICON} aria-hidden="true">{glyph}</span>;
+  return (
+    <span className={MTC_ITEM_ICON} aria-hidden="true">
+      {glyph}
+    </span>
+  );
 }

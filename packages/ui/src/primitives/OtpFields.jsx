@@ -9,7 +9,15 @@ const BOX =
   'aria-[invalid=true]:[border-color:var(--color-err)] aria-[invalid=true]:[box-shadow:0_0_0_3px_rgba(154,74,63,0.14)] ' +
   'disabled:opacity-50';
 
-export default function OtpFields({ length = 6, value = '', onChange = () => {}, onComplete = null, error = false, disabled = false, autoFocus = false }) {
+export default function OtpFields({
+  length = 6,
+  value = '',
+  onChange = () => {},
+  onComplete = null,
+  error = false,
+  disabled = false,
+  autoFocus = false,
+}) {
   const refs = useRef([]);
   const digits = Array.from({ length }, (_, index) => value[index] || '');
 
@@ -26,7 +34,9 @@ export default function OtpFields({ length = 6, value = '', onChange = () => {},
   function spread(start, raw) {
     const next = [...digits];
     const fits = raw.slice(0, length - start).split('');
-    fits.forEach((char, offset) => { next[start + offset] = char; });
+    fits.forEach((char, offset) => {
+      next[start + offset] = char;
+    });
     commit(next);
     refs.current[Math.min(start + fits.length, length - 1)]?.focus();
   }
@@ -82,7 +92,9 @@ export default function OtpFields({ length = 6, value = '', onChange = () => {},
       {digits.map((digit, index) => (
         <input
           key={index}
-          ref={(input) => { refs.current[index] = input; }}
+          ref={(input) => {
+            refs.current[index] = input;
+          }}
           type="text"
           inputMode="numeric"
           pattern="[0-9]*"

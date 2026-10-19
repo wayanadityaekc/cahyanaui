@@ -13,14 +13,24 @@ export default function Prose({ blocks = [], headingVariant = 'legal' }) {
   if (!blocks.length) return <LoadFallback />;
   return blocks.map((block, i) => {
     if (block.type === 'crumb') {
-      return <p className="text-label text-muted mb-[1.25rem] [&_a]:text-gold [&_a]:no-underline [&_a]:font-medium" key={i} dangerouslySetInnerHTML={{ __html: String(block.html) }} />;
+      return (
+        <p
+          className="text-label text-muted mb-[1.25rem] [&_a]:text-gold [&_a]:no-underline [&_a]:font-medium"
+          key={i}
+          dangerouslySetInnerHTML={{ __html: String(block.html) }}
+        />
+      );
     }
     if (block.type === 'lead') {
       return (
         <figure className="mb-6" key={i}>
           <img
             className="block w-full h-auto aspect-[4/3] object-cover"
-            src={block.src} alt={block.alt} loading={block.loading} width={block.width} height={block.height}
+            src={block.src}
+            alt={block.alt}
+            loading={block.loading}
+            width={block.width}
+            height={block.height}
           />
           <figcaption
             className="mt-2 text-[length:var(--fs-label)] italic text-center text-muted"
@@ -30,9 +40,15 @@ export default function Prose({ blocks = [], headingVariant = 'legal' }) {
       );
     }
     if (block.type === 'heading') {
-      return block.sub === false
-        ? <h2 className={SECTION_TITLE} key={i} dangerouslySetInnerHTML={{ __html: String(block.html) }} />
-        : <h2 className={SUB_VARIANT[headingVariant] || SUB_VARIANT.legal} key={i} dangerouslySetInnerHTML={{ __html: String(block.html) }} />;
+      return block.sub === false ? (
+        <h2 className={SECTION_TITLE} key={i} dangerouslySetInnerHTML={{ __html: String(block.html) }} />
+      ) : (
+        <h2
+          className={SUB_VARIANT[headingVariant] || SUB_VARIANT.legal}
+          key={i}
+          dangerouslySetInnerHTML={{ __html: String(block.html) }}
+        />
+      );
     }
     if (block.type === 'para') {
       return <p key={i} dangerouslySetInnerHTML={{ __html: String(block.html) }} />;
@@ -40,7 +56,9 @@ export default function Prose({ blocks = [], headingVariant = 'legal' }) {
     if (block.type === 'list') {
       return (
         <ul className={infoList(block.variant)} key={i}>
-          {block.items.map((item, j) => <li key={j} dangerouslySetInnerHTML={{ __html: String(item) }} />)}
+          {block.items.map((item, j) => (
+            <li key={j} dangerouslySetInnerHTML={{ __html: String(item) }} />
+          ))}
         </ul>
       );
     }
@@ -65,7 +83,14 @@ export default function Prose({ blocks = [], headingVariant = 'legal' }) {
       );
     }
     if (block.type === 'back') {
-      return <p style={{ marginTop: '2rem' }} className="[&_a]:text-gold [&_a]:no-underline [&_a]:font-medium" key={i} dangerouslySetInnerHTML={{ __html: String(block.html) }} />;
+      return (
+        <p
+          style={{ marginTop: '2rem' }}
+          className="[&_a]:text-gold [&_a]:no-underline [&_a]:font-medium"
+          key={i}
+          dangerouslySetInnerHTML={{ __html: String(block.html) }}
+        />
+      );
     }
     return null;
   });

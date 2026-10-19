@@ -1,4 +1,3 @@
-
 export { cn } from './lib/cn.js';
 export { default as useMobile } from './lib/useMobile.js';
 export { default as useBodyLock } from './lib/useBodyLock.js';
@@ -103,7 +102,15 @@ export { default as ExtrasPanel } from './blocks/ExtrasPanel.jsx';
 export { default as PayOptions } from './blocks/PayOptions.jsx';
 export { default as PlanList } from './blocks/PlanList.jsx';
 export { default as AvailabilityCalendar } from './blocks/AvailabilityCalendar.jsx';
-export { canCheckIn, canCheckOut, isBookedNight, nightsBetween as stayNights, stayLimits, stayIsOpen, addDays as addStayDays } from './lib/stayRules.js';
+export {
+  canCheckIn,
+  canCheckOut,
+  isBookedNight,
+  nightsBetween as stayNights,
+  stayLimits,
+  stayIsOpen,
+  addDays as addStayDays,
+} from './lib/stayRules.js';
 
 export * from './primitives/controlClasses.js';
 export * from './blocks/layoutClasses.js';

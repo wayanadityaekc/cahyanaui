@@ -13,8 +13,7 @@ export function writeThread(id) {
   try {
     if (id) localStorage.setItem(KEY.chatThread, id);
     else localStorage.removeItem(KEY.chatThread);
-  } catch (e) {
-  }
+  } catch (e) {}
 }
 
 export async function startThread({ name, email, question, page }) {

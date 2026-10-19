@@ -13,7 +13,9 @@ export default function SignInPrompt({ lead, sub, className = '' }) {
     <div className={`text-center pt-2 px-0 pb-0 ${className}`}>
       <p className={LEAD}>{lead}</p>
       <p className={SUB}>{sub}</p>
-      <button type="button" className={`inline-flex ${BTN_CTA}`} onClick={() => setOpen(true)}>Sign in</button>
+      <button type="button" className={`inline-flex ${BTN_CTA}`} onClick={() => setOpen(true)}>
+        Sign in
+      </button>
       <AuthModal open={open} onClose={() => setOpen(false)} />
     </div>
   );

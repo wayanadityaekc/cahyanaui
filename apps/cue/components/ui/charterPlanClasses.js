@@ -1,7 +1,6 @@
 const PLAN_ROW_SHELL = 'flex gap-3 py-[0.7rem] px-[0.875rem] rounded-md';
 export const PLAN_ROW = `${PLAN_ROW_SHELL} bg-white [border:1px_solid_var(--line)]`;
-export const PLAN_ROW_PICKED =
-  `${PLAN_ROW_SHELL} bg-cream [border:1px_solid_var(--color-cta)] [box-shadow:inset_0_0_0_1px_var(--color-cta)]`;
+export const PLAN_ROW_PICKED = `${PLAN_ROW_SHELL} bg-cream [border:1px_solid_var(--color-cta)] [box-shadow:inset_0_0_0_1px_var(--color-cta)]`;
 export const PLAN_NAME = 'block text-h3 font-semibold text-gold';
 export const PLAN_SUB = 'block text-[0.66rem] leading-[1.45] text-muted';
 export const PLAN_BADGE = 'text-label tracking-[0.1em] uppercase font-medium text-amber-d whitespace-nowrap';

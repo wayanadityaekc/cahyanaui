@@ -1,8 +1,6 @@
-
 export const DEPOSIT_USD = 10;
 export const REFERRAL_DISCOUNT_PCT = 5;
 export const FREE_CANCEL_HOURS = 24;
-
 
 export const PAY_OPTIONS = ['deposit', 'full', 'referral'];
 
@@ -40,7 +38,16 @@ export function baseTotalUsd(priced) {
   return lines.reduce((sum, l) => sum + (l.was.usd || 0), 0);
 }
 
-export function payOptions({ total, currency = 'USD', stay = '', hasReferral = false, deposit = null, totalIdr = null, depositIdr = null, totalUsd = null }) {
+export function payOptions({
+  total,
+  currency = 'USD',
+  stay = '',
+  hasReferral = false,
+  deposit = null,
+  totalIdr = null,
+  depositIdr = null,
+  totalUsd = null,
+}) {
   const cur = String(currency || 'USD').toUpperCase();
   const known = total != null;
   const dep = depositIn(cur, deposit);

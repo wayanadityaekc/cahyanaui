@@ -1,4 +1,3 @@
-
 export function addDaysStr(dateStr, n) {
   if (!dateStr) return '';
   const [y, m, d] = dateStr.split('-').map(Number);
@@ -96,9 +95,10 @@ export function setRowDate(state, row, date, time) {
   }
   const next = JSON.parse(JSON.stringify(state));
   const list = row.kind === 'transfer' ? next.transfers : next.charters;
-  const idx = row.kind === 'transfer'
-    ? (state.transfers || []).findIndex((t) => t.route === row.service && t.date === row.date)
-    : (state.charters || []).findIndex((c) => c.date === row.date);
+  const idx =
+    row.kind === 'transfer'
+      ? (state.transfers || []).findIndex((t) => t.route === row.service && t.date === row.date)
+      : (state.charters || []).findIndex((c) => c.date === row.date);
   if (idx < 0) return null;
   list[idx].date = date;
   list[idx].time = time || '';

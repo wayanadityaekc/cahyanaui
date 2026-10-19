@@ -2,8 +2,12 @@ import { z } from 'zod';
 
 export const EMAIL_RE = /^\S+@\S+\.\S+$/;
 
-function email(msg = 'Please enter a valid email address.') { return z.string().trim().regex(EMAIL_RE, msg); }
-function required(msg) { return z.string().trim().min(1, msg); }
+function email(msg = 'Please enter a valid email address.') {
+  return z.string().trim().regex(EMAIL_RE, msg);
+}
+function required(msg) {
+  return z.string().trim().min(1, msg);
+}
 
 export const contactSchema = z.object({
   name: required('Please enter your name.'),
@@ -27,7 +31,12 @@ export const reviewSchema = z.object({
   message: required('Please write your review.'),
 });
 
-export function bookingSchema({ pickupOptional = false, dropoffRequired = false, needsTime = false, needsFlight = false } = {}) {
+export function bookingSchema({
+  pickupOptional = false,
+  dropoffRequired = false,
+  needsTime = false,
+  needsFlight = false,
+} = {}) {
   return z.object({
     name: required('Please enter your name.'),
     phone: required('Please enter your phone number.'),

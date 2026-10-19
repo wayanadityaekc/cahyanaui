@@ -12,7 +12,14 @@ const SHEET_TO = { y: 0, opacity: 1 };
 const CARD_FROM = { opacity: 0, y: 14, scale: 0.96 };
 const CARD_TO = { opacity: 1, y: 0, scale: 1 };
 
-export default function SheetPresence({ open = false, onClose = null, shell = '', box = '', label = 'Dialog', children }) {
+export default function SheetPresence({
+  open = false,
+  onClose = null,
+  shell = '',
+  box = '',
+  label = 'Dialog',
+  children,
+}) {
   const reduced = useReducedMotion();
   const isMobile = useMobile();
   useBodyLock(open);

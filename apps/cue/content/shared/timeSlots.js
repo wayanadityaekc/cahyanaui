@@ -1,13 +1,16 @@
-
 export const TIME_SLOTS = (() => {
   const out = [];
-  [...Array(48).keys()].map((k) => k * 30).forEach((m) => {
-    out.push(`${String(Math.floor(m / 60)).padStart(2, '0')}:${String(m % 60).padStart(2, '0')}`);
-  });
+  [...Array(48).keys()]
+    .map((k) => k * 30)
+    .forEach((m) => {
+      out.push(`${String(Math.floor(m / 60)).padStart(2, '0')}:${String(m % 60).padStart(2, '0')}`);
+    });
   return out;
 })();
 
-function range(from, to) { return TIME_SLOTS.filter((t) => t >= from && t <= to); }
+function range(from, to) {
+  return TIME_SLOTS.filter((t) => t >= from && t <= to);
+}
 
 const PRE_DAWN = ['02:00', '03:00'];
 const MORNING = ['08:00', '08:30', '09:00'];

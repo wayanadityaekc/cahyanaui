@@ -1,8 +1,13 @@
 import { chromium } from '/home/user/CUE/node_modules/playwright-core/index.mjs';
-const b = await chromium.launch({ executablePath: '/opt/pw-browsers/chromium_headless_shell-1194/chrome-linux/headless_shell' });
+const b = await chromium.launch({
+  executablePath: '/opt/pw-browsers/chromium_headless_shell-1194/chrome-linux/headless_shell',
+});
 
-let pass = 0, fail = 0;
-function ok(c, m) { c ? pass++ : (fail++, console.log('  FAIL:', m)); }
+let pass = 0,
+  fail = 0;
+function ok(c, m) {
+  c ? pass++ : (fail++, console.log('  FAIL:', m));
+}
 
 const ACC = { id: 1, name: 'Wayan Aditya', email: 'wayan@example.com' };
 
@@ -26,15 +31,19 @@ const PAGES = [
 for (const { path, crumb } of PAGES) {
   const ctx = await loggedInCtx(1280);
   const page = await ctx.newPage();
-  const errs = []; page.on('pageerror', (e) => errs.push(String(e)));
+  const errs = [];
+  page.on('pageerror', (e) => errs.push(String(e)));
   await page.goto(`http://127.0.0.1:4000${path}`, { waitUntil: 'networkidle' });
   await page.waitForTimeout(500);
 
   const trigger = page.locator('button[aria-label="Collapse sidebar"]');
-  ok(await trigger.count() === 1, `${path}: no collapse trigger found`);
+  ok((await trigger.count()) === 1, `${path}: no collapse trigger found`);
 
   const crumbText = await page.locator('nav[aria-label="Breadcrumb"]:visible').innerText();
-  ok(crumbText.includes('Home') && crumbText.includes(crumb), `${path}: header breadcrumb missing "Home › ${crumb}" (got "${crumbText}")`);
+  ok(
+    crumbText.includes('Home') && crumbText.includes(crumb),
+    `${path}: header breadcrumb missing "Home › ${crumb}" (got "${crumbText}")`,
+  );
 
   const before = await page.evaluate(() => document.querySelector('aside').getBoundingClientRect().width);
   await trigger.click({ force: true, timeout: 8000 });
@@ -61,7 +70,10 @@ for (const { path, crumb } of PAGES) {
   await page.goto('http://127.0.0.1:4000/settings.html', { waitUntil: 'networkidle' });
   await page.waitForTimeout(500);
   const w = await page.evaluate(() => document.querySelector('aside').getBoundingClientRect().width);
-  ok(w < 100, `settings.html after collapsing on my-trips.html: rail is ${w}px, expected <100 (collapse should be a shared preference)`);
+  ok(
+    w < 100,
+    `settings.html after collapsing on my-trips.html: rail is ${w}px, expected <100 (collapse should be a shared preference)`,
+  );
   await ctx.close();
 }
 
@@ -72,7 +84,10 @@ for (const { path, crumb } of PAGES) {
   await page.waitForTimeout(600);
   const headerCrumbCount = await page.locator('main > div > nav[aria-label="Breadcrumb"]:visible').count();
   ok(headerCrumbCount === 1, `terms tab: header breadcrumb should always show, found ${headerCrumbCount}`);
-  const inlineCrumb = await page.locator('h1', { hasText: 'Terms & Conditions' }).locator('xpath=preceding-sibling::nav[1]').count();
+  const inlineCrumb = await page
+    .locator('h1', { hasText: 'Terms & Conditions' })
+    .locator('xpath=preceding-sibling::nav[1]')
+    .count();
   ok(inlineCrumb === 0, 'terms tab: no breadcrumb should print inside the content anymore');
   const totalCrumbs = await page.locator('nav[aria-label="Breadcrumb"]:visible').count();
   ok(totalCrumbs === 1, `terms tab: exactly one breadcrumb should be visible on screen, found ${totalCrumbs}`);
@@ -82,7 +97,8 @@ for (const { path, crumb } of PAGES) {
 for (const { path } of PAGES) {
   const ctx = await loggedInCtx(390);
   const page = await ctx.newPage();
-  const errs = []; page.on('pageerror', (e) => errs.push(String(e)));
+  const errs = [];
+  page.on('pageerror', (e) => errs.push(String(e)));
   await page.goto(`http://127.0.0.1:4000${path}`, { waitUntil: 'networkidle' });
   await page.waitForTimeout(500);
   const trigger = await page.locator('button[aria-label="Collapse sidebar"]:visible').count();
@@ -99,9 +115,15 @@ for (const { path } of PAGES) {
   await page.goto('http://127.0.0.1:4000/settings.html', { waitUntil: 'networkidle' });
   await page.waitForTimeout(500);
   const bodyText = await page.locator('body').innerText();
-  ok(bodyText.includes('Account Settings'), '@390 settings: content not shown directly (mobileNav should skip the list+back screen)');
+  ok(
+    bodyText.includes('Account Settings'),
+    '@390 settings: content not shown directly (mobileNav should skip the list+back screen)',
+  );
   const backBtn = await page.locator('button:visible', { hasText: 'Account Settings' }).count();
-  ok(backBtn === 0, `@390 settings: found ${backBtn} "Account Settings" back/list button - mobileNav should have skipped it`);
+  ok(
+    backBtn === 0,
+    `@390 settings: found ${backBtn} "Account Settings" back/list button - mobileNav should have skipped it`,
+  );
   await ctx.close();
 }
 

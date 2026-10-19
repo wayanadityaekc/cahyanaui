@@ -33,24 +33,38 @@ export function openChatSocket(thread, { onMessage, onTyping, onPresence, onOpen
   }
 
   function stopTimers() {
-    clearInterval(pingTimer); pingTimer = null;
-    clearTimeout(pongTimer); pongTimer = null;
+    clearInterval(pingTimer);
+    pingTimer = null;
+    clearTimeout(pongTimer);
+    pongTimer = null;
   }
 
   function beat() {
     stopTimers();
     pingTimer = setInterval(() => {
       if (!ws || ws.readyState !== WebSocket.OPEN) return;
-      try { ws.send(JSON.stringify({ type: 'ping' })); } catch (e) { return; }
+      try {
+        ws.send(JSON.stringify({ type: 'ping' }));
+      } catch (e) {
+        return;
+      }
       clearTimeout(pongTimer);
-      pongTimer = setTimeout(() => { try { ws.close(); } catch (e) {   } }, PONG_GRACE_MS);
+      pongTimer = setTimeout(() => {
+        try {
+          ws.close();
+        } catch (e) {}
+      }, PONG_GRACE_MS);
     }, PING_MS);
   }
 
   function connect() {
     if (closedByUs) return;
     let sock;
-    try { sock = new WebSocket(chatSocketUrl(thread)); } catch (e) { return schedule(); }
+    try {
+      sock = new WebSocket(chatSocketUrl(thread));
+    } catch (e) {
+      return schedule();
+    }
     ws = sock;
 
     sock.onopen = () => {
@@ -62,12 +76,29 @@ export function openChatSocket(thread, { onMessage, onTyping, onPresence, onOpen
 
     sock.onmessage = (ev) => {
       let msg = null;
-      try { msg = JSON.parse(ev.data); } catch (e) { return; }
+      try {
+        msg = JSON.parse(ev.data);
+      } catch (e) {
+        return;
+      }
       if (!msg || typeof msg.type !== 'string') return;
-      if (msg.type === 'pong') { clearTimeout(pongTimer); pongTimer = null; return; }
-      if (msg.type === 'ready') { if (onPresence) onPresence(!!msg.ownerHere); return; }
-      if (msg.type === 'presence') { if (onPresence) onPresence(!!msg.ownerHere); return; }
-      if (msg.type === 'typing') { if (onTyping) onTyping(msg.expiresIn || 4000); return; }
+      if (msg.type === 'pong') {
+        clearTimeout(pongTimer);
+        pongTimer = null;
+        return;
+      }
+      if (msg.type === 'ready') {
+        if (onPresence) onPresence(!!msg.ownerHere);
+        return;
+      }
+      if (msg.type === 'presence') {
+        if (onPresence) onPresence(!!msg.ownerHere);
+        return;
+      }
+      if (msg.type === 'typing') {
+        if (onTyping) onTyping(msg.expiresIn || 4000);
+        return;
+      }
       if (msg.type === 'message' && msg.message && onMessage) onMessage(msg.message);
     };
 
@@ -97,11 +128,18 @@ export function openChatSocket(thread, { onMessage, onTyping, onPresence, onOpen
       stopTimers();
       clearTimeout(retryTimer);
       setLive(false);
-      if (ws) { ws.onclose = null; try { ws.close(); } catch (e) {   } }
+      if (ws) {
+        ws.onclose = null;
+        try {
+          ws.close();
+        } catch (e) {}
+      }
     },
     typing() {
       if (ws && ws.readyState === WebSocket.OPEN) {
-        try { ws.send(JSON.stringify({ type: 'typing' })); } catch (e) {   }
+        try {
+          ws.send(JSON.stringify({ type: 'typing' }));
+        } catch (e) {}
       }
     },
     live: () => live,

@@ -17,16 +17,27 @@ export default function PackageCard({
 }) {
   return (
     <article
-      className={cn('relative flex flex-col bg-surface-raised p-6 [border:1px_solid_var(--line)]', featured && '[border-color:var(--color-gold)]', className)}
+      className={cn(
+        'relative flex flex-col bg-surface-raised p-6 [border:1px_solid_var(--line)]',
+        featured && '[border-color:var(--color-gold)]',
+        className,
+      )}
       data-package-card
     >
-      {badge ? <span className={cn(UPPER, 'absolute -top-[9px] left-6 px-2 py-[2px] bg-cta text-white font-medium')}>{badge}</span> : null}
+      {badge ? (
+        <span className={cn(UPPER, 'absolute -top-[9px] left-6 px-2 py-[2px] bg-cta text-white font-medium')}>
+          {badge}
+        </span>
+      ) : null}
       <h3 className="m-0 text-h3 font-semibold text-gold">{name}</h3>
       {tagline ? <p className="mt-1 mb-0 text-small leading-[1.5] text-muted">{tagline}</p> : null}
       <p className="mt-5 mb-2 text-small font-medium text-gold">{labels.includes}</p>
       <ul className="list-none m-0 p-0">
         {items.map((item) => (
-          <li key={item.label} className="flex items-baseline justify-between gap-3 py-2 [border-bottom:1px_solid_var(--line)] last:[border-bottom:0]">
+          <li
+            key={item.label}
+            className="flex items-baseline justify-between gap-3 py-2 [border-bottom:1px_solid_var(--line)] last:[border-bottom:0]"
+          >
             <span className="text-small text-gold">{item.label}</span>
             <span className="text-small text-muted whitespace-nowrap">{item.price}</span>
           </li>

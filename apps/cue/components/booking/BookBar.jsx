@@ -8,12 +8,10 @@ import { useTripPrefs } from '@/state/TripPrefsProvider';
 import { BAR_SHELL, BAR_UPTO_LG } from '@/components/ui/stickyBar';
 import { observeBookCtas, scrollToBookCard } from './bookScroll';
 
-
 const KICKER = 'text-[0.6rem] font-medium tracking-[0.12em] uppercase text-muted leading-none';
 const UNIT = 'text-[0.68rem] font-normal text-muted leading-none';
 const AMOUNT = 'price text-[1.2rem] font-semibold text-gold leading-none';
-const CTA =
-  `flex-none flex ${BTN_SM} bg-cta text-white no-underline whitespace-nowrap hover:bg-cta-d`;
+const CTA = `flex-none flex ${BTN_SM} bg-cta text-white no-underline whitespace-nowrap hover:bg-cta-d`;
 
 export default function BookBar({ item, priceFallback, perPerson = false }) {
   const { displayGuests } = useTripPrefs();

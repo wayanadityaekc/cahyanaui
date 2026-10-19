@@ -37,17 +37,31 @@ export default function Prose({ blocks, headingVariant = 'legal' }) {
       return <Breadcrumb items={b.items} className="mb-2" key={i} />;
     }
     if (b.type === 'heading') {
-      return b.sub === false
-        ? <h2 className={SECTION_TITLE} key={i} dangerouslySetInnerHTML={{ __html: unlinkHiddenTours(b.html) }} />
-        : <h2 className={`${SUB_VARIANT[headingVariant] || SUB_VARIANT.legal}${afterBoxes ? ' !mt-0' : ''}`} key={i} dangerouslySetInnerHTML={{ __html: unlinkHiddenTours(b.html) }} />;
+      return b.sub === false ? (
+        <h2 className={SECTION_TITLE} key={i} dangerouslySetInnerHTML={{ __html: unlinkHiddenTours(b.html) }} />
+      ) : (
+        <h2
+          className={`${SUB_VARIANT[headingVariant] || SUB_VARIANT.legal}${afterBoxes ? ' !mt-0' : ''}`}
+          key={i}
+          dangerouslySetInnerHTML={{ __html: unlinkHiddenTours(b.html) }}
+        />
+      );
     }
     if (b.type === 'para') {
-      return <p className={`${BODY_P} ${PROSE_LINK}`} key={i} dangerouslySetInnerHTML={{ __html: unlinkHiddenTours(b.html) }} />;
+      return (
+        <p
+          className={`${BODY_P} ${PROSE_LINK}`}
+          key={i}
+          dangerouslySetInnerHTML={{ __html: unlinkHiddenTours(b.html) }}
+        />
+      );
     }
     if (b.type === 'list') {
       return (
         <ul className={`${infoList(b.variant)} ${PROSE_LINK}`} key={i}>
-          {b.items.map((item, j) => <li key={j} dangerouslySetInnerHTML={{ __html: unlinkHiddenTours(item) }} />)}
+          {b.items.map((item, j) => (
+            <li key={j} dangerouslySetInnerHTML={{ __html: unlinkHiddenTours(item) }} />
+          ))}
         </ul>
       );
     }
@@ -74,7 +88,14 @@ export default function Prose({ blocks, headingVariant = 'legal' }) {
       );
     }
     if (b.type === 'back') {
-      return <p style={{ marginTop: '2rem' }} className={`${BODY_P} [&_a]:text-gold [&_a]:no-underline [&_a]:font-medium`} key={i} dangerouslySetInnerHTML={{ __html: unlinkHiddenTours(b.html) }} />;
+      return (
+        <p
+          style={{ marginTop: '2rem' }}
+          className={`${BODY_P} [&_a]:text-gold [&_a]:no-underline [&_a]:font-medium`}
+          key={i}
+          dangerouslySetInnerHTML={{ __html: unlinkHiddenTours(b.html) }}
+        />
+      );
     }
     return null;
   });

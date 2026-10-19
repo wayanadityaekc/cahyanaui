@@ -12,7 +12,10 @@ export default function Card({
 }) {
   const lift = hover === 'lg' ? CARD_HOVER_LG : hover ? CARD_HOVER_SM : '';
   return (
-    <Tag className={cn(CARD_SHAPES[shape] || CARD_SHAPES.framed, CARD_TONES[tone] ?? CARD_TONES.white, lift, className)} {...rest}>
+    <Tag
+      className={cn(CARD_SHAPES[shape] || CARD_SHAPES.framed, CARD_TONES[tone] ?? CARD_TONES.white, lift, className)}
+      {...rest}
+    >
       {children}
     </Tag>
   );

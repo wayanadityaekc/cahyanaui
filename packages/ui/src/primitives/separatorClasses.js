@@ -1,4 +1,3 @@
-
 export const SEP_H = 'block shrink-0 h-px w-full bg-line';
 export const SEP_V = 'block shrink-0 w-px h-full bg-line';
 

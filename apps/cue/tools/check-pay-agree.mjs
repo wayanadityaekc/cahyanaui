@@ -19,8 +19,24 @@ CASES.forEach((idr) => {
       [false, true].forEach((ref) => {
         const base = FX.display(idr, cur);
         const deposit = FX.fromUsd(10, cur);
-        const site = payOptions({ total: base, currency: cur, stay, hasReferral: ref, deposit, totalIdr: idr, depositIdr: FX.fromUsd(10, 'IDR'), totalUsd: usd });
-        const srv = SRV.quotePayment({ baseUsd: usd, baseIdr: idr, baseDisplay: base, currency: cur, stay, hasReferral: ref });
+        const site = payOptions({
+          total: base,
+          currency: cur,
+          stay,
+          hasReferral: ref,
+          deposit,
+          totalIdr: idr,
+          depositIdr: FX.fromUsd(10, 'IDR'),
+          totalUsd: usd,
+        });
+        const srv = SRV.quotePayment({
+          baseUsd: usd,
+          baseIdr: idr,
+          baseDisplay: base,
+          currency: cur,
+          stay,
+          hasReferral: ref,
+        });
 
         ['deposit', 'full', 'referral'].forEach((id) => {
           const a = site.find((o) => o.id === id);
@@ -44,10 +60,17 @@ CASES.forEach((idr) => {
             bad.push(`${id} rupiah ${cur} idr=${idr} ref=${ref}: site=${aIdr} server=${bIdr}`);
           }
           if (cur === 'IDR') {
-            const pp = SRV.quotePayment({ baseUsd: usd, baseIdr: idr, baseDisplay: null, currency: 'USD', stay, hasReferral: ref })
-              .options.find((o) => o.id === id);
+            const pp = SRV.quotePayment({
+              baseUsd: usd,
+              baseIdr: idr,
+              baseDisplay: null,
+              currency: 'USD',
+              stay,
+              hasReferral: ref,
+            }).options.find((o) => o.id === id);
             const bUsd = pp && pp.amount ? pp.amount.display : null;
-            if (a.amountUsd !== bUsd) bad.push(`${id} paypal-usd idr=${idr} ref=${ref}: site=${a.amountUsd} server=${bUsd}`);
+            if (a.amountUsd !== bUsd)
+              bad.push(`${id} paypal-usd idr=${idr} ref=${ref}: site=${a.amountUsd} server=${bUsd}`);
           }
         });
       });

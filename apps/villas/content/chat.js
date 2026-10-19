@@ -1,4 +1,3 @@
-
 export const SUGGESTIONS = [
   'How many people can stay?',
   'What does a night cost?',
@@ -9,113 +8,250 @@ export const SUGGESTIONS = [
 ];
 
 export const TOPICS = [
-  { id: 'villa-prices', build: 'villaPrices',
+  {
+    id: 'villa-prices',
+    build: 'villaPrices',
     strong: ['per night', 'a night', 'nightly', 'night cost', 'room rate'],
-    words: ['how much', 'price', 'prices', 'cost', 'costs', 'rate', 'rates', 'night', 'nights', 'expensive', 'cheap'] },
+    words: ['how much', 'price', 'prices', 'cost', 'costs', 'rate', 'rates', 'night', 'nights', 'expensive', 'cheap'],
+  },
 
-  { id: 'price-shown', faq: 'Is the price on the site what I pay?',
+  {
+    id: 'price-shown',
+    faq: 'Is the price on the site what I pay?',
     strong: ['service fee', 'hidden', 'what i pay', 'final price', 'extra fee'],
-    words: ['fee', 'fees', 'hidden', 'total', 'season', 'seasonal'] },
+    words: ['fee', 'fees', 'hidden', 'total', 'season', 'seasonal'],
+  },
 
-  { id: 'sleeps', faq: 'How many people can each villa sleep?',
+  {
+    id: 'sleeps',
+    faq: 'How many people can each villa sleep?',
     strong: ['how many people', 'how many guests', 'sleep', 'sleeps', 'bedrooms'],
-    words: ['people', 'guests', 'bedroom', 'bedrooms', 'beds', 'family', 'group', 'capacity', 'stay'] },
+    words: ['people', 'guests', 'bedroom', 'bedrooms', 'beds', 'family', 'group', 'capacity', 'stay'],
+  },
 
-  { id: 'pool', faq: 'Does each villa really have its own pool?',
+  {
+    id: 'pool',
+    faq: 'Does each villa really have its own pool?',
     strong: ['pool', 'swimming'],
-    words: ['pool', 'swim', 'swimming', 'private pool'] },
+    words: ['pool', 'swim', 'swimming', 'private pool'],
+  },
 
-  { id: 'kitchen', faq: 'Is there a kitchen?',
+  {
+    id: 'kitchen',
+    faq: 'Is there a kitchen?',
     strong: ['kitchen', 'cook'],
-    words: ['kitchen', 'cook', 'cooking', 'fridge'] },
+    words: ['kitchen', 'cook', 'cooking', 'fridge'],
+  },
 
-  { id: 'difference', faq: 'What is the difference between the two?',
+  {
+    id: 'difference',
+    faq: 'What is the difference between the two?',
     strong: ['difference', 'which villa', 'compare', 'which one'],
-    words: ['difference', 'different', 'compare', 'better', 'choose', 'quieter'] },
+    words: ['difference', 'different', 'compare', 'better', 'choose', 'quieter'],
+  },
 
-  { id: 'book', faq: 'How do I book?',
+  {
+    id: 'book',
+    faq: 'How do I book?',
     strong: ['how do i book', 'book', 'booking', 'reserve', 'reservation'],
-    words: ['book', 'booking', 'reserve', 'reservation'] },
+    words: ['book', 'booking', 'reserve', 'reservation'],
+  },
 
-  { id: 'currency', faq: 'Can I pay in my own currency?',
+  {
+    id: 'currency',
+    faq: 'Can I pay in my own currency?',
     strong: ['currency', 'rupiah', 'dollars', 'euro'],
-    words: ['currency', 'rupiah', 'idr', 'usd', 'dollar', 'euro', 'aud', 'pound', 'gbp'] },
+    words: ['currency', 'rupiah', 'idr', 'usd', 'dollar', 'euro', 'aud', 'pound', 'gbp'],
+  },
 
-  { id: 'airbnb', faq: 'Do you take bookings outside Airbnb?',
+  {
+    id: 'airbnb',
+    faq: 'Do you take bookings outside Airbnb?',
     strong: ['airbnb', 'book direct'],
-    words: ['airbnb', 'direct', 'listing'] },
+    words: ['airbnb', 'direct', 'listing'],
+  },
 
-  { id: 'payment', faq: 'Do I pay a deposit, or the whole thing?',
+  {
+    id: 'payment',
+    faq: 'Do I pay a deposit, or the whole thing?',
     strong: ['deposit', 'pay in full', 'full payment', 'upfront'],
-    words: ['deposit', 'pay', 'payment', 'upfront', 'advance', 'full'] },
+    words: ['deposit', 'pay', 'payment', 'upfront', 'advance', 'full'],
+  },
 
-  { id: 'cancel', faq: 'What if I need to cancel?',
+  {
+    id: 'cancel',
+    faq: 'What if I need to cancel?',
     strong: ['cancel', 'cancellation', 'refund'],
-    words: ['cancel', 'cancellation', 'refund'] },
+    words: ['cancel', 'cancellation', 'refund'],
+  },
 
-  { id: 'move-dates', faq: 'Can I move my dates instead of cancelling?',
+  {
+    id: 'move-dates',
+    faq: 'Can I move my dates instead of cancelling?',
     strong: ['move my dates', 'change my dates', 'change dates', 'reschedule', 'postpone'],
-    words: ['move', 'change', 'reschedule', 'postpone', 'dates'] },
+    words: ['move', 'change', 'reschedule', 'postpone', 'dates'],
+  },
 
-  { id: 'check-times', faq: 'What time is check-in and check-out?',
+  {
+    id: 'check-times',
+    faq: 'What time is check-in and check-out?',
     strong: ['check in', 'check out', 'checkin', 'checkout'],
-    words: ['check in', 'check out', 'checkin', 'checkout', 'arrive', 'arrival', 'leave', 'late', 'early'] },
+    words: ['check in', 'check out', 'checkin', 'checkout', 'arrive', 'arrival', 'leave', 'late', 'early'],
+  },
 
-  { id: 'breakfast', faq: 'Is breakfast included?', link: { href: '/services/breakfast', label: 'Breakfast' },
+  {
+    id: 'breakfast',
+    faq: 'Is breakfast included?',
+    link: { href: '/services/breakfast', label: 'Breakfast' },
     strong: ['breakfast'],
-    words: ['breakfast', 'morning', 'floating breakfast'] },
+    words: ['breakfast', 'morning', 'floating breakfast'],
+  },
 
-  { id: 'massage', faq: 'Can I get a massage at the villa?', link: { href: '/services/spa', label: 'Spa & Massage' },
+  {
+    id: 'massage',
+    faq: 'Can I get a massage at the villa?',
+    link: { href: '/services/spa', label: 'Spa & Massage' },
     strong: ['massage', 'spa', 'therapist'],
-    words: ['massage', 'spa', 'therapist', 'treatment', 'reflexology'] },
+    words: ['massage', 'spa', 'therapist', 'treatment', 'reflexology'],
+  },
 
-  { id: 'dinner', build: 'liveDinner',
+  {
+    id: 'dinner',
+    build: 'liveDinner',
     strong: ['dinner', 'chef', 'cooking class'],
-    words: ['dinner', 'chef', 'meal', 'bbq', 'feast', 'cooking class'] },
+    words: ['dinner', 'chef', 'meal', 'bbq', 'feast', 'cooking class'],
+  },
 
-  { id: 'driver', faq: 'Can you arrange a driver or airport pickup?',
+  {
+    id: 'driver',
+    faq: 'Can you arrange a driver or airport pickup?',
     strong: ['driver', 'airport pickup', 'pick me up', 'pickup', 'pick up', 'transfer'],
-    words: ['driver', 'pickup', 'pick up', 'pick me up', 'transfer', 'taxi', 'car'] },
+    words: ['driver', 'pickup', 'pick up', 'pick me up', 'transfer', 'taxi', 'car'],
+  },
 
-  { id: 'airport-far', faq: 'How far is the airport?',
+  {
+    id: 'airport-far',
+    faq: 'How far is the airport?',
     strong: ['how far', 'from the airport', 'to the airport'],
-    words: ['airport', 'far', 'distance', 'dps', 'ngurah rai'] },
+    words: ['airport', 'far', 'distance', 'dps', 'ngurah rai'],
+  },
 
-  { id: 'location', faq: 'Where exactly are the villas?',
+  {
+    id: 'location',
+    faq: 'Where exactly are the villas?',
     strong: ['where are', 'where is', 'located', 'location', 'address'],
-    words: ['location', 'located', 'address', 'north ubud', 'gianyar', 'map'] },
+    words: ['location', 'located', 'address', 'north ubud', 'gianyar', 'map'],
+  },
 
-  { id: 'getting-around', faq: 'Do I need a scooter or car to stay here?',
+  {
+    id: 'getting-around',
+    faq: 'Do I need a scooter or car to stay here?',
     strong: ['walking distance', 'walk to', 'need a car', 'get around'],
-    words: ['walk', 'walking', 'around', 'cafes', 'warung', 'restaurants'] },
+    words: ['walk', 'walking', 'around', 'cafes', 'warung', 'restaurants'],
+  },
 ];
 
 export const HUMAN_WORDS = [
-  'tour', 'tours', 'day trip', 'excursion', 'sightseeing', 'itinerary',
-  'scooter', 'scooters', 'motorbike', 'motorbikes', 'motorcycle', 'bike rental', 'moped',
-  'available', 'availability', 'free on', 'vacancy', 'dates free',
-  'wheelchair', 'disabled', 'disability', 'accessible', 'accessibility',
-  'baby', 'infant', 'toddler', 'newborn', 'cot', 'crib', 'pregnant', 'elderly',
-  'allergy', 'allergic', 'medication', 'medical', 'injury', 'sick',
-  'wedding', 'honeymoon', 'proposal', 'birthday', 'party', 'event',
-  'drone', 'filming', 'photoshoot', 'photographer',
-  'pet', 'pets', 'dog', 'cat',
-  'discount', 'long stay', 'monthly', 'weekly rate',
-  'complaint', 'complain', 'problem with', 'went wrong', 'lost', 'left behind', 'broken',
+  'tour',
+  'tours',
+  'day trip',
+  'excursion',
+  'sightseeing',
+  'itinerary',
+  'scooter',
+  'scooters',
+  'motorbike',
+  'motorbikes',
+  'motorcycle',
+  'bike rental',
+  'moped',
+  'available',
+  'availability',
+  'free on',
+  'vacancy',
+  'dates free',
+  'wheelchair',
+  'disabled',
+  'disability',
+  'accessible',
+  'accessibility',
+  'baby',
+  'infant',
+  'toddler',
+  'newborn',
+  'cot',
+  'crib',
+  'pregnant',
+  'elderly',
+  'allergy',
+  'allergic',
+  'medication',
+  'medical',
+  'injury',
+  'sick',
+  'wedding',
+  'honeymoon',
+  'proposal',
+  'birthday',
+  'party',
+  'event',
+  'drone',
+  'filming',
+  'photoshoot',
+  'photographer',
+  'pet',
+  'pets',
+  'dog',
+  'cat',
+  'discount',
+  'long stay',
+  'monthly',
+  'weekly rate',
+  'complaint',
+  'complain',
+  'problem with',
+  'went wrong',
+  'lost',
+  'left behind',
+  'broken',
 ];
 
 export const SERVICE_WORDS = ['breakfast', 'spa', 'massage', 'dinner', 'chef', 'cooking class', 'treatment'];
 export const PRICE_WORDS = ['how much', 'price', 'prices', 'cost', 'costs', 'rate', 'rates', 'charge'];
 
-export const GREETINGS = ['hi', 'hey', 'hello', 'halo', 'hai', 'good morning', 'good afternoon', 'good evening', 'morning', 'evening'];
-export const THANKS = ['thanks', 'thank you', 'thankyou', 'makasih', 'terima kasih', 'ok thanks', 'cheers', 'great thanks'];
+export const GREETINGS = [
+  'hi',
+  'hey',
+  'hello',
+  'halo',
+  'hai',
+  'good morning',
+  'good afternoon',
+  'good evening',
+  'morning',
+  'evening',
+];
+export const THANKS = [
+  'thanks',
+  'thank you',
+  'thankyou',
+  'makasih',
+  'terima kasih',
+  'ok thanks',
+  'cheers',
+  'great thanks',
+];
 
 export const REPLY_HOURS = { from: 8, to: 21, tz: 'Asia/Makassar', label: '8am and 9pm Bali time' };
 
 export function wayanIsAround(now = new Date()) {
-  const hour = Number(new Intl.DateTimeFormat('en-GB', {
-    timeZone: REPLY_HOURS.tz, hour: '2-digit', hour12: false,
-  }).format(now));
+  const hour = Number(
+    new Intl.DateTimeFormat('en-GB', {
+      timeZone: REPLY_HOURS.tz,
+      hour: '2-digit',
+      hour12: false,
+    }).format(now),
+  );
   return hour >= REPLY_HOURS.from && hour < REPLY_HOURS.to;
 }
 

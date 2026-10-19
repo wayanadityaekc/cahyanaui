@@ -49,8 +49,7 @@ export default function ArticlePage({ article }) {
           <p className="mt-3 max-w-2xl text-body text-muted">{article.sub}</p>
           <p className={`${META} mt-4`}>
             <span className="inline-flex items-center gap-1.5">
-              <Clock className={ICON} strokeWidth={1.7} aria-hidden="true" />
-              ~{article.read} min read
+              <Clock className={ICON} strokeWidth={1.7} aria-hidden="true" />~{article.read} min read
             </span>
           </p>
         </Container>
@@ -94,7 +93,13 @@ export default function ArticlePage({ article }) {
           <h2 className="text-h2 font-medium text-gold mb-6">Keep reading</h2>
           <div className={GRID_CARDS}>
             {more.map((related) => (
-              <Card as={Link} hover key={related.slug} href={`/guide/${related.slug}`} className="p-5 flex flex-col gap-2 no-underline">
+              <Card
+                as={Link}
+                hover
+                key={related.slug}
+                href={`/guide/${related.slug}`}
+                className="p-5 flex flex-col gap-2 no-underline"
+              >
                 <p className={`${EYEBROW_LINE} !mb-0`}>{categoryLabel(related.cat)}</p>
                 <h3 className="text-h3 font-semibold text-gold">{related.title}</h3>
                 <p className="text-small text-muted">{related.sub}</p>
@@ -104,7 +109,7 @@ export default function ArticlePage({ article }) {
               </Card>
             ))}
           </div>
-</Section>
+        </Section>
       )}
     </article>
   );

@@ -41,13 +41,19 @@ export default function TransferPicker() {
 
   const options = [{ value: UBUD, label: 'Ubud' }, ...areas.map((a) => ({ value: a.area, label: a.area }))];
 
-  function swap() { pickFrom(to); pickTo(from); }
+  function swap() {
+    pickFrom(to);
+    pickTo(from);
+  }
 
   function addToTrip(goto) {
     if (!entry) return;
     save({
       ...state,
-      transfers: [...(state.transfers || []), { route: routeName, guests: displayGuests, return: isReturn, date: '', pickup: from, dropoff: to }],
+      transfers: [
+        ...(state.transfers || []),
+        { route: routeName, guests: displayGuests, return: isReturn, date: '', pickup: from, dropoff: to },
+      ],
     });
     if (goto) window.location.href = '/my-trips.html';
     else {
@@ -61,12 +67,23 @@ export default function TransferPicker() {
     <div ref={pickerRef} className="bg-white border border-line rounded-xl pt-6 px-[1.4rem] pb-[1.6rem] text-left">
       <div className="grid grid-cols-[1fr_auto_1fr] [align-items:end] gap-[0.55rem] [@media(max-width:600px)]:grid-cols-[1fr] [@media(max-width:600px)]:items-stretch [@media(max-width:600px)]:gap-2 [@media(max-width:600px)]:justify-items-stretch">
         <div>
-          <label className={FIELD_LABEL} htmlFor="tp-from">From</label>
+          <label className={FIELD_LABEL} htmlFor="tp-from">
+            From
+          </label>
           <Select id="tp-from" label="From" value={from} onChange={pickFrom} options={options} placeholder="Select" />
         </div>
-        <button type="button" className="inline-flex items-center justify-center w-[var(--btn-h)] h-[var(--btn-h)] rounded-sm border border-line bg-white text-gold-d text-small leading-none mb-[0.15rem] cursor-pointer [@media(max-width:600px)]:justify-self-center [@media(max-width:600px)]:[transform:rotate(90deg)]" aria-label="Swap direction" onClick={swap}>&#8646;</button>
+        <button
+          type="button"
+          className="inline-flex items-center justify-center w-[var(--btn-h)] h-[var(--btn-h)] rounded-sm border border-line bg-white text-gold-d text-small leading-none mb-[0.15rem] cursor-pointer [@media(max-width:600px)]:justify-self-center [@media(max-width:600px)]:[transform:rotate(90deg)]"
+          aria-label="Swap direction"
+          onClick={swap}
+        >
+          &#8646;
+        </button>
         <div>
-          <label className={FIELD_LABEL} htmlFor="tp-to">To</label>
+          <label className={FIELD_LABEL} htmlFor="tp-to">
+            To
+          </label>
           <Select id="tp-to" label="To" value={to} onChange={pickTo} options={options} placeholder="Select" />
         </div>
       </div>
@@ -85,23 +102,51 @@ export default function TransferPicker() {
       </div>
 
       <label className="flex items-center justify-center gap-2 mt-[0.9rem] mb-[1.1rem] text-green text-small cursor-pointer">
-        <input type="checkbox" className="peer absolute opacity-0 w-0 h-0" checked={isReturn} onChange={(e) => setIsReturn(e.target.checked)} />
+        <input
+          type="checkbox"
+          className="peer absolute opacity-0 w-0 h-0"
+          checked={isReturn}
+          onChange={(e) => setIsReturn(e.target.checked)}
+        />
         <span className="w-10 h-[23px] rounded-pill bg-line relative shrink-0 transition-[background] duration-200 peer-checked:bg-gold after:content-[''] after:absolute after:top-[3px] after:left-[3px] after:w-[17px] after:h-[17px] after:rounded-[50%] after:bg-white after:transition-[left] after:duration-200 peer-checked:after:left-[20px]" />
-        <span>Add return trip <b className="text-gold-d">(save 10%)</b></span>
+        <span>
+          Add return trip <b className="text-gold-d">(save 10%)</b>
+        </span>
       </label>
 
       <div className="flex flex-col gap-[0.55rem]">
-        <button type="button" className={`${BTN} bg-cta text-white hover:bg-cta-d`} onClick={() => addToTrip(true)} disabled={!entry}>Book now</button>
-        <button type="button" className={`${BTN} bg-white text-green`} onClick={() => addToTrip(false)} disabled={!entry}>Save trip</button>
+        <button
+          type="button"
+          className={`${BTN} bg-cta text-white hover:bg-cta-d`}
+          onClick={() => addToTrip(true)}
+          disabled={!entry}
+        >
+          Book now
+        </button>
+        <button
+          type="button"
+          className={`${BTN} bg-white text-green`}
+          onClick={() => addToTrip(false)}
+          disabled={!entry}
+        >
+          Save trip
+        </button>
       </div>
 
       <p className="text-center text-[0.8rem] text-muted mt-[0.8rem] [&_a]:text-gold-d" hidden={!routeName || !!entry}>
         No fixed price for this pair -{' '}
-        <a href={`https://wa.me/${WHATSAPP_NUMBER}`} target="_blank" rel="noopener">ask us on WhatsApp</a>.
+        <a href={`https://wa.me/${WHATSAPP_NUMBER}`} target="_blank" rel="noopener">
+          ask us on WhatsApp
+        </a>
+        .
       </p>
 
       <LiveRegion>{toast}</LiveRegion>
-      {toast && <div className={CART_TOAST} aria-hidden="true">{toast}</div>}
+      {toast && (
+        <div className={CART_TOAST} aria-hidden="true">
+          {toast}
+        </div>
+      )}
     </div>
   );
 }

@@ -24,7 +24,8 @@ export const FOOT_BOTTOM =
 export const FOOT_BOTTOM_TEXT = 'text-small opacity-70';
 
 export const FOOT_FEATURED = 'text-[0.8rem] font-semibold tracking-[0.01em] text-green opacity-[0.85]';
-export const FOOT_REG = 'flex flex-wrap items-center gap-x-[7px] gap-y-1 max-[700px]:justify-center text-[length:0.58rem] font-normal text-muted opacity-40';
+export const FOOT_REG =
+  'flex flex-wrap items-center gap-x-[7px] gap-y-1 max-[700px]:justify-center text-[length:0.58rem] font-normal text-muted opacity-40';
 
 export const FOOT_SOCIAL_A_AIRBNB =
   'group flex items-center justify-center w-[22px] h-[22px] rounded-base bg-[rgba(0,0,0,0.06)] hover:bg-[#FF5A5F]';

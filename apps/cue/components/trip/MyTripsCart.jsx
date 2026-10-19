@@ -61,7 +61,10 @@ export default function MyTripsCart() {
   });
   const { format } = useMoney();
 
-  useResumeBooking(hydrated && rows.length > 0 && rows.every((row) => row.date), () => checkoutRef.current && checkoutRef.current());
+  useResumeBooking(
+    hydrated && rows.length > 0 && rows.every((row) => row.date),
+    () => checkoutRef.current && checkoutRef.current(),
+  );
 
   if (!hydrated) return <div data-mytrips-cart />;
 
@@ -89,7 +92,10 @@ export default function MyTripsCart() {
       pickupOptional: true,
       dropoffRequired: false,
       detailsTitle: 'Trip details',
-      detailLines: rows.map((row) => `${row.day_no ? `Day ${row.day_no} · ` : ''}${fmtDay(row.date)}${row.time ? ` · ${fmtTime(row.time)}` : ''} · ${row.service}`),
+      detailLines: rows.map(
+        (row) =>
+          `${row.day_no ? `Day ${row.day_no} · ` : ''}${fmtDay(row.date)}${row.time ? ` · ${fmtTime(row.time)}` : ''} · ${row.service}`,
+      ),
       lines: rows,
       onSuccess: () => save({ days: [], transfers: [], charters: [] }),
     });
@@ -113,56 +119,67 @@ export default function MyTripsCart() {
   return (
     <>
       {payReturn}
-    <div data-mytrips-cart>
-      <RailLayout
-        label="My trips"
-        items={TABS}
-        active={tab}
-        onSelect={(id) => { setTab(id); setReading(true); }}
-        reading={reading}
-        onBack={() => setReading(false)}
-        collapsible
-        breadcrumb={crumbsFor('my-trips')}
-        scrollContent
-      >
-      {tab === 'custom' && (
-        <CartPanel
-          rows={rows}
-          priced={priced}
-          format={format}
-          totalText={totalText}
-          undated={undated}
-          setAdding={setAdding}
-          setEditDate={setEditDate}
-          remove={remove}
-          checkout={checkout}
+      <div data-mytrips-cart>
+        <RailLayout
+          label="My trips"
+          items={TABS}
+          active={tab}
+          onSelect={(id) => {
+            setTab(id);
+            setReading(true);
+          }}
+          reading={reading}
+          onBack={() => setReading(false)}
+          collapsible
+          breadcrumb={crumbsFor('my-trips')}
+          scrollContent
+        >
+          {tab === 'custom' && (
+            <CartPanel
+              rows={rows}
+              priced={priced}
+              format={format}
+              totalText={totalText}
+              undated={undated}
+              setAdding={setAdding}
+              setEditDate={setEditDate}
+              remove={remove}
+              checkout={checkout}
+            />
+          )}
+
+          {tab === 'booked' && (
+            <div>
+              <BookedTrips isPast={false} openRef={openRef} setOpenRef={setOpenRef} setReview={setReview} />
+            </div>
+          )}
+          {tab === 'past' && (
+            <div>
+              <BookedTrips isPast openRef={openRef} setOpenRef={setOpenRef} setReview={setReview} />
+            </div>
+          )}
+        </RailLayout>
+
+        <ReviewModal open={!!review} prefill={review} onClose={() => setReview(null)} />
+
+        <AddItemPicker open={adding} onClose={() => setAdding(false)} />
+
+        <DatePopup
+          open={!!editDate}
+          title={editDate ? editDate.row.service : ''}
+          initial={editDate ? editDate.row.date : ''}
+          onPick={(date, time) => {
+            if (!editDate) return;
+            const next = setRowDate(state, editDate.row, date, time);
+            if (next) save(next);
+          }}
+          onClose={() => setEditDate(null)}
+          withTime
+          initialTime={editDate ? editDate.row.time || '' : ''}
+          category={editDate ? categoryOfRow(editDate.row) : null}
+          itemName={editDate ? editDate.row.service : null}
         />
-      )}
-
-      {tab === 'booked' && <div><BookedTrips isPast={false} openRef={openRef} setOpenRef={setOpenRef} setReview={setReview} /></div>}
-      {tab === 'past' && <div><BookedTrips isPast openRef={openRef} setOpenRef={setOpenRef} setReview={setReview} /></div>}
-      </RailLayout>
-
-      <ReviewModal open={!!review} prefill={review} onClose={() => setReview(null)} />
-
-      <AddItemPicker open={adding} onClose={() => setAdding(false)} />
-
-      <DatePopup
-        open={!!editDate}
-        title={editDate ? editDate.row.service : ''}
-        initial={editDate ? editDate.row.date : ''}
-        onPick={(date, time) => {
-          if (!editDate) return;
-          const next = setRowDate(state, editDate.row, date, time);
-          if (next) save(next);
-        }}
-        onClose={() => setEditDate(null)}
-        withTime
-        initialTime={editDate ? editDate.row.time || '' : ''}
-        category={editDate ? categoryOfRow(editDate.row) : null}
-        itemName={editDate ? editDate.row.service : null}
-      />
-    </div>
+      </div>
     </>
   );
 }

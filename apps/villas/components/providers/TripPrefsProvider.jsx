@@ -14,8 +14,7 @@ export function TripPrefsProvider({ children }) {
     try {
       const saved = Number(window.localStorage.getItem(KEY));
       if (saved >= 1 && saved <= 12) setGuestsState(saved);
-    } catch (e) {
-    }
+    } catch (e) {}
   }, []);
 
   function setGuests(value) {
@@ -23,8 +22,7 @@ export function TripPrefsProvider({ children }) {
     setGuestsState(nextGuests);
     try {
       window.localStorage.setItem(KEY, String(nextGuests));
-    } catch (e) {
-    }
+    } catch (e) {}
   }
 
   return <TripPrefsContext.Provider value={{ guests, setGuests }}>{children}</TripPrefsContext.Provider>;

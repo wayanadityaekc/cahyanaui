@@ -7,35 +7,89 @@ import ReviewsStrip from '@/components/reviews/ReviewsStrip';
 import LoadFallback from '@/components/ui/LoadFallback';
 import { CARD, CARD_WRAP, STRIP, TRACK, segment, SEC, SEC_H } from '@/components/ui/detailCardClasses';
 
-function CarIcon() { return <Car strokeWidth={1.7} aria-hidden="true" />; }
-function TicketIcon() { return <Banknote strokeWidth={1.7} aria-hidden="true" />; }
+function CarIcon() {
+  return <Car strokeWidth={1.7} aria-hidden="true" />;
+}
+function TicketIcon() {
+  return <Banknote strokeWidth={1.7} aria-hidden="true" />;
+}
 
-function ClockIcon() { return <Clock strokeWidth={1.7} aria-hidden="true" />; }
-function BagIcon() { return <Backpack strokeWidth={1.7} aria-hidden="true" />; }
-function InfoIcon() { return <Info strokeWidth={1.7} aria-hidden="true" />; }
-function CardIcon() { return <CreditCard strokeWidth={1.7} aria-hidden="true" />; }
+function ClockIcon() {
+  return <Clock strokeWidth={1.7} aria-hidden="true" />;
+}
+function BagIcon() {
+  return <Backpack strokeWidth={1.7} aria-hidden="true" />;
+}
+function InfoIcon() {
+  return <Info strokeWidth={1.7} aria-hidden="true" />;
+}
+function CardIcon() {
+  return <CreditCard strokeWidth={1.7} aria-hidden="true" />;
+}
 
 function GoodToKnow({ isActivity }) {
   const rows = isActivity
     ? [
-        { ic: <TicketIcon />, h: 'Included in this price', t: 'Your entrance ticket and return transport from Ubud are already included - nothing extra to pay for the activity itself.' },
-        { ic: <ClockIcon />, h: 'Pick-up & timing', t: 'We pick you up from your hotel or villa in the Ubud area at the time you choose. Your driver shares their details the day before.' },
-        { ic: <BagIcon />, h: 'What to bring', t: 'Comfortable clothes and shoes suited to the activity, sunscreen, and a change of clothes if things might get wet or muddy.' },
-        { ic: <CardIcon />, h: 'Booking & payment', t: 'A small deposit over WhatsApp holds your date; you settle the rest at the end. Free cancellation up to 24 hours before.' },
+        {
+          ic: <TicketIcon />,
+          h: 'Included in this price',
+          t: 'Your entrance ticket and return transport from Ubud are already included - nothing extra to pay for the activity itself.',
+        },
+        {
+          ic: <ClockIcon />,
+          h: 'Pick-up & timing',
+          t: 'We pick you up from your hotel or villa in the Ubud area at the time you choose. Your driver shares their details the day before.',
+        },
+        {
+          ic: <BagIcon />,
+          h: 'What to bring',
+          t: 'Comfortable clothes and shoes suited to the activity, sunscreen, and a change of clothes if things might get wet or muddy.',
+        },
+        {
+          ic: <CardIcon />,
+          h: 'Booking & payment',
+          t: 'A small deposit over WhatsApp holds your date; you settle the rest at the end. Free cancellation up to 24 hours before.',
+        },
       ]
     : [
-        { ic: <CarIcon />, h: 'Standard', t: 'Private car, driver and fuel. You pay entrance tickets at each gate as you go - handy if you like to skip a stop.' },
-        { ic: <TicketIcon />, h: 'Exclusive', t: 'The whole day prepaid, with entrance tickets for the listed stops included. Nothing to pay at the gates.' },
-        { ic: <ClockIcon />, h: 'Pick-up & timing', t: 'We pick you up from your hotel or villa in the Ubud area at the time you choose. Your driver shares their details the day before.' },
-        { ic: <BagIcon />, h: 'What to bring', t: 'Comfortable shoes, sunscreen and a hat, and some cash for entrance tickets (Standard) and lunch along the way.' },
-        { ic: <InfoIcon />, h: 'Good to know', t: 'Temples ask for a sarong, arranged at the gate. A few stops have stairs or a short walk. The route is flexible - linger or skip as you like.' },
-        { ic: <CardIcon />, h: 'Booking & payment', t: 'A small deposit over WhatsApp holds your date; you settle the rest at the end of the day. Free cancellation up to 24 hours before.' },
+        {
+          ic: <CarIcon />,
+          h: 'Standard',
+          t: 'Private car, driver and fuel. You pay entrance tickets at each gate as you go - handy if you like to skip a stop.',
+        },
+        {
+          ic: <TicketIcon />,
+          h: 'Exclusive',
+          t: 'The whole day prepaid, with entrance tickets for the listed stops included. Nothing to pay at the gates.',
+        },
+        {
+          ic: <ClockIcon />,
+          h: 'Pick-up & timing',
+          t: 'We pick you up from your hotel or villa in the Ubud area at the time you choose. Your driver shares their details the day before.',
+        },
+        {
+          ic: <BagIcon />,
+          h: 'What to bring',
+          t: 'Comfortable shoes, sunscreen and a hat, and some cash for entrance tickets (Standard) and lunch along the way.',
+        },
+        {
+          ic: <InfoIcon />,
+          h: 'Good to know',
+          t: 'Temples ask for a sarong, arranged at the gate. A few stops have stairs or a short walk. The route is flexible - linger or skip as you like.',
+        },
+        {
+          ic: <CardIcon />,
+          h: 'Booking & payment',
+          t: 'A small deposit over WhatsApp holds your date; you settle the rest at the end of the day. Free cancellation up to 24 hours before.',
+        },
       ];
   return (
     <ul className="list-none mb-[1.6rem] flex flex-col gap-[1.1rem]">
       {rows.map((row) => (
         <li className="flex gap-[0.85rem] items-start" key={row.h}>
-          <span className="flex-none grid place-items-center w-[2.2rem] h-[2.2rem] rounded-[50%] bg-cream text-gold [&_svg]:w-[var(--icon-sm)] [&_svg]:h-[var(--icon-sm)]">{row.ic}</span>
+          <span className="flex-none grid place-items-center w-[2.2rem] h-[2.2rem] rounded-[50%] bg-cream text-gold [&_svg]:w-[var(--icon-sm)] [&_svg]:h-[var(--icon-sm)]">
+            {row.ic}
+          </span>
           <div>
             <span className="block text-strong font-semibold text-gold mb-[0.15rem]">{row.h}</span>
             <p className="text-small leading-[1.45] text-green m-0">{row.t}</p>
@@ -63,7 +117,14 @@ function Inclusions({ included, excluded }) {
   );
 }
 
-export default function DetailTabs({ overview = null, priceItem = '', bookType = 'tour', included = [], excluded = [], reviewService = '' }) {
+export default function DetailTabs({
+  overview = null,
+  priceItem = '',
+  bookType = 'tour',
+  included = [],
+  excluded = [],
+  reviewService = '',
+}) {
   const sections = [{ id: 'overview', label: 'Overview', content: overview || <LoadFallback /> }];
   if (priceItem) {
     sections.push({
@@ -83,7 +144,12 @@ export default function DetailTabs({ overview = null, priceItem = '', bookType =
   sections.push({
     id: 'reviews',
     label: 'Reviews',
-    content: <ReviewsStrip service={reviewService} emptyText="No reviews yet for this program - be the first to share your trip." />,
+    content: (
+      <ReviewsStrip
+        service={reviewService}
+        emptyText="No reviews yet for this program - be the first to share your trip."
+      />
+    ),
   });
 
   const [active, setActive] = useState(sections[0].id);
@@ -127,10 +193,7 @@ export default function DetailTabs({ overview = null, priceItem = '', bookType =
     <div className={CARD_WRAP}>
       <div className={CARD}>
         <div ref={stripRef} className={STRIP}>
-          <nav
-            className={TRACK}
-            aria-label="Jump to section"
-          >
+          <nav className={TRACK} aria-label="Jump to section">
             {sections.map((s) => (
               <button
                 key={s.id}
@@ -148,7 +211,9 @@ export default function DetailTabs({ overview = null, priceItem = '', bookType =
           <section
             key={s.id}
             id={`dsec-${s.id}`}
-            ref={(section) => { secRefs.current[s.id] = section; }}
+            ref={(section) => {
+              secRefs.current[s.id] = section;
+            }}
             className={SEC}
             aria-label={s.heading === false ? s.label : undefined}
           >

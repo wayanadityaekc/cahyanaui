@@ -15,16 +15,16 @@ export default function GuideHome() {
   const shown = useMemo(() => {
     const term = query.trim().toLowerCase();
     if (!term) return GUIDE_CARDS;
-    return GUIDE_CARDS.filter(
-      (c) => c.more || c.title.toLowerCase().includes(term) || (c.kw || '').includes(term),
-    );
+    return GUIDE_CARDS.filter((c) => c.more || c.title.toLowerCase().includes(term) || (c.kw || '').includes(term));
   }, [query]);
 
   return (
     <section className="px-[var(--container-x)]" id="guides" aria-labelledby="guide-home-title">
       <div className="max-w-[1200px] mx-auto">
         <div className="text-left mb-7">
-          <h2 className={`${SECTION_TITLE} ${ST_LEFT}`} id="guide-home-title">Guides &amp; Information</h2>
+          <h2 className={`${SECTION_TITLE} ${ST_LEFT}`} id="guide-home-title">
+            Guides &amp; Information
+          </h2>
         </div>
 
         <div className="relative max-w-[560px] mt-6 mx-auto mb-[1.7rem]">
@@ -40,7 +40,11 @@ export default function GuideHome() {
               onChange={(e) => setQuery(e.target.value)}
             />
           </div>
-          <div className="absolute left-0 right-0 top-[calc(100%+8px)] bg-white [border:1px_solid_var(--line)] rounded-lg overflow-hidden z-[6] [&[hidden]]:hidden" role="listbox" hidden />
+          <div
+            className="absolute left-0 right-0 top-[calc(100%+8px)] bg-white [border:1px_solid_var(--line)] rounded-lg overflow-hidden z-[6] [&[hidden]]:hidden"
+            role="listbox"
+            hidden
+          />
         </div>
 
         <Slider gridClassName={GRID_SLIDER}>
@@ -54,13 +58,28 @@ export default function GuideHome() {
                 style={{ backgroundImage: `url(/assets/images/${c.bg})`, backgroundColor: 'var(--color-green)' }}
               >
                 <span className="relative z-[1] flex flex-col items-center gap-[0.9rem] p-8 text-center">
-                  <span className="flex items-center justify-center w-14 h-14 border-2 border-[rgba(255,255,255,0.9)] rounded-[50%] text-[1.5rem] transition-[background-color,color,scale] duration-200 ease-[ease] group-hover:bg-white group-hover:text-green" aria-hidden="true">&rarr;</span>
+                  <span
+                    className="flex items-center justify-center w-14 h-14 border-2 border-[rgba(255,255,255,0.9)] rounded-[50%] text-[1.5rem] transition-[background-color,color,scale] duration-200 ease-[ease] group-hover:bg-white group-hover:text-green"
+                    aria-hidden="true"
+                  >
+                    &rarr;
+                  </span>
                   <span className="font-semibold text-h2">{c.title}</span>
                   <span className="text-small opacity-90">{c.sub}</span>
                 </span>
               </a>
             ) : (
-              <GuideCard key={c.href} href={c.href} img={c.img} alt={c.alt} title={c.title} tag={c.tag} cat={c.cat} w={c.w} hgt={c.hgt} />
+              <GuideCard
+                key={c.href}
+                href={c.href}
+                img={c.img}
+                alt={c.alt}
+                title={c.title}
+                tag={c.tag}
+                cat={c.cat}
+                w={c.w}
+                hgt={c.hgt}
+              />
             ),
           )}
         </Slider>

@@ -32,8 +32,12 @@ export default function InfoDot({ label = 'More information', align = 'start', s
 
   useEffect(() => {
     if (!open) return undefined;
-    function onDown(e) { if (!ref.current?.contains(e.target)) setOpen(false); }
-    function onKey(e) { if (e.key === 'Escape') setOpen(false); }
+    function onDown(e) {
+      if (!ref.current?.contains(e.target)) setOpen(false);
+    }
+    function onKey(e) {
+      if (e.key === 'Escape') setOpen(false);
+    }
     document.addEventListener('pointerdown', onDown);
     document.addEventListener('keydown', onKey);
     return () => {
@@ -56,7 +60,9 @@ export default function InfoDot({ label = 'More information', align = 'start', s
         <Info strokeWidth={1.7} className={ICON[tone]} aria-hidden="true" />
       </button>
       <PopMenu open={open}>
-        <span className={`${PANEL_BASE} ${PANEL_ALIGN[align] || PANEL_ALIGN.start}`} role="note">{children}</span>
+        <span className={`${PANEL_BASE} ${PANEL_ALIGN[align] || PANEL_ALIGN.start}`} role="note">
+          {children}
+        </span>
       </PopMenu>
     </span>
   );

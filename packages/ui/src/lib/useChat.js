@@ -15,7 +15,11 @@ function uid() {
 }
 
 function firstName(account) {
-  return account ? String(account.name || '').trim().split(/\s+/)[0] : '';
+  return account
+    ? String(account.name || '')
+        .trim()
+        .split(/\s+/)[0]
+    : '';
 }
 
 export default function useChat({
@@ -100,8 +104,7 @@ export default function useChat({
         return;
       }
       takeOwner(messages);
-    } catch (e) {
-    }
+    } catch (e) {}
   }, [client, thread, takeOwner, suggestions]);
 
   useEffect(() => {
@@ -111,7 +114,10 @@ export default function useChat({
       thread,
       onOpen: catchUp,
       onLive: setLive,
-      onPresence: (here) => { ownerHereRef.current = here; setOwnerHere(here); },
+      onPresence: (here) => {
+        ownerHereRef.current = here;
+        setOwnerHere(here);
+      },
       onTyping: (durationMs) => setTypingUntil(Date.now() + durationMs),
       onMessage: (message) => takeOwner([message]),
     });
@@ -146,51 +152,64 @@ export default function useChat({
     return () => clearTimeout(timer);
   }, [typingUntil]);
 
-  const connect = useCallback(async (question) => {
-    if (sending) return;
-    setSending(true);
-    const words = copyRef.current;
-    try {
-      const id = await client.start({
-        question,
-        name: (account && account.name) || '',
-        email: (account && account.email) || '',
-        page: String(page() || '').slice(0, 200),
-      });
-      setThread(id);
-      let hours = words.hoursClosed;
-      if (ownerHereRef.current) hours = words.hoursHere;
-      else if (isAround()) hours = words.hoursOpen;
-      say(`${words.connected} ${hours}`);
-    } catch (e) {
-      say(e.message || words.reachFailed);
-    }
-    setSending(false);
-  }, [sending, account, client, page, isAround]);
-
-  const ask = useCallback((question) => {
-    const text = String(question || '').trim();
-    if (!text || thinking || sending) return;
-    setDraft('');
-    setLog((prev) => [...prev, { id: uid(), from: 'me', text }]);
-
-    if (thread) {
-      deliver(thread, text);
-      return;
-    }
-
-    setThinking(true);
-    setTimeout(() => {
-      const result = answerFor(text) || { kind: 'handoff' };
-      const line = { id: uid(), from: 'bot', text: result.text, rows: result.rows, link: result.link, chips: result.chips };
-      if (result.kind === 'handoff') {
-        line.text = copyRef.current.connecting;
-        connect(text);
+  const connect = useCallback(
+    async (question) => {
+      if (sending) return;
+      setSending(true);
+      const words = copyRef.current;
+      try {
+        const id = await client.start({
+          question,
+          name: (account && account.name) || '',
+          email: (account && account.email) || '',
+          page: String(page() || '').slice(0, 200),
+        });
+        setThread(id);
+        let hours = words.hoursClosed;
+        if (ownerHereRef.current) hours = words.hoursHere;
+        else if (isAround()) hours = words.hoursOpen;
+        say(`${words.connected} ${hours}`);
+      } catch (e) {
+        say(e.message || words.reachFailed);
       }
-      setLog((prev) => [...prev, line]);
-      setThinking(false);
-    }, THINK_MS);
-  }, [answerFor, thinking, sending, thread, connect, client]);
+      setSending(false);
+    },
+    [sending, account, client, page, isAround],
+  );
+
+  const ask = useCallback(
+    (question) => {
+      const text = String(question || '').trim();
+      if (!text || thinking || sending) return;
+      setDraft('');
+      setLog((prev) => [...prev, { id: uid(), from: 'me', text }]);
+
+      if (thread) {
+        deliver(thread, text);
+        return;
+      }
+
+      setThinking(true);
+      setTimeout(() => {
+        const result = answerFor(text) || { kind: 'handoff' };
+        const line = {
+          id: uid(),
+          from: 'bot',
+          text: result.text,
+          rows: result.rows,
+          link: result.link,
+          chips: result.chips,
+        };
+        if (result.kind === 'handoff') {
+          line.text = copyRef.current.connecting;
+          connect(text);
+        }
+        setLog((prev) => [...prev, line]);
+        setThinking(false);
+      }, THINK_MS);
+    },
+    [answerFor, thinking, sending, thread, connect, client],
+  );
 
   useEffect(() => {
     if (!thread || mail !== 'idle') return undefined;
@@ -234,7 +253,21 @@ export default function useChat({
   }
 
   return {
-    log, draft, onDraft, ask, thinking, sending, thread, live, ownerHere, ownerTyping,
-    mail, mailDraft, setMailDraft, mailErr, saveEmail, skipMail: () => setMail('skip'),
+    log,
+    draft,
+    onDraft,
+    ask,
+    thinking,
+    sending,
+    thread,
+    live,
+    ownerHere,
+    ownerTyping,
+    mail,
+    mailDraft,
+    setMailDraft,
+    mailErr,
+    saveEmail,
+    skipMail: () => setMail('skip'),
   };
 }

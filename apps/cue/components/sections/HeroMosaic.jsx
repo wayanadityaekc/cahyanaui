@@ -8,7 +8,6 @@ import Slider from '@/components/ui/Slider';
 import { BLEED_MOBILE } from '@/components/ui/gridClasses';
 import useBodyLock from '@/components/ui/useBodyLock';
 
-
 const PILL_FROM = 10;
 
 const TILE_BASE =
@@ -20,8 +19,7 @@ const TRACK =
   `flex gap-1 aspect-[1.6/1] min-[769px]:aspect-[2.7/1] ` +
   `overflow-x-auto overflow-y-hidden overscroll-x-contain ` +
   `[scroll-snap-type:x_mandatory] [touch-action:pan-x_pan-y] ` +
-  `[scrollbar-width:none] [&::-webkit-scrollbar]:hidden ${ 
-  BLEED_MOBILE}`;
+  `[scrollbar-width:none] [&::-webkit-scrollbar]:hidden ${BLEED_MOBILE}`;
 const STATIC_1 = 'aspect-[16/10] min-[769px]:aspect-[2.7/1]';
 const STATIC_2 = `flex gap-1 ${STATIC_1} [&>*]:flex-1 [&>*]:min-w-0`;
 const MORE_BTN =
@@ -67,17 +65,19 @@ export default function HeroMosaic({ photos = [], title }) {
   }
 
   const children = [];
-  [...Array(Math.ceil(photos.length / 3)).keys()].map((k) => k * 3).forEach((i) => {
-    children.push(tile(i, BIG));
-    const pair = [i + 1, i + 2].filter((n) => n < photos.length);
-    if (pair.length) {
-      children.push(
-        <div className={PAIR} key={`pair-${i}`}>
-          {pair.map((n) => tile(n, TILE_BASE))}
-        </div>,
-      );
-    }
-  });
+  [...Array(Math.ceil(photos.length / 3)).keys()]
+    .map((k) => k * 3)
+    .forEach((i) => {
+      children.push(tile(i, BIG));
+      const pair = [i + 1, i + 2].filter((n) => n < photos.length);
+      if (pair.length) {
+        children.push(
+          <div className={PAIR} key={`pair-${i}`}>
+            {pair.map((n) => tile(n, TILE_BASE))}
+          </div>,
+        );
+      }
+    });
 
   const gallery =
     photos.length === 1 ? (
@@ -112,7 +112,12 @@ export default function HeroMosaic({ photos = [], title }) {
               <span className="font-body text-small text-[rgba(255,255,255,0.75)]">
                 {openIndex + 1} / {photos.length}
               </span>
-              <button type="button" className={LB_ICON_BTN} onClick={() => setOpenIndex(null)} aria-label="Close photos">
+              <button
+                type="button"
+                className={LB_ICON_BTN}
+                onClick={() => setOpenIndex(null)}
+                aria-label="Close photos"
+              >
                 &times;
               </button>
             </div>

@@ -35,7 +35,10 @@ export default function SearchCard({ layout = 'bar' }) {
         icon={<CalendarDays className={iconCls} strokeWidth={1.7} aria-hidden="true" />}
         placeholders={{ start: 'Select dates', end: 'Add date' }}
         value={{ checkIn, checkOut }}
-        onChange={(range) => { setCheckIn(range.checkIn); setCheckOut(range.checkOut); }}
+        onChange={(range) => {
+          setCheckIn(range.checkIn);
+          setCheckOut(range.checkOut);
+        }}
       />
       <Select
         id="search-guests"
@@ -44,7 +47,10 @@ export default function SearchCard({ layout = 'bar' }) {
         icon={<UserRound className={iconCls} strokeWidth={1.7} aria-hidden="true" />}
         value={String(guests)}
         onChange={(value) => setGuests(Number(value))}
-        options={GUEST_OPTIONS.map((count) => ({ value: String(count), label: `${count} guest${count > 1 ? 's' : ''}` }))}
+        options={GUEST_OPTIONS.map((count) => ({
+          value: String(count),
+          label: `${count} guest${count > 1 ? 's' : ''}`,
+        }))}
       />
       <Select
         id="search-currency"
@@ -65,18 +71,26 @@ export default function SearchCard({ layout = 'bar' }) {
         <DateRangeField
           id="search-checkin"
           value={{ checkIn, checkOut }}
-          onChange={(range) => { setCheckIn(range.checkIn); setCheckOut(range.checkOut); }}
+          onChange={(range) => {
+            setCheckIn(range.checkIn);
+            setCheckOut(range.checkOut);
+          }}
         />
       </div>
 
       <div className="min-w-0">
-        <label className={SEARCH_LABEL} htmlFor="search-guests">Guests</label>
+        <label className={SEARCH_LABEL} htmlFor="search-guests">
+          Guests
+        </label>
         <Select
           id="search-guests"
           label="Guests"
           value={String(guests)}
           onChange={(value) => setGuests(Number(value))}
-          options={GUEST_OPTIONS.map((count) => ({ value: String(count), label: `${count} guest${count > 1 ? 's' : ''}` }))}
+          options={GUEST_OPTIONS.map((count) => ({
+            value: String(count),
+            label: `${count} guest${count > 1 ? 's' : ''}`,
+          }))}
         />
       </div>
     </>

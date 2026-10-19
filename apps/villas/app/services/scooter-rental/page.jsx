@@ -5,7 +5,8 @@ import { breadcrumbList, serviceCrumbs } from '@/lib/schema';
 
 export const metadata = pageMeta({
   title: 'Scooter Rental in Ubud',
-  description: 'Scooter rental for guests at Cahyana House and Cahyana Tibuah in Ubud. Details are being confirmed; message us with your dates and we will tell you what is available.',
+  description:
+    'Scooter rental for guests at Cahyana House and Cahyana Tibuah in Ubud. Details are being confirmed; message us with your dates and we will tell you what is available.',
   path: '/services/scooter-rental/',
 });
 

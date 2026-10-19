@@ -75,19 +75,24 @@ export function AccountProvider({ children }) {
     if (!trips || !trips.history) return [];
     const out = [];
     trips.history.forEach((t) => {
-      (t.review_items || []).forEach((s) => out.push({
-        ref: t.ref,
-        service: s,
-        tripName: t.name,
-        date: t.start_date ? fmtDay(t.start_date) : '',
-      }));
+      (t.review_items || []).forEach((s) =>
+        out.push({
+          ref: t.ref,
+          service: s,
+          tripName: t.name,
+          date: t.start_date ? fmtDay(t.start_date) : '',
+        }),
+      );
     });
     return out;
   }, [trips]);
 
   const refreshMyReviews = useCallback(async () => {
     const token = readLocal(KEY.token, '');
-    if (!token) { setMyReviews([]); return; }
+    if (!token) {
+      setMyReviews([]);
+      return;
+    }
     try {
       const response = await fetch(`${API_BASE}/reviews/mine`, { headers: { Authorization: `Bearer ${token}` } });
       const d = response.ok ? await response.json() : [];
@@ -185,7 +190,25 @@ export function AccountProvider({ children }) {
   }
 
   return (
-    <AccountContext.Provider value={{ account, setAccount, hasUpcoming, trips, reviewableItems, refreshTrips, myReviews, refreshMyReviews, deleteAccount, logout, requestLogin, verifyCode, createAccount, hydrated, justSignedIn }}>
+    <AccountContext.Provider
+      value={{
+        account,
+        setAccount,
+        hasUpcoming,
+        trips,
+        reviewableItems,
+        refreshTrips,
+        myReviews,
+        refreshMyReviews,
+        deleteAccount,
+        logout,
+        requestLogin,
+        verifyCode,
+        createAccount,
+        hydrated,
+        justSignedIn,
+      }}
+    >
       {children}
     </AccountContext.Provider>
   );

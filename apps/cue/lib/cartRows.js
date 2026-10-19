@@ -18,21 +18,36 @@ export function cartRows(state, displayGuests) {
       });
     });
   });
-  (state.transfers || []).forEach((t, transferIndex) => out.push({
-    kind: 'transfer', type: 'transfer', service: t.route, date: t.date || '',
-    guests: parseInt(t.guests, 10) || displayGuests, return: !!t.return, localIndex: transferIndex,
-    ...(t.direction ? { direction: t.direction } : null),
-    ...(t.pickup ? { pickup: t.pickup } : null),
-    ...(t.dropoff ? { dropoff: t.dropoff } : null),
-    ...(t.time ? { time: t.time } : null),
-    ...(t.flight_number ? { flight_number: t.flight_number } : null),
-    ...(t.flight_datetime ? { flight_datetime: t.flight_datetime } : null),
-  }));
-  (state.charters || []).forEach((c, charterIndex) => out.push({
-    kind: 'charter', type: 'charter', service: CHARTER_SERVICE, date: c.date || '',
-    guests: parseInt(c.guests, 10) || displayGuests, area: c.area || 'Ubud',
-    duration: c.dur || c.duration, extra: c.extra || 0, localIndex: charterIndex,
-    ...(c.time ? { time: c.time } : null),
-  }));
+  (state.transfers || []).forEach((t, transferIndex) =>
+    out.push({
+      kind: 'transfer',
+      type: 'transfer',
+      service: t.route,
+      date: t.date || '',
+      guests: parseInt(t.guests, 10) || displayGuests,
+      return: !!t.return,
+      localIndex: transferIndex,
+      ...(t.direction ? { direction: t.direction } : null),
+      ...(t.pickup ? { pickup: t.pickup } : null),
+      ...(t.dropoff ? { dropoff: t.dropoff } : null),
+      ...(t.time ? { time: t.time } : null),
+      ...(t.flight_number ? { flight_number: t.flight_number } : null),
+      ...(t.flight_datetime ? { flight_datetime: t.flight_datetime } : null),
+    }),
+  );
+  (state.charters || []).forEach((c, charterIndex) =>
+    out.push({
+      kind: 'charter',
+      type: 'charter',
+      service: CHARTER_SERVICE,
+      date: c.date || '',
+      guests: parseInt(c.guests, 10) || displayGuests,
+      area: c.area || 'Ubud',
+      duration: c.dur || c.duration,
+      extra: c.extra || 0,
+      localIndex: charterIndex,
+      ...(c.time ? { time: c.time } : null),
+    }),
+  );
   return out;
 }

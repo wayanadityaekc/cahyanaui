@@ -2,7 +2,12 @@ import { copyFileSync, existsSync, mkdirSync, readFileSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-const SHARED_FILES = ['CLAUDE-global.md', 'tools/eslint/cahyana-rules.mjs', 'tools/eslint/css-comments.mjs', 'tools/check-global.mjs'];
+const SHARED_FILES = [
+  'CLAUDE-global.md',
+  'tools/eslint/cahyana-rules.mjs',
+  'tools/eslint/css-comments.mjs',
+  'tools/check-global.mjs',
+];
 const SITE_REPOS = ['cahyana-api', 'cahyana-dashboard', 'cahyana-ubud-experience', 'cahyana-my', 'ubud-private-villas'];
 
 const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');

@@ -4,8 +4,12 @@ import { useEffect, useRef, useState } from 'react';
 import { ChevronDown, LayoutGrid } from 'lucide-react';
 import { PopMenu } from '@/components/ui/Reveal';
 
-export function CAT_ITEM(active) { return `text-left font-body text-body leading-[var(--lh-body)] no-underline ${active ? 'font-semibold text-gold' : 'text-muted'}`; }
-export function CAT_ITEM_TAP(active) { return `${CAT_ITEM(active)} py-[var(--space-1)]`; }
+export function CAT_ITEM(active) {
+  return `text-left font-body text-body leading-[var(--lh-body)] no-underline ${active ? 'font-semibold text-gold' : 'text-muted'}`;
+}
+export function CAT_ITEM_TAP(active) {
+  return `${CAT_ITEM(active)} py-[var(--space-1)]`;
+}
 
 const PANEL =
   'absolute left-0 right-0 top-[calc(100%+var(--space-1))] z-30 flex flex-col p-[var(--space-1)] ' +
@@ -21,8 +25,12 @@ export default function CatDropdown({ label, ariaLabel, className = '', children
 
   useEffect(() => {
     if (!open) return undefined;
-    function onDown(e) { if (!ref.current?.contains(e.target)) setOpen(false); }
-    function onKey(e) { if (e.key === 'Escape') setOpen(false); }
+    function onDown(e) {
+      if (!ref.current?.contains(e.target)) setOpen(false);
+    }
+    function onKey(e) {
+      if (e.key === 'Escape') setOpen(false);
+    }
     document.addEventListener('pointerdown', onDown);
     document.addEventListener('keydown', onKey);
     return () => {

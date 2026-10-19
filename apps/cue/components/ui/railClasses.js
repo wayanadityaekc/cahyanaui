@@ -6,8 +6,7 @@ export const RAIL_PAGE_BOX = `${PAGE_WIDE} pb-[var(--space-5)]`;
 
 export const RAIL_PAGE = `${RAIL_PAGE_BOX} pt-[calc(var(--header-h-max,104px)+1.9rem)]`;
 
-export const RAIL_PAGE_SCROLL =
-  `${PAGE_WIDE} pb-[var(--space-3)] pt-[calc(var(--header-h-max,104px)+var(--space-3))]`;
+export const RAIL_PAGE_SCROLL = `${PAGE_WIDE} pb-[var(--space-3)] pt-[calc(var(--header-h-max,104px)+var(--space-3))]`;
 
 const FRAME_DESK =
   'flex items-stretch bg-white [border:1px_solid_var(--line)] rounded-[var(--r-lg)] ' +
@@ -46,12 +45,15 @@ export const RAIL_LABEL =
   'font-body text-label font-medium tracking-[0.14em] uppercase text-muted m-0 mb-[var(--space-2)] px-[0.75rem]';
 
 export function railItem(active, collapsed = false) {
-  return `flex items-center ${collapsed ? 'justify-center w-9 h-9 p-0' : 'w-full text-left p-[0.55rem_0.75rem] gap-[0.65rem]'} ` +
+  return (
+    `flex items-center ${collapsed ? 'justify-center w-9 h-9 p-0' : 'w-full text-left p-[0.55rem_0.75rem] gap-[0.65rem]'} ` +
     `rounded-[var(--r-md)] bg-transparent border-none cursor-pointer font-body text-body leading-[1.35] ` +
-    `[&>svg]:w-[var(--icon-sm)] [&>svg]:h-[var(--icon-sm)] [&>svg]:shrink-0 ${ 
-    active
-      ? `font-semibold text-gold bg-white [border:1px_solid_var(--line)] ${collapsed ? '' : 'p-[calc(0.55rem-1px)_calc(0.75rem-1px)]'}`
-      : 'text-muted [&>svg]:opacity-75 hover:text-gold'}`;
+    `[&>svg]:w-[var(--icon-sm)] [&>svg]:h-[var(--icon-sm)] [&>svg]:shrink-0 ${
+      active
+        ? `font-semibold text-gold bg-white [border:1px_solid_var(--line)] ${collapsed ? '' : 'p-[calc(0.55rem-1px)_calc(0.75rem-1px)]'}`
+        : 'text-muted [&>svg]:opacity-75 hover:text-gold'
+    }`
+  );
 }
 
 export const RAIL_HEADER =
@@ -87,9 +89,12 @@ export const MENU_ROW_BOX =
   '[&>svg]:w-[var(--icon-sm)] [&>svg]:h-[var(--icon-sm)] [&>svg]:shrink-0';
 
 export function railMobileItem(active) {
-  return `${MENU_ROW_BOX} ` +
-    `bg-transparent border-none cursor-pointer font-body text-body leading-[1.35] ${ 
-    active ? 'font-semibold text-gold bg-cream' : 'text-muted [&>svg]:opacity-75'}`;
+  return (
+    `${MENU_ROW_BOX} ` +
+    `bg-transparent border-none cursor-pointer font-body text-body leading-[1.35] ${
+      active ? 'font-semibold text-gold bg-cream' : 'text-muted [&>svg]:opacity-75'
+    }`
+  );
 }
 
 export const RAIL_MCHEV = 'ml-auto w-[var(--icon-sm)] h-[var(--icon-sm)] shrink-0 text-muted opacity-70';

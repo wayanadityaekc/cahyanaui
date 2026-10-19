@@ -1,4 +1,3 @@
-
 const FREE_CANCEL = {
   text: 'Free cancellation up to 24 hours',
   cta: 'See policy',

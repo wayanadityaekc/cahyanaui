@@ -41,9 +41,15 @@ export default function ReviewList({
 
   return (
     <>
-      {variant === 'grid'
-        ? <div className={`${REVIEW_GRID} ${className}`.trim()} data-reviews-track>{cards}</div>
-        : <Slider className={className} gridClassName={REVIEW_SLIDER}>{cards}</Slider>}
+      {variant === 'grid' ? (
+        <div className={`${REVIEW_GRID} ${className}`.trim()} data-reviews-track>
+          {cards}
+        </div>
+      ) : (
+        <Slider className={className} gridClassName={REVIEW_SLIDER}>
+          {cards}
+        </Slider>
+      )}
       <ReviewDetail review={selected} onClose={() => setSelected(null)} />
     </>
   );

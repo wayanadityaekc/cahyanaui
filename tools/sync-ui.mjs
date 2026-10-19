@@ -43,7 +43,7 @@ const pkgPath = path.join(DEST, 'package.json');
 const pkg = JSON.parse(fs.readFileSync(path.join(APP, 'package.json'), 'utf8'));
 pkg.dependencies['@cahyana/ui'] = 'file:packages/ui';
 pkg.dependencies = Object.fromEntries(Object.entries(pkg.dependencies).sort());
-fs.writeFileSync(pkgPath, `${JSON.stringify(pkg, null, 2)  }\n`);
+fs.writeFileSync(pkgPath, `${JSON.stringify(pkg, null, 2)}\n`);
 
 const cssPath = path.join(DEST, 'app', 'globals.css');
 let css = fs.readFileSync(cssPath, 'utf8');
@@ -56,7 +56,9 @@ if (!css.includes(MONO)) {
 }
 fs.writeFileSync(cssPath, css.replace(MONO, LIVE));
 
-fs.writeFileSync(path.join(DEST, 'packages', 'ui', 'VENDORED.md'), `# This directory is a COPY. Do not edit it here.
+fs.writeFileSync(
+  path.join(DEST, 'packages', 'ui', 'VENDORED.md'),
+  `# This directory is a COPY. Do not edit it here.
 
 \`@cahyana/ui\` lives in the monorepo, wayanadityaekc/cahyanaui, at \`packages/ui\`.
 This copy exists for one reason: this repository is what actually deploys the
@@ -70,7 +72,8 @@ there.** An edit made here is lost at the next sync, and until then the two
 copies disagree - which is exactly the drift the library was built to remove.
 
 This goes away when Hostinger is pointed at the monorepo.
-`);
+`,
+);
 
 console.log(`synced -> ${DEST}`);
 console.log('now, in that repo:  npm install && npm run build');

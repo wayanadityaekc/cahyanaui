@@ -13,7 +13,11 @@ export async function generateMetadata({ params }) {
   const { slug } = await params;
   const article = articleBySlug(slug);
   if (!article) return {};
-  return pageMeta({ title: article.metaTitle || article.title, description: article.metaDesc || article.sub, path: `/guide/${slug}/` });
+  return pageMeta({
+    title: article.metaTitle || article.title,
+    description: article.metaDesc || article.sub,
+    path: `/guide/${slug}/`,
+  });
 }
 
 export default async function GuideArticleRoute({ params }) {

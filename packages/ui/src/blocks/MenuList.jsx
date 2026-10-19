@@ -6,9 +6,11 @@ const GRIDS = {
   3: 'grid grid-cols-2 min-[769px]:grid-cols-3 gap-x-2 gap-y-6 m-0 p-0 list-none',
 };
 
-const PHOTO = 'relative aspect-[4/3] overflow-hidden rounded-base bg-cream [&>img]:absolute [&>img]:inset-0 [&>img]:w-full [&>img]:h-full [&>img]:object-cover';
+const PHOTO =
+  'relative aspect-[4/3] overflow-hidden rounded-base bg-cream [&>img]:absolute [&>img]:inset-0 [&>img]:w-full [&>img]:h-full [&>img]:object-cover';
 
-const EMPTY = 'absolute inset-0 rounded-base grid place-content-center justify-items-center gap-1 text-muted border border-dashed border-line';
+const EMPTY =
+  'absolute inset-0 rounded-base grid place-content-center justify-items-center gap-1 text-muted border border-dashed border-line';
 
 export default function MenuList({
   groups = [],

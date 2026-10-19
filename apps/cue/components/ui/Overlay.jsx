@@ -9,11 +9,7 @@ export default function Overlay({ open, elevated = false, onClose }) {
 
   if (typeof document === 'undefined') return null;
   return createPortal(
-    <div
-      className={overlay(open, elevated)}
-      data-portal="overlay"
-      onClick={onClose}
-    />,
+    <div className={overlay(open, elevated)} data-portal="overlay" onClick={onClose} />,
     document.body,
   );
 }

@@ -60,7 +60,7 @@ export default function Navbar() {
         linkAs={Link}
         isActive={isActive}
         links={LINKS}
-        logo={(
+        logo={
           <Link href="/" className="max-[992px]:mr-auto" aria-label="Ubud Private Villas home">
             <img
               className="h-10 w-auto block mr-4 ml-[0.1rem] max-[992px]:h-[34px] max-[992px]:ml-0"
@@ -70,17 +70,19 @@ export default function Navbar() {
               height="324"
             />
           </Link>
-        )}
-        actions={(
+        }
+        actions={
           <>
             <ChatLauncher className={NAV_ICON} />
 
             <Link href="/my-booking" className={`relative ${NAV_ICON}`} aria-label="My Booking">
               <ShoppingBag className="w-5 h-5" strokeWidth={1.6} aria-hidden="true" />
-              <span className={NAV_BADGE} hidden={!count}>{count}</span>
+              <span className={NAV_BADGE} hidden={!count}>
+                {count}
+              </span>
             </Link>
           </>
-        )}
+        }
         extras={<FlagDefs />}
         fields={<TripPrefsFields idPrefix="acct" />}
         drawerFoot={(close) => (
@@ -89,7 +91,7 @@ export default function Navbar() {
             WhatsApp
           </Button>
         )}
-        account={(
+        account={
           <AccountMenu
             pop={PopMenu}
             account={account}
@@ -102,7 +104,7 @@ export default function Navbar() {
             prefs={<TripPrefsFields idPrefix="menu" />}
             rows={ACCOUNT_ROWS}
           />
-        )}
+        }
       />
       <AuthSheet open={authOpen} onClose={() => setAuthOpen(false)} />
     </>

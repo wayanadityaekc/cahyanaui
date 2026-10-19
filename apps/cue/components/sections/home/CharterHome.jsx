@@ -20,14 +20,23 @@ export default function CharterHome({ paired = false }) {
     if (d && CHARTER.durations.some((x) => x.dur === d.dur)) setDur(d.dur);
   }, []);
 
-  function pick(d) { setDur(d); saveCharterDraft({ dur: d }); }
+  function pick(d) {
+    setDur(d);
+    saveCharterDraft({ dur: d });
+  }
 
   return (
     <section className={paired ? SECTION_PAIRED : SECTION} id="charter-promo">
-      <div className={`bg-white border border-line rounded-lg p-[var(--space-5)] max-[560px]:p-[var(--space-4)_var(--space-3)] ${paired ? 'min-[993px]:h-full' : ''}`}>
+      <div
+        className={`bg-white border border-line rounded-lg p-[var(--space-5)] max-[560px]:p-[var(--space-4)_var(--space-3)] ${paired ? 'min-[993px]:h-full' : ''}`}
+      >
         <div className="text-center mb-[var(--space-3)]">
-          <span className="block uppercase tracking-[0.14em] text-label text-muted mb-[0.4rem]">One more way to explore</span>
-          <h2 className="font-head text-h2 font-medium tracking-[-0.01em] mb-[0.6rem] text-gold">Charter a car for the whole day</h2>
+          <span className="block uppercase tracking-[0.14em] text-label text-muted mb-[0.4rem]">
+            One more way to explore
+          </span>
+          <h2 className="font-head text-h2 font-medium tracking-[-0.01em] mb-[0.6rem] text-gold">
+            Charter a car for the whole day
+          </h2>
           <p className="text-body leading-[1.6] text-ink mx-auto max-w-[60ch]">
             Private car and driver, yours for the day. Pick a length, build your own route. Petrol included, pick up
             anywhere on the island.
@@ -36,10 +45,13 @@ export default function CharterHome({ paired = false }) {
 
         <CharterPlans value={dur} onChange={pick} />
 
-        <a className={`${BTN_BOOK} block max-w-[320px] mx-auto text-center`} href="/charter.html">Build charter</a>
+        <a className={`${BTN_BOOK} block max-w-[320px] mx-auto text-center`} href="/charter.html">
+          Build charter
+        </a>
 
         <p className="text-center mt-[var(--space-3)] text-small text-muted">
-          Only a <b className="text-gold font-semibold">$10 deposit</b> to book &middot; prices per car, pick-up outside Ubud <CharterSurcharge />
+          Only a <b className="text-gold font-semibold">$10 deposit</b> to book &middot; prices per car, pick-up outside
+          Ubud <CharterSurcharge />
         </p>
       </div>
     </section>

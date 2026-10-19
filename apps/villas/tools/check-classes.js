@@ -4,7 +4,8 @@ const path = require('node:path');
 
 const ROOT = path.join(__dirname, '..');
 
-const VARIANT = /^(hover|focus|focus-within|focus-visible|active|visited|target|disabled|checked|required|invalid|open|group-open|group-hover|group-focus|peer-[\w-]+|first|last|only|odd|even|first-of-type|last-of-type|empty|before|after|placeholder|file|marker|selection|backdrop|motion-reduce|motion-safe|standalone|dark|light|print|portrait|landscape|rtl|ltr|sm|md|lg|xl|2xl|min|max|aria-\[[^\]]*\]|data-\[[^\]]*\]|has-\[[^\]]*\]|not-has-\[[^\]]*\]|group-has-\[[^\]]*\]|peer-has-\[[^\]]*\]|max-\[[^\]]*\]|min-\[[^\]]*\]|supports-\[[^\]]*\]|\[@[^\]]*\]|\[&[^\]]*\])$/;
+const VARIANT =
+  /^(hover|focus|focus-within|focus-visible|active|visited|target|disabled|checked|required|invalid|open|group-open|group-hover|group-focus|peer-[\w-]+|first|last|only|odd|even|first-of-type|last-of-type|empty|before|after|placeholder|file|marker|selection|backdrop|motion-reduce|motion-safe|standalone|dark|light|print|portrait|landscape|rtl|ltr|sm|md|lg|xl|2xl|min|max|aria-\[[^\]]*\]|data-\[[^\]]*\]|has-\[[^\]]*\]|not-has-\[[^\]]*\]|group-has-\[[^\]]*\]|peer-has-\[[^\]]*\]|max-\[[^\]]*\]|min-\[[^\]]*\]|supports-\[[^\]]*\]|\[@[^\]]*\]|\[&[^\]]*\])$/;
 
 function libraryDir() {
   const vendored = path.join(ROOT, 'packages/ui/src');
@@ -29,7 +30,10 @@ function segments(token) {
   [...token].forEach((ch) => {
     if (ch === '[' || ch === '(') depth++;
     else if (ch === ']' || ch === ')') depth--;
-    if (ch === ':' && depth === 0) { parts.push(current); current = ''; } else current += ch;
+    if (ch === ':' && depth === 0) {
+      parts.push(current);
+      current = '';
+    } else current += ch;
   });
   parts.push(current);
   return parts;
@@ -40,18 +44,35 @@ function stringLiterals(src) {
   const stack = [{ kind: 'code', depth: 0 }];
   let chunk = null;
   let i = 0;
-  function open(kind) { stack.push({ kind }); chunk = { text: '', start: i + 1 }; }
-  function close() { if (chunk) found.push(chunk); chunk = null; stack.pop(); }
+  function open(kind) {
+    stack.push({ kind });
+    chunk = { text: '', start: i + 1 };
+  }
+  function close() {
+    if (chunk) found.push(chunk);
+    chunk = null;
+    stack.pop();
+  }
   while (i < src.length) {
     const ch = src[i];
     const top = stack[stack.length - 1];
     if (top.kind === 'code') {
-      if (ch === '/' && src[i + 1] === '/') { i = src.indexOf('\n', i); if (i === -1) break; continue; }
-      if (ch === '/' && src[i + 1] === '*') { const end = src.indexOf('*/', i + 2); i = end === -1 ? src.length : end + 2; continue; }
+      if (ch === '/' && src[i + 1] === '/') {
+        i = src.indexOf('\n', i);
+        if (i === -1) break;
+        continue;
+      }
+      if (ch === '/' && src[i + 1] === '*') {
+        const end = src.indexOf('*/', i + 2);
+        i = end === -1 ? src.length : end + 2;
+        continue;
+      }
       if (ch === '"' || ch === "'" || ch === '`') open(ch);
       else if (ch === '{') top.depth++;
-      else if (ch === '}' && top.inTemplate && top.depth === 0) { stack.pop(); chunk = { text: '', start: i + 1 }; }
-      else if (ch === '}') top.depth--;
+      else if (ch === '}' && top.inTemplate && top.depth === 0) {
+        stack.pop();
+        chunk = { text: '', start: i + 1 };
+      } else if (ch === '}') top.depth--;
     } else if (ch === '\\') {
       if (chunk) chunk.text += src.slice(i, i + 2);
       i += 2;
@@ -101,7 +122,8 @@ files.forEach((file) => {
       if (!parts.length || !parts.every((part) => VARIANT.test(part))) return;
       tokensChecked++;
       if (last === '') bad.push([rel, lineAt(src, at), token, 'variant prefix with no utility after it']);
-      else if (new Set(parts).size !== parts.length) bad.push([rel, lineAt(src, at), token, 'the same variant prefix twice']);
+      else if (new Set(parts).size !== parts.length)
+        bad.push([rel, lineAt(src, at), token, 'the same variant prefix twice']);
     });
     const empty = text.indexOf('var(--)');
     if (empty !== -1) bad.push([rel, lineAt(src, start + empty), 'var(--)', 'empty custom property']);
@@ -118,5 +140,7 @@ if (!bad.length) {
   process.exit(0);
 }
 console.error(`check-classes: ${bad.length} malformed utilit${bad.length > 1 ? 'ies' : 'y'}\n`);
-bad.forEach(([file, line, token, why]) => { console.error(`  ${file}:${line}\n    ${token}\n    ${why} - it generates no CSS at all\n`); });
+bad.forEach(([file, line, token, why]) => {
+  console.error(`  ${file}:${line}\n    ${token}\n    ${why} - it generates no CSS at all\n`);
+});
 process.exit(1);

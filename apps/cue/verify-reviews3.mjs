@@ -1,15 +1,25 @@
 import { chromium } from '/home/user/CUE/node_modules/playwright-core/index.mjs';
 
 const BASE = process.env.BASE || 'http://127.0.0.1:4010';
-let pass = 0, fail = 0;
-function ok(c, m) { c ? pass++ : (fail++, console.log('  FAIL:', m)); }
+let pass = 0,
+  fail = 0;
+function ok(c, m) {
+  c ? pass++ : (fail++, console.log('  FAIL:', m));
+}
 
 const b = await chromium.launch({
   executablePath: process.env.PW_BIN || '/opt/pw-browsers/chromium-1194/chrome-linux/chrome',
 });
 
 const REVIEWS = [
-  { name: 'Anna', service: 'Charter', rating: 5, message: 'Went wherever we asked all day.', country: 'AU', created_at: '2026-09-18' },
+  {
+    name: 'Anna',
+    service: 'Charter',
+    rating: 5,
+    message: 'Went wherever we asked all day.',
+    country: 'AU',
+    created_at: '2026-09-18',
+  },
 ];
 
 const PAGES = [
@@ -38,8 +48,10 @@ for (const w of [390, 1280]) {
 
     const tag = `${p.label}@${w}`;
     ok(asked.length > 0, `${tag}: the page never asked for reviews`);
-    ok(asked.some((u) => decodeURIComponent(u).includes(p.expect)),
-       `${tag}: asked ${asked.map((u) => decodeURIComponent(u).split('/reviews')[1]).join(' , ')} - expected ${p.expect}`);
+    ok(
+      asked.some((u) => decodeURIComponent(u).includes(p.expect)),
+      `${tag}: asked ${asked.map((u) => decodeURIComponent(u).split('/reviews')[1]).join(' , ')} - expected ${p.expect}`,
+    );
     ok(asked.length === 1, `${tag}: asked for reviews ${asked.length} times`);
 
     const txt = await page.locator('body').innerText();
@@ -73,11 +85,19 @@ async function myTrips({ url, trips }) {
   const page = await ctx.newPage();
   const errs = [];
   page.on('pageerror', (e) => errs.push(String(e)));
-  await page.addInitScript(() => { try { localStorage.setItem('cue_token', 'tok-test'); } catch (e) {} });
+  await page.addInitScript(() => {
+    try {
+      localStorage.setItem('cue_token', 'tok-test');
+    } catch (e) {}
+  });
   await page.route('**/api/**', async (route) => {
     const u = route.request().url();
     if (/\/account\/session/.test(u)) {
-      return route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ account: { name: 'Anna', email: 'a@b.c' } }) });
+      return route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({ account: { name: 'Anna', email: 'a@b.c' } }),
+      });
     }
     if (/\/bookings\/mine/.test(u)) {
       return route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(trips) });
@@ -96,8 +116,14 @@ async function myTrips({ url, trips }) {
   const modal = page.locator('[data-step="write"]').first();
   const open = await modal.isVisible().catch(() => false);
   ok(open, 'review link: the review popup did not open');
-  ok(await page.getByText("Leave a Review", { exact: true }).first().isVisible().catch(() => false),
-     'review link: the popup is open but is not the review form');
+  ok(
+    await page
+      .getByText('Leave a Review', { exact: true })
+      .first()
+      .isVisible()
+      .catch(() => false),
+    'review link: the popup is open but is not the review form',
+  );
   const url = await page.evaluate(() => window.location.search);
   ok(!/review=1/.test(url), `review link: the flag stayed in the URL (${url})`);
   ok(errs.length === 0, `review link: page errors ${errs.join(' | ')}`);
@@ -105,7 +131,10 @@ async function myTrips({ url, trips }) {
 }
 
 {
-  const empty = { upcoming: [], history: [{ ref: 'CUE-002', name: 'Ubud Tour', start_date: '2026-01-02', review_items: [] }] };
+  const empty = {
+    upcoming: [],
+    history: [{ ref: 'CUE-002', name: 'Ubud Tour', start_date: '2026-01-02', review_items: [] }],
+  };
   const { page, ctx } = await myTrips({ url: '/my-trips.html?review=1', trips: empty });
   const modal = page.locator('[data-step="write"]').first();
   const open = await modal.isVisible().catch(() => false);
@@ -126,7 +155,11 @@ async function myTrips({ url, trips }) {
   const url = await page.evaluate(() => window.location.search);
   ok(!/review=1/.test(url), `the flag stayed (${url})`);
   ok(!/token=abc/.test(url), `the magic-link token was left in the URL (${url})`);
-  const openedToo = await page.locator('[data-step="write"]').first().isVisible().catch(() => false);
+  const openedToo = await page
+    .locator('[data-step="write"]')
+    .first()
+    .isVisible()
+    .catch(() => false);
   ok(openedToo, 'with a token in the URL too, the popup did not open - the two rewrites clobbered each other');
   await ctx.close();
 }

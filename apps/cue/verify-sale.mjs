@@ -1,25 +1,34 @@
 import { chromium } from '/home/user/CUE/node_modules/playwright-core/index.mjs';
 
 const BASE = process.env.BASE || 'http://localhost:4000';
-let pass = 0, fail = 0;
-function ok(c, m) { c ? pass++ : (fail++, console.log('  FAIL:', m)); }
+let pass = 0,
+  fail = 0;
+function ok(c, m) {
+  c ? pass++ : (fail++, console.log('  FAIL:', m));
+}
 
 const ON_SALE = 'Ubud Tour';
-const SALE = 40, LIST = 45;
+const SALE = 40,
+  LIST = 45;
 
 function catalogFor(symbol) {
   const cur = symbol === 'Rp' ? 'IDR' : 'USD';
-  function n(usd) { return (symbol === 'Rp' ? usd * 17600 : usd); }
+  function n(usd) {
+    return symbol === 'Rp' ? usd * 17600 : usd;
+  }
   function item(name, price, list) {
-    return ({
+    return {
       name,
       standard: { display: n(price) },
       listStandard: { display: n(list == null ? price : list) },
-      exclusive: null, listExclusive: null, hasExclusive: false,
-    });
+      exclusive: null,
+      listExclusive: null,
+      hasExclusive: false,
+    };
   }
   return {
-    symbol, currency: cur,
+    symbol,
+    currency: cur,
     promo: { pct: 10, endsOn: '2099-01-01', label: 'Low season' },
     items: [
       item(ON_SALE, SALE, LIST),
@@ -29,7 +38,11 @@ function catalogFor(symbol) {
       item('ATV Adventure', 72),
     ],
     transfers: [{ route: 'Airport – Ubud', display: n(26) }],
-    charters: [{ duration: 'half', display: n(35) }, { duration: 'full', display: n(57) }, { duration: 'long', display: n(64) }],
+    charters: [
+      { duration: 'half', display: n(35) },
+      { duration: 'full', display: n(57) },
+      { duration: 'long', display: n(64) },
+    ],
   };
 }
 
@@ -42,9 +55,14 @@ for (const symbol of ['$', 'Rp']) {
     const ctx = await b.newContext({ viewport: { width: w, height: 900 } });
     await ctx.routeWebSocket(/\/ws\//, (ws) => ws.close());
     await ctx.route('**/api/pricing/catalog*', (r) =>
-      r.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(catalogFor(symbol)) }));
+      r.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(catalogFor(symbol)) }),
+    );
     if (symbol === 'Rp') {
-      await ctx.addInitScript(() => { try { localStorage.setItem('cue_currency', 'IDR'); } catch (e) {} });
+      await ctx.addInitScript(() => {
+        try {
+          localStorage.setItem('cue_currency', 'IDR');
+        } catch (e) {}
+      });
     }
 
     for (const path of ['/tour.html', '/ubud-tour.html']) {
@@ -52,10 +70,16 @@ for (const symbol of ['$', 'Rp']) {
       const errs = [];
       page.on('pageerror', (e) => errs.push(e.message));
       await page.goto(BASE + path, { waitUntil: 'load' });
-      await page.waitForFunction((name) => {
-        const element = document.querySelector(`[data-price="${name}"]`);
-        return element && element.querySelector('[data-price-was]');
-      }, ON_SALE, { timeout: 15000 }).catch(() => {});
+      await page
+        .waitForFunction(
+          (name) => {
+            const element = document.querySelector(`[data-price="${name}"]`);
+            return element && element.querySelector('[data-price-was]');
+          },
+          ON_SALE,
+          { timeout: 15000 },
+        )
+        .catch(() => {});
 
       const read = await page.evaluate((name) => {
         const out = { sale: null, others: 0, othersWithStrike: 0 };
@@ -93,13 +117,20 @@ for (const symbol of ['$', 'Rp']) {
         ok(s.first, `${tag}: the old price is rendered after the new one`);
         ok(s.size < s.parentSize, `${tag}: the old price is not smaller (${s.size} vs ${s.parentSize})`);
         ok(s.weight === '400', `${tag}: the old price is bold (${s.weight}) and competes with the real one`);
-        function digits(t) { return t.replace(/[^\d]/g, ''); }
+        function digits(t) {
+          return t.replace(/[^\d]/g, '');
+        }
         ok(digits(s.wasText).length > 0, `${tag}: the struck element has no number in it`);
-        ok(digits(s.text).length > digits(s.wasText).length, `${tag}: the sale price is missing next to the struck one`);
+        ok(
+          digits(s.text).length > digits(s.wasText).length,
+          `${tag}: the sale price is missing next to the struck one`,
+        );
       }
       ok(read.others > 0, `${tag}: no other prices on the page - this case proves nothing`);
-      ok(read.othersWithStrike === 0,
-         `${tag}: ${read.othersWithStrike} price(s) NOT on sale were struck through anyway`);
+      ok(
+        read.othersWithStrike === 0,
+        `${tag}: ${read.othersWithStrike} price(s) NOT on sale were struck through anyway`,
+      );
 
       const over = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
       ok(over <= 0, `${tag}: page overflows by ${over}px`);
@@ -113,11 +144,14 @@ for (const symbol of ['$', 'Rp']) {
 {
   const plain = catalogFor('$');
   plain.promo = null;
-  plain.items.forEach((i) => { i.listStandard = { display: i.standard.display }; });
+  plain.items.forEach((i) => {
+    i.listStandard = { display: i.standard.display };
+  });
   const ctx = await b.newContext({ viewport: { width: 390, height: 900 } });
   await ctx.routeWebSocket(/\/ws\//, (ws) => ws.close());
   await ctx.route('**/api/pricing/catalog*', (r) =>
-    r.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(plain) }));
+    r.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(plain) }),
+  );
   for (const path of ['/tour.html', '/ubud-tour.html', '/index.html']) {
     const page = await ctx.newPage();
     await page.goto(BASE + path, { waitUntil: 'load' });

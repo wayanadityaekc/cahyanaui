@@ -1,4 +1,3 @@
-
 export const PAY_DEFAULT = true;
 
 const KEY = 'cue_pay_beta';
@@ -13,7 +12,6 @@ export function readPayFlag() {
     }
     const saved = localStorage.getItem(KEY);
     if (saved === '1' || saved === '0') return saved === '1';
-  } catch (e) {
-  }
+  } catch (e) {}
   return PAY_DEFAULT;
 }

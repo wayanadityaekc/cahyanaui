@@ -1,7 +1,21 @@
 import { fmtTime } from '@/content/shared/timeSlots';
 
-export function bookingPayload({ ctx, f, referral, payOn, payOption, currency, stay, priced, displayGuests, singleLine, needsFlight, dateOf, timeOf }) {
-  return ({
+export function bookingPayload({
+  ctx,
+  f,
+  referral,
+  payOn,
+  payOption,
+  currency,
+  stay,
+  priced,
+  displayGuests,
+  singleLine,
+  needsFlight,
+  dateOf,
+  timeOf,
+}) {
+  return {
     type: ctx.type,
     service: ctx.service,
     name: f.name,
@@ -34,7 +48,7 @@ export function bookingPayload({ ctx, f, referral, payOn, payOption, currency, s
         price_idr: p ? p.price_idr : null,
       };
     }),
-  });
+  };
 }
 
 export function priceText(priced) {
@@ -51,6 +65,8 @@ export function whatsappText({ ctx, f, displayGuests, singleLine, flightNumberDi
       return `- ${l.day_no ? `Day ${l.day_no} · ` : ''}${d}${t ? ` · ${fmtTime(t)}` : ''} · ${l.service} · ${l.guests || displayGuests} pax`;
     })
     .join('\n');
-  const flightLine = flightNumberDisplay ? `\nFlight: ${flightNumberDisplay} (${f.flightDatetime || singleLine.flight_datetime || 'TBD'})` : '';
+  const flightLine = flightNumberDisplay
+    ? `\nFlight: ${flightNumberDisplay} (${f.flightDatetime || singleLine.flight_datetime || 'TBD'})`
+    : '';
   return `Hello, I'd like to book:\nService: ${ctx.service}\nName: ${f.name}\nPhone: ${f.phone}\nEmail: ${f.email}\n${rowText}\nPick-up: ${f.pickup || '-'}\nDrop-off: ${f.dropoff || '-'}${flightLine}\nPrice: ${price}`;
 }

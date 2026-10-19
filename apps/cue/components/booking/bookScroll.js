@@ -6,16 +6,21 @@ export function scrollToBookCard(e) {
   if (card) card.scrollIntoView({ behavior: 'smooth', block: 'center' });
 }
 
-function ENOUGH({ height }) { return Math.min(160, height * 0.5); }
+function ENOUGH({ height }) {
+  return Math.min(160, height * 0.5);
+}
 
 export function observeBookCtas(self, onChange) {
-  const targets = [...document.querySelectorAll(BOOK_ON_SCREEN)].filter((t) => t !== self && !(self && self.contains(t)));
+  const targets = [...document.querySelectorAll(BOOK_ON_SCREEN)].filter(
+    (t) => t !== self && !(self && self.contains(t)),
+  );
   if (!targets.length) return undefined;
   const onScreen = new Set();
   const observer = new IntersectionObserver(
     (entries) => {
       entries.forEach((entry) => {
-        if (entry.isIntersecting && entry.intersectionRect.height >= ENOUGH(entry.boundingClientRect)) onScreen.add(entry.target);
+        if (entry.isIntersecting && entry.intersectionRect.height >= ENOUGH(entry.boundingClientRect))
+          onScreen.add(entry.target);
         else onScreen.delete(entry.target);
       });
       onChange(onScreen.size > 0);

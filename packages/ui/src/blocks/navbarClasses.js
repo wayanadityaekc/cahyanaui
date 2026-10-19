@@ -1,4 +1,3 @@
-
 export const NAV_HEADER =
   'fixed top-0 left-0 right-0 z-[100] w-full leading-[normal] text-green bg-surface-raised ' +
   'animate-[navbarIn_0.4s_ease-out] motion-reduce:animate-none';
@@ -48,13 +47,14 @@ export const NAV_LI = '-mx-3';
 export const NAV_SUBLIST = 'list-none mt-[0.1rem] mb-[0.2rem] pt-[0.2rem] pb-[0.5rem] pl-[1.65rem] block';
 
 export function navLink(active) {
-  return `${MENU_ROW_BOX} text-strong no-underline ${active
-    ? 'font-semibold bg-cream text-green max-[992px]:text-gold-d'
-    : 'font-medium text-gold hover:bg-cream hover:text-green max-[992px]:hover:text-gold-d'}`;
+  return `${MENU_ROW_BOX} text-strong no-underline ${
+    active
+      ? 'font-semibold bg-cream text-green max-[992px]:text-gold-d'
+      : 'font-medium text-gold hover:bg-cream hover:text-green max-[992px]:hover:text-gold-d'
+  }`;
 }
 
-export const NAV_SUBTRIGGER =
-  `${MENU_ROW_BOX} text-strong font-body font-medium border-none bg-transparent text-gold cursor-pointer hover:bg-cream hover:text-green`;
+export const NAV_SUBTRIGGER = `${MENU_ROW_BOX} text-strong font-body font-medium border-none bg-transparent text-gold cursor-pointer hover:bg-cream hover:text-green`;
 
 export const NAV_CLOSE =
   'ml-auto flex-none grid place-items-center w-[34px] h-[34px] rounded-[var(--r-md)] ' +
@@ -69,19 +69,24 @@ export const NAV_ROW_END = 'ml-auto';
 export const NAV_DESK = 'max-[992px]:hidden flex items-center gap-1 list-none m-0 p-0 mr-auto ml-2';
 
 export function navDeskLink(active) {
-  return 'inline-flex items-center gap-1 h-[2.1rem] px-3 rounded-[var(--r-md)] text-small no-underline font-body bg-transparent border-none cursor-pointer ' +
-    `[transition:background-color_var(--dur)_var(--ease),scale_var(--dur-fast)_var(--ease)] hover:bg-cream font-medium ${active ? 'text-green bg-cream' : 'text-gold'}`;
+  return (
+    'inline-flex items-center gap-1 h-[2.1rem] px-3 rounded-[var(--r-md)] text-small no-underline font-body bg-transparent border-none cursor-pointer ' +
+    `[transition:background-color_var(--dur)_var(--ease),scale_var(--dur-fast)_var(--ease)] hover:bg-cream font-medium ${active ? 'text-green bg-cream' : 'text-gold'}`
+  );
 }
 
 export const NAV_CHEVRON = 'w-[var(--icon-sm)] h-[var(--icon-sm)] transition-[rotate] duration-200';
 
 export function navPop(open) {
-  return '[transition:opacity_var(--dur)_var(--ease-out),translate_var(--dur)_var(--ease-out),visibility_var(--dur)] motion-reduce:transition-none ' +
-    `${open ? 'opacity-100 visible translate-y-0' : 'opacity-0 invisible pointer-events-none -translate-y-1.5'}`;
+  return (
+    '[transition:opacity_var(--dur)_var(--ease-out),translate_var(--dur)_var(--ease-out),visibility_var(--dur)] motion-reduce:transition-none ' +
+    `${open ? 'opacity-100 visible translate-y-0' : 'opacity-0 invisible pointer-events-none -translate-y-1.5'}`
+  );
 }
 
 export const NAV_POP_WRAP = 'absolute left-0 top-full pt-[var(--space-1)] z-[130]';
-export const NAV_POP_LIST = 'list-none m-0 w-[12rem] bg-surface-raised [border:1px_solid_var(--line)] rounded-[var(--r-md)] p-[var(--space-1)]';
+export const NAV_POP_LIST =
+  'list-none m-0 w-[12rem] bg-surface-raised [border:1px_solid_var(--line)] rounded-[var(--r-md)] p-[var(--space-1)]';
 
 export function navPopLink(active) {
   return `flex w-full px-3 py-[0.55rem] rounded-[var(--r-md)] text-small no-underline hover:bg-cream font-medium ${active ? 'text-green bg-cream' : 'text-gold'}`;
@@ -90,8 +95,7 @@ export function navPopLink(active) {
 export const ACCOUNT_PANEL =
   'absolute right-0 top-[calc(100%+var(--space-1))] z-[130] bg-surface-raised [border:1px_solid_var(--line)] rounded-[var(--r-md)] p-[var(--space-1)]';
 
-export const ACCOUNT_ROW =
-  `${MENU_ROW_BOX} text-small font-medium text-gold no-underline bg-transparent border-none cursor-pointer font-body hover:bg-cream`;
+export const ACCOUNT_ROW = `${MENU_ROW_BOX} text-small font-medium text-gold no-underline bg-transparent border-none cursor-pointer font-body hover:bg-cream`;
 
 export const ACCOUNT_LOGIN =
   'max-[992px]:hidden inline-flex items-center h-[2.1rem] px-3 rounded-sm [border:1px_solid_var(--line)] bg-surface-raised ' +

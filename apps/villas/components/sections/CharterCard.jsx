@@ -18,14 +18,17 @@ function useCharterPrices(currency = 'USD') {
         const data = await response.json();
         if (!alive || !data || !Array.isArray(data.charters) || data.currency !== currency) return;
         const byTier = {};
-        data.charters.forEach((row) => { byTier[row.duration] = row.display; });
+        data.charters.forEach((row) => {
+          byTier[row.duration] = row.display;
+        });
         setPrices(byTier);
-      } catch (e) {
-      }
+      } catch (e) {}
     }
     setPrices(null);
     load();
-    return () => { alive = false; };
+    return () => {
+      alive = false;
+    };
   }, [currency]);
 
   return prices;
@@ -47,7 +50,12 @@ export default function CharterCard({ compact = false }) {
           <p className="mt-1 mb-4 text-body text-muted">{CHARTER_CARD.bookingNote}</p>
         </>
       ) : (
-        <SectionHeading eyebrow={CHARTER_CARD.eyebrow} title={CHARTER_CARD.title} lede={CHARTER_CARD.lede} className="mb-6" />
+        <SectionHeading
+          eyebrow={CHARTER_CARD.eyebrow}
+          title={CHARTER_CARD.title}
+          lede={CHARTER_CARD.lede}
+          className="mb-6"
+        />
       )}
       <PlanList plans={plans} label="Charter plans" />
       <div className="mt-5">

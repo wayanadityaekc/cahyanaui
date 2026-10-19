@@ -6,10 +6,22 @@ import { chromium } from 'playwright-core';
 
 const ROOT = 'out';
 function findShell() {
-  try { return execSync('ls -d /opt/pw-browsers/*/chrome-linux/headless_shell 2>/dev/null | head -1').toString().trim(); } catch (e) { return '/opt/pw-browsers/chromium_headless_shell-1194/chrome-linux/headless_shell'; }
+  try {
+    return execSync('ls -d /opt/pw-browsers/*/chrome-linux/headless_shell 2>/dev/null | head -1').toString().trim();
+  } catch (e) {
+    return '/opt/pw-browsers/chromium_headless_shell-1194/chrome-linux/headless_shell';
+  }
 }
 const EXE = findShell();
-const MIME = { '.html': 'text/html', '.css': 'text/css', '.js': 'application/javascript', '.webp': 'image/webp', '.woff2': 'font/woff2', '.svg': 'image/svg+xml', '.json': 'application/json' };
+const MIME = {
+  '.html': 'text/html',
+  '.css': 'text/css',
+  '.js': 'application/javascript',
+  '.webp': 'image/webp',
+  '.woff2': 'font/woff2',
+  '.svg': 'image/svg+xml',
+  '.json': 'application/json',
+};
 function serve(root, port) {
   return new Promise((result) => {
     const s = http.createServer((q, r) => {
@@ -17,7 +29,11 @@ function serve(root, port) {
       if (p.endsWith('/')) p += 'index.html';
       let f = path.join(root, p);
       if (!fs.existsSync(f) && !path.extname(f)) f = path.join(root, `${p}.html`);
-      if (!fs.existsSync(f)) { r.writeHead(404); r.end(); return; }
+      if (!fs.existsSync(f)) {
+        r.writeHead(404);
+        r.end();
+        return;
+      }
       r.writeHead(200, { 'content-type': MIME[path.extname(f)] || 'text/html' });
       r.end(fs.readFileSync(f));
     });
@@ -28,8 +44,17 @@ function serve(root, port) {
 const port = 8000 + Math.floor(Math.random() * 1500);
 const s = await serve(ROOT, port);
 const b = await chromium.launch({ executablePath: EXE });
-let pass = 0, fail = 0;
-function check(label, cond) { if (cond) { pass++; console.log(`OK   ${label}`); } else { fail++; console.log(`FAIL ${label}`); } }
+let pass = 0,
+  fail = 0;
+function check(label, cond) {
+  if (cond) {
+    pass++;
+    console.log(`OK   ${label}`);
+  } else {
+    fail++;
+    console.log(`FAIL ${label}`);
+  }
+}
 
 function lockState(pg) {
   return pg.evaluate(() => ({
@@ -47,7 +72,10 @@ function lockState(pg) {
   await pg.click('button:has-text("Add a program")');
   await pg.waitForTimeout(400);
   const st = await lockState(pg);
-  check('Add Program popup: html+body both locked, overflow hidden on both', st.html && st.body && st.htmlOv === 'hidden' && st.bodyOv === 'hidden');
+  check(
+    'Add Program popup: html+body both locked, overflow hidden on both',
+    st.html && st.body && st.htmlOv === 'hidden' && st.bodyOv === 'hidden',
+  );
   await pg.click('[aria-label="Add to your trip"] button[aria-label="Close"]');
   await pg.waitForTimeout(300);
   const st2 = await lockState(pg);

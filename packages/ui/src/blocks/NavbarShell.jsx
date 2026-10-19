@@ -64,7 +64,10 @@ export default function NavbarShell({
         root.style.setProperty('--header-h-max', `${height}px`);
       }
     }
-    function onResize() { max = 0; set(); }
+    function onResize() {
+      max = 0;
+      set();
+    }
     set();
     const resizeObserver = new ResizeObserver(set);
     resizeObserver.observe(header);
@@ -110,10 +113,17 @@ export default function NavbarShell({
 
   useBodyLock(menuOpen);
 
-  function close() { setMenuOpen(false); }
+  function close() {
+    setMenuOpen(false);
+  }
 
   return (
-    <header ref={headerRef} className={cn(NAV_HEADER, className)} data-overlay={overlay || undefined} data-clear={overlay && atTop && !menuOpen ? '' : undefined}>
+    <header
+      ref={headerRef}
+      className={cn(NAV_HEADER, className)}
+      data-overlay={overlay || undefined}
+      data-clear={overlay && atTop && !menuOpen ? '' : undefined}
+    >
       {topBar ? <div ref={barRef}>{topBar}</div> : null}
       <div className={NAV_ROW}>
         <button
@@ -139,7 +149,10 @@ export default function NavbarShell({
         <nav ref={navRef}>
           <ul
             id={drawerId}
-            className={cn(NAV_DRAWER, menuOpen ? 'translate-x-0 pointer-events-auto' : '-translate-x-full pointer-events-none')}
+            className={cn(
+              NAV_DRAWER,
+              menuOpen ? 'translate-x-0 pointer-events-auto' : '-translate-x-full pointer-events-none',
+            )}
           >
             <li className={NAV_DRAWER_HEAD}>
               <b className="text-strong font-semibold text-gold">{drawerTitle}</b>
@@ -169,7 +182,14 @@ export default function NavbarShell({
                           aria-label={`${link.label} list`}
                           onClick={() => setOpenSub(open ? null : link.label)}
                         >
-                          <span className={cn('inline-block transition-[rotate] duration-200 ease-[ease]', open && 'rotate-90')}>&rsaquo;</span>
+                          <span
+                            className={cn(
+                              'inline-block transition-[rotate] duration-200 ease-[ease]',
+                              open && 'rotate-90',
+                            )}
+                          >
+                            &rsaquo;
+                          </span>
                         </button>
                       </div>
                     ) : (
@@ -182,7 +202,13 @@ export default function NavbarShell({
                       >
                         {link.icon}
                         {link.label}
-                        <span className={cn(NAV_ROW_END, 'inline-block transition-[rotate] duration-200 ease-[ease]', open && 'rotate-90')}>
+                        <span
+                          className={cn(
+                            NAV_ROW_END,
+                            'inline-block transition-[rotate] duration-200 ease-[ease]',
+                            open && 'rotate-90',
+                          )}
+                        >
                           &rsaquo;
                         </span>
                       </button>
@@ -191,7 +217,9 @@ export default function NavbarShell({
                       <ul className={NAV_SUBLIST}>
                         {link.items.map((item) => (
                           <li key={item.href} className="py-[0.4rem]">
-                            <Link href={item.href} onClick={close} className={NAV_SUBLINK}>{item.label}</Link>
+                            <Link href={item.href} onClick={close} className={NAV_SUBLINK}>
+                              {item.label}
+                            </Link>
                           </li>
                         ))}
                       </ul>
@@ -210,7 +238,9 @@ export default function NavbarShell({
               );
             })}
 
-            {drawerFoot ? <li className="mt-auto pt-4">{typeof drawerFoot === 'function' ? drawerFoot(close) : drawerFoot}</li> : null}
+            {drawerFoot ? (
+              <li className="mt-auto pt-4">{typeof drawerFoot === 'function' ? drawerFoot(close) : drawerFoot}</li>
+            ) : null}
           </ul>
         </nav>
 

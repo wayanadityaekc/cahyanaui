@@ -43,11 +43,7 @@ export function ItineraryProvider({ children }) {
     state.transfers.length +
     state.charters.length;
 
-  return (
-    <ItineraryContext.Provider value={{ state, save, count, hydrated }}>
-      {children}
-    </ItineraryContext.Provider>
-  );
+  return <ItineraryContext.Provider value={{ state, save, count, hydrated }}>{children}</ItineraryContext.Provider>;
 }
 
 export function useItinerary() {

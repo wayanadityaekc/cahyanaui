@@ -16,7 +16,9 @@ export function ReviewsProvider({ children }) {
         const d = response.ok ? await response.json() : null;
         if (cancelled || !Array.isArray(d)) return;
         const map = {};
-        d.forEach((r) => { map[r.service] = r; });
+        d.forEach((r) => {
+          map[r.service] = r;
+        });
         setSummary(map);
       } catch (e) {}
     }
@@ -26,7 +28,9 @@ export function ReviewsProvider({ children }) {
     };
   }, []);
 
-  function lookup(service) { return (summary && summary[service]) || null; }
+  function lookup(service) {
+    return (summary && summary[service]) || null;
+  }
 
   return <ReviewsContext.Provider value={{ lookup }}>{children}</ReviewsContext.Provider>;
 }

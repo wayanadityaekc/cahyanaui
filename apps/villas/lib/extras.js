@@ -3,12 +3,32 @@ import { AIRPORT_ROUTE, allowedSlots, fmtTime } from '@/lib/timeSlots';
 
 export const EXTRA_PROGRAMS = [
   { key: 'Ubud Tour', group: 'tours', title: 'Ubud: Rice Terrace & Monkey Forest', path: '/ubud-tour.html' },
-  { key: 'Ubud Culture Day', group: 'tours', title: 'Full-Day Ubud Culture: Barong & Kecak', path: '/ubud-culture-day.html' },
-  { key: 'East Bali Tour', group: 'tours', title: 'East Bali: Lempuyang, Besakih & Tirta Gangga', path: '/lempuyang-tirta-gangga.html' },
+  {
+    key: 'Ubud Culture Day',
+    group: 'tours',
+    title: 'Full-Day Ubud Culture: Barong & Kecak',
+    path: '/ubud-culture-day.html',
+  },
+  {
+    key: 'East Bali Tour',
+    group: 'tours',
+    title: 'East Bali: Lempuyang, Besakih & Tirta Gangga',
+    path: '/lempuyang-tirta-gangga.html',
+  },
   { key: 'West Bali Tour', group: 'tours', title: 'West Bali Tour', path: '/tanah-lot-taman-ayun.html' },
-  { key: 'Mount Batur Trekking', group: 'activities', title: 'Mount Batur Sunrise Trek', path: '/attractions/mount-batur-trekking.html' },
+  {
+    key: 'Mount Batur Trekking',
+    group: 'activities',
+    title: 'Mount Batur Sunrise Trek',
+    path: '/attractions/mount-batur-trekking.html',
+  },
   { key: 'Rafting', group: 'activities', title: 'Ayung River Rafting', path: '/attractions/rafting.html' },
-  { key: 'Cooking Class', group: 'activities', title: 'Cooking Class: Market & Kitchen', path: '/attractions/cooking-class.html' },
+  {
+    key: 'Cooking Class',
+    group: 'activities',
+    title: 'Cooking Class: Market & Kitchen',
+    path: '/attractions/cooking-class.html',
+  },
   { key: 'Kecak Dance', group: 'activities', title: 'Kecak Fire Dance', path: '/attractions/kecak-dance.html' },
 ].map((program) => ({ ...program, href: `${CUE_LINK}${program.path}` }));
 
@@ -56,7 +76,8 @@ export function extraProblem(extra, stay, category) {
 
 export function priceFor(extra, catalog) {
   if (!catalog) return null;
-  if (extra.kind === 'transfer') return catalog.transfer ? { display: catalog.transfer.display, idr: catalog.transfer.idr } : null;
+  if (extra.kind === 'transfer')
+    return catalog.transfer ? { display: catalog.transfer.display, idr: catalog.transfer.idr } : null;
   const item = catalog.items[extra.key];
   if (!item || !item.standard) return null;
   return { display: item.standard.display, idr: item.standard.idr };

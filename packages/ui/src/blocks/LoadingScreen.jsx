@@ -25,8 +25,8 @@ export default function LoadingScreen({
 
   useEffect(() => {
     function hide() {
-  return (setOut(true));
-}
+      return setOut(true);
+    }
     let cap;
     if (document.readyState === 'complete') {
       cap = setTimeout(hide, 350);
@@ -42,7 +42,10 @@ export default function LoadingScreen({
 
   useEffect(() => {
     if (routeKey === undefined) return undefined;
-    if (firstRoute.current) { firstRoute.current = false; return undefined; }
+    if (firstRoute.current) {
+      firstRoute.current = false;
+      return undefined;
+    }
     const waited = Date.now() - shownAt.current;
     const t = setTimeout(() => setOut(true), Math.max(0, minVisible - waited));
     return () => clearTimeout(t);
@@ -57,7 +60,11 @@ export default function LoadingScreen({
       const href = a.getAttribute('href');
       if (!href || href.startsWith('#') || /^(mailto:|tel:|javascript:)/i.test(href)) return;
       let url;
-      try { url = new URL(a.href); } catch { return; }
+      try {
+        url = new URL(a.href);
+      } catch {
+        return;
+      }
       if (url.origin !== window.location.origin) return;
       if (url.pathname === window.location.pathname && url.hash) return;
       if (url.pathname === window.location.pathname) return;
@@ -77,8 +84,8 @@ export default function LoadingScreen({
     }
     document.addEventListener('click', onClick, true);
     function onShow() {
-  return (setOut(true));
-}
+      return setOut(true);
+    }
     window.addEventListener('pageshow', onShow);
     return () => {
       document.removeEventListener('click', onClick, true);

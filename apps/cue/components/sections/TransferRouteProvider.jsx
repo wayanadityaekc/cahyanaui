@@ -2,10 +2,11 @@
 
 import { createContext, useCallback, useContext, useMemo, useRef, useState } from 'react';
 
-
 const UBUD = 'Ubud';
 
-function facing(v) { return (other) => (!v ? other : v === UBUD ? (other === UBUD ? '' : other) : UBUD); }
+function facing(v) {
+  return (other) => (!v ? other : v === UBUD ? (other === UBUD ? '' : other) : UBUD);
+}
 
 const Ctx = createContext(null);
 
@@ -20,8 +21,14 @@ export default function TransferRouteProvider({ children }) {
   const [to, setTo] = useState(UBUD);
   const pickerRef = useRef(null);
 
-  const pickFrom = useCallback((v) => { setFrom(v); setTo(facing(v)); }, []);
-  const pickTo = useCallback((v) => { setTo(v); setFrom(facing(v)); }, []);
+  const pickFrom = useCallback((v) => {
+    setFrom(v);
+    setTo(facing(v));
+  }, []);
+  const pickTo = useCallback((v) => {
+    setTo(v);
+    setFrom(facing(v));
+  }, []);
 
   const selectRoute = useCallback((area) => {
     setFrom(area);
@@ -31,7 +38,7 @@ export default function TransferRouteProvider({ children }) {
 
   const value = useMemo(
     () => ({ from, to, pickFrom, pickTo, selectRoute, pickerRef, UBUD }),
-    [from, to, pickFrom, pickTo, selectRoute]
+    [from, to, pickFrom, pickTo, selectRoute],
   );
 
   return <Ctx.Provider value={value}>{children}</Ctx.Provider>;

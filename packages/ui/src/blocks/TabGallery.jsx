@@ -28,7 +28,9 @@ export default function TabGallery({ items = [], label = '', className }) {
             onClick={() => choose(entry.id)}
             className={cn(
               'h-[var(--btn-h)] px-4 rounded-pill font-body text-small font-medium cursor-pointer [border:1px_solid_var(--line)] transition-[background-color,color] duration-200 ease-[ease]',
-              entry.id === item.id ? 'bg-gold text-white [border-color:var(--color-gold)]' : 'bg-surface-raised text-green hover:bg-cream',
+              entry.id === item.id
+                ? 'bg-gold text-white [border-color:var(--color-gold)]'
+                : 'bg-surface-raised text-green hover:bg-cream',
             )}
           >
             {entry.label}
@@ -37,7 +39,14 @@ export default function TabGallery({ items = [], label = '', className }) {
       </div>
       <div className="grid gap-6 min-[993px]:grid-cols-[1.45fr_1fr] min-[993px]:gap-10 items-start">
         <div className="relative overflow-hidden bg-cream aspect-[16/10]">
-          {current ? <img src={current.src} alt={current.alt || ''} loading="lazy" className="absolute inset-0 w-full h-full object-cover" /> : null}
+          {current ? (
+            <img
+              src={current.src}
+              alt={current.alt || ''}
+              loading="lazy"
+              className="absolute inset-0 w-full h-full object-cover"
+            />
+          ) : null}
         </div>
         <div role="tabpanel" className="grid gap-4 content-start">
           <h3 className="text-h2 font-medium text-gold">{item.title}</h3>

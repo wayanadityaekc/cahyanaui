@@ -49,10 +49,11 @@ export default function Hero({
           bandClassName,
         )}
       >
-        {image ? (
-          <img src={image} alt={alt} className="absolute inset-0 w-full h-full object-cover" />
-        ) : null}
-        <span aria-hidden="true" className="absolute inset-0 pointer-events-none mix-blend-multiply [background:linear-gradient(180deg,rgba(214,178,120,0.18),rgba(120,80,40,0.30))]" />
+        {image ? <img src={image} alt={alt} className="absolute inset-0 w-full h-full object-cover" /> : null}
+        <span
+          aria-hidden="true"
+          className="absolute inset-0 pointer-events-none mix-blend-multiply [background:linear-gradient(180deg,rgba(214,178,120,0.18),rgba(120,80,40,0.30))]"
+        />
         <div className={cn('absolute inset-0', SCRIM, scrimClassName)} />
         <Container width={width} className={cn('relative z-10', (SIZES[size] || SIZES.page).pad, innerClassName)}>
           {title ? (

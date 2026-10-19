@@ -22,8 +22,7 @@ export function writeCart(cart) {
   if (typeof window === 'undefined') return;
   try {
     window.localStorage.setItem(CART_KEY, JSON.stringify(cart));
-  } catch (e) {
-  }
+  } catch (e) {}
 }
 
 export function countItems(cart) {

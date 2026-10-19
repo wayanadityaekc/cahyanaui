@@ -3,8 +3,18 @@ import { CURRENCIES, displayFromIdr, formatMoney } from '@cahyana/ui';
 export { CURRENCIES };
 
 export const CURRENCY_NAMES = {
-  USD: 'US Dollar', IDR: 'Indonesian Rupiah', AUD: 'Australian Dollar', EUR: 'Euro', GBP: 'British Pound', SGD: 'Singapore Dollar',
-  NZD: 'New Zealand Dollar', CAD: 'Canadian Dollar', CHF: 'Swiss Franc', JPY: 'Japanese Yen', MYR: 'Malaysian Ringgit', HKD: 'Hong Kong Dollar',
+  USD: 'US Dollar',
+  IDR: 'Indonesian Rupiah',
+  AUD: 'Australian Dollar',
+  EUR: 'Euro',
+  GBP: 'British Pound',
+  SGD: 'Singapore Dollar',
+  NZD: 'New Zealand Dollar',
+  CAD: 'Canadian Dollar',
+  CHF: 'Swiss Franc',
+  JPY: 'Japanese Yen',
+  MYR: 'Malaysian Ringgit',
+  HKD: 'Hong Kong Dollar',
 };
 
 export const DEFAULT_CURRENCY = 'USD';

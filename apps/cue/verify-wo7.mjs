@@ -8,20 +8,37 @@ const AFTER = process.env.AFTER || '/home/user/CUE/out';
 const SHOT = process.env.SHOT || '/tmp/claude-0/-home-user/b39e23b2-cabe-5327-8412-a80a03834acc/scratchpad/wo7';
 fs.mkdirSync(SHOT, { recursive: true });
 
-const MIME = { '.html': 'text/html', '.css': 'text/css', '.js': 'application/javascript', '.json': 'application/json',
-  '.txt': 'text/plain', '.xml': 'application/xml', '.svg': 'image/svg+xml', '.png': 'image/png', '.jpg': 'image/jpeg',
-  '.webp': 'image/webp', '.ico': 'image/x-icon', '.woff2': 'font/woff2', '.woff': 'font/woff' };
+const MIME = {
+  '.html': 'text/html',
+  '.css': 'text/css',
+  '.js': 'application/javascript',
+  '.json': 'application/json',
+  '.txt': 'text/plain',
+  '.xml': 'application/xml',
+  '.svg': 'image/svg+xml',
+  '.png': 'image/png',
+  '.jpg': 'image/jpeg',
+  '.webp': 'image/webp',
+  '.ico': 'image/x-icon',
+  '.woff2': 'font/woff2',
+  '.woff': 'font/woff',
+};
 function serve(root, port) {
   return new Promise((result) => {
-    const s = http.createServer((req, rsp) => {
-      let p = decodeURIComponent(req.url.split('?')[0]);
-      if (p.endsWith('/')) p += 'index.html';
-      let f = path.join(root, p);
-      if (!fs.existsSync(f) && !path.extname(f)) f = path.join(root, `${p}.html`);
-      if (!f.startsWith(root) || !fs.existsSync(f) || fs.statSync(f).isDirectory()) { rsp.writeHead(404); return rsp.end('nf'); }
-      rsp.writeHead(200, { 'content-type': MIME[path.extname(f)] || 'application/octet-stream' });
-      rsp.end(fs.readFileSync(f));
-    }).listen(port, () => result(s));
+    const s = http
+      .createServer((req, rsp) => {
+        let p = decodeURIComponent(req.url.split('?')[0]);
+        if (p.endsWith('/')) p += 'index.html';
+        let f = path.join(root, p);
+        if (!fs.existsSync(f) && !path.extname(f)) f = path.join(root, `${p}.html`);
+        if (!f.startsWith(root) || !fs.existsSync(f) || fs.statSync(f).isDirectory()) {
+          rsp.writeHead(404);
+          return rsp.end('nf');
+        }
+        rsp.writeHead(200, { 'content-type': MIME[path.extname(f)] || 'application/octet-stream' });
+        rsp.end(fs.readFileSync(f));
+      })
+      .listen(port, () => result(s));
   });
 }
 const sB = await serve(BEFORE, 4711);
@@ -30,19 +47,46 @@ const OLD = 'http://127.0.0.1:4711';
 const NEW = 'http://127.0.0.1:4712';
 const UNDER = process.env.UNDER === 'before' ? OLD : NEW;
 
-let pass = 0, fail = 0;
-function ok(c, m) { c ? pass++ : (fail++, console.log('  FAIL:', m)); }
-function info(m) { return console.log('  ..', m); }
-const br = await chromium.launch({ executablePath: '/opt/pw-browsers/chromium_headless_shell-1194/chrome-linux/headless_shell' });
+let pass = 0,
+  fail = 0;
+function ok(c, m) {
+  c ? pass++ : (fail++, console.log('  FAIL:', m));
+}
+function info(m) {
+  return console.log('  ..', m);
+}
+const br = await chromium.launch({
+  executablePath: '/opt/pw-browsers/chromium_headless_shell-1194/chrome-linux/headless_shell',
+});
 
-const MINE = { upcoming: [], history: [
-  { ref: 'CUE-100', name: 'Ubud Tour', start_date: '2026-08-20', end_date: '2026-08-20', guests: '2', price_usd: 40, price_idr: 700000,
-    status: 'new', upcoming: false, review_items: ['Ubud Tour'], lines: [{ type: 'tour', service: 'Ubud Tour', date: '2026-08-20', guests: '2' }] } ] };
+const MINE = {
+  upcoming: [],
+  history: [
+    {
+      ref: 'CUE-100',
+      name: 'Ubud Tour',
+      start_date: '2026-08-20',
+      end_date: '2026-08-20',
+      guests: '2',
+      price_usd: 40,
+      price_idr: 700000,
+      status: 'new',
+      upcoming: false,
+      review_items: ['Ubud Tour'],
+      lines: [{ type: 'tour', service: 'Ubud Tour', date: '2026-08-20', guests: '2' }],
+    },
+  ],
+};
 function api(loggedIn) {
   return async (route) => {
     const u = route.request().url();
-    function j(b) { return route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(b) }); }
-    if (u.includes('/account/session') || u.includes('/account/me')) return j(loggedIn ? { status: 'ok', account: { id: 7, name: 'Wayan', email: 'w@e.com', phone: '' } } : { account: null });
+    function j(b) {
+      return route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(b) });
+    }
+    if (u.includes('/account/session') || u.includes('/account/me'))
+      return j(
+        loggedIn ? { status: 'ok', account: { id: 7, name: 'Wayan', email: 'w@e.com', phone: '' } } : { account: null },
+      );
     if (u.includes('/bookings/mine')) return j(MINE);
     return j({});
   };
@@ -61,10 +105,26 @@ async function open(base, url, w, { loggedIn = false, h = 900 } = {}) {
 
 console.log('1. border colours + layout, before vs after');
 const HEX = /rgb\((\d+), (\d+), (\d+)\)/;
-function hex(c) { const m = HEX.exec(c); return m ? `#${[1, 2, 3].map((i) => (+m[i]).toString(16).padStart(2, '0')).join('')}` : c; }
-const PAGES = ['/', '/tour.html', '/destinations.html', '/activities.html', '/ubud-tour.html', '/attractions/monkey-forest.html',
-  '/charter.html', '/transfer.html', '/airport-transfer.html', '/our-company.html', '/bali-guide.html',
-  '/guide/ubud.html', '/my-trips.html', '/settings.html'];
+function hex(c) {
+  const m = HEX.exec(c);
+  return m ? `#${[1, 2, 3].map((i) => (+m[i]).toString(16).padStart(2, '0')).join('')}` : c;
+}
+const PAGES = [
+  '/',
+  '/tour.html',
+  '/destinations.html',
+  '/activities.html',
+  '/ubud-tour.html',
+  '/attractions/monkey-forest.html',
+  '/charter.html',
+  '/transfer.html',
+  '/airport-transfer.html',
+  '/our-company.html',
+  '/bali-guide.html',
+  '/guide/ubud.html',
+  '/my-trips.html',
+  '/settings.html',
+];
 async function measure(base, url, w) {
   const { ctx, page } = await open(base, url, w, { loggedIn: true });
   const r = await page.evaluate(() => {
@@ -85,26 +145,54 @@ async function measure(base, url, w) {
 }
 const OFF = ['#f2efe7', '#eeeeee', '#ece6d8', '#e6dfce', '#e2ddd0', '#ececec', '#e6e6e6', '#e4dcc8', '#e0ddd4'];
 const LINE = '#e7e4dd';
-let gainedTotal = 0, lostTotal = 0;
+let gainedTotal = 0,
+  lostTotal = 0;
 const heightDiffs = [];
 for (const w of [390, 1280]) {
   for (const url of PAGES) {
     const a = await measure(OLD, url, w);
     const b = await measure(NEW, url, w);
-    function H(h) { return Object.fromEntries(Object.entries(h).map(([k, v]) => { const [c, st] = k.split('|'); return [`${hex(c)}|${st}`, v]; })); }
-    const ha = H(a.hist), hb = H(b.hist);
-    let lost = 0, gained = 0;
-    OFF.forEach((o) => { Object.keys(ha).forEach((k) => { if (k.startsWith(`${o}|`)) lost += (ha[k] || 0) - (hb[k] || 0); }); });
-    const lineA = Object.entries(ha).filter(([k]) => k.startsWith(LINE)).reduce((s, [, v]) => s + v, 0);
-    const lineB = Object.entries(hb).filter(([k]) => k.startsWith(LINE)).reduce((s, [, v]) => s + v, 0);
+    function H(h) {
+      return Object.fromEntries(
+        Object.entries(h).map(([k, v]) => {
+          const [c, st] = k.split('|');
+          return [`${hex(c)}|${st}`, v];
+        }),
+      );
+    }
+    const ha = H(a.hist),
+      hb = H(b.hist);
+    let lost = 0,
+      gained = 0;
+    OFF.forEach((o) => {
+      Object.keys(ha).forEach((k) => {
+        if (k.startsWith(`${o}|`)) lost += (ha[k] || 0) - (hb[k] || 0);
+      });
+    });
+    const lineA = Object.entries(ha)
+      .filter(([k]) => k.startsWith(LINE))
+      .reduce((s, [, v]) => s + v, 0);
+    const lineB = Object.entries(hb)
+      .filter(([k]) => k.startsWith(LINE))
+      .reduce((s, [, v]) => s + v, 0);
     gained = lineB - lineA;
-    lostTotal += lost; gainedTotal += gained;
-    OFF.forEach((o) => { ok(!Object.keys(hb).some((k) => k.startsWith(`${o}|`)), `${url}@${w}: no ${o} border left`); });
+    lostTotal += lost;
+    gainedTotal += gained;
+    OFF.forEach((o) => {
+      ok(!Object.keys(hb).some((k) => k.startsWith(`${o}|`)), `${url}@${w}: no ${o} border left`);
+    });
     const expect = url === '/settings.html' ? lost - 2 : lost;
-    ok(gained === expect, `${url}@${w}: --line gained ${gained} = off-token lost ${lost}${url === '/settings.html' ? ' - 2 hr' : ''}`);
+    ok(
+      gained === expect,
+      `${url}@${w}: --line gained ${gained} = off-token lost ${lost}${url === '/settings.html' ? ' - 2 hr' : ''}`,
+    );
     if (a.h !== b.h) heightDiffs.push(`${url}@${w}: ${a.h} -> ${b.h}`);
     ok(b.over <= 0, `${url}@${w}: no horizontal overflow (${b.over})`);
-    function rest(h) { return Object.fromEntries(Object.entries(h).filter(([k]) => !OFF.some((o) => k.startsWith(`${o}|`)) && !k.startsWith(LINE))); }
+    function rest(h) {
+      return Object.fromEntries(
+        Object.entries(h).filter(([k]) => !OFF.some((o) => k.startsWith(`${o}|`)) && !k.startsWith(LINE)),
+      );
+    }
     ok(JSON.stringify(rest(ha)) === JSON.stringify(rest(hb)), `${url}@${w}: every other border unchanged`);
   }
 }
@@ -131,13 +219,20 @@ async function hoverShift(base, url, w, sel) {
   await ctx.close();
   return out;
 }
-const CARD_SELS = [['/', '.hcard'], ['/bali-guide.html', '[class*="shadow-card"]'], ['/ubud-tour.html', '[class*="shadow-card"]']];
+const CARD_SELS = [
+  ['/', '.hcard'],
+  ['/bali-guide.html', '[class*="shadow-card"]'],
+  ['/ubud-tour.html', '[class*="shadow-card"]'],
+];
 let movedBefore = 0;
 for (const [url, sel] of CARD_SELS) {
   const before = await hoverShift(OLD, url, 1280, sel);
   const after = await hoverShift(NEW, url, 1280, sel);
   movedBefore += before.filter((d) => d > 0.5).length;
-  ok(after.length > 0 && after.every((d) => d < 0.5), `${url} ${sel}: after = no movement (${after.map((d) => d.toFixed(1))}) [before ${before.map((d) => d.toFixed(1))}]`);
+  ok(
+    after.length > 0 && after.every((d) => d < 0.5),
+    `${url} ${sel}: after = no movement (${after.map((d) => d.toFixed(1))}) [before ${before.map((d) => d.toFixed(1))}]`,
+  );
 }
 ok(movedBefore > 0, `the check can fail: ${movedBefore} card(s) lifted on the BEFORE build`);
 
@@ -153,17 +248,31 @@ for (const loggedIn of [false, true]) {
   }));
   const ctl = await slot.getAttribute('aria-controls');
   ok(s.menus === 0 && s.haspopup === 0, `account (${loggedIn ? 'in' : 'out'}): no role=menu/menuitem/haspopup`);
-  ok((await slot.getAttribute('aria-expanded')) === 'true' && !!ctl && (await page.locator(`[id="${ctl}"]`).count()) === 1, `account (${loggedIn ? 'in' : 'out'}): aria-expanded + aria-controls -> real panel`);
-  await page.screenshot({ path: `${SHOT}/menu-${loggedIn ? 'in' : 'out'}-1280.png`, clip: { x: 780, y: 0, width: 500, height: 520 } });
+  ok(
+    (await slot.getAttribute('aria-expanded')) === 'true' &&
+      !!ctl &&
+      (await page.locator(`[id="${ctl}"]`).count()) === 1,
+    `account (${loggedIn ? 'in' : 'out'}): aria-expanded + aria-controls -> real panel`,
+  );
+  await page.screenshot({
+    path: `${SHOT}/menu-${loggedIn ? 'in' : 'out'}-1280.png`,
+    clip: { x: 780, y: 0, width: 500, height: 520 },
+  });
   if (loggedIn) {
     const seps = await page.locator(`[id="${ctl}"] [role="none"]`).count();
     ok(seps >= 2, `account (in): group lines are Separator elements (${seps})`);
-    ok((await page.locator(`[id="${ctl}"] a[href="/settings.html"]`).count()) === 1, 'account (in): Settings is a plain link');
+    ok(
+      (await page.locator(`[id="${ctl}"] a[href="/settings.html"]`).count()) === 1,
+      'account (in): Settings is a plain link',
+    );
   }
   await page.keyboard.press('Escape');
   await page.waitForTimeout(400);
   ok((await slot.getAttribute('aria-expanded')) === 'false', `account (${loggedIn ? 'in' : 'out'}): Escape closes`);
-  ok(await page.evaluate(() => document.activeElement === document.querySelector('[data-account-slot] > button')), `account (${loggedIn ? 'in' : 'out'}): Escape returns focus to the trigger`);
+  ok(
+    await page.evaluate(() => document.activeElement === document.querySelector('[data-account-slot] > button')),
+    `account (${loggedIn ? 'in' : 'out'}): Escape returns focus to the trigger`,
+  );
   ok(errs.length === 0, `account menu: no page errors ${errs}`);
   await ctx.close();
 }
@@ -179,7 +288,10 @@ for (const loggedIn of [false, true]) {
   await page.screenshot({ path: `${SHOT}/program-1280.png`, clip: { x: 0, y: 0, width: 700, height: 340 } });
   await page.keyboard.press('Escape');
   await page.waitForTimeout(400);
-  ok(await page.evaluate(() => document.activeElement?.textContent?.trim().startsWith('Program')), 'Program list: Escape returns focus to the trigger');
+  ok(
+    await page.evaluate(() => document.activeElement?.textContent?.trim().startsWith('Program')),
+    'Program list: Escape returns focus to the trigger',
+  );
   await ctx.close();
 }
 
@@ -188,7 +300,10 @@ console.log('4. tabs only where they are tabs');
   const { ctx, page } = await open(UNDER, '/ubud-tour.html', 1280);
   ok((await page.locator('[role="tablist"], [role="tab"]').count()) === 0, 'tour page: no fake tablist');
   ok((await page.locator('nav[aria-label="Jump to section"]').count()) === 1, 'tour page: "Jump to section" is a nav');
-  ok((await page.locator('nav[aria-label="Jump to section"] [aria-current="true"]').count()) <= 1, 'tour page: at most one current');
+  ok(
+    (await page.locator('nav[aria-label="Jump to section"] [aria-current="true"]').count()) <= 1,
+    'tour page: at most one current',
+  );
   await ctx.close();
 }
 {
@@ -205,8 +320,14 @@ console.log('5. dialogs');
   await opener.focus();
   await opener.click();
   await page.waitForTimeout(600);
-  const dlg = page.locator('[role="dialog"][aria-modal="true"]').filter({ has: page.locator('#modal-form, form, input') }).first();
-  ok((await dlg.count()) === 1 && !!(await dlg.getAttribute('aria-label')), `AuthModal: role=dialog + aria-modal + name ("${await dlg.getAttribute('aria-label')}")`);
+  const dlg = page
+    .locator('[role="dialog"][aria-modal="true"]')
+    .filter({ has: page.locator('#modal-form, form, input') })
+    .first();
+  ok(
+    (await dlg.count()) === 1 && !!(await dlg.getAttribute('aria-label')),
+    `AuthModal: role=dialog + aria-modal + name ("${await dlg.getAttribute('aria-label')}")`,
+  );
   ok(await dlg.evaluate((n) => n === document.activeElement), 'AuthModal: focus lands on the dialog box (not a field)');
   let inside = true;
   for (let i = 0; i < 14; i++) {
@@ -244,7 +365,10 @@ console.log('5. dialogs');
     await page.screenshot({ path: `${SHOT}/dialog-review-390.png` });
     await page.keyboard.press('Escape');
     await page.waitForTimeout(800);
-    ok((await page.locator('[role="dialog"][aria-label="Leave a review"]').count()) === 0, 'ReviewModal: Escape closes it (it had no Escape before)');
+    ok(
+      (await page.locator('[role="dialog"][aria-label="Leave a review"]').count()) === 0,
+      'ReviewModal: Escape closes it (it had no Escape before)',
+    );
   }
   await ctx.close();
 }
@@ -269,12 +393,17 @@ console.log('6. announcements');
 }
 {
   const { ctx, page } = await open(UNDER, '/settings.html', 1280, { loggedIn: true });
-  ok((await page.locator('[role="none"].bg-line, div[role="none"]').count()) >= 1, 'settings: dividers are Separator elements');
+  ok(
+    (await page.locator('[role="none"].bg-line, div[role="none"]').count()) >= 1,
+    'settings: dividers are Separator elements',
+  );
   ok((await page.locator('hr').count()) === 0, 'settings: no raw <hr> left');
   await page.screenshot({ path: `${SHOT}/settings-1280.png` });
   await ctx.close();
 }
 
 console.log(`\n${pass}/${pass + fail}`);
-sB.close(); sA.close(); await br.close();
+sB.close();
+sA.close();
+await br.close();
 process.exit(fail ? 1 : 0);

@@ -4,13 +4,27 @@ import Rating from '@/components/Rating';
 
 const PLACEHOLDER_GRADIENT = 'linear-gradient(135deg, rgba(31, 61, 43, 0.92), rgba(46, 90, 64, 0.86))';
 
-function ClockIcon() { return <Clock strokeWidth={1.7} />; }
-function PinIcon() { return <MapPin strokeWidth={1.7} />; }
-function UserIcon() { return <UserRound strokeWidth={1.7} />; }
-function LeafIcon() { return <Leaf fill="currentColor" aria-hidden="true" />; }
-function MaskIcon() { return <VenetianMask fill="currentColor" aria-hidden="true" />; }
-function MountainIcon() { return <Mountain fill="currentColor" aria-hidden="true" />; }
-function TempleIcon() { return <Landmark fill="currentColor" aria-hidden="true" />; }
+function ClockIcon() {
+  return <Clock strokeWidth={1.7} />;
+}
+function PinIcon() {
+  return <MapPin strokeWidth={1.7} />;
+}
+function UserIcon() {
+  return <UserRound strokeWidth={1.7} />;
+}
+function LeafIcon() {
+  return <Leaf fill="currentColor" aria-hidden="true" />;
+}
+function MaskIcon() {
+  return <VenetianMask fill="currentColor" aria-hidden="true" />;
+}
+function MountainIcon() {
+  return <Mountain fill="currentColor" aria-hidden="true" />;
+}
+function TempleIcon() {
+  return <Landmark fill="currentColor" aria-hidden="true" />;
+}
 
 const CATS = {
   Culture: { tone: 'gold', Icon: MaskIcon },
@@ -20,7 +34,7 @@ const CATS = {
 };
 
 const FRAME =
-  "hcard relative block overflow-hidden text-white no-underline bg-white rounded-xl aspect-[4/5] shadow-card " +
+  'hcard relative block overflow-hidden text-white no-underline bg-white rounded-xl aspect-[4/5] shadow-card ' +
   "after:content-[''] after:absolute after:inset-0 after:z-[1] " +
   'after:bg-[linear-gradient(to_top,rgba(12,14,10,0.86)_0%,rgba(12,14,10,0.40)_40%,rgba(12,14,10,0)_66%,rgba(12,14,10,0.14)_100%)]';
 const IMG = 'absolute inset-0 w-full h-full object-cover';
@@ -33,7 +47,8 @@ const RATE =
   'bg-[rgba(255,255,255,0.92)] text-ink text-small font-semibold ' +
   '[&>svg]:w-[13px] [&>svg]:h-[13px] [&>svg]:text-amber-d';
 const OVERLAY = 'absolute left-0 right-0 bottom-0 z-[2] px-[15px] pb-[14px]';
-const TITLE = 'mt-0 mb-[9px] font-semibold text-h2 leading-[1.2] text-white line-clamp-2 [text-shadow:0_2px_12px_rgba(0,0,0,0.5)]';
+const TITLE =
+  'mt-0 mb-[9px] font-semibold text-h2 leading-[1.2] text-white line-clamp-2 [text-shadow:0_2px_12px_rgba(0,0,0,0.5)]';
 const ACCENT = 'block w-[38px] h-[3px] rounded-[2px] mb-3';
 const BAR =
   'flex items-center justify-between gap-2 px-[11px] py-2 rounded-md bg-[rgba(12,14,10,0.42)] ' +
@@ -47,8 +62,19 @@ const SEP = 'w-px h-[11px] bg-[rgba(255,255,255,0.35)] flex-[0_0_auto]';
 const PRICE_WRAP = 'flex-[0_0_auto] text-right leading-[1.05] whitespace-nowrap text-white';
 
 export default function HomepageCard({
-  href, name, img, alt, meta, metaIcon = 'clock',
-  priceName, priceFallback, priceMode = 'standard', zone, cat, width = 600, height = 600,
+  href,
+  name,
+  img,
+  alt,
+  meta,
+  metaIcon = 'clock',
+  priceName,
+  priceFallback,
+  priceMode = 'standard',
+  zone,
+  cat,
+  width = 600,
+  height = 600,
 }) {
   const c = (cat && CATS[cat]) || null;
   const tone = c ? c.tone : 'gold';
@@ -58,13 +84,21 @@ export default function HomepageCard({
   return (
     <a className={FRAME} href={href} data-zone={zone}>
       {img ? (
-        <img className={IMG} src={`/assets/images/${img}`} alt={alt || name} width={width} height={height} loading="lazy" />
+        <img
+          className={IMG}
+          src={`/assets/images/${img}`}
+          alt={alt || name}
+          width={width}
+          height={height}
+          loading="lazy"
+        />
       ) : (
         <div className="absolute inset-0" style={{ backgroundImage: PLACEHOLDER_GRADIENT }} />
       )}
       {c && (
         <span className={`${CAT_BASE} ${catTone}`}>
-          <c.Icon />{cat}
+          <c.Icon />
+          {cat}
         </span>
       )}
       <Rating name={priceName} className={RATE} />
@@ -73,18 +107,25 @@ export default function HomepageCard({
         <span className={`${ACCENT} ${accentTone}`} />
         <div className={BAR}>
           <span className={META}>
-            {isTour ? <ClockIcon /> : <PinIcon />}<span className={META_ITEM}>{meta}</span>
+            {isTour ? <ClockIcon /> : <PinIcon />}
+            <span className={META_ITEM}>{meta}</span>
             {isTour && (
               <>
                 <span className={SEP} />
-                <UserIcon /><span className={META_TRUNC}>Private Tour</span>
+                <UserIcon />
+                <span className={META_TRUNC}>Private Tour</span>
               </>
             )}
           </span>
           {priceName && (
             <span className={PRICE_WRAP}>
               <small className="block text-[9px] opacity-85 font-medium">from</small>
-              <Price name={priceName} mode={priceMode} fallback={priceFallback} className="text-white font-bold text-strong" />
+              <Price
+                name={priceName}
+                mode={priceMode}
+                fallback={priceFallback}
+                className="text-white font-bold text-strong"
+              />
             </span>
           )}
         </div>

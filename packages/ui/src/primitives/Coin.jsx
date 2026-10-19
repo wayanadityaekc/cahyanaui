@@ -10,7 +10,15 @@ export default function Coin({ size = 'md', still = false, shine = false, src = 
   if (shine) {
     return (
       <span className={`relative block flex-none ${sizeClass(size)}`} data-coin-stage>
-        <img className={`block rounded-[50%] ${sizeClass(size)}`} src={src} alt="" aria-hidden="true" width="256" height="256" data-coin />
+        <img
+          className={`block rounded-[50%] ${sizeClass(size)}`}
+          src={src}
+          alt=""
+          aria-hidden="true"
+          width="256"
+          height="256"
+          data-coin
+        />
         <span className="cahyana-coin-shine" aria-hidden="true" data-coin-shine />
       </span>
     );

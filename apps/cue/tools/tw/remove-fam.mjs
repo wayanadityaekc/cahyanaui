@@ -14,28 +14,68 @@ function selectorIsDead(sel) {
   return DEAD.test(sel);
 }
 function findBrace(s, from) {
-  let i = from; const n = s.length;
-  while (i < n) { const c = s[i];
-    if (c === '/' && s[i + 1] === '*') { const e = s.indexOf('*/', i + 2); i = e === -1 ? n : e + 2; continue; }
-    if (c === '"' || c === "'") { let j = i + 1; while (j < n && s[j] !== c) { if (s[j] === '\\') j++; j++; } i = j + 1; continue; }
-    if (c === '{') return i; i++;
+  let i = from;
+  const n = s.length;
+  while (i < n) {
+    const c = s[i];
+    if (c === '/' && s[i + 1] === '*') {
+      const e = s.indexOf('*/', i + 2);
+      i = e === -1 ? n : e + 2;
+      continue;
+    }
+    if (c === '"' || c === "'") {
+      let j = i + 1;
+      while (j < n && s[j] !== c) {
+        if (s[j] === '\\') j++;
+        j++;
+      }
+      i = j + 1;
+      continue;
+    }
+    if (c === '{') return i;
+    i++;
   }
   return -1;
 }
 function matchClose(s, open) {
-  let depth = 0, i = open; const n = s.length;
-  while (i < n) { const c = s[i];
-    if (c === '/' && s[i + 1] === '*') { const e = s.indexOf('*/', i + 2); i = e === -1 ? n : e + 2; continue; }
-    if (c === '"' || c === "'") { let j = i + 1; while (j < n && s[j] !== c) { if (s[j] === '\\') j++; j++; } i = j + 1; continue; }
-    if (c === '{') depth++; else if (c === '}') { depth--; if (depth === 0) return i; } i++;
+  let depth = 0,
+    i = open;
+  const n = s.length;
+  while (i < n) {
+    const c = s[i];
+    if (c === '/' && s[i + 1] === '*') {
+      const e = s.indexOf('*/', i + 2);
+      i = e === -1 ? n : e + 2;
+      continue;
+    }
+    if (c === '"' || c === "'") {
+      let j = i + 1;
+      while (j < n && s[j] !== c) {
+        if (s[j] === '\\') j++;
+        j++;
+      }
+      i = j + 1;
+      continue;
+    }
+    if (c === '{') depth++;
+    else if (c === '}') {
+      depth--;
+      if (depth === 0) return i;
+    }
+    i++;
   }
   return n - 1;
 }
 function processBlock(s) {
-  let out = ''; let i = 0; const n = s.length;
+  let out = '';
+  let i = 0;
+  const n = s.length;
   while (i < n) {
     const brace = findBrace(s, i);
-    if (brace === -1) { out += s.slice(i); break; }
+    if (brace === -1) {
+      out += s.slice(i);
+      break;
+    }
     const prelude = s.slice(i, brace);
     const close = matchClose(s, brace);
     const body = s.slice(brace + 1, close);
@@ -47,10 +87,13 @@ function processBlock(s) {
       out += `${prelude}{${body}}`;
     } else {
       const clean = prelude.replace(/\/\*[\s\S]*?\*\//g, '');
-      const sels = clean.split(',').map((x) => x.replace(/\n/g, ' ').trim()).filter(Boolean);
+      const sels = clean
+        .split(',')
+        .map((x) => x.replace(/\n/g, ' ').trim())
+        .filter(Boolean);
       const keep = sels.filter((sx) => !selectorIsDead(sx));
-      if (keep.length === 0) {   }
-      else if (keep.length === sels.length) out += `${prelude}{${body}}`;
+      if (keep.length === 0) {
+      } else if (keep.length === sels.length) out += `${prelude}{${body}}`;
       else {
         const lead = (prelude.match(/^(\s*(?:\/\*[\s\S]*?\*\/\s*)*)/) || [''])[0];
         out += `${lead}${keep.join(',\n')} {${body}}`;
@@ -64,6 +107,9 @@ function processBlock(s) {
 const before = css.length;
 css = processBlock(css);
 fs.writeFileSync(file, css);
-const o = (css.match(/{/g) || []).length, c = (css.match(/}/g) || []).length;
-console.log(`removed from ${file} | chars ${before} -> ${css.length} | braces ${o === c ? 'OK' : `MISMATCH ${o}/${c}`}`);
+const o = (css.match(/{/g) || []).length,
+  c = (css.match(/}/g) || []).length;
+console.log(
+  `removed from ${file} | chars ${before} -> ${css.length} | braces ${o === c ? 'OK' : `MISMATCH ${o}/${c}`}`,
+);
 if (o !== c) process.exit(1);

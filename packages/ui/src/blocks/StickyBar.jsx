@@ -22,13 +22,7 @@ const CARDS = {
 export const BAR_SHELL = SHELLS.floating;
 export const BAR_CARD = CARDS.floating;
 
-export default function StickyBar({
-  variant = 'floating',
-  show = true,
-  className,
-  cardClassName,
-  children,
-}) {
+export default function StickyBar({ variant = 'floating', show = true, className, cardClassName, children }) {
   return (
     <div className={cn(SHELLS[variant] || SHELLS.floating, show ? 'translate-y-0' : 'translate-y-[150%]', className)}>
       <div className={cn(CARDS[variant] || CARDS.floating, cardClassName)}>{children}</div>

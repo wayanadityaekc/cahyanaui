@@ -14,7 +14,8 @@ export function groupReviews(rows = []) {
       .sort((a, b) => String(a.created_at || '').localeCompare(String(b.created_at || '')))
       .map((r) => r.service)
       .filter((s, i, all) => s && all.indexOf(s) === i);
-    const label = services.length > 1 ? `${services[0]} + ${services.length - 1} more` : services[0] || copies[0].service;
+    const label =
+      services.length > 1 ? `${services[0]} + ${services.length - 1} more` : services[0] || copies[0].service;
     return { ...copies[0], service: label, services };
   });
 }

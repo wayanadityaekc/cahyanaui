@@ -29,9 +29,15 @@ export default function PayWaiting({ bookingRef, onClose, onConfirmed }) {
   }, []);
 
   useEffect(() => {
-    if (!bookingRef) { setPhase('blind'); return; }
+    if (!bookingRef) {
+      setPhase('blind');
+      return;
+    }
     const token = readLocal(KEY.token, '');
-    if (!token) { setPhase('blind'); return; }
+    if (!token) {
+      setPhase('blind');
+      return;
+    }
     let stop = false;
     const started = Date.now();
     async function ask() {
@@ -40,7 +46,10 @@ export default function PayWaiting({ bookingRef, onClose, onConfirmed }) {
           headers: { Authorization: `Bearer ${token}` },
         });
         if (stop) return;
-        if (response.status === 401 || response.status === 404) { setPhase('blind'); return; }
+        if (response.status === 401 || response.status === 404) {
+          setPhase('blind');
+          return;
+        }
         const data = await response.json().catch(() => null);
         if (stop) return;
         if (data && data.payment === 'paid') {
@@ -48,15 +57,23 @@ export default function PayWaiting({ bookingRef, onClose, onConfirmed }) {
           if (typeof onConfirmed === 'function') onConfirmed();
           return;
         }
-        if (data && data.payment === 'mismatch') { setPhase('mismatch'); return; }
-      } catch (e) {
-      }
+        if (data && data.payment === 'mismatch') {
+          setPhase('mismatch');
+          return;
+        }
+      } catch (e) {}
       if (stop) return;
-      if (Date.now() - started > GIVE_UP_MS) { setPhase('slow'); return; }
+      if (Date.now() - started > GIVE_UP_MS) {
+        setPhase('slow');
+        return;
+      }
       timer.current = setTimeout(ask, POLL_MS);
     }
     timer.current = setTimeout(ask, POLL_MS);
-    return () => { stop = true; clearTimeout(timer.current); };
+    return () => {
+      stop = true;
+      clearTimeout(timer.current);
+    };
   }, [bookingRef, onConfirmed]);
 
   if (!mounted) return null;
@@ -76,7 +93,9 @@ export default function PayWaiting({ bookingRef, onClose, onConfirmed }) {
     },
     paid: {
       title: 'Booking confirmed',
-      lines: ['The payment cleared. Your confirmation email is on its way, with the details of every day we have booked for you.'],
+      lines: [
+        'The payment cleared. Your confirmation email is on its way, with the details of every day we have booked for you.',
+      ],
     },
     mismatch: {
       title: 'We need to check this payment',
@@ -126,7 +145,9 @@ export default function PayWaiting({ bookingRef, onClose, onConfirmed }) {
         <h2 className="mb-3 font-body text-h2 font-semibold text-white">{COPY.title}</h2>
         <div className="max-w-[420px]">
           {COPY.lines.map((t, i) => (
-            <p className="mb-2 text-body leading-[var(--lh-body)] text-[rgba(255,255,255,0.86)]" key={i}>{t}</p>
+            <p className="mb-2 text-body leading-[var(--lh-body)] text-[rgba(255,255,255,0.86)]" key={i}>
+              {t}
+            </p>
           ))}
         </div>
         {bookingRef && (
@@ -137,9 +158,13 @@ export default function PayWaiting({ bookingRef, onClose, onConfirmed }) {
 
         {!waiting && (
           <div className="w-full max-w-[320px] mt-6">
-            <button type="button" className={BTN} onClick={onClose}>Done</button>
+            <button type="button" className={BTN} onClick={onClose}>
+              Done
+            </button>
             {(phase === 'mismatch' || phase === 'slow') && (
-              <a className={`${BTN_WA} ${STACK}`} href={whatsappUrl} target="_blank" rel="noopener noreferrer">WhatsApp</a>
+              <a className={`${BTN_WA} ${STACK}`} href={whatsappUrl} target="_blank" rel="noopener noreferrer">
+                WhatsApp
+              </a>
             )}
           </div>
         )}

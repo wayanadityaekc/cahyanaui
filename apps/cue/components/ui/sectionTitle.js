@@ -1,4 +1,3 @@
-
 const ST_CORE = 'font-head font-medium tracking-[-0.01em] text-center text-gold leading-[var(--lh-heading)]';
 
 export const SECTION_TITLE = `${ST_CORE} mb-8 text-h2`;

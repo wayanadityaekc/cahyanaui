@@ -4,9 +4,7 @@ import { BTN_SM } from '@/components/ui/btnClasses';
 import { useEffect, useRef, useState } from 'react';
 import { usePathname } from 'next/navigation';
 import { normalizePath } from '@/lib/pathname';
-import {
-  Building2, Compass, BookOpen, House, MessageCircle, ShoppingBag, Star, X,
-} from 'lucide-react';
+import { Building2, Compass, BookOpen, House, MessageCircle, ShoppingBag, Star, X } from 'lucide-react';
 import { useItinerary } from '@/state/ItineraryProvider';
 import ChatLauncher from '@/components/chat/ChatLauncher';
 import { APP_HIDE } from '@/components/ui/pwaClasses';
@@ -21,18 +19,17 @@ import AccountMenu from './AccountMenu';
 import TripPrefsFields from './TripPrefsFields';
 import DesktopNav from './DesktopNav';
 
-
 const BURGER_BAR =
   'w-full h-[2px] bg-gold max-[992px]:w-[20px] ' +
   '[transition:translate_var(--dur)_var(--ease),rotate_var(--dur)_var(--ease),opacity_var(--dur-fast)_var(--ease)] ' +
   'motion-reduce:transition-none';
 
-
 function navLink(active) {
-  return `${MENU_ROW_BOX} text-strong no-underline ${ 
+  return `${MENU_ROW_BOX} text-strong no-underline ${
     active
       ? 'font-semibold bg-cream text-green max-[992px]:text-gold-d'
-      : 'font-medium text-gold hover:bg-cream hover:text-green max-[992px]:hover:text-gold-d'}`;
+      : 'font-medium text-gold hover:bg-cream hover:text-green max-[992px]:hover:text-gold-d'
+  }`;
 }
 
 const NAV_LI = '-mx-3';
@@ -67,7 +64,10 @@ export default function Navbar() {
         root.style.setProperty('--header-h-max', `${h}px`);
       }
     }
-    function onResize() { max = 0; set(); }
+    function onResize() {
+      max = 0;
+      set();
+    }
     set();
     const resizeObserver = new ResizeObserver(set);
     resizeObserver.observe(header);
@@ -80,7 +80,9 @@ export default function Navbar() {
 
   const [slid, setSlid] = useState(false);
   useEffect(() => {
-    function onScroll() { return setSlid((was) => (was ? window.scrollY > 8 : window.scrollY > 80)); }
+    function onScroll() {
+      return setSlid((was) => (was ? window.scrollY > 8 : window.scrollY > 80));
+    }
     onScroll();
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
@@ -119,7 +121,9 @@ export default function Navbar() {
       className={`fixed left-0 right-0 z-[100] w-full bg-white animate-[navbarIn_0.4s_ease-out] motion-reduce:animate-none [transition:top_var(--dur)_var(--ease)] motion-reduce:transition-none ${slid ? 'top-[calc(-1_*_var(--tripbar-h,0px))]' : 'top-0'}`}
       ref={headerRef}
     >
-      <div ref={barRef}><TripBar /></div>
+      <div ref={barRef}>
+        <TripBar />
+      </div>
       <div className="flex justify-between items-center max-w-[1200px] mx-auto py-[0.55rem] px-[var(--container-x)] min-[993px]:px-5">
         <button
           className="min-[993px]:hidden relative flex flex-col gap-[4px] w-6 bg-transparent border-none cursor-pointer max-[992px]:h-[2.2rem] max-[992px]:mr-2 max-[992px]:items-center max-[992px]:justify-center"
@@ -134,18 +138,31 @@ export default function Navbar() {
         </button>
 
         <a href="/" className="max-[992px]:mr-auto">
-          <img className="h-10 w-auto block mr-4 ml-[0.1rem] max-[992px]:h-[34px] max-[992px]:ml-0" src="/assets/images/logo.webp" alt="The Cahyana Logo" width="1005" height="324" />
+          <img
+            className="h-10 w-auto block mr-4 ml-[0.1rem] max-[992px]:h-[34px] max-[992px]:ml-0"
+            src="/assets/images/logo.webp"
+            alt="The Cahyana Logo"
+            width="1005"
+            height="324"
+          />
         </a>
 
         <DesktopNav isActive={isActive} />
 
-        <ChatLauncher className={`${APP_HIDE} inline-flex items-center text-gold mr-[1.3rem] bg-transparent border-none p-0 cursor-pointer [transition:color_var(--dur)_ease,scale_var(--dur-fast)_var(--ease)] hover:text-gold-d max-[992px]:mr-[0.85rem]`} />
+        <ChatLauncher
+          className={`${APP_HIDE} inline-flex items-center text-gold mr-[1.3rem] bg-transparent border-none p-0 cursor-pointer [transition:color_var(--dur)_ease,scale_var(--dur-fast)_var(--ease)] hover:text-gold-d max-[992px]:mr-[0.85rem]`}
+        />
 
-        <a href="/my-trips.html" className={`${APP_HIDE} relative inline-flex items-center text-gold mr-[1.3rem] transition-[color] duration-200 ease-[ease] hover:text-gold-d max-[992px]:mr-[0.85rem]`} aria-label="My Trips">
+        <a
+          href="/my-trips.html"
+          className={`${APP_HIDE} relative inline-flex items-center text-gold mr-[1.3rem] transition-[color] duration-200 ease-[ease] hover:text-gold-d max-[992px]:mr-[0.85rem]`}
+          aria-label="My Trips"
+        >
           <ShoppingBag className="w-5 h-5" strokeWidth={1.6} aria-hidden="true" />
-          <span className={`absolute top-[-7px] right-[-9px] bg-gold ${BADGE_BASE}`} hidden={!count}>{count}</span>
+          <span className={`absolute top-[-7px] right-[-9px] bg-gold ${BADGE_BASE}`} hidden={!count}>
+            {count}
+          </span>
         </a>
-
 
         <FlagDefs />
 
@@ -166,9 +183,16 @@ export default function Navbar() {
               </button>
             </li>
 
-            <li className="pt-[0.9rem] pb-4"><TripPrefsFields idPrefix="acct" /></li>
+            <li className="pt-[0.9rem] pb-4">
+              <TripPrefsFields idPrefix="acct" />
+            </li>
 
-            <li className={NAV_LI}><a href="/" className={navLink(isActive('/'))}><House strokeWidth={1.7} aria-hidden="true" />Home</a></li>
+            <li className={NAV_LI}>
+              <a href="/" className={navLink(isActive('/'))}>
+                <House strokeWidth={1.7} aria-hidden="true" />
+                Home
+              </a>
+            </li>
             <li className={`relative ${NAV_LI}`}>
               <button
                 type="button"
@@ -176,23 +200,84 @@ export default function Navbar() {
                 aria-expanded={dropOpen}
                 onClick={() => setDropOpen((v) => !v)}
               >
-                <Compass strokeWidth={1.7} aria-hidden="true" />Program<span className={`ml-auto inline-block transition-[rotate] duration-200 ease-[ease] ${dropOpen ? 'rotate-90' : ''}`}>&rsaquo;</span>
+                <Compass strokeWidth={1.7} aria-hidden="true" />
+                Program
+                <span
+                  className={`ml-auto inline-block transition-[rotate] duration-200 ease-[ease] ${dropOpen ? 'rotate-90' : ''}`}
+                >
+                  &rsaquo;
+                </span>
               </button>
               <Collapse open={dropOpen}>
-              <ul className="list-none mt-[0.1rem] mb-[0.2rem] pt-[0.2rem] pb-[0.5rem] pl-[1.65rem] block">
-                <li className="py-[0.4rem]"><a className="block text-small font-medium no-underline text-gold hover:text-green max-[992px]:hover:text-gold-d" href="/tour.html">Tours</a></li>
-                <li className="py-[0.4rem]"><a className="block text-small font-medium no-underline text-gold hover:text-green max-[992px]:hover:text-gold-d" href="/destinations.html">Destinations</a></li>
-                <li className="py-[0.4rem]"><a className="block text-small font-medium no-underline text-gold hover:text-green max-[992px]:hover:text-gold-d" href="/activities.html">Experiences</a></li>
-                <li className="py-[0.4rem]"><a className="block text-small font-medium no-underline text-gold hover:text-green max-[992px]:hover:text-gold-d" href="/transfer.html">Transfer</a></li>
-                <li className="py-[0.4rem]"><a className="block text-small font-medium no-underline text-gold hover:text-green max-[992px]:hover:text-gold-d" href="/charter.html">Charter</a></li>
-              </ul>
+                <ul className="list-none mt-[0.1rem] mb-[0.2rem] pt-[0.2rem] pb-[0.5rem] pl-[1.65rem] block">
+                  <li className="py-[0.4rem]">
+                    <a
+                      className="block text-small font-medium no-underline text-gold hover:text-green max-[992px]:hover:text-gold-d"
+                      href="/tour.html"
+                    >
+                      Tours
+                    </a>
+                  </li>
+                  <li className="py-[0.4rem]">
+                    <a
+                      className="block text-small font-medium no-underline text-gold hover:text-green max-[992px]:hover:text-gold-d"
+                      href="/destinations.html"
+                    >
+                      Destinations
+                    </a>
+                  </li>
+                  <li className="py-[0.4rem]">
+                    <a
+                      className="block text-small font-medium no-underline text-gold hover:text-green max-[992px]:hover:text-gold-d"
+                      href="/activities.html"
+                    >
+                      Experiences
+                    </a>
+                  </li>
+                  <li className="py-[0.4rem]">
+                    <a
+                      className="block text-small font-medium no-underline text-gold hover:text-green max-[992px]:hover:text-gold-d"
+                      href="/transfer.html"
+                    >
+                      Transfer
+                    </a>
+                  </li>
+                  <li className="py-[0.4rem]">
+                    <a
+                      className="block text-small font-medium no-underline text-gold hover:text-green max-[992px]:hover:text-gold-d"
+                      href="/charter.html"
+                    >
+                      Charter
+                    </a>
+                  </li>
+                </ul>
               </Collapse>
             </li>
-            <li className={NAV_LI}><a href="/bali-guide.html" className={navLink(isActive('/bali-guide.html'))}><BookOpen strokeWidth={1.7} aria-hidden="true" />Guide</a></li>
-            <li className={NAV_LI}><a href="/all-reviews.html" className={navLink(isActive('/all-reviews.html'))}><Star strokeWidth={1.7} aria-hidden="true" />Reviews</a></li>
-            <li className={NAV_LI}><a href="/our-company.html" className={navLink(isActive('/our-company.html'))}><Building2 strokeWidth={1.7} aria-hidden="true" />Our Company</a></li>
+            <li className={NAV_LI}>
+              <a href="/bali-guide.html" className={navLink(isActive('/bali-guide.html'))}>
+                <BookOpen strokeWidth={1.7} aria-hidden="true" />
+                Guide
+              </a>
+            </li>
+            <li className={NAV_LI}>
+              <a href="/all-reviews.html" className={navLink(isActive('/all-reviews.html'))}>
+                <Star strokeWidth={1.7} aria-hidden="true" />
+                Reviews
+              </a>
+            </li>
+            <li className={NAV_LI}>
+              <a href="/our-company.html" className={navLink(isActive('/our-company.html'))}>
+                <Building2 strokeWidth={1.7} aria-hidden="true" />
+                Our Company
+              </a>
+            </li>
             <li className="mt-auto pt-4">
-              <a href={`https://wa.me/${WHATSAPP_NUMBER}`} target="_blank" rel="noopener" className={`flex w-full gap-2 ${BTN_SM} border-0 bg-cta no-underline text-white transition-[background,scale] duration-200 ease-[var(--ease)] hover:bg-cta-d`}>
+              <a
+                href={`https://wa.me/${WHATSAPP_NUMBER}`}
+                target="_blank"
+                rel="noopener"
+                className={`flex w-full gap-2 ${BTN_SM} border-0 bg-cta no-underline text-white transition-[background,scale] duration-200 ease-[var(--ease)] hover:bg-cta-d`}
+              >
                 <MessageCircle className="w-[18px] h-[18px] flex-none" strokeWidth={1.7} aria-hidden="true" />
                 WhatsApp
               </a>
@@ -203,7 +288,10 @@ export default function Navbar() {
         <AccountMenu onLogin={() => setAuthOpen(true)} />
       </div>
 
-      <div className={`fixed inset-0 bg-[rgba(26,26,26,0.45)] z-[95] transition-[opacity,visibility] duration-300 ease-[var(--ease)] ${menuOpen ? 'opacity-100 visible' : 'opacity-0 invisible'}`} onClick={() => setMenuOpen(false)} />
+      <div
+        className={`fixed inset-0 bg-[rgba(26,26,26,0.45)] z-[95] transition-[opacity,visibility] duration-300 ease-[var(--ease)] ${menuOpen ? 'opacity-100 visible' : 'opacity-0 invisible'}`}
+        onClick={() => setMenuOpen(false)}
+      />
       <AuthModal open={authOpen} onClose={() => setAuthOpen(false)} />
     </header>
   );

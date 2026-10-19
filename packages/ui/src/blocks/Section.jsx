@@ -15,7 +15,13 @@ export default function Section({
 }) {
   return (
     <Tag className={cn(!flush && SECTION, SECTION_TONES[tone] ?? '', className)} {...rest}>
-      {bare ? children : <Container width={width} className={innerClassName}>{children}</Container>}
+      {bare ? (
+        children
+      ) : (
+        <Container width={width} className={innerClassName}>
+          {children}
+        </Container>
+      )}
     </Tag>
   );
 }

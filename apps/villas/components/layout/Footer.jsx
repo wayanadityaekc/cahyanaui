@@ -12,7 +12,6 @@ import {
 import { CONTACT_EMAIL, CUE_LINK, WHATSAPP_LINK } from '@/lib/constants';
 import { REGISTRATION } from '@/content/registration';
 
-
 const BRAND = 'Ubud Private Villas';
 
 const COLUMNS = [
@@ -60,7 +59,7 @@ export default function Footer() {
       columns={COLUMNS}
       social={SOCIAL}
       featured={FEATURED}
-      brand={(
+      brand={
         <>
           <Link href="/" className="inline-block no-underline text-green">
             <span className="font-body text-[1.1rem] font-semibold text-green leading-[1.2]">{BRAND}</span>
@@ -80,14 +79,19 @@ export default function Footer() {
             </span>
           </div>
         </>
-      )}
-      bottom={(
+      }
+      bottom={
         <>
           <p className={FOOT_BOTTOM_TEXT}>&copy; 2026 {BRAND}. All rights reserved.</p>
           <p className={FOOT_REG}>
             <span className="whitespace-nowrap">{REGISTRATION.name}</span>
             <span aria-hidden="true">·</span>
-            <span className="whitespace-nowrap">Ministry of Law <a href={REGISTRATION.verifyUrl} target="_blank" rel="noopener" className="text-inherit underline">{REGISTRATION.decreeShort}</a></span>
+            <span className="whitespace-nowrap">
+              Ministry of Law{' '}
+              <a href={REGISTRATION.verifyUrl} target="_blank" rel="noopener" className="text-inherit underline">
+                {REGISTRATION.decreeShort}
+              </a>
+            </span>
             <span aria-hidden="true">·</span>
             <span className="whitespace-nowrap">NIB {REGISTRATION.nib}</span>
           </p>
@@ -95,7 +99,7 @@ export default function Footer() {
             Part of Cahyana Ubud Experience
           </a>
         </>
-      )}
+      }
     />
   );
 }

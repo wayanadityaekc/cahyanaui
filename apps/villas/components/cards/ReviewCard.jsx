@@ -14,7 +14,10 @@ export default function ReviewCard({ card }) {
         <p className={`${CAPS} text-muted mb-3`}>{card.heading}</p>
         <ul className="flex flex-col gap-2">
           {card.themes.map(([label, count]) => (
-            <li key={label} className="flex items-center justify-between text-small py-1.5 border-b border-line last:border-b-0">
+            <li
+              key={label}
+              className="flex items-center justify-between text-small py-1.5 border-b border-line last:border-b-0"
+            >
               <span className="text-gold">{label}</span>
               <span className="font-semibold text-amber">{count}</span>
             </li>

@@ -24,13 +24,10 @@ export const INPUT = FIELD_INPUT;
 export const TEXTAREA = FIELD_AREA;
 export const SELECT = FIELD_INPUT;
 
-export const BTN =
-  `flex w-full ${BTN_SM} border-none text-white bg-cta no-underline cursor-pointer transition-[background-color,color,scale] duration-[var(--dur)] ease-[ease] hover:bg-cta-d hover:text-white`;
+export const BTN = `flex w-full ${BTN_SM} border-none text-white bg-cta no-underline cursor-pointer transition-[background-color,color,scale] duration-[var(--dur)] ease-[ease] hover:bg-cta-d hover:text-white`;
 export const STACK = 'mt-[0.6rem]';
-export const BTN_GHOST =
-  `flex w-full ${BTN_SM} no-underline cursor-pointer transition-[background-color,color,scale] duration-[var(--dur)] ease-[ease] mt-[0.6rem] bg-white [border:1.5px_solid_var(--color-green)] text-green hover:bg-green hover:text-cream hover:[border-color:var(--color-green)]`;
-export const BTN_WA =
-  `flex w-full ${BTN_SM} border-none no-underline cursor-pointer transition-[background-color,color,scale] duration-[var(--dur)] ease-[ease] text-white bg-[#25d366] hover:bg-[#1fb457] hover:text-white`;
+export const BTN_GHOST = `flex w-full ${BTN_SM} no-underline cursor-pointer transition-[background-color,color,scale] duration-[var(--dur)] ease-[ease] mt-[0.6rem] bg-white [border:1.5px_solid_var(--color-green)] text-green hover:bg-green hover:text-cream hover:[border-color:var(--color-green)]`;
+export const BTN_WA = `flex w-full ${BTN_SM} border-none no-underline cursor-pointer transition-[background-color,color,scale] duration-[var(--dur)] ease-[ease] text-white bg-[#25d366] hover:bg-[#1fb457] hover:text-white`;
 
 export const REFMSG = 'block mt-[0.4rem] text-small';
 export const REFMSG_ERR = 'block mt-[0.4rem] text-small text-err';
@@ -46,4 +43,6 @@ export const REFERRAL_INPUT = `flex-1 ${FIELD_INPUT}`;
 export const REFERRAL_BTN =
   'px-[1.1rem] py-0 border-none rounded-sm font-semibold text-cream bg-green cursor-pointer ' +
   '[transition:background-color_var(--dur)_ease,scale_var(--dur-fast)_var(--ease)]';
-export function refMsgCls(ok) { return `block mt-[0.4rem] text-small ${ok ? 'text-ok' : 'text-err'}`; }
+export function refMsgCls(ok) {
+  return `block mt-[0.4rem] text-small ${ok ? 'text-ok' : 'text-err'}`;
+}

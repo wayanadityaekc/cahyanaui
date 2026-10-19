@@ -9,7 +9,8 @@ export default function AboutPage() {
       <p className="mb-6 text-body leading-[1.5] text-muted">{ABOUT.sub}</p>
 
       <p className="mb-2 text-body text-ink">
-        Based in {ABOUT.intro.facts[0].value} - run by {ABOUT.intro.facts[1].value.toLowerCase()} - prices {ABOUT.intro.facts[2].value.toLowerCase()}.
+        Based in {ABOUT.intro.facts[0].value} - run by {ABOUT.intro.facts[1].value.toLowerCase()} - prices{' '}
+        {ABOUT.intro.facts[2].value.toLowerCase()}.
       </p>
       <p className="mb-8 text-body leading-[1.6] text-ink">{ABOUT.intro.text}</p>
 
@@ -19,14 +20,18 @@ export default function AboutPage() {
           <h2 className="m-0 mb-2 font-head text-h2 font-medium text-green">{row.heading}</h2>
 
           {row.paras.map((para, i) => (
-            <p className="mb-3 text-body leading-[1.6] text-ink" key={i}>{para}</p>
+            <p className="mb-3 text-body leading-[1.6] text-ink" key={i}>
+              {para}
+            </p>
           ))}
 
           {row.steps && (
             <ol className="list-none m-0 p-0">
               {row.steps.map((step) => (
                 <li className="mb-3" key={step.n}>
-                  <strong className="text-body font-semibold text-green">{step.n}. {step.title}</strong>
+                  <strong className="text-body font-semibold text-green">
+                    {step.n}. {step.title}
+                  </strong>
                   <p className="m-0 mt-[0.15rem] text-small leading-[1.5] text-muted">{step.text}</p>
                 </li>
               ))}
@@ -35,15 +40,18 @@ export default function AboutPage() {
 
           {row.list && (
             <ul className={infoList(row.list.cls)}>
-              {row.list.items.map((it, i) => <li key={i}>{it}</li>)}
+              {row.list.items.map((it, i) => (
+                <li key={i}>{it}</li>
+              ))}
             </ul>
           )}
 
-          {row.drivers && row.drivers.map((driver) => (
-            <p className="mb-3 text-body leading-[1.6] text-ink" key={driver.name}>
-              <strong className="font-semibold text-green">{driver.name}</strong> - {driver.tagline}. {driver.desc}
-            </p>
-          ))}
+          {row.drivers &&
+            row.drivers.map((driver) => (
+              <p className="mb-3 text-body leading-[1.6] text-ink" key={driver.name}>
+                <strong className="font-semibold text-green">{driver.name}</strong> - {driver.tagline}. {driver.desc}
+              </p>
+            ))}
         </div>
       ))}
 

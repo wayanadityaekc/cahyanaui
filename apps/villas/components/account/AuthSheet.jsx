@@ -86,14 +86,14 @@ export default function AuthSheet({ open = false, onClose = () => {} }) {
     toCodeStage(email);
   }
 
-  async function submitSignIn() {
+  async function handleSignInSubmit() {
     reset();
     const data = check(signInSchema);
     if (!data) return;
     await sendCode(data.email);
   }
 
-  async function submitCreateAccount() {
+  async function handleCreateAccountSubmit() {
     reset();
     const data = check(createAccountSchema);
     if (!data) return;
@@ -112,7 +112,7 @@ export default function AuthSheet({ open = false, onClose = () => {} }) {
     setMessage(result.error || 'Sorry, we could not create your account. Please try again.');
   }
 
-  async function verifyEnteredCode(fullCode) {
+  async function handleCodeComplete(fullCode) {
     reset();
     setIsBusy(true);
     const result = await verifyCode(codeEmail, fullCode);
@@ -125,12 +125,12 @@ export default function AuthSheet({ open = false, onClose = () => {} }) {
     setMessage(result.error || 'Sorry, something went wrong. Please try again.');
   }
 
-  async function resendCode() {
+  async function handleCodeResend() {
     if (cooldown > 0 || isBusy) return;
     await sendCode(codeEmail);
   }
 
-  function returnToEmailStage() {
+  function handleEmailReturn() {
     setStage('email');
     setCode('');
     reset();
@@ -177,7 +177,7 @@ export default function AuthSheet({ open = false, onClose = () => {} }) {
             <OtpFields
               value={code}
               onChange={setCode}
-              onComplete={verifyEnteredCode}
+              onComplete={handleCodeComplete}
               error={!!message}
               disabled={isBusy}
               autoFocus
@@ -192,19 +192,19 @@ export default function AuthSheet({ open = false, onClose = () => {} }) {
                 {note}
               </p>
             )}
-            <Button full onClick={() => verifyEnteredCode(code)} disabled={isBusy || code.length < OTP_CODE_LENGTH}>
+            <Button full onClick={() => handleCodeComplete(code)} disabled={isBusy || code.length < OTP_CODE_LENGTH}>
               {isBusy ? 'Checking...' : 'Verify'}
             </Button>
             <p className="text-center text-small text-muted">
               {cooldown > 0 ? (
                 `Resend code in ${cooldown}s`
               ) : (
-                <button type="button" className={LINK_BUTTON} onClick={resendCode}>
+                <button type="button" className={LINK_BUTTON} onClick={handleCodeResend}>
                   Resend code
                 </button>
               )}
               {' · '}
-              <button type="button" className={LINK_BUTTON} onClick={returnToEmailStage}>
+              <button type="button" className={LINK_BUTTON} onClick={handleEmailReturn}>
                 Change email
               </button>
             </p>
@@ -232,7 +232,7 @@ export default function AuthSheet({ open = false, onClose = () => {} }) {
                 {message}
               </p>
             )}
-            <Button full onClick={submitSignIn} disabled={isBusy}>
+            <Button full onClick={handleSignInSubmit} disabled={isBusy}>
               {isBusy ? 'Sending...' : 'Send code'}
             </Button>
             <p className="text-center text-small text-muted">
@@ -287,7 +287,7 @@ export default function AuthSheet({ open = false, onClose = () => {} }) {
                 {message}
               </p>
             )}
-            <Button full onClick={submitCreateAccount} disabled={isBusy}>
+            <Button full onClick={handleCreateAccountSubmit} disabled={isBusy}>
               {isBusy ? 'Creating...' : 'Create account'}
             </Button>
             <p className="text-center text-small text-muted">

@@ -125,12 +125,12 @@ export default function AuthModal({ open, onClose, reason, onSignedIn }) {
     setMessage(result.error || 'Sorry, something went wrong. Please try again.');
   }
 
-  async function resendCode() {
+  async function handleCodeResend() {
     if (cooldown > 0 || isBusy) return;
     await sendCode(codeEmail);
   }
 
-  function returnToEmail() {
+  function handleEmailReturn() {
     setStage('email');
     setCode('');
     reset();
@@ -194,7 +194,7 @@ export default function AuthModal({ open, onClose, reason, onSignedIn }) {
               <button
                 type="button"
                 className="bg-transparent border-none p-0 cursor-pointer font-body text-small text-gold font-semibold underline hover:text-gold-d"
-                onClick={resendCode}
+                onClick={handleCodeResend}
               >
                 Resend code
               </button>
@@ -203,7 +203,7 @@ export default function AuthModal({ open, onClose, reason, onSignedIn }) {
             <button
               type="button"
               className="bg-transparent border-none p-0 cursor-pointer font-body text-small text-gold font-semibold underline hover:text-gold-d"
-              onClick={returnToEmail}
+              onClick={handleEmailReturn}
             >
               Change email
             </button>

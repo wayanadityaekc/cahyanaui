@@ -8,11 +8,9 @@ import Separator from '../primitives/Separator.jsx';
 import { BTN_SM } from '../primitives/btnClasses.js';
 import { initialsOf } from './AccountMenu.jsx';
 
-// CUE's red ghost button; it only opens the site's delete confirmation, never deletes by itself.
 const BTN_DANGER_GHOST = `inline-flex ${BTN_SM} font-body [border:1px_solid_var(--color-err)] bg-white text-err cursor-pointer hover:bg-err hover:text-white`;
 const SECTION_TITLE = 'font-head font-medium text-h3 text-green m-0 mb-3';
 
-// CUE's Account Settings body; the site passes the account, its own prefs fields and the handlers that call the API.
 export default function AccountSettings({
   account = null,
   prefs = null,

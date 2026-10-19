@@ -3,7 +3,6 @@ import Prose from '@/components/prose/Prose';
 import { CHARTER } from '@/content/shared/charter';
 import FormHero from '@/components/sections/FormHero';
 
-// Charter page body: one FormHero with the builder, the Handara Gate photo and a single details Prose.
 export default function CharterSection() {
   return (
     <FormHero

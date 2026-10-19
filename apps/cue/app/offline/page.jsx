@@ -1,6 +1,5 @@
 import { SECTION_TITLE } from '@/components/ui/sectionTitle';
 
-// Offline fallback cached by the service worker; noindex, it is not content.
 export const metadata = {
   title: 'You are offline | Cahyana Ubud Experience',
   robots: { index: false, follow: false },

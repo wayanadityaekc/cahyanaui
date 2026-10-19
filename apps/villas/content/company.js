@@ -1,4 +1,3 @@
-// Our Company copy: every line is a fact already on this site or its Airbnb listings; booking terms live in policies.js.
 export const ABOUT = [
   { type: 'heading', html: 'Who we are' },
   { type: 'para', html: 'Cahyana Ubud is a family operation in north Ubud. Cahyana House came first - three bedrooms around a private pool, inside the family compound. Wayan, born and raised here, followed with Cahyana Tibuah out in the rice fields. Both villas are run by PT Cahyana Ubud Experience, the company behind Cahyana Ubud Experience.' },
@@ -10,7 +9,6 @@ export const ABOUT = [
   { type: 'para', html: 'Two villas today. The plan is to look after other people&rsquo;s villas the same way - owners in Ubud who want their place hosted properly rather than listed and forgotten. If that&rsquo;s you, get in touch.' },
 ];
 
-// Booking terms are restated from content/policies.js: change both in the same edit or the FAQ and policy page disagree.
 export const FAQ = [
   {
     cat: 'The villas',
@@ -54,7 +52,6 @@ export const FAQ = [
   },
 ];
 
-// Written from what this site actually does in a browser, not from a template.
 export const PRIVACY = [
   { type: 'heading', html: 'What this site collects' },
   { type: 'para', html: 'This site has no tracking pixels. If you create an account or sign in, your name, email and phone number are sent to our booking server, run by PT Cahyana Ubud Experience, so we can keep your account and send you sign-in codes.' },

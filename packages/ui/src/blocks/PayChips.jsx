@@ -1,4 +1,3 @@
-// Card brands above Book Now (Visa, Mastercard, JCB, Amex), copied from CUE; the marks are hand-drawn, not Lucide.
 export default function PayChips({ className = '', logosClass = '', chipClass = '', svgClass = '' }) {
   return (
     <div className={className}>

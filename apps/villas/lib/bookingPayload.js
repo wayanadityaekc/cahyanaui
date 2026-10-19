@@ -1,9 +1,7 @@
-// The /api/inquiry body for a villa booking: one villa line plus its CUE extras; prices are never sent, the server prices every line.
 import { VILLAS, nightsBetween } from '@/lib/villas';
 import { serviceById } from '@/lib/bookingCart';
 import { programByKey, transferById, TRANSFER_KEY } from '@/lib/extras';
 
-// Both villas are in Ubud, so every pickup is the villa and no pickup fee applies.
 const PICKUP_AREA = 'Ubud';
 const AIRPORT = 'Ngurah Rai Airport (DPS)';
 
@@ -41,7 +39,6 @@ function extraLine(extra, stay, villaName) {
   };
 }
 
-// Lines in the shape the quote and the booking both take.
 export function bookingLines(cart) {
   const stay = cart.stay;
   if (!stay || nightsBetween(stay.checkIn, stay.checkOut) < 1) return [];

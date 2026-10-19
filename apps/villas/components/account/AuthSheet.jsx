@@ -7,12 +7,10 @@ import SheetPresence from '@/components/ui/SheetPresence';
 import { useAccount } from '@/components/providers/AccountProvider';
 import { createAccountSchema, signInSchema } from '@/lib/schemas';
 
-// Resend cooldown for the code; UX only, the server's login limiter is the real rate limit.
 const RESEND_SECONDS = 30;
 const EMPTY_FORM = { name: '', email: '', phone: '' };
 const LINK_BUTTON = 'bg-transparent border-none p-0 cursor-pointer font-body text-small font-semibold text-gold underline';
 
-// CUE's sign-in flow on the villa site's sheet: both views share one email -> 6-digit code stage.
 export default function AuthSheet({ open = false, onClose = () => {} }) {
   const { requestLogin, verifyCode, createAccount } = useAccount();
   const [view, setView] = useState('signin');
@@ -42,7 +40,6 @@ export default function AuthSheet({ open = false, onClose = () => {} }) {
   function reset() { setErrors({}); setMsg(''); setNote(''); }
   function close() { reset(); setForm(EMPTY_FORM); setStage('email'); setCode(''); setView('signin'); onClose(); }
 
-  // One validator for both views; Zod drops unknown keys, so every field must be in the schema.
   function check(schema) {
     const result = schema.safeParse(form);
     if (result.success) return result.data;
@@ -83,7 +80,6 @@ export default function AuthSheet({ open = false, onClose = () => {} }) {
     const result = await createAccount(data);
     setBusy(false);
     if (result.ok) { close(); return; }
-    // Email already has an account: the server emailed a code, so go to the code stage.
     if (result.signin) { toCodeStage(result.email); setNote(`You already have an account as ${result.email}.`); return; }
     setMsg(result.error || 'Sorry, we could not create your account. Please try again.');
   }
@@ -117,7 +113,6 @@ export default function AuthSheet({ open = false, onClose = () => {} }) {
       shell="fixed inset-0 z-[130] flex items-center justify-center p-6 bg-[rgba(0,0,0,0.55)]"
       box="relative w-full max-w-[420px] max-h-[90vh] overflow-y-auto p-8 rounded-md bg-white"
     >
-      {/* CUE's account modal geometry (modalClasses SHELL/BOX/CLOSE/TITLE). */}
       <button type="button" onClick={close} aria-label="Close" className="absolute top-3 right-4 text-green bg-transparent border-none cursor-pointer">
         <X className="w-[var(--icon-md)] h-[var(--icon-md)]" strokeWidth={1.8} aria-hidden="true" />
       </button>

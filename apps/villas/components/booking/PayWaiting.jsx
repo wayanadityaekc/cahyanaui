@@ -7,7 +7,6 @@ import { API_BASE, TOKEN_KEY, whatsappLink } from '@/lib/constants';
 import { VILLA_LIST } from '@/lib/villas';
 import useBodyLock from '@/components/ui/useBodyLock';
 
-// Ported from CUE PayWaiting: asks /booking-status until the webhook marks the booking paid; no way out while waiting.
 const POLL_MS = 4000;
 const GIVE_UP_MS = 120000;
 const SLIDE_MS = 6000;
@@ -70,7 +69,6 @@ export default function PayWaiting({ bookingRef = '', onClose = () => {}, onConf
 
   useEffect(() => {
     const token = readToken();
-    // Without a session the server cannot check who is asking, so say what we know instead of spinning.
     if (!bookingRef || !token) { setPhase('blind'); return undefined; }
     let stop = false;
     const started = Date.now();
@@ -86,10 +84,8 @@ export default function PayWaiting({ bookingRef = '', onClose = () => {}, onConf
           if (typeof onConfirmed === 'function') onConfirmed();
           return;
         }
-        // A mismatch is not paid; never tell the guest it is confirmed.
         if (data && data.payment === 'mismatch') { setPhase('mismatch'); return; }
       } catch (e) {
-        // A dropped request is not an answer; keep asking until we give up.
       }
       if (stop) return;
       if (Date.now() - started > GIVE_UP_MS) { setPhase('slow'); return; }
@@ -106,7 +102,6 @@ export default function PayWaiting({ bookingRef = '', onClose = () => {}, onConf
   return createPortal(
     <div className="fixed inset-0 z-[300] overflow-hidden" role="dialog" aria-modal="true" aria-label={copy.title} aria-live="polite" data-pay-waiting={phase}>
       {photos.map((photo, index) => (
-        // eslint-disable-next-line @next/next/no-img-element
         <img
           key={photo.src}
           src={photo.src}

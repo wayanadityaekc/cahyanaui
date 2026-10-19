@@ -22,14 +22,12 @@ const DIRECTIONS = [
 ];
 
 export default function AirportTransferForm() {
-  // Guests bound straight to TripPrefs so the homepage choice shows here pre-filled.
   const { currency, setGuests, displayGuests } = useTripPrefs();
   const pricing = usePricing();
   const { state, save } = useItinerary();
 
   const [direction, setDirection] = useState('pickup');
 
-  // ?dir from the /transfer Airport card sets direction; read in an effect, not initial state (static export).
   useEffect(() => {
     const dir = new URLSearchParams(window.location.search).get('dir');
     if (dir === 'pickup' || dir === 'dropoff') setDirection(dir);
@@ -45,11 +43,9 @@ export default function AirportTransferForm() {
   const total = entry ? entry.display * cars : null;
   const totalText = total == null ? '-' : symbol + total.toLocaleString(currency === 'IDR' ? 'id-ID' : 'en-US');
 
-  // One date on this form: the transfer date is read off the flight date and time.
   const date = flightTime.slice(0, 10);
   const ready = !!(date && address && flightNumber);
 
-  // Adds a transfers row (with flight details) to the cart and goes to My Trips, like every booking flow.
   function book() {
     if (!ready) return;
     save({
@@ -69,7 +65,6 @@ export default function AirportTransferForm() {
     window.location.href = '/my-trips.html';
   }
 
-  // Fields use the shared formClasses strings (FIELD_LABEL / FIELD_INPUT) plus Select and DateTimeField.
   return (
     <div className="bg-white rounded-xl pt-6 px-[1.4rem] pb-[1.6rem] text-left" id={AIRPORT.boxId}>
       <h2 className="font-head text-[1.15rem] text-green text-center mt-0 mb-[1.1rem]">{AIRPORT.boxTitle}</h2>
@@ -107,13 +102,11 @@ export default function AirportTransferForm() {
         <DateTimeField id="at-flight-time" label="Flight date & time" value={flightTime} onChange={setFlightTime} />
       </div>
 
-      {/* Explains the transfer takes the flight's date and why the flight number is required. */}
       <p className="mt-[0.4rem] text-small text-muted">
         Your transfer is booked for this flight's date. The flight number lets your driver track delays and time
         the pickup right - both are required to book.
       </p>
 
-      {/* Total is larger and soft black (text-gold), not amber; the colour must sit on the PRICE span itself. */}
       <div className="flex items-baseline justify-between border-t border-line pt-4 mt-5 mb-4 font-semibold">
         <span className="text-strong">Total</span>
         <span id="at-total"><span className={`${PRICE} !text-gold text-[1.35rem]`}>{withSymbol(totalText)}</span></span>

@@ -6,14 +6,12 @@ import { SUB } from '@/components/ui/modalClasses';
 import { usePricing } from '@/state/PricingProvider';
 import { EXPLORE_OPTIONS } from '@/content/shared/explore-options';
 
-// Bookable categories only (Destinations isn't sold as a standalone item - CLAUDE.md).
 const LINK_OPTIONS = EXPLORE_OPTIONS.filter((o) => o.cat !== 'destination');
 const PICK_CATS_SRC = [
   { key: 'tour', label: 'Tour Programs', cats: ['tour', 'combo'] },
   { key: 'experience', label: 'Activities & Performances', cats: ['experience', 'performance'] },
 ];
 
-// Category picker styles, local to this component.
 const PICK_CATS = 'flex flex-col gap-[0.6rem]';
 const PICK_CAT = 'block w-full py-[0.95rem] px-4 text-center [border:1px_solid_var(--line)] rounded-md bg-cream font-body font-semibold text-green no-underline transition-[border-color,background-color,scale] duration-[var(--dur)] ease-[ease] hover:border-gold hover:bg-[#efe9db]';
 const PICK_CAT_BTN = `${PICK_CAT} cursor-pointer [font-size:inherit]`;
@@ -22,7 +20,6 @@ const LINK_ICON = 'flex-none w-9 h-9 grid place-items-center rounded-[50%] bg-wh
 const LINK_NAME = 'font-semibold text-green';
 const LINK_SUB = 'block text-small text-muted mt-[0.1rem]';
 
-// mode 'link' sends a category to its listing page; mode 'pick' picks an item in-modal (keeps the itinerary day context).
 export default function AddItemPicker({ open, onClose, onPick, mode = 'link' }) {
   const pricing = usePricing();
   const [cat, setCat] = useState(null);

@@ -1,27 +1,4 @@
-/**
- * @cahyana/ui - the shared Cahyana library.
- *
- * THREE LAYERS, and the split is the whole design:
- *   1  tokens   CSS. Imported separately:  @import "@cahyana/ui/tokens.css";
- *   2  primitives  the atoms - a button, a field, a badge
- *   3  blocks   assembled shapes - a hero, a card, the navbar shell
- *
- * Layers 2 and 3 export from here.
- *
- * Structure borrowed from shadcn/ui - three layers, components you own rather
- * than a dependency you upgrade - but no code and no dependency taken from it.
- *
- * TWO RULES THIS FILE ENFORCES BY WHAT IT DOES NOT EXPORT:
- *   - No component in here imports next/link, next/image or next/navigation. A
- *     UI library that imports the framework can only be used by that framework.
- *     Anything that needs a link takes a `linkAs` prop.
- *   - No component in here reads an app's React context (currency, cart,
- *     booking). Those live in one app's provider tree; a library component that
- *     reaches for one can only be rendered inside that app. Values come in as
- *     props, already formatted.
- */
 
-/* --- helpers --- */
 export { cn } from './lib/cn.js';
 export { default as useMobile } from './lib/useMobile.js';
 export { default as useBodyLock } from './lib/useBodyLock.js';
@@ -35,7 +12,6 @@ export { openChatSocket, chatSocketUrl } from './lib/chatSocket.js';
 export { createChatThread } from './lib/chatThread.js';
 export { CURRENCIES, CURRENCY_SYMBOL, BASELINE_FX, ladder, perIdr, displayFromIdr, formatMoney } from './lib/money.js';
 
-/* --- layer 2: primitives --- */
 export { default as Button } from './primitives/Button.jsx';
 export * from './primitives/btnClasses.js';
 export { default as Badge } from './primitives/Badge.jsx';
@@ -54,7 +30,6 @@ export { default as LiveRegion } from './primitives/LiveRegion.jsx';
 export { default as OtpFields } from './primitives/OtpFields.jsx';
 export { default as Coin } from './primitives/Coin.jsx';
 
-/* --- layer 3: blocks --- */
 export { default as CoinBalance } from './blocks/CoinBalance.jsx';
 export { default as UseCoin } from './blocks/UseCoin.jsx';
 export { default as CoinBand } from './blocks/CoinBand.jsx';
@@ -130,7 +105,6 @@ export { default as PlanList } from './blocks/PlanList.jsx';
 export { default as AvailabilityCalendar } from './blocks/AvailabilityCalendar.jsx';
 export { canCheckIn, canCheckOut, isBookedNight, nightsBetween as stayNights, stayLimits, stayIsOpen, addDays as addStayDays } from './lib/stayRules.js';
 
-/* Shared class strings, for a page that needs the look without the component. */
 export * from './primitives/controlClasses.js';
 export * from './blocks/layoutClasses.js';
 export * from './blocks/gridClasses.js';

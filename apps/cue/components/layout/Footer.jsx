@@ -6,13 +6,10 @@ import { WHATSAPP_NUMBER } from '@/lib/constants';
 import { REGISTRATION as R } from '@/content/shared/registration';
 import FooterPayChips from './FooterPayChips';
 
-// Pages that get the compact fixed footer instead of the full one.
 const COMPACT_PATHS = ['/settings.html', '/my-trips.html', '/our-company.html'];
 
-// Match both '/x' and '/x.html' so server and client renders agree (avoids hydration error #418).
 function isCompactPath(pathname) { return COMPACT_PATHS.some((p) => pathname === p || pathname === p.replace(/\.html$/, '')); }
 
-// Full footer: one 5-column grid (2 columns under 900px); Featured On and Follow stay separate columns.
 
 const CONTACT_ITEM = 'flex items-center gap-[0.55rem] text-[0.8rem] text-green opacity-90 no-underline';
 const CONTACT_LINK = `${CONTACT_ITEM} hover:opacity-100 hover:text-gold`;
@@ -26,7 +23,6 @@ const COL_A = 'no-underline text-green hover:text-gold';
 const COL_H = 'mb-[0.9rem] font-body text-h3 font-semibold tracking-normal text-gold';
 const COL_LI = 'mb-[0.55rem] text-[0.8rem] opacity-[0.85]';
 
-// 'Airport Transfer' is the site-wide link to /airport-transfer; keep the full phrase, it is the SEO anchor text.
 const EXPLORE = [
   ['/tour.html', 'Tours'],
   ['/activities.html', 'Experiences'],
@@ -36,7 +32,6 @@ const EXPLORE = [
   ['/my-trips.html', 'My Trips'],
 ];
 
-// Company links land on Our Company sections by hash (OurCompany.jsx reads it).
 const COMPANY = [
   ['/our-company.html#contact', 'Contact Us'],
   ['/our-company.html#about', 'About Us'],
@@ -52,7 +47,6 @@ const SOCIAL = [
   ['Facebook', 'facebook.webp'],
 ];
 
-// Compact footer, fixed to the bottom; .footerbar is what body padding and AppBottomNav key off. Icons only under 561px.
 function CompactFooter() {
   return (
     <footer className="footerbar fixed inset-x-0 bottom-0 z-[90] px-4 min-[561px]:px-6 py-[1rem] min-[561px]:pt-5 min-[561px]:pb-[max(1.25rem,env(safe-area-inset-bottom))] pb-[max(1rem,env(safe-area-inset-bottom))] text-green bg-[#ebe8e2] [border-top:1px_solid_rgba(0,0,0,0.08)]">

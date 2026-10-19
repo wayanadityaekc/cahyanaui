@@ -1,7 +1,4 @@
 #!/usr/bin/env node
-// Every asset the built pages reference must exist on disk, and every asset on
-// disk should be referenced by something. A missing image is invisible in the
-// class diff and only shows up as a broken picture in a browser.
 const fs = require("fs");
 const path = require("path");
 
@@ -24,8 +21,6 @@ function walk(dir, test) {
 
 const pages = walk(OUT, (n) => n.endsWith(".html"));
 const referenced = new Set();
-// &-stop matters: an inline style writes url(&#x27;/assets/...&#x27;), so the
-// entity would otherwise be swallowed into the filename.
 const RX = [/(?:src|href)="(\/assets\/[^"?#&]+)/g, /url\((?:&#x27;|')?(\/assets\/[^'")#?&]+)/g];
 pages.forEach((p) => {
   const s = fs.readFileSync(p, "utf8");
@@ -46,8 +41,6 @@ if (missing.length) {
   if (missing.length > 30) console.error(`  ... and ${missing.length - 30} more`);
   process.exit(1);
 }
-// The export dropped the favicon links once already, which browsers answer by
-// requesting /favicon.ico and 404ing - invisible except as a blank tab icon.
 const noIcon = pages.filter((p) => !/rel="icon"/.test(fs.readFileSync(p, "utf8")));
 console.log(`Pages without a favicon: ${noIcon.length}`);
 if (noIcon.length) {

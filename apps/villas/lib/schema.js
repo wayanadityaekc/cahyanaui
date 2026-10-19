@@ -4,7 +4,6 @@ import { REGISTRATION } from '@/content/registration';
 
 export { HOME_CRUMB, GUIDE_CRUMBS, COMPANY_CRUMBS, villaCrumbs, serviceCrumbs, articleCrumbs } from '@/lib/crumbs';
 
-// Every item carries its own URL, the current page included: an item with no URL has pointed Google at the homepage before (CUE).
 export function breadcrumbList(items = []) {
   return {
     '@context': 'https://schema.org',
@@ -27,7 +26,6 @@ const OPERATOR = {
   identifier: { '@type': 'PropertyValue', propertyID: 'NIB', value: REGISTRATION.nib },
 };
 
-// The site as a business; no aggregateRating on purpose (the 4.96 is Airbnb's, Wayan kept it out of schema).
 export function siteSchema(villas = []) {
   const rates = villas.map((villa) => villa.nightlyRateIdr).sort((a, b) => a - b);
   return [
@@ -47,7 +45,6 @@ export function siteSchema(villas = []) {
   ];
 }
 
-// One villa: the nightly rupiah rate as an Offer, the same number the page converts from.
 export function villaSchema(villa) {
   return {
     '@context': 'https://schema.org',

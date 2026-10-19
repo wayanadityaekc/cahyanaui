@@ -1,5 +1,3 @@
-// Seeded snapshot of the My-Trips cart (client-rendered from localStorage).
-// Usage: node tools/tw/snap-cart.mjs <out.json>
 import http from 'node:http';
 import fs from 'node:fs';
 import path from 'node:path';

@@ -4,7 +4,6 @@ import { useRef, useState } from 'react';
 
 const DOT_MAX = 5;
 
-// Hero slider of the page's stop photos; swipe only reacts to a clearly horizontal gesture.
 export default function HeroSlider({ slides = [] }) {
   const [cur, setCur] = useState(0);
   const touch = useRef({ x: 0, y: 0 });
@@ -17,7 +16,6 @@ export default function HeroSlider({ slides = [] }) {
   const count = Math.min(DOT_MAX, total);
   const start = total > DOT_MAX ? Math.min(Math.max(cur - 2, 0), total - DOT_MAX) : 0;
 
-  // Slider styles; keep `.hero-slider__dots` as a hook (check-detail counts it).
   const ARROW =
     'w-[30px] h-[30px] flex items-center justify-center border-none rounded-[50%] bg-[rgba(0,0,0,0.3)] p-0 text-white text-[1.25rem] leading-none cursor-pointer hover:bg-[rgba(0,0,0,0.5)]';
   function dotCls(idx, j) {

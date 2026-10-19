@@ -1,9 +1,7 @@
-// One review posted for several trips is saved once per trip; mixed lists show it once as "Ubud Tour + 2 more".
 function reviewKey(r) {
   return [r.name, r.country, r.rating, r.message, r.source].map((v) => String(v ?? '').trim()).join('\u0001');
 }
 
-// Keeps the list order (newest first); trips inside a review are listed in the order the guest submitted them.
 export function groupReviews(rows = []) {
   const groups = new Map();
   rows.forEach((r) => {

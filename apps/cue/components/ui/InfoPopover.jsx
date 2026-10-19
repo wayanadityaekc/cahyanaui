@@ -3,7 +3,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { Info } from 'lucide-react';
 
-// Small info icon + popover; `variant` sets popover and arrow position (default, hero, booking).
 function wrap(v) { return `inline-flex align-middle ${v === 'default' ? 'relative' : 'static'}`; }
 const BTN =
   'inline-flex items-center justify-center w-[18px] h-[18px] p-0 border-none border-current bg-none text-gold cursor-pointer rounded-[50%] ' +
@@ -16,7 +15,6 @@ const POP_BASE =
   "before:content-[''] before:absolute before:top-[-6px] before:w-[11px] before:h-[11px] before:bg-white " +
   'before:[border-left:1px_solid_var(--line)] before:[border-top:1px_solid_var(--line)] before:[transform:rotate(45deg)] ' +
   '[&_p]:m-0 [&_p]:text-small [&_p]:leading-[1.45] [&_p]:font-normal [&_p]:text-[#6b6456]';
-// Popover position per variant; consumer 'lead' row styles need ! to beat the [&_p] descendant rule.
 const POP_POS = {
   default: 'top-[calc(100%+9px)] left-1/2 [transform:translateX(-50%)] before:left-1/2 before:ml-[-5px]',
   hero: 'top-[2.1rem] left-0 right-auto [transform:none] before:left-[242px] before:ml-0',

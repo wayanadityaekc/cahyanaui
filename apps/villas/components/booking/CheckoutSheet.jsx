@@ -30,7 +30,7 @@ function readToken() {
   try { return window.localStorage.getItem(TOKEN_KEY) || ''; } catch (e) { return ''; }
 }
 function writeToken(token) {
-  try { window.localStorage.setItem(TOKEN_KEY, token); } catch (e) { /* the booking still stands */ }
+  try { window.localStorage.setItem(TOKEN_KEY, token); } catch (e) {   }
 }
 
 function guestProblems({ name, email, phone }) {
@@ -41,7 +41,6 @@ function guestProblems({ name, email, phone }) {
   return problems;
 }
 
-// Book & pay for My Booking: details, then how to pay (amounts from the server's own quote), then the rail.
 export default function CheckoutSheet({ open = false, onClose = () => {}, cart = null, onPaid = () => {} }) {
   const { account } = useAccount();
   const { currency, formatAmount } = useCurrency();
@@ -60,7 +59,6 @@ export default function CheckoutSheet({ open = false, onClose = () => {}, cart =
     if (open && account) setGuest((current) => ({ name: current.name || account.name || '', email: current.email || account.email || '', phone: current.phone || account.phone || '' }));
   }, [open, account]);
 
-  // Ask the server what each option charges; the site never computes a charge itself.
   useEffect(() => {
     if (!open || !cart) return undefined;
     let alive = true;

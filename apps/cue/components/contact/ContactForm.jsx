@@ -16,7 +16,6 @@ export default function ContactForm({ company = false }) {
   const [errors, setErrors] = useState({});
   const [error, setError] = useState('');
 
-  // Clear a field's error as the guest types in it.
   function set(k) {
     return (e) => {
       const { value } = e.target;

@@ -4,11 +4,9 @@ import { FIELD_LABEL } from '@/components/ui/formClasses';
 
 import { useEffect, useState } from 'react';
 import { BTN_BOOK } from '@/components/ui/btnBookClasses';
-// Plan list shared with the homepage charter section; this page adds the trip fields.
 import CharterPlans, { useCharterTier } from '@/components/sections/CharterPlans';
 import { readCharterDraft, saveCharterDraft } from '@/lib/charterDraft';
 import { useTripPrefs } from '@/state/TripPrefsProvider';
-// Still needed here for the pick-up area list, which comes from the transfers.
 import { usePricing } from '@/state/PricingProvider';
 import { useItinerary } from '@/state/ItineraryProvider';
 import { CHARTER } from '@/content/shared/charter';
@@ -19,10 +17,8 @@ import { withSymbol } from '@/components/Price';
 
 const GUESTS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
-// Pick-up times 06:00-17:00 every 30 min; values stay 24-hour, labels are shown 12-hour via fmtTime.
 const TIMES = (() => {
   const out = [];
-  // 06:00 to 17:00, every 30 minutes
   [...Array(23).keys()].map((k) => 6 * 60 + k * 30).forEach((m) => {
     out.push(`${String(Math.floor(m / 60)).padStart(2, '0')}:${String(m % 60).padStart(2, '0')}`);
   });
@@ -38,10 +34,8 @@ export default function CharterBuilder() {
   const [date, setDate] = useState('');
   const [time, setTime] = useState('');
   const [guests, setLocalGuests] = useState('');
-  // Selected plan, booked by the single Book button under the fields.
   const [dur, setDur] = useState(CHARTER.durations[0].dur);
 
-  // Seed the plan from the homepage draft; in an effect, not initial state, or hydration breaks.
   useEffect(() => {
     const d = readCharterDraft();
     if (!d) return;
@@ -57,7 +51,6 @@ export default function CharterBuilder() {
   const selected = CHARTER.durations.find((d) => d.dur === dur) || CHARTER.durations[0];
   const total = tier(dur);
 
-  // Adds a charters row to the cart and goes to My Trips, like every booking flow.
   function book() {
     if (!ready || total == null) return;
     save({
@@ -79,17 +72,13 @@ export default function CharterBuilder() {
     <div className="bg-white rounded-xl p-[var(--space-2)] text-left" id={CHARTER.boxId}>
       <h2 className="font-head text-h2 font-semibold text-gold text-center m-0 mb-[var(--space-2)]">{CHARTER.boxTitle}</h2>
 
-      {/* Plans left, fields right from 993px (not 769: too narrow for a 340px field column); stacked on phones. */}
       <div className="flex flex-col gap-[var(--space-2)] min-[993px]:grid min-[993px]:grid-cols-[1fr_340px] min-[993px]:gap-[var(--space-3)] min-[993px]:items-start">
 
-        {/* 1 - the plan list (same as the homepage); it drives the Book button below. */}
         <CharterPlans value={dur} onChange={pick} area={area} heading="How long do you need the car?" />
 
-        {/* 2 - the trip, then the one Book button. */}
         <div>
           <div className="flex items-center gap-[var(--space-1)] mb-[var(--space-1)]">
             <h3 className="m-0 text-h3 font-semibold text-gold">Your trip</h3>
-            {/* Surcharge note lives behind the info dot instead of under the fields. */}
             <InfoDot label="About charter prices">
               Pick-up outside Ubud adds a small surcharge. It is already counted in the prices shown.
             </InfoDot>
@@ -134,7 +123,6 @@ export default function CharterBuilder() {
             </div>
           </div>
 
-          {/* Restates the picked plan and total next to Book, since on phones the list may be off screen. */}
           <div className="mt-[var(--space-2)] flex items-baseline justify-between gap-[var(--space-1)] [border-top:1px_solid_var(--line)] pt-[var(--space-1)]">
             <span className="text-small text-muted">{selected.name}</span>
             <span className="text-gold font-semibold text-[1.05rem] whitespace-nowrap">

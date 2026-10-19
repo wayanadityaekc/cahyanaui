@@ -1,5 +1,3 @@
-// Slider arrows show only when they can move (hover on desktop). Run: npm run build && npm run serve, then node verify-slider-arrows.mjs
-// The bug this guards: the arrows were hidden with the `hidden` attribute, which loses to their own `min-[993px]:flex` class.
 import { chromium } from 'playwright-core';
 
 const SITE = process.env.BASE || 'http://127.0.0.1:4000';
@@ -27,7 +25,6 @@ async function open(path, w, count) {
   return { ctx, page, errors };
 }
 
-// For the slider holding `sel`: can it scroll each way, and is each arrow actually visible while hovered?
 async function arrows(page, sel) {
   const track = page.locator(sel).first();
   await track.scrollIntoViewIfNeeded();
@@ -49,7 +46,6 @@ async function arrows(page, sel) {
   }, sel);
 }
 
-// Review rows: 2 cards fit (no arrows), 8 cards overflow (Next only at the start).
 for (const [path, sel] of [['/', '#reviews [class*="overflow-x-auto"]'], ['/ubud-tour.html', '#dsec-reviews [class*="overflow-x-auto"]']]) {
   for (const count of [2, 8]) {
     const { ctx, page, errors } = await open(path, 1280, count);
@@ -57,7 +53,6 @@ for (const [path, sel] of [['/', '#reviews [class*="overflow-x-auto"]'], ['/ubud
     ok(a.prev === a.canPrev, `${path} ${count} reviews: Previous shown=${a.prev} but can scroll back=${a.canPrev}`);
     ok(a.next === a.canNext, `${path} ${count} reviews: Next shown=${a.next} but can scroll on=${a.canNext}`);
     if (count === 8) {
-      // Scroll to the end: Next must go, Previous must appear.
       await page.evaluate((s) => { const t = document.querySelector(s); t.scrollLeft = t.scrollWidth; }, sel);
       await page.waitForTimeout(500);
       const end = await arrows(page, sel);
@@ -68,12 +63,10 @@ for (const [path, sel] of [['/', '#reviews [class*="overflow-x-auto"]'], ['/ubud
   }
 }
 
-// Every other slider on the site: arrows match what can scroll, and Next actually moves the row.
 for (const path of ['/', '/ubud-tour.html', '/attractions/atv-ride.html']) {
   const { ctx, page, errors } = await open(path, 1280, 8);
   const n = await page.evaluate(() => {
     let k = 0;
-    // A slider = a .group.relative holding a sideways track (the arrows' parent).
     document.querySelectorAll('.group.relative').forEach((h) => { const t = [...h.children].find((c) => c.tagName === 'DIV' && /overflow-x-auto/.test(c.className)); if (t) t.setAttribute('data-sweep', String(k++)); });
     return document.querySelectorAll('[data-sweep]').length;
   });
@@ -99,7 +92,6 @@ for (const path of ['/', '/ubud-tour.html', '/attractions/atv-ride.html']) {
   await ctx.close();
 }
 
-// Phones never show arrows (they swipe).
 {
   const { ctx, page } = await open('/', 390, 8);
   const shown = await page.evaluate(() => [...document.querySelectorAll('button[aria-label="Next"], button[aria-label="Previous"]')]

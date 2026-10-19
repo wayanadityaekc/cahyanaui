@@ -13,7 +13,6 @@ const PROGRAM_GROUPS = [
   { id: 'activities', title: 'Activities', note: 'Booked through Cahyana Ubud Experience, with pickup at your villa. A small deposit now, the rest on the day.' },
 ];
 
-// A missing value is a hint; a value that breaks a rule is an error the reader is told about.
 function fieldNote(problem, word) {
   if (!problem.includes(word)) return {};
   return /inside|listed/.test(problem) ? { error: problem } : { hint: problem };
@@ -23,7 +22,6 @@ function timeOptions(slots) {
   return (slots || TIME_SLOTS).map((slot) => ({ value: slot, label: fmtTime(slot) }));
 }
 
-// Add-ons for a stay: CUE programs and airport transfers are priced from the API; villa services are paid at the villa.
 export default function ExtrasSection({
   stay = null,
   extras = [],

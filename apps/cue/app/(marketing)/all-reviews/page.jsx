@@ -18,7 +18,6 @@ export default function AllReviews() {
   return (
     <>
       <JsonLd page="all-reviews" />
-      {/* Text-only header (crumb, h1, blurb), no photo band; pt- clears the fixed header like DetailHero's crumb. */}
       <section className="px-[var(--container-x)] pt-[calc(var(--header-h-max,92px)_+_var(--container-x))] min-[769px]:pt-[calc(var(--header-h-max,98px)_+_var(--container-x))] pb-6">
         <div className={CATSEC}>
           <Breadcrumb items={crumbsFor('all-reviews')} className="m-0 mb-2" />
@@ -29,7 +28,6 @@ export default function AllReviews() {
         </div>
       </section>
 
-      {/* Listing-page layout: padding on the outer section, CATSEC on the inner div (px on CATSEC doubles the gutter). */}
       <section className="px-[var(--container-x)]" id="all-reviews">
         <div className={CATSEC}>
           <div className="flex justify-between items-end gap-6 flex-wrap mb-[1.6rem] pb-[0.8rem]">

@@ -1,6 +1,5 @@
 import { WHY_US } from '@/content/shared/home';
 
-// Why Us band: 4 icon columns (2 at <=760px); icon size set via [&>svg].
 const CLS = {
   section: 'bg-cream',
   in: 'max-w-[var(--container)] mx-auto px-[var(--container-x)] py-12',

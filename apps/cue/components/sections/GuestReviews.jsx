@@ -1,7 +1,6 @@
 import ReviewsStrip from '@/components/reviews/ReviewsStrip';
 import { SECTION_TITLE, SECTION_TITLE_SUB, ST_LEFT } from '@/components/ui/sectionTitle';
 
-// Homepage reviews slider (real reviews only, empty state otherwise); internal links need the .html suffix.
 export default function GuestReviews() {
   return (
     <section className="py-16 px-[var(--container-x)]" id="reviews">

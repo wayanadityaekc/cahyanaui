@@ -1,7 +1,5 @@
-// Shared shell for BookBar and SectionSwitcher: flush bottom, top border only, safe-area bottom padding.
 export const BAR_MARK = 'stickybar';
 
-// Show-up-to widths; Tailwind max-[N] means width < N, so the number is one past the last width shown.
 export const BAR_UPTO_MD = 'hidden max-md:flex';
 export const BAR_UPTO_LG = 'hidden max-[993px]:flex';
 

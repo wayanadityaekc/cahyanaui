@@ -9,7 +9,6 @@ import TripPrefsFields from './TripPrefsFields';
 import { BTN_CTA } from '@/components/ui/btnClasses';
 import Separator from '@/components/ui/Separator';
 
-// Navbar account slot; a disclosure (aria-expanded), not role=menu - don't add menu roles without arrow-key navigation.
 
 const PHONE =
   'max-[992px]:h-auto max-[992px]:p-0 max-[992px]:border-none max-[992px]:bg-transparent max-[992px]:hover:bg-transparent';
@@ -38,7 +37,6 @@ export default function AccountMenu({ onLogin }) {
   useEffect(() => {
     if (!open) return undefined;
     function onDoc(e) {
-      // Select popups are portaled to <body>; picking an option must not close this menu.
       if (e.target.closest && e.target.closest('[data-portal]')) return;
       if (boxRef.current && !boxRef.current.contains(e.target)) setOpen(false);
     }
@@ -56,7 +54,6 @@ export default function AccountMenu({ onLogin }) {
     };
   }, [open]);
 
-  // Render nothing until the session check answers, so signed-in guests don't see 'Log in' flash.
   const pending = !hydrated;
 
   const PREFS = (

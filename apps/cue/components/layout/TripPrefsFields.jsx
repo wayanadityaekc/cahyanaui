@@ -6,7 +6,6 @@ import Select from '@/components/ui/Select';
 import PickupAreaSelect from '@/components/ui/PickupAreaSelect';
 import CurrencyPicker from './CurrencyPicker';
 
-// Guests/Pickup/Currency shared by the drawer and account menu; idPrefix must differ (both render on desktop).
 const GUEST_OPTIONS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
 export default function TripPrefsFields({ idPrefix, className = '' }) {

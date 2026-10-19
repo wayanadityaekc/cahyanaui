@@ -3,7 +3,6 @@ import DateField from '@/components/ui/DateField';
 import { GROUP, LABEL, INPUT, BTN, FIELD_ERR } from '@/components/ui/modalClasses';
 import { HINT } from './bookingModalClasses';
 
-// Step 1: contact fields, then one date and time control per line (the airport leg uses its flight date/time).
 export default function DetailsStep({
   f, errors, set, setValue, view, lines, needsFlight, isAirportLine, lineDateTime, setDT, categoryOfLine, dtErr, onContinue,
 }) {
@@ -46,7 +45,6 @@ export default function DetailsStep({
 
       {lines.map((l, i) =>
         isAirportLine(l) && i === 0 && needsFlight ? (
-          // Airport leg: one flight date/time control with real minutes; do not add a second date field here.
           <div className={GROUP} key={`dt${i}`}>
             <label className={LABEL} htmlFor="flight-datetime">Flight date &amp; time</label>
             <DateTimeField id="flight-datetime" label="Flight date & time" value={f.flightDatetime} onChange={setValue('flightDatetime')} />

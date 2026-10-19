@@ -6,30 +6,11 @@ const BASE = process.env.BASE || 'http://localhost:4000';
 let pass = 0, fail = 0;
 function ok(c, m) { c ? pass++ : (fail++, console.log('  FAIL:', m)); }
 
-// Pages with no sticky bar of their own - the app bar belongs to them.
 const FREE = ['/', '/bali-guide.html', '/charter.html'];
-const DETAIL = '/ubud-tour.html';   // BookBar, shows below 993
-const LISTING = '/tour.html';       // SectionSwitcher, shows below 768
-// My Trips + Our Company (WO5+, Sep 2026, Wayan: "the footer needs to be
-// sticky at the bottom") moved OUT of FREE and in here: the compact footer on
-// those two pages is `.footerbar`, fixed at the bottom at every width, so the
-// app bar now yields to it there exactly like it yields to BookBar/
-// SectionSwitcher elsewhere. They used to be the two pages the app bar owned
-// outright - now neither is.
+const DETAIL = '/ubud-tour.html';
+const LISTING = '/tour.html';
 const FOOTERBAR = ['/my-trips.html', '/our-company.html'];
 
-// WHAT THIS HARNESS CANNOT DO, said plainly.
-// App mode reaches the CSS down two paths: `@media (display-mode: standalone)`
-// and `html[data-standalone]`. Only the SECOND can be exercised here - measured,
-// not assumed: this Chromium accepts `Emulation.setEmulatedMedia` for
-// prefers-color-scheme (returns true) and ignores it for display-mode (returns
-// false at every width), and a headless `--app` window exposes no page to drive.
-// Pretending otherwise is how a suite reports green over a branch it never ran,
-// which is the trap verify-zoom hit with maxTouchPoints.
-//   So the behaviour below runs through the attribute, and the media branch is
-// covered by proving in the BUILT CSS that it declares the same thing for the
-// same classes at the same widths. If someone drops a slot from the custom
-// variant, that check fires.
 function appMode(page) {
   return page.addInitScript(() => {
     function mark() { document.documentElement.dataset.standalone = '1'; }
@@ -48,9 +29,6 @@ function box(page, sel) {
   }, sel);
 }
 
-// Exactly one thing stuck to the bottom of the screen. Two is the collision
-// Wayan decided against; zero is what the first cut of this shipped at 768-992
-// on a listing page, where the app bar yielded to a bar that was not displayed.
 function bottomBars(page) {
   return page.evaluate(() => [...document.querySelectorAll('[data-appnav], .stickybar, .footerbar')]
     .filter((el) => {
@@ -61,7 +39,6 @@ function bottomBars(page) {
     }).length);
 }
 
-// ---- 1. the two CSS branches must agree ----
 {
   const root = 'out/_next/static';
   function walk(d) {
@@ -99,7 +76,6 @@ function bottomBars(page) {
 
 const browser = await chromium.launch({ executablePath: process.env.PW_BIN || '/opt/pw-browsers/chromium-1194/chrome-linux/chrome' });
 
-// ---- 2. a browser tab: nothing may change ----
 {
   const ctx = await browser.newContext({ viewport: { width: 390, height: 844 } });
   for (const path of [...FREE, DETAIL, LISTING, ...FOOTERBAR]) {
@@ -144,11 +120,9 @@ const browser = await chromium.launch({ executablePath: process.env.PW_BIN || '/
   ok(mf.status === 200, `manifest: HTTP ${mf.status}`);
   ok(mf.display === 'standalone', `manifest: display is "${mf.display}"`);
   ok(mf.start === '/', `manifest: start_url is "${mf.start}"`);
-  // Chrome will not offer the install prompt without both sizes.
   ok(mf.any === '192x192,512x512', `manifest: "any" icons are ${mf.any}`);
   ok(mf.maskable === '192x192,512x512', `manifest: "maskable" icons are ${mf.maskable}`);
 
-  // localhost is a secure context, so this is the real worker, not a mock.
   const sw = await page.evaluate(async () => {
     for (let i = 0; i < 40; i += 1) {
       const r = await navigator.serviceWorker.getRegistration();
@@ -160,7 +134,6 @@ const browser = await chromium.launch({ executablePath: process.env.PW_BIN || '/
   ok(sw.ok, 'service worker never registered');
   ok(!sw.ok || sw.scope.endsWith('/'), `service worker scope is ${sw.scope}`);
 
-  // The one rule the worker exists to honour: a page is never answered from cache.
   const swSrc = readFileSync('out/sw.js', 'utf8');
   ok(/mode\s*!==?\s*['"]navigate['"]|mode === 'navigate'/.test(swSrc), 'sw: no navigation branch at all');
   const navBranch = swSrc.slice(swSrc.indexOf("'navigate'"), swSrc.indexOf("'navigate'") + 220);
@@ -170,7 +143,6 @@ const browser = await chromium.launch({ executablePath: process.env.PW_BIN || '/
   await ctx.close();
 }
 
-// ---- 3. app mode ----
 for (const w of [390, 768]) {
   const ctx = await browser.newContext({ viewport: { width: w, height: 844 } });
 
@@ -193,7 +165,6 @@ for (const w of [390, 768]) {
       ok(cells === 4, `${w}${path}: app bar has ${cells} items, expected 4`);
     }
 
-    // The hand-over: what moved down has to be gone from the top.
     const navChat = await page.evaluate(() => {
       const b = [...document.querySelectorAll('button[aria-label="Chat with us"]')].find((el) => !el.closest('[data-appnav]'));
       return b ? getComputedStyle(b).display : null;
@@ -208,13 +179,6 @@ for (const w of [390, 768]) {
     await page.close();
   }
 
-  // A detail page sells, so BookBar wins there - but BookBar starts TRANSLATED
-  // OUT and slides in once the guest is past the booking card, and SectionSwitcher
-  // is not even mounted until the listing hero leaves the screen. Measured, not
-  // assumed: at the top of /ubud-tour.html the bar reads translate "0px 150%",
-  // and /tour.html has no .stickybar in the DOM at all.
-  //   So the invariant is NEVER TWO, checked at the top AND after scrolling, plus
-  // the specific hand-over each page owes.
   for (const path of [...FREE, DETAIL, LISTING, ...FOOTERBAR]) {
     const page = await ctx.newPage();
     await appMode(page);
@@ -230,24 +194,18 @@ for (const w of [390, 768]) {
       ok(after === 1, `${w}${path}: the app bar disappeared on a page that has no bar of its own`);
     }
     if (path === DETAIL) {
-      // The page the money is on: its own bar, and only its own bar.
       const bar = await box(page, '.stickybar');
       const nav = await box(page, '[data-appnav]');
       ok(bar && bar.bottom === 844, `${w}${DETAIL}: BookBar did not come in on scroll (bottom ${bar && bar.bottom})`);
       ok(nav && nav.display === 'none', `${w}${DETAIL}: app bar did not yield to BookBar`);
     }
     if (path === LISTING && w < 768) {
-      // The switcher only exists once the hero is gone - that is when the app
-      // bar has to step aside, and not a moment before.
       const nav = await box(page, '[data-appnav]');
       const sw = await box(page, '.stickybar');
       ok(sw && sw.display !== 'none', `${w}${LISTING}: SectionSwitcher never appeared after scrolling`);
       ok(nav && nav.display === 'none', `${w}${LISTING}: app bar did not yield to SectionSwitcher`);
     }
     if (FOOTERBAR.includes(path)) {
-      // Unlike BookBar/SectionSwitcher, the compact footer runs at EVERY
-      // width and is on screen from the first paint, not just after
-      // scrolling - so this checks it before AND after scroll, both times.
       const footer = await box(page, '.footerbar');
       const nav = await box(page, '[data-appnav]');
       ok(footer && footer.display !== 'none' && footer.bottom === 844, `${w}${path}: compact footer is not pinned to the bottom (bottom ${footer && footer.bottom})`);
@@ -258,7 +216,6 @@ for (const w of [390, 768]) {
   await ctx.close();
 }
 
-// ---- 4. desktop app mode is deliberately untouched ----
 {
   const ctx = await browser.newContext({ viewport: { width: 1280, height: 900 } });
   const page = await ctx.newPage();
@@ -273,7 +230,6 @@ for (const w of [390, 768]) {
   await ctx.close();
 }
 
-// ---- 5. the bar's chat button opens the real panel ----
 {
   const ctx = await browser.newContext({ viewport: { width: 390, height: 844 } });
   const page = await ctx.newPage();
@@ -281,7 +237,6 @@ for (const w of [390, 768]) {
   await page.route('**/api/chat/**', (r) => r.fulfill({ status: 500, contentType: 'application/json', body: '{}' }));
   await page.goto(`${BASE}/`, { waitUntil: 'load' });
   await page.waitForTimeout(250);
-  // Never throw: a thrown click ends the run and hides every later assertion.
   let clicked = true;
   try {
     await page.click('[data-appnav] button[aria-label="Chat with us"]', { timeout: 8000 });

@@ -13,13 +13,10 @@ import ChatLauncher from '@/components/chat/ChatLauncher';
 import { PopMenu } from '@/components/ui/Reveal';
 import TripPrefsFields from './TripPrefsFields';
 
-// One Lucide icon per drawer row, each the icon that already means that thing elsewhere on the site.
 const ICON = { strokeWidth: 1.7, 'aria-hidden': 'true' };
 
-// The same links fill the drawer (phones) and the bar (desktop); My Booking is the cart icon, contact goes through chat.
 const LINKS = [
   { href: '/', label: 'Home', icon: <House {...ICON} /> },
-  // Villas is a dropdown, not a page (Wayan): with two villas a listing page is just a stop on the way.
   {
     label: 'Villas',
     icon: <BedDouble {...ICON} />,
@@ -42,10 +39,8 @@ const LINKS = [
   { href: '/our-company', label: 'Our Company', icon: <Building2 {...ICON} /> },
 ];
 
-// My Booking is the cart icon, so Settings is the only row (CUE keeps the same one).
 const ACCOUNT_ROWS = [{ href: '/settings', label: 'Settings', icon: <Settings {...ICON} /> }];
 
-// Header slots only: the drawer, burger, desktop links, account shell and header-height vars live in @cahyana/ui.
 export default function Navbar() {
   const pathname = usePathname();
   const { account, hydrated, logout } = useAccount();
@@ -67,7 +62,6 @@ export default function Navbar() {
         links={LINKS}
         logo={(
           <Link href="/" className="max-[992px]:mr-auto" aria-label="Ubud Private Villas home">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               className="h-10 w-auto block mr-4 ml-[0.1rem] max-[992px]:h-[34px] max-[992px]:ml-0"
               src="/images/logo.webp"
@@ -79,10 +73,8 @@ export default function Navbar() {
         )}
         actions={(
           <>
-            {/* Chat lives in the navbar like CUE: it opens the live chat in place; WhatsApp is a switch inside the panel. */}
             <ChatLauncher className={NAV_ICON} />
 
-            {/* My Booking in CUE's cart slot; the badge only shows once the booking has something in it. */}
             <Link href="/my-booking" className={`relative ${NAV_ICON}`} aria-label="My Booking">
               <ShoppingBag className="w-5 h-5" strokeWidth={1.6} aria-hidden="true" />
               <span className={NAV_BADGE} hidden={!count}>{count}</span>
@@ -98,7 +90,6 @@ export default function Navbar() {
           </Button>
         )}
         account={(
-          /* Same account as the tour site (one guest record); villas has no Settings page, so no Settings row. */
           <AccountMenu
             pop={PopMenu}
             account={account}
@@ -113,7 +104,6 @@ export default function Navbar() {
           />
         )}
       />
-      {/* Outside the header, so the sign-in sheet outlives the menu that opened it. */}
       <AuthSheet open={authOpen} onClose={() => setAuthOpen(false)} />
     </>
   );

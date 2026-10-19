@@ -13,9 +13,7 @@ const GRID = 'grid grid-cols-3 max-[768px]:grid-cols-1 gap-5 max-w-[1100px] mx-a
 
 export default function ReviewsStrip({
   service, group, emptyText, showEmpty = true, emptyCta = false,
-  // 'slider' = sideways card row (every review section); 'grid' = full list, only /all-reviews.
   variant = 'slider',
-  // Optional cap on how many reviews to show (homepage); /all-reviews renders with no limit.
   limit,
 }) {
   const [rows, setRows] = useState(null);
@@ -23,11 +21,9 @@ export default function ReviewsStrip({
 
   useEffect(() => {
     let cancelled = false;
-    // Multi-service pages (e.g. /transfer) ask by group; the server resolves the set from the pricing catalog.
     const query = group ? `?group=${encodeURIComponent(group)}`
       : (service ? `?service=${encodeURIComponent(service)}` : "");
     const url = `${API_BASE}/reviews${query}`;
-    // load the reviews for this page
     async function load() {
       try {
         const r = await fetch(url);
@@ -43,7 +39,6 @@ export default function ReviewsStrip({
     };
   }, [service, group]);
 
-  // Single-service pages keep their own copy; mixed lists (homepage, all reviews, transfer routes) merge copies.
   const all = service ? rows || [] : groupReviews(rows || []);
   const list = limit ? all.slice(0, limit) : all;
 

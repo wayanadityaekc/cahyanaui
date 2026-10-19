@@ -3,7 +3,6 @@ import { GRID_CAROUSEL_4UP } from '@/components/ui/gridClasses';
 import Slider from '@/components/ui/Slider';
 import { CAROUSEL_SECTION, CAROUSEL_TITLE } from '@/components/ui/carouselSection';
 
-// Destination cards on tour pages (the only tour-to-attraction link); no priceName, so no second price shows.
 export default function TourDestinationCards({ items }) {
   if (!items || !items.length) return null;
   return (

@@ -6,7 +6,6 @@ import { useCurrency } from '@/components/providers/CurrencyProvider';
 import { API_BASE } from '@/lib/constants';
 import { CHARTER_CARD, CHARTER_PLANS } from '@/content/charter';
 
-// CUE's charter price per tier, in the guest's currency; null until the API answers, so no price is ever guessed.
 function useCharterPrices(currency = 'USD') {
   const [prices, setPrices] = useState(null);
 
@@ -22,7 +21,6 @@ function useCharterPrices(currency = 'USD') {
         data.charters.forEach((row) => { byTier[row.duration] = row.display; });
         setPrices(byTier);
       } catch (e) {
-        // API down: prices stay "-" and the card still links to CUE.
       }
     }
     setPrices(null);
@@ -33,7 +31,6 @@ function useCharterPrices(currency = 'USD') {
   return prices;
 }
 
-// G8: CUE's charter plans with live prices, linking out to book on CUE. "compact" is the My Booking card version.
 export default function CharterCard({ compact = false }) {
   const { currency, formatAmount } = useCurrency();
   const prices = useCharterPrices(currency);

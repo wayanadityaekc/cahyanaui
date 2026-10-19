@@ -1,7 +1,3 @@
-// WO5 (Sep 2026): compact footer on Settings/My Trips/Our Company, sticky
-// sidebar reusing RailLayout on My Trips + Our Company (legal pages live
-// inside Our Company), and My Trips' duplicate title trimmed to one.
-// Run against the built pages: npm run build && npm run serve (port 4000).
 import { chromium } from '/home/user/CUE/node_modules/playwright-core/index.mjs';
 const b = await chromium.launch({ executablePath: '/opt/pw-browsers/chromium_headless_shell-1194/chrome-linux/headless_shell' });
 
@@ -21,7 +17,6 @@ for (const w of [390, 1280]) {
   const page = await ctx.newPage();
   const errs = []; page.on('pageerror', (e) => errs.push(String(e)));
 
-  // ---- compact footer on the three account/utility pages ------------------
   for (const path of COMPACT_PAGES) {
     await page.goto(`http://127.0.0.1:4000${path}`, { waitUntil: 'networkidle' });
     await page.waitForTimeout(300);
@@ -34,9 +29,6 @@ for (const w of [390, 1280]) {
     ok(!/Explore/i.test(text), `${w}${path}: full footer's "Explore" column heading still showing`);
     const h = await footer.evaluate((el) => el.getBoundingClientRect().height);
     ok(h < 140, `${w}${path}: compact footer measured ${h}px tall, expected under 140`);
-    // Mobile: no taller than the navbar itself (Wayan: "shorter, at least
-    // same height with navbar") - compared against the navbar's OWN measured
-    // height on this page, not a number typed into the harness.
     if (w <= 560) {
       const navH = await page.evaluate(() => document.querySelector('header').getBoundingClientRect().height);
       ok(h <= navH + 1, `${w}${path}: compact footer (${h}px) is taller than the navbar (${navH}px)`);
@@ -44,7 +36,6 @@ for (const w of [390, 1280]) {
     ok(errs.length === 0, `${w}${path}: page errors ${errs.join(' | ')}`);
   }
 
-  // ---- full footer everywhere else, unchanged ------------------------------
   for (const path of FULL_PAGES) {
     await page.goto(`http://127.0.0.1:4000${path}`, { waitUntil: 'networkidle' });
     await page.waitForTimeout(300);
@@ -53,7 +44,6 @@ for (const w of [390, 1280]) {
     ok(/Featured On/i.test(text), `${w}${path}: full footer lost its "Featured On" column`);
   }
 
-  // ---- My Trips: one title, not two --------------------------------------
   await page.goto('http://127.0.0.1:4000/my-trips.html', { waitUntil: 'networkidle' });
   await page.waitForTimeout(300);
   const h1Count = await page.locator('h1').count();
@@ -64,7 +54,6 @@ for (const w of [390, 1280]) {
   await ctx.close();
 }
 
-// ---- sticky sidebar (desktop only) on My Trips + Our Company --------------
 for (const path of ['/my-trips.html', '/our-company.html']) {
   const ctx = await b.newContext({ viewport: { width: 1280, height: 900 } });
   await ctx.route('**/api/**', (route) => route.fulfill({ json: {} }));

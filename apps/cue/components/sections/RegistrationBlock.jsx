@@ -4,7 +4,6 @@ import { REGISTRATION as R } from '@/content/shared/registration';
 function SealIcon({ className }) { return <ShieldCheck className={className} strokeWidth={1.7} aria-hidden="true" />; }
 function CheckIcon({ className }) { return <Check className={className} aria-hidden="true" />; }
 
-// Registered-business trust block (no personal IDs); `company` = the borderless Our Company variant.
 export default function RegistrationBlock({ company = false }) {
   const rows = [
     ['Ministry of Law Decree', R.decree],

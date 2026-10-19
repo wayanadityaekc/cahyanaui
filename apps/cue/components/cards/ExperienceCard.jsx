@@ -7,7 +7,6 @@ import { BADGE_POPULAR, CARD_FRAME, CARD_IMG } from '@/components/ui/cardClasses
 
 const PLACEHOLDER_GRADIENT = 'linear-gradient(135deg, rgba(31, 61, 43, 0.92), rgba(46, 90, 64, 0.86))';
 
-// Photo 4:3 card on CARD_FRAME with a 2-row body grid (title/rating, meta/price).
 const IMG_WRAP =
   'relative aspect-[4/3] rounded-md overflow-hidden bg-green bg-cover bg-center ' +
   "after:content-[''] after:absolute after:inset-0 after:bg-[linear-gradient(to_bottom,transparent_55%,rgba(31,61,43,0.45))]";
@@ -19,7 +18,6 @@ const BODY_INCL =
   'gap-x-[0.55rem] gap-y-[0.4rem] pt-[0.6rem] px-[0.9rem] pb-[0.8rem] grow';
 const NAME =
   '[grid-area:title] m-0 text-strong max-[992px]:text-small font-semibold leading-[1.25] line-clamp-2';
-// Rating cell in the title row: same star + amber-d as HomepageCard's badge, inline instead of a pill.
 const RATING =
   '[grid-area:rating] flex items-center gap-[3px] self-start justify-self-end text-small font-semibold text-amber-d whitespace-nowrap ' +
   '[&>svg]:w-[13px] [&>svg]:h-[13px] [&>svg]:text-amber-d';

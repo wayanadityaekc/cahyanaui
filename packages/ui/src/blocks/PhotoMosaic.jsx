@@ -3,53 +3,15 @@
 import { cn } from '../lib/cn.js';
 import { BLEED_MOBILE } from './gridClasses.js';
 
-/**
- * THE PHOTO MOSAIC that opens a detail page: one large photograph, then a
- * column of two stacked smaller ones, then another large, and so on - and the
- * whole row SLIDES, so the next column peeks in at the right-hand edge.
- *
- * Ported from CUE's own hero (components/sections/HeroMosaic.jsx) so a tour
- * page and a villa page open on the same shape. Wayan: "hero villa pakai grid
- * kayak CUE, kalo di klik baru muncul yang full screen".
- *
- * WHAT IT DOES NOT DO: it does not open anything. Tapping a tile calls
- * `onOpen(index)` and that is all - the overlay is the app's business, because
- * the two sites answer a tap differently (CUE runs its own lightbox, the villa
- * site opens PhotoGrid). A block that owned the overlay would force one of
- * them to accept the other's.
- *
- * THE RHYTHM RUNS CONTINUOUSLY - big, pair, big, pair - with the pair as the
- * only wrapper and a SIBLING of the big tile rather than grouped with it. That
- * is what keeps a mid-scroll position showing "two small | BIG | two small",
- * the way the reference does; a locked three-photo group only ever puts a big
- * photo at the front of each group.
- *
- * TILES CARRY NO ASPECT OF THEIR OWN. The track owns the height, through
- * `aspect`, so the crop holds at every width - never a pixel height, which
- * gave a 1.24 big photo at a 993px viewport when CUE tried it.
- *
- * NO ZOOM on hover (Wayan, WO10): tiles do not move or scale under the pointer.
- *
- * NO RADIUS on the tiles, matching CUE (Wayan there: "grid nya gausah kasi
- * border radius"). Pass `className` if a site wants its own.
- *
- * Layouts degrade by count, so a listing with two photographs still looks
- * finished: 1 = one wide tile, 2 = side by side, 3+ = the sliding mosaic.
- */
 const TILE =
   'relative block w-full h-full overflow-hidden p-0 bg-cream border-none cursor-pointer ' +
   '[&>img]:absolute [&>img]:inset-0 [&>img]:w-full [&>img]:h-full [&>img]:object-cover [&>img]:object-center';
 
 const BIG = `${TILE} flex-[0_0_62%] [scroll-snap-align:start]`;
 
-// A column of two stacked photos. With one photo in it (the tail of an odd
-// count) it fills the column height instead of leaving a hole - it is the only
-// flex-1 child.
 const PAIR =
   'flex-[0_0_35%] h-full flex flex-col gap-2 [scroll-snap-align:start] [&>*]:flex-[1_1_0] [&>*]:min-h-0';
 
-// Mobile 1.6/1 puts the big photo at about square, which is what a phone
-// gallery wants; desktop 2.7/1 makes it landscape.
 const TRACK =
   'flex gap-2 aspect-[1.1/1] min-[769px]:aspect-[1.9/1] ' +
   'overflow-x-auto overflow-y-hidden overscroll-x-contain ' +
@@ -59,8 +21,6 @@ const TRACK =
 const STATIC_1 = 'aspect-[1.1/1] min-[769px]:aspect-[1.9/1]';
 const STATIC_2 = `flex gap-2 ${STATIC_1} [&>*]:flex-1 [&>*]:min-w-0`;
 
-// A small, semi-transparent corner pill (Wayan, WO10: "too big, smaller and a bit transparent").
-// Own geometry on purpose: BTN_SM is the full-size action button, this is a photo label.
 const MORE_BTN =
   'absolute bottom-3 right-3 z-[6] inline-flex items-center justify-center h-7 px-3 rounded-sm ' +
   'text-small font-medium leading-none text-gold cursor-pointer bg-white/80 backdrop-blur-[2px] ' +
@@ -87,7 +47,6 @@ export default function PhotoMosaic({
         onClick={() => onOpen && onOpen(i)}
         aria-label={`Open photo ${i + 1} of ${images.length}${p.title ? `: ${p.title}` : ''}`}
       >
-        {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={p.src}
           alt={p.alt || ''}

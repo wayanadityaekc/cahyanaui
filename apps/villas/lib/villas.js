@@ -1,5 +1,4 @@
 
-// All copy here is real (ported from the old site); nightly rates are rupiah, set by Wayan (Sep 2026).
 export const VILLAS = {
   'cahyana-house': {
     slug: 'cahyana-house',
@@ -15,7 +14,6 @@ export const VILLAS = {
     reviews: 221,
     host: 'PT Cahyana Ubud Experience · replies within an hour',
     shortDesc: 'A spacious villa with a private pool and tropical garden. Perfect for couples or small families.',
-    // Real photo of this villa, reused from CUE's own asset (not a stock shot).
     heroImg: '/images/cahyana-house.webp',
     cardImg: '/images/cahyana-house.webp',
     gallery: [
@@ -81,7 +79,6 @@ export const VILLAS = {
     reviews: 85,
     host: 'Wayan · Superhost, replies within an hour, speaks English & Indonesian',
     shortDesc: 'A serene escape with a private pool, open living space and a calming view of the tropical garden.',
-    // Real photo of this villa, reused from CUE's own asset (not a stock shot).
     heroImg: '/images/cahyana-tibuah.webp',
     cardImg: '/images/cahyana-tibuah.webp',
     gallery: [
@@ -204,6 +201,5 @@ export function priceBreakdown(slug, checkIn, checkOut) {
   const nights = nightsBetween(checkIn, checkOut);
   const nightlyIdr = villa.nightlyRateIdr;
   const subtotalIdr = nightlyIdr * nights;
-  // No service fee (Wayan, 1 Oct 2026): the nightly rate is the whole price.
   return { villa, nights, nightlyIdr, subtotalIdr, totalIdr: subtotalIdr };
 }

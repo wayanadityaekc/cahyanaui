@@ -17,8 +17,6 @@ import {
 
 const DOW = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
-// Range calendar look (Wayan's reference): big round days, month title left, round arrows right, dark filled circle for the chosen days.
-// Phone: 2% margin each side, height fits the month; desktop: almost full screen; two months side by side from 993px.
 const panelRange = (open) =>
   `fixed z-[340] flex flex-col overflow-hidden bg-surface-raised [overscroll-behavior:contain] inset-x-[2%] top-1/2 max-h-[80%] rounded-xl [border:1px_solid_var(--line)] [box-shadow:var(--shadow-xl)] [transition:opacity_0.24s_var(--ease),transform_0.24s_var(--ease),visibility_0.24s] min-[769px]:inset-auto min-[769px]:max-h-none min-[769px]:top-1/2 min-[769px]:left-1/2 min-[769px]:w-[min(1040px,94vw)] min-[769px]:h-[min(92vh,860px)] min-[769px]:rounded-xl min-[769px]:[border:1px_solid_var(--line)] min-[769px]:[box-shadow:var(--shadow-xl)] ${
     open
@@ -57,35 +55,6 @@ function nightsBetween(a, b) {
   return Math.round((new Date(b) - new Date(a)) / 86400000);
 }
 
-/**
- * ONE CALENDAR FOR A STAY, not two date fields that happen to sit next to each
- * other.
- *
- *   value     { checkIn, checkOut }
- *   onChange  called with the whole range, every time either end moves
- *
- * WHY THIS IS ONE COMPONENT. Two independent pickers make the guest do the
- * arithmetic: they choose the 12th, close the panel, open a second panel that
- * has forgotten the 12th, and count forward. Worse, nothing stops them picking
- * a check-out before their check-in except a `min` that silently greys days
- * out. A range picker is what every booking site uses because the thing being
- * chosen is one thing - a stay - and the number that matters is the nights
- * between, which this shows.
- *
- * THE INTERACTION, and each rule is there for a failure it prevents:
- *  - First tap sets check-in and CLEARS check-out. Without the clear, tapping a
- *    new start date inside an existing range leaves an end date behind it.
- *  - Second tap sets check-out, but only if it is AFTER check-in; tapping an
- *    earlier day restarts the range from there, which is what a guest correcting
- *    themselves means. It never produces a backwards stay.
- *  - Same day twice is also a restart, not a zero-night stay.
- *  - The panel stays open between the two taps. It closes on the second, when
- *    the range is complete and there is nothing left to say.
- *
- * TWO TRIGGERS, ONE PANEL. The guest taps the end they want to change, and the
- * panel opens ready to change it - tapping "Check-out" on a complete range does
- * NOT wipe the check-in.
- */
 export default function DateRangeField({
   value = {},
   onChange,
@@ -95,14 +64,8 @@ export default function DateRangeField({
   id,
   name,
   panelLabel = 'Select dates',
-  // ONE ROW INSTEAD OF TWO (Wayan, Sep 2026, pointing at CUE's booking card:
-  // "pakai kolom date, satu kolom dan pakai sistem date picker range"). The
-  // control was already a range picker - it just drew two triggers side by
-  // side, so it READ as two questions. `hint` + `icon` switch it to the same
-  // rich row the other fields use: icon, small label, value, chevron.
   hint = '',
   icon = null,
-  // Booked nights and stay rules (shared with AvailabilityCalendar): days that can't start or end a stay are disabled.
   busy = [],
   minNights = 1,
   maxDaysAhead = 365,
@@ -129,16 +92,12 @@ export default function DateRangeField({
   const choosingEnd = editing === 'end' && !!checkIn;
   const nights = nightsBetween(checkIn, checkOut);
   const single = !!(hint || icon);
-  // One line for the whole range, and it says what has been answered so far:
-  // nothing, a check-in waiting on its check-out, or both plus the nights - the
-  // number the guest is actually choosing.
   const rangeLabel = !checkIn
     ? placeholders.start
     : !checkOut
       ? `${fmt(checkIn)} - add check-out`
       : `${fmt(checkIn)} - ${fmt(checkOut)} · ${nights} ${nights === 1 ? 'night' : 'nights'}`;
 
-  // Month grid with the neighbouring months' days fading in at both ends (not tappable).
   function monthCells(base) {
     const first = new Date(base.getFullYear(), base.getMonth(), 1);
     const days = new Date(base.getFullYear(), base.getMonth() + 1, 0).getDate();
@@ -159,7 +118,6 @@ export default function DateRangeField({
   };
 
   function selectable(v) {
-    // Once a check-in is set, later days can only end the stay; earlier days restart it.
     if (choosingEnd) return v > checkIn ? canCheckOut(v, checkIn, { busy, limits }) : canCheckIn(v, { busy, limits });
     return canCheckIn(v, { busy, limits });
   }
@@ -171,7 +129,6 @@ export default function DateRangeField({
       setOpen(false);
       return;
     }
-    // Only an earlier day (or a fresh start) restarts the range.
     if ((choosingEnd && v > checkIn) || !canCheckIn(v, { busy, limits })) return;
     onChange({ checkIn: v, checkOut: '' });
     setEditing('end');
@@ -179,8 +136,6 @@ export default function DateRangeField({
 
   function openAt(which) {
     setEditing(which);
-    // Opening "Check-out" on a complete range should let the guest change just
-    // that end, so the check-in is left alone - `pick` handles the rest.
     setOpen(true);
   }
 
@@ -202,8 +157,6 @@ export default function DateRangeField({
     <div className={panelRange(open)}>
       <div className={PANEL_HEAD_RANGE}>
         <h3 className={PANEL_HEAD_H3}>
-          {/* The heading says which end the next tap will set, so the panel is
-              never ambiguous about what is about to happen. */}
           {editing === 'end' && checkIn ? labels.end : labels.start}
         </h3>
         <button type="button" className={PANEL_CLOSE} aria-label="Close" onClick={() => setOpen(false)}>&times;</button>
@@ -248,8 +201,6 @@ export default function DateRangeField({
         </div>
       </div>
       <div className={`${RANGE_FOOT} flex-none pb-[max(1rem,env(safe-area-inset-bottom))]`}>
-        {/* The nights count is the point of a range picker: it is the number the
-            guest is actually choosing, and neither date field can show it. */}
         <span className="text-small text-muted">
           {nights > 0 ? `${nights} ${nights === 1 ? 'night' : 'nights'}` : 'Pick your dates'}
         </span>
@@ -260,8 +211,6 @@ export default function DateRangeField({
 
   return (
     <div className={CSEL_GROUP}>
-      {/* Native inputs behind the custom control, so the values are in the form
-          and a browser autofill still has somewhere to land. */}
       <input type="date" className={BK_NATIVE} name={name && `${name}-in`} id={id} value={checkIn} min={minDate} onChange={(e) => onChange({ checkIn: e.target.value, checkOut })} tabIndex={-1} aria-hidden="true" />
       <input type="date" className={BK_NATIVE} name={name && `${name}-out`} value={checkOut} min={checkIn || minDate} onChange={(e) => onChange({ checkIn, checkOut: e.target.value })} tabIndex={-1} aria-hidden="true" />
 

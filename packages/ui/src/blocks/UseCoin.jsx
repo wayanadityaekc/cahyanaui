@@ -1,7 +1,6 @@
 import { Minus, Plus } from 'lucide-react';
 import Coin from '../primitives/Coin.jsx';
 
-// CUE UseCoin look. row: the pill on My Booking rows. cta: button height and full width, the second column beside a Book/Add button; both states keep that one height, so a tap never moves anything. Colour-only hover, nothing changes size.
 const STYLES = {
   row: {
     use: 'inline-flex items-center gap-[0.35rem] text-left mt-[0.45rem] py-[0.2rem] pl-[0.25rem] pr-[0.6rem] rounded-pill border',
@@ -22,14 +21,11 @@ const STEP_BTN =
   '[transition:background-color_var(--dur)_var(--ease)] hover:bg-cream disabled:opacity-40 disabled:cursor-not-allowed';
 const STEP_TEXT = 'min-w-[4.5em] text-center text-small font-semibold text-green';
 const ICON = 'w-[var(--icon-sm)] h-[var(--icon-sm)]';
-// The label truncates in a narrow cta column rather than wrap: a wrapped label would make the form taller.
 const LABEL = 'min-w-0 overflow-hidden text-ellipsis';
-// cta toggle: the button is its own size container; under 10rem it shows the coin count only ("1 coin"), full label in aria-label.
 const CTA_BOX = '[container-type:inline-size]';
 const LONG = 'min-w-0 overflow-hidden text-ellipsis [@container(max-width:10rem)]:hidden';
 const SHORT = 'hidden [@container(max-width:10rem)]:inline';
 
-// Cart row control. Stepper mode (default): "Use coin", then - n coins +. Toggle mode (`toggle`): one pill, "Use coin · 2 coins", pressed while on (a villa service covered by coins).
 export default function UseCoin({
   coins = 0,
   canAdd = true,

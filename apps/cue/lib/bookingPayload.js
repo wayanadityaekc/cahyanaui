@@ -1,6 +1,5 @@
 import { fmtTime } from '@/content/shared/timeSlots';
 
-// Booking request sent to /api/inquiry; carries the quoted prices or the server stores nothing and the email shows $0.
 export function bookingPayload({ ctx, f, referral, payOn, payOption, currency, stay, priced, displayGuests, singleLine, needsFlight, dateOf, timeOf }) {
   return ({
     type: ctx.type,
@@ -9,14 +8,11 @@ export function bookingPayload({ ctx, f, referral, payOn, payOption, currency, s
     phone: f.phone,
     email: f.email,
     referral: (referral && referral.code) || '',
-    // Only the option the guest picked; the server never trusts an amount from the browser.
     pay_option: payOn ? payOption : '',
-    // Quoted currency, so the server invoices the same number the guest agreed to.
     currency: currency || 'USD',
     stay: stay || '',
     lines: ctx.lines.map((l, i) => {
       const p = priced && priced.lines && priced.lines[i] && priced.lines[i].ok ? priced.lines[i] : null;
-      // Each line sends its own date/time (falling back to what it arrived with); flight fields only for a single airport line.
       const isTarget = !!singleLine && i === 0;
       return {
         type: l.type,
@@ -41,14 +37,12 @@ export function bookingPayload({ ctx, f, referral, payOn, payOption, currency, s
   });
 }
 
-// Quoted total as display text ("$240", "Rp1.200.000"), or "-" before the quote lands.
 export function priceText(priced) {
   if (!priced) return '-';
   const s = priced.symbol || '$';
   return s + priced.total.display.toLocaleString(s === 'Rp' ? 'id-ID' : 'en-US');
 }
 
-// Prefilled WhatsApp message for "Discuss via WhatsApp".
 export function whatsappText({ ctx, f, displayGuests, singleLine, flightNumberDisplay, dateOf, timeOf, price }) {
   const rowText = ctx.lines
     .map((l, i) => {

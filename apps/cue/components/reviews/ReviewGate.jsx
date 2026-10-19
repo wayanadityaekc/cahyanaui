@@ -7,7 +7,6 @@ import ReviewModal from '@/components/reviews/ReviewModal';
 import Modal from '@/components/ui/Modal';
 import { BTN } from '@/components/ui/modalClasses';
 
-// 'Write review' trigger that opens the review popup in place; gates on sign-in and an open reviewable booking.
 export default function ReviewGate({ className, children = 'Write review' }) {
   const { account, hydrated, reviewableItems } = useAccount();
   const [authOpen, setAuthOpen] = useState(false);

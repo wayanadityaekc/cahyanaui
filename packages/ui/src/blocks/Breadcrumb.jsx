@@ -1,6 +1,5 @@
 import { cn } from '../lib/cn.js';
 
-// CUE's breadcrumb: nav + ol, 12.8px, the last item is the current page (plain text, aria-current), never a link.
 export const CRUMB_NAV = 'font-body text-small text-muted';
 export const CRUMB_OL = 'flex flex-wrap items-center gap-0 m-0 p-0 list-none';
 export const CRUMB_LINK = 'text-muted no-underline hover:text-gold hover:underline';

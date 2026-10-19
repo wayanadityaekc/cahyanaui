@@ -5,12 +5,10 @@ import PayPalCheckout from './PayPalCheckout';
 import DokuCheckout from './DokuCheckout';
 import PayWaiting from './PayWaiting';
 
-// Booking saved, payment on: pay with the chosen rail, then lock on the waiting screen once the card is charged.
 export default function PaymentScreen({ paid, bookingRef, closeBooking, signinNote, payRail, payOption, currency, onPaid }) {
   return (
     <div>
       {paid ? (
-        // Card charged but not yet confirmed: lock the screen and poll the server until the webhook marks it paid.
         <PayWaiting
           bookingRef={bookingRef}
           onClose={closeBooking}
@@ -24,7 +22,6 @@ export default function PaymentScreen({ paid, bookingRef, closeBooking, signinNo
           </p>
           {signinNote}
           {bookingRef && railFor(payRail) === 'doku' ? (
-            // DOKU is hosted, so no onPaid: do not clear the cart on the way out; My Trips checks status on return.
             <DokuCheckout
               bookingRef={bookingRef}
               option={payOption}

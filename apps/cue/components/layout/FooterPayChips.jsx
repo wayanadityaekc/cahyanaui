@@ -1,4 +1,3 @@
-// Footer payment logos, hand-drawn SVG (Lucide has no brand logos); differs from booking/PayChips.jsx on purpose.
 export default function FooterPayChips({ chipClass, svgClass = 'block h-[13px] w-auto' }) {
   return (
     <>

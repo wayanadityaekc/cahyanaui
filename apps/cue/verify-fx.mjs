@@ -1,18 +1,3 @@
-// Live-rate pricing on the built site (29 Sep 2026).
-//
-//   node ../cahyana-api/tools/chat-dev-server.js                 # API on 4599
-//   NEXT_PUBLIC_API_BASE=http://127.0.0.1:4599/api npm run build
-//   node tools/serve-out.js                                      # site on 4000
-//   node verify-fx.mjs
-//
-// Checks, at 390 and 1280:
-//   - the HTML already carries the API's price (build-time catalog), so first
-//     paint is not a stale fallback;
-//   - the currency picker offers all 12 currencies, each with a drawn flag, and
-//     the open list stays on screen;
-//   - picking a new currency (JPY, SGD) reprices the page in that currency, and
-//     every price on it reads as a clean ladder number;
-//   - no page errors, no horizontal overflow.
 import { chromium } from 'playwright-core';
 
 const SITE = 'http://127.0.0.1:4000';
@@ -26,12 +11,10 @@ function ok(c, m) { return (c ? pass++ : (fail++, console.log('  FAIL:', m))); }
 
 const b = await chromium.launch({ executablePath: '/opt/pw-browsers/chromium_headless_shell-1194/chrome-linux/headless_shell' });
 
-// What the API itself says, so nothing here is a number typed into the harness.
 async function apiCat(cur) { return (await fetch(`${API}/pricing/catalog?currency=${cur}&guests=2&stay=`)).json(); }
 const usd = await apiCat('USD');
 const ubudUsd = usd.items.find((i) => i.name === 'Ubud Tour').standard.display;
 
-// Is n on the ladder fx.js uses? (<=10 whole; else a mantissa step of its decade)
 const M = [1, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2, 2.2, 2.4, 2.5, 2.6, 2.8, 3, 3.2, 3.5, 3.8, 4, 4.2, 4.5, 4.8, 5, 5.5, 6, 6.5, 7, 7.5, 8, 8.5, 9, 9.5, 10];
 function onLadder(n) {
   if (n <= 10) return Number.isInteger(n);
@@ -45,16 +28,12 @@ for (const w of [390, 1280]) {
   const errs = [];
   page.on('pageerror', (e) => errs.push(e.message));
 
-  // 1. First paint = the API's number, before any client fetch runs.
   const raw = await (await fetch(`${SITE}/tour.html`)).text();
   const m = raw.match(/data-price="Ubud Tour" data-mode="standard"><span[^>]*>\$<\/span>(\d+)/);
   ok(m && Number(m[1]) === ubudUsd, `${w}: static HTML already shows the API price ($${m && m[1]} vs $${ubudUsd})`);
 
   await page.goto(`${SITE}/tour.html`, { waitUntil: 'networkidle' });
 
-  // 2. The picker. On phones it lives in the drawer; on desktop in the account menu.
-  // Two copies of the picker are mounted at every width (drawer: #acct-cur,
-  // account menu: #menu-cur) - pick the one this width actually uses.
   const id = w <= 992 ? 'acct-cur' : 'menu-cur';
   if (w <= 992) await page.click('button[aria-label="Open menu"]');
   else await page.click('header button:has-text("Log in")');
@@ -80,7 +59,6 @@ for (const w of [390, 1280]) {
   ok(await list.evaluate((ul) => ul.scrollHeight > ul.clientHeight), `${w}: long list scrolls inside itself`);
   await page.screenshot({ path: `${SHOT}/fx-picker-${w}.png` });
 
-  // 3. Pick JPY: prices reprice in yen, on the ladder, matching the API.
   await list.locator('li[role="option"]', { hasText: 'JPY' }).click();
   const jpy = await apiCat('JPY');
   const want = jpy.items.find((i) => i.name === 'Ubud Tour').standard.display;

@@ -13,7 +13,6 @@ import {
   navPopLink,
 } from './navbarClasses.js';
 
-// One bar dropdown: a disclosure that opens on hover and on click.
 function NavDropdown({ label, href = '', items = [], isActive, linkAs: Link, pop = null }) {
   const { open, setOpen, boxRef, triggerRef, panelId } = useDisclosure();
   const active = (href && isActive(href)) || items.some((item) => isActive(item.href));
@@ -25,7 +24,6 @@ function NavDropdown({ label, href = '', items = [], isActive, linkAs: Link, pop
       onMouseEnter={() => setOpen(true)}
       onMouseLeave={() => setOpen(false)}
     >
-      {/* With an href the label is its own link and only the arrow opens the list. */}
       {href ? (
         <span className={cn(navDeskLink(active), 'pr-1')}>
           <Link href={href} className="no-underline text-inherit">{label}</Link>
@@ -58,7 +56,6 @@ function NavDropdown({ label, href = '', items = [], isActive, linkAs: Link, pop
         <ul id={panelId} className={NAV_POP_LIST}>
           {items.map((item) => (
             <li key={item.href}>
-              {/* Client-side links keep the navbar mounted, so a pick closes the panel itself. */}
               <Link href={item.href} className={navPopLink(isActive(item.href))} onClick={() => setOpen(false)}>
                 {item.label}
               </Link>
@@ -70,7 +67,6 @@ function NavDropdown({ label, href = '', items = [], isActive, linkAs: Link, pop
   );
 }
 
-// Desktop page links in the bar (>=993); takes the same `links` as the drawer.
 export default function NavDesktop({ links = [], isActive = () => false, linkAs = 'a', pop = null }) {
   const Link = linkAs;
   return (

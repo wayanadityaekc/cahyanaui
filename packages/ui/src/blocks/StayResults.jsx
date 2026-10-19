@@ -3,7 +3,6 @@ import { cn } from '../lib/cn.js';
 import Button from '../primitives/Button.jsx';
 import { CAPS } from '../primitives/Eyebrow.jsx';
 
-// What each status says under the villa; "unknown" is never worded as available.
 const STATUS_LINE = {
   checking: 'Checking the calendar...',
   taken: 'Not free on these dates',
@@ -23,7 +22,6 @@ function StatusTag({ status }) {
   return null;
 }
 
-// One photo card per villa for the picked dates: Details always, Reserve only when the calendar said free.
 export default function StayResults({ items = [], linkAs = 'a', className }) {
   if (!items.length) {
     return <p className="text-small text-muted">Sorry, we could not load this information. Please try again.</p>;

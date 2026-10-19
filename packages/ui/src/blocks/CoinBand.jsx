@@ -1,8 +1,6 @@
 import Button from '../primitives/Button.jsx';
 import Coin from '../primitives/Coin.jsx';
 
-// "Cahyana Coin Rewards" teaser (option B, as on CUE, Wayan 14 Oct 2026): a slim light-grey strip, shining coin | text |
-// balance + one button in one row; on a phone the button drops below. Only a teaser: no rates or rules here.
 const WRAP = 'max-w-[var(--container)] mx-auto px-[var(--container-x)] mt-[var(--space-3)]';
 const PANEL =
   'flex items-center gap-[var(--space-2)] rounded-md bg-cream py-3 px-[var(--space-2)] max-[768px]:flex-wrap';
@@ -13,8 +11,6 @@ const SIDE = 'flex flex-none items-center gap-[var(--space-2)]';
 const BALANCE = 'm-0 whitespace-nowrap text-body text-green';
 const BIG = 'font-semibold text-gold';
 
-// Presentational: the site passes the copy, the balance (signed in only), the coin-page link and its own link component.
-// One button, "See how coins work"; no sign-in or spend button here (Wayan, 14 Oct 2026).
 export default function CoinBand({
   hook = '',
   title = '',

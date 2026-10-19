@@ -1,5 +1,4 @@
 import { BTN_SM } from '@/components/ui/btnClasses';
-// Full-bleed photo band with a dark gradient overlay.
 const CLS = {
   section:
     "relative flex items-center justify-center min-h-[360px] px-[var(--container-x)] py-16 text-center bg-cover bg-center " +
@@ -11,7 +10,6 @@ const CLS = {
   btn: `inline-flex ${BTN_SM} font-body no-underline text-white bg-cta border border-cta hover:bg-cta-d`,
 };
 
-// paired: becomes a rounded, left-aligned card in the homepage charter row from 993px; unchanged below.
 const PAIRED =
   'min-[993px]:min-h-0 min-[993px]:h-full min-[993px]:rounded-lg min-[993px]:overflow-hidden ' +
   'min-[993px]:justify-start min-[993px]:text-left min-[993px]:p-[var(--space-5)] ' +

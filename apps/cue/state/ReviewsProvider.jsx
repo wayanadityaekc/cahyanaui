@@ -5,13 +5,11 @@ import { API_BASE } from '@/lib/constants';
 
 const ReviewsContext = createContext(null);
 
-// One fetch of /reviews/summary for every card's star rating, looked up by service name.
 export function ReviewsProvider({ children }) {
   const [summary, setSummary] = useState(null);
 
   useEffect(() => {
     let cancelled = false;
-    // load the star summary for every service
     async function load() {
       try {
         const res = await fetch(`${API_BASE}/reviews/summary`);

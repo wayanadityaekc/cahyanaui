@@ -12,7 +12,6 @@ import {
 import { CONTACT_EMAIL, CUE_LINK, WHATSAPP_LINK } from '@/lib/constants';
 import { REGISTRATION } from '@/content/registration';
 
-// Footer contents only; the five-column shell lives in @cahyana/ui FooterShell and is shared with CUE.
 
 const BRAND = 'Ubud Private Villas';
 
@@ -35,7 +34,6 @@ const COLUMNS = [
     ],
   },
   {
-    // No standalone /about page: its copy lives in Our Company, so two URLs do not compete in search.
     heading: 'Company',
     id: 'contact',
     items: [
@@ -48,13 +46,11 @@ const COLUMNS = [
   },
 ];
 
-// CEK WAYAN: Instagram stays hidden until there is a real account URL (CUE's is still "#"); no Facebook.
 const SOCIAL = {
   heading: 'Follow',
   links: [{ name: 'WhatsApp', href: WHATSAPP_LINK }],
 };
 
-// Text wordmarks: no partner logo files or listing URLs yet.
 const FEATURED = { heading: 'Featured On', names: ['Airbnb', 'Booking.com'] };
 
 export default function Footer() {

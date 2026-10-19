@@ -9,7 +9,6 @@ const TOGGLE_ON =
 const TOGGLE_OFF =
   'inline-flex items-center gap-1.5 shrink-0 rounded-pill px-3 h-8 [border:1px_solid_var(--line)] bg-surface-raised text-gold text-small font-semibold cursor-pointer hover:[border-color:var(--color-gold)]';
 
-// `coin` (optional): a Use coin control the site passes, shown under the row once it is added.
 function ExtraRow({ id, title = '', href = '', meta = '', price = null, added = false, onToggle = () => {}, fields = null, coin = null, linkAs = 'a' }) {
   const Link = linkAs;
   return (
@@ -36,7 +35,6 @@ function ExtraRow({ id, title = '', href = '', meta = '', price = null, added = 
   );
 }
 
-// "Add to your stay": groups of add-on rows; the site passes prices, the date/time fields and the handlers.
 export default function ExtrasPanel({ groups = [], linkAs = 'a' }) {
   if (!groups.length) return <p className="m-0 text-body text-muted">Sorry, we could not load this information. Please try again.</p>;
   return (

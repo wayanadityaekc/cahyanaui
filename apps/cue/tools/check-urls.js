@@ -37,9 +37,6 @@ if (missing.length) {
 
 console.log(`URL check passed - all ${expected.length} live URLs present in out/.`);
 
-// Legacy guide pages relied on <base href="/">, which the export does not carry.
-// Any relative src/href left in the extracted HTML resolves against /guide/ and
-// 404s - it broke 104 images and 319 links before this check existed.
 (function checkRelativeUrls() {
   const path = require("path");
   const files = [];
@@ -58,8 +55,6 @@ console.log(`URL check passed - all ${expected.length} live URLs present in out/
       if (/^(https?:|\/|#|mailto:|tel:|data:|\{)/.test(u)) return;
       bad.push(`${file}  ${m[1]}="${u}"`);
     });
-    // Inline styles hide the same problem inside CSS url(), which the attribute
-    // scan above cannot see.
     [...src.matchAll(/url\(\s*(\\?['"]?)([^'")\\]+)/g)].forEach((m) => {
       const u = m[2];
       if (/^(https?:|\/|#|data:)/.test(u)) return;
@@ -76,9 +71,6 @@ console.log(`URL check passed - all ${expected.length} live URLs present in out/
   }
 })();
 
-// A new page that never reaches sitemap.xml is invisible to search, and nothing
-// else notices - our-company.html once shipped without it.
-// Pages marked noindex are meant to be absent, so they are skipped.
 (function checkSitemap() {
   const path = require("path");
   const OUT = path.join(__dirname, "..", "out");
@@ -88,7 +80,6 @@ console.log(`URL check passed - all ${expected.length} live URLs present in out/
   const pages = [];
   (function w(d, rel) {
     fs.readdirSync(d, { withFileTypes: true }).forEach((e) => {
-      // assets/ holds a favicon <head> snippet, not a page
       if (e.name === "_next" || e.name === "assets") return;
       const p = path.join(d, e.name);
       if (e.isDirectory()) w(p, `${rel}${e.name}/`);
@@ -115,18 +106,11 @@ console.log(`URL check passed - all ${expected.length} live URLs present in out/
   }
 })();
 
-// Two sitemaps exist: sitemap.xml at the repo root (hand-kept checklist, read by
-// the checks above) and out/sitemap.xml (generated from lib/routes.js - the one
-// that actually ships). They silently drifted once: the root file dropped the six
-// retired legal/about pages while routes.js kept them, so the live sitemap sent
-// Google to six redirects. Comparing them makes that impossible to repeat.
 (function checkSitemapsAgree() {
   const path = require("path");
   const root = path.join(__dirname, "..", "sitemap.xml");
   const built = path.join(__dirname, "..", "out", "sitemap.xml");
   if (!fs.existsSync(root) || !fs.existsSync(built)) return;
-  // Commented-out entries are deliberately-parked URLs (e.g. a parked tour), not
-  // live ones - strip comments first or they read as present in the checklist.
   function locs(file) {
     return new Set(
         [

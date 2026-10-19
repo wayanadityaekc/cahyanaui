@@ -16,7 +16,6 @@ export default function Modal({ open, onClose, title, children, className = '' }
 
   if (!mounted) return null;
 
-  // Scrim + dialog box, faded and scaled by `open`; useDialog handles focus and Escape.
   return createPortal(
     <div
       className={clsx(

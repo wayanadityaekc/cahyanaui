@@ -1,7 +1,6 @@
 import Link from 'next/link';
 import { Button, Container } from '@cahyana/ui';
 
-// Old /about URL kept as a meta-refresh shim (no 301 in a static export); delete once traffic stops.
 const TARGET = '/our-company#about';
 
 export const metadata = {

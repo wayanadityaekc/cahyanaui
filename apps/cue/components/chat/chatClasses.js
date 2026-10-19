@@ -1,18 +1,15 @@
 import { BTN_SM } from '@/components/ui/btnClasses';
 
-// Chat panel shape: right-hand full-height drawer on desktop, bottom sheet on phones.
 export function PANEL(open) {
   return [
     'fixed z-[130] flex flex-col bg-white overflow-hidden',
     'motion-reduce:transition-none',
-    // Desktop: right drawer with the same width cap, 100dvh and 300ms slide as the navbar menu; keep them matching.
     '[@media(min-width:769px)]:top-0 [@media(min-width:769px)]:right-0 [@media(min-width:769px)]:bottom-0',
     '[@media(min-width:769px)]:h-[100dvh] [@media(min-width:769px)]:w-[38%] [@media(min-width:769px)]:max-w-[420px] [@media(min-width:769px)]:min-w-[340px]',
     '[@media(min-width:769px)]:[transition:translate_300ms_var(--ease),visibility_300ms]',
     open
       ? '[@media(min-width:769px)]:translate-x-0'
       : '[@media(min-width:769px)]:translate-x-full',
-    // Phone: unchanged - a sheet off the bottom, which Wayan signed off on.
     '[@media(max-width:768px)]:left-0 [@media(max-width:768px)]:right-0 [@media(max-width:768px)]:bottom-0 [@media(max-width:768px)]:top-auto',
     '[@media(max-width:768px)]:h-[86dvh] [@media(max-width:768px)]:[border-radius:var(--r-xl)_var(--r-xl)_0_0]',
     '[@media(max-width:768px)]:[transition:opacity_var(--dur)_var(--ease-out),transform_var(--dur)_var(--ease-out),visibility_var(--dur)]',
@@ -23,7 +20,6 @@ export function PANEL(open) {
   ].join(' ');
 }
 
-// Scrim at every width under the panel, same colour and timing as the navbar menu scrim; tap closes.
 export function SCRIM(open) {
   return 'fixed inset-0 z-[125] bg-[rgba(26,26,26,0.45)] ' +
     '[transition:opacity_300ms_var(--ease),visibility_300ms] motion-reduce:transition-none ' +
@@ -43,7 +39,6 @@ export const BODY =
   'flex-[1_1_auto] overflow-y-auto [overscroll-behavior:contain] px-4 py-4 flex flex-col gap-[0.6rem] ' +
   '[scrollbar-width:none] [&::-webkit-scrollbar]:hidden';
 
-// Bubbles: guest's own on the right in CTA green, ours on the left on cream.
 export const BUBBLE_BOT =
   'self-start max-w-[86%] px-[0.85rem] py-[0.6rem] rounded-[var(--r-md)] bg-cream ' +
   '[border:1px_solid_var(--line)] font-body text-body leading-[var(--lh-body)] text-ink';
@@ -51,7 +46,6 @@ export const BUBBLE_ME =
   'self-end max-w-[86%] px-[0.85rem] py-[0.6rem] rounded-[var(--r-md)] bg-cta ' +
   'font-body text-body leading-[var(--lh-body)] text-white';
 
-// Tappable price row inside an answer, linking to the page that sells it.
 export const ROW =
   'flex flex-none items-center gap-[0.6rem] w-full px-[0.7rem] py-[0.5rem] rounded-[var(--r-sm)] bg-white ' +
   '[border:1px_solid_var(--line)] no-underline text-left cursor-pointer text-small ' +
@@ -68,7 +62,6 @@ export const HANDOFF_BTN =
   '[&>svg]:w-[var(--icon-sm)] [&>svg]:h-[var(--icon-sm)] [&>svg]:shrink-0 ' +
   '[transition:background-color_var(--dur)_var(--ease),scale_var(--dur-fast)_var(--ease)] hover:bg-cta-d';
 
-// Suggested question chips, phrased as things a guest would ask.
 export const CHIPS = 'flex flex-wrap gap-[0.4rem] self-start mt-[0.15rem]';
 export const CHIP_Q =
   'inline-flex flex-none items-center h-[var(--btn-h)] px-[0.8rem] py-0 rounded-[var(--r-pill)] bg-white ' +
@@ -86,19 +79,15 @@ export const SEND =
 
 export const DOTS = 'self-start flex gap-[4px] px-[0.85rem] py-[0.7rem] rounded-[var(--r-md)] bg-cream [border:1px_solid_var(--line)]';
 export const DOT = 'w-[5px] h-[5px] rounded-[50%] bg-muted';
-// Wayan-typing row: same bubble shell as the dots, with his name so it is clear who is typing.
 export const TYPING_ROW = `${DOTS} items-center gap-[0.45rem]`;
 export const TYPING_WHO = 'font-body text-label font-medium tracking-[0.06em] uppercase text-cta';
-// Animated live dot; reduced motion stops the animation but the name still carries the meaning.
 export function DOT_LIVE(i) { return `${DOT} motion-safe:animate-[chatdot_1.1s_ease-in-out_infinite] [animation-delay:${i * 0.15}s]`; }
 
-// Wayan's replies: left side like ours but bordered green and named, so a person reads differently from the bot.
 export const BUBBLE_WAYAN =
   'self-start max-w-[86%] px-[0.85rem] py-[0.6rem] rounded-[var(--r-md)] bg-white ' +
   '[border:1px_solid_var(--color-cta)] font-body text-body leading-[var(--lh-body)] text-ink';
 export const WHO = 'block font-body text-label font-medium tracking-[0.06em] uppercase text-cta mb-[0.2rem]';
 
-// Inline handover email form inside the conversation, not a modal.
 export const HANDOFF_FORM =
   'self-start w-full max-w-[86%] flex flex-col gap-[0.4rem] p-[0.7rem] rounded-[var(--r-md)] ' +
   'bg-cream [border:1px_solid_var(--line)]';
@@ -106,12 +95,10 @@ export const HANDOFF_ROW = 'flex flex-col min-[420px]:flex-row gap-[0.4rem] [&>*
 export const NOTE = 'font-body text-label text-muted m-0';
 export const ALT_LINK =
   'font-body text-small text-muted underline underline-offset-2 cursor-pointer bg-transparent border-none p-0 self-start';
-// Strip shown once the conversation has been handed to Wayan.
 export const CONNECTED =
   'flex-none flex items-center gap-[0.4rem] px-4 py-[0.4rem] bg-cream [border-top:1px_solid_var(--line)] ' +
   'font-body text-label text-cta [&>svg]:w-[12px] [&>svg]:h-[12px] [&>svg]:shrink-0';
 
-// Quiet sign-in strip above the conversation that guests can ignore.
 export const SIGNIN_BAR =
   'flex flex-none items-center gap-[0.6rem] px-[0.8rem] py-[0.5rem] rounded-[var(--r-md)] ' +
   'bg-cream [border:1px_solid_var(--line)] m-0';

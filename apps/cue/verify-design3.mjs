@@ -16,20 +16,6 @@ const PAGES = ['/', '/tour.html', '/ubud-tour.html', '/attractions/monkey-forest
   '/transfer.html', '/airport-transfer.html', '/our-company.html', '/bali-guide.html',
   '/guide/ubud.html', '/my-trips.html', '/settings.html', '/activities.html', '/destinations.html'];
 
-// ---------- 1. ZERO ELEVATION SHADOWS, EXCEPT THE CARD ----------
-// The rule, not a list of selectors: a computed box-shadow may not have a real offset
-// or blur. That still allows 0-offset/0-blur rings (focus, invalid field, flag
-// hairlines, the charter inset border) and the 2px dot halo, all deliberate.
-//
-// ONE exception since 27 Sep 2026: --shadow-card. The shadow sweep left the listing
-// card with no boundary at all (white on white, border 0), so Wayan asked for a
-// shadow back "setipis mungkin". It is matched against the page's OWN --shadow-card,
-// never against a number typed in here - a hardcoded number would only prove this
-// harness agrees with itself.
-//
-// And the second half matters as much as the first: the card shadow must still BE
-// there. A sweep quietly deleting it is exactly how the cards went invisible, with
-// every gate green, so "no shadows anywhere" must not be a way to pass this check.
 for (const w of [390, 1280]) {
   const ctx = await br.newContext({ viewport: { width: w, height: 900 } });
   await ctx.addInitScript(() => localStorage.setItem('cue_token', 'stub-token'));
@@ -45,7 +31,6 @@ for (const w of [390, 1280]) {
     ok(r.status() === 200, `${w} ${p}: HTTP 200`);
     await page.waitForTimeout(350);
     const res = await page.evaluate(() => {
-      // Resolved from the page, not typed here - see the note above this loop.
       const tok = getComputedStyle(document.documentElement).getPropertyValue('--shadow-card').trim();
       const tokNums = tok.replace(/rgba?\([^)]*\)/g, '').trim().split(/\s+/).filter(Boolean).map(parseFloat);
       const out = [];
@@ -55,12 +40,6 @@ for (const w of [390, 1280]) {
         const sh = c.boxShadow;
         if (!sh || sh === 'none') return;
         n++;
-        // Tailwind v4 composes box-shadow from FIVE layers (inset-shadow, inset-ring,
-        // ring-offset, ring, shadow), so the computed value is a comma-separated list
-        // whose first four layers are usually 'rgba(0,0,0,0) 0px 0px 0px 0px'. Reading
-        // the first four px numbers of the WHOLE string therefore always found zeros:
-        // the first version of this check passed with the navbar shadow put back.
-        // Split per layer - on commas that are NOT inside rgb()/rgba().
         const layers = [];
         let depth = 0, cur = '';
         [...sh].forEach((ch) => {
@@ -73,10 +52,8 @@ for (const w of [390, 1280]) {
         layers.forEach((L) => {
           const nums = (L.match(/-?[\d.]+px/g) || []).map(parseFloat);
           const [ox = 0, oy = 0, blur = 0] = nums;
-          // fully transparent layers paint nothing
           const m = L.match(/rgba?\([^)]*\)/);
           if (m && /,\s*0\s*\)$/.test(m[0])) return;
-          // the one deliberate exception, matched against the page's own token
           const isCard = tokNums.length >= 3 && nums.length >= 3 &&
             nums[0] === tokNums[0] && nums[1] === tokNums[1] && nums[2] === tokNums[2];
           if (isCard) { card++; return; }
@@ -95,8 +72,6 @@ for (const w of [390, 1280]) {
   }
   ok(bad.length === 0, `${w}: nol shadow elevasi se-web${bad.length ? `\n        :: ${bad.join('\n        :: ')}` : ''}`);
   ok(seen > 0, `${w}: ring/hairline yang disengaja masih ke-render (${seen} elemen)`);
-  // The card shadow must still exist. Every page below renders cards, so a zero here
-  // means it was removed - the failure this whole section was rewritten to catch.
   ok(/\d/.test(token), `${w}: --shadow-card kedefinisi (${token || 'KOSONG'})`);
   ['/', '/tour.html', '/activities.html', '/destinations.html', '/bali-guide.html'].forEach((p) => {
     ok(cards[p] > 0, `${w} ${p}: kartu masih bawa --shadow-card (${cards[p]} elemen)`);
@@ -105,7 +80,6 @@ for (const w of [390, 1280]) {
   await ctx.close();
 }
 
-// ---------- 2. HEADER HIDES DOWN / SHOWS UP ----------
 for (const w of [390, 1280]) {
   const ctx = await br.newContext({ viewport: { width: w, height: 900 } });
   const page = await ctx.newPage();
@@ -127,7 +101,7 @@ for (const w of [390, 1280]) {
   async function scrollTo(y) {
     await page.evaluate((v) => window.scrollTo(0, v), y);
     await page.waitForFunction((v) => Math.abs(window.scrollY - v) < 2, y, { timeout: 5000 });
-    await page.waitForTimeout(450); // then let the header's own transition land
+    await page.waitForTimeout(450);
   }
   async function by(d) { await page.evaluate((v) => window.scrollBy(0, v), d); await page.waitForTimeout(450); }
 
@@ -135,24 +109,22 @@ for (const w of [390, 1280]) {
   ok(atTop.top === 0, `${w}: di puncak header rata atas (top ${atTop.top})`);
   ok(atTop.bottom > 0, `${w}: di puncak header keliatan`);
 
-  // STICKY, and that is a reverted decision (27 Sep 2026) - the header used to hide on
-  // the way down. If someone re-adds that, these four fail, which is the point.
-  await scrollTo(40);                  // past 8, short of the 80 that tucks the bar
+  await scrollTo(40);
   ok((await box()).top === 0, `${w}: 40px = masih utuh, ambang tuck itu 80 (top ${(await box()).top})`);
 
-  await scrollTo(600);                 // one long move down
+  await scrollTo(600);
   const down = await box();
   ok(down.bottom > 0, `${w}: scroll ke BAWAH header TETEP keliatan - sticky (bottom ${down.bottom})`);
   ok(Math.abs(down.top + down.barH) < 2, `${w}: yang ketuck cuma trip bar (top ${down.top} vs -${down.barH})`);
 
-  await by(-200);                      // reverse: nothing may change
+  await by(-200);
   const up = await box();
   ok(Math.abs(up.top - down.top) < 2, `${w}: scroll ke ATAS gak ngubah apa-apa lagi (top ${up.top})`);
 
   await by(300);
   ok((await box()).bottom > 0, `${w}: turun lagi tetep keliatan`);
 
-  await scrollTo(40);                  // hysteresis: reopens at 8, not at 80
+  await scrollTo(40);
   ok((await box()).bottom > 0, `${w}: di 40 nav masih keliatan`);
   ok(Math.abs((await box()).top + up.barH) < 2, `${w}: turun-balik ke 40 bar TETEP ketuck (ambang buka 8)`);
 
@@ -160,7 +132,6 @@ for (const w of [390, 1280]) {
   const back = await box();
   ok(back.top === 0, `${w}: balik ke puncak = trip bar + nav utuh (top ${back.top})`);
 
-  // jitter must not flip it
   await scrollTo(600);
   const before = (await box()).top;
   for (const d of [-3, 3, -2, 2, -3]) { await page.evaluate((v) => window.scrollBy(0, v), d); }
@@ -169,14 +140,10 @@ for (const w of [390, 1280]) {
   await ctx.close();
 }
 
-// ---------- 3. HAMBURGER LEFT OF THE LOGO ----------
 for (const w of [390, 1280]) {
   const ctx = await br.newContext({ viewport: { width: w, height: 900 } });
   const page = await ctx.newPage();
   await page.route('**/api/**', api);
-  // NOT the homepage: it deliberately has no breadcrumb, so the "same edge as the
-  // page body" assertion below silently skipped and tested nothing (caught by a
-  // sabotage that only fired once instead of twice).
   await page.goto(`${B}/ubud-tour.html`, { waitUntil: 'load' });
   await page.waitForTimeout(300);
   const g = await page.evaluate(() => {
@@ -185,13 +152,11 @@ for (const w of [390, 1280]) {
     const row = document.getElementById('hamburger').parentElement.getBoundingClientRect();
     const cs = getComputedStyle(document.getElementById('hamburger').parentElement);
     const slot = document.querySelector('[data-account-slot]').getBoundingClientRect();
-    // the right cluster: every icon in the row that is NOT inside the drawer panel
     const icons = [...document.getElementById('hamburger').parentElement.querySelectorAll('svg')]
       .filter((e) => !e.closest('#nav-menu') && e.getBoundingClientRect().width > 0)
       .map((e) => e.getBoundingClientRect())
       .filter((r) => r.left >= 0)
       .sort((a, c) => a.left - c.left);
-    // the page's own gutter, resolved by the page rather than typed in here
     const probe = document.createElement('div');
     probe.style.cssText = 'position:absolute;width:var(--container-x)';
     document.body.appendChild(probe);
@@ -209,10 +174,6 @@ for (const w of [390, 1280]) {
       icons: icons.map((r) => ({ w: +r.width.toFixed(1), h: +r.height.toFixed(1), l: +r.left.toFixed(1), r: +r.right.toFixed(1) })),
     };
   });
-  // WO1 (28 Sep 2026, Wayan approved): burger LEFT of the logo on phones, drawer from
-  // the LEFT, account slot on its own at the far right. Desktop: no burger, page links
-  // in the bar, account slot at the far right. This replaces the 27 Sep "burger back on
-  // the right" rules that used to live here.
   console.log(`     burger ${g.bl}-${g.br} · logo ${g.ll}-${g.lr} · akun ${g.sl}-${g.sr} · baris ${g.rowL}+${g.padL} .. ${g.rowR}-${g.padR}`);
   if (w <= 992) {
     ok(g.bw > 0, `${w}: burger keliatan di HP (lebar ${g.bw})`);
@@ -226,39 +187,18 @@ for (const w of [390, 1280]) {
   ok((g.rowR - g.padR) - g.sr < 3, `${w}: slot akun nempel di gutter KANAN baris (${Math.round((g.rowR - g.padR) - g.sr)}px)`);
   ok(g.icons.every((r) => r.r <= g.sr + 1), `${w}: slot akun paling kanan di klusternya`);
 
-  // GUTTER LUAR TURUN SENOTCH (27 Sep 2026, Wayan: "padding di luar kiri kanan kecilin
-  // dikit"). Dulu `px-6` hardcoded = 24 rata di semua lebar. Sekarang 16 di HP (token
-  // --container-x, jadi burger lurus sama isi halaman) dan 20 di desktop.
-  // Dua utility padding itu specificity-nya SAMA, jadi yang menang urutan compile - itu
-  // sebabnya angkanya dibaca dari halaman, bukan dipercaya dari class-nya.
   console.log(`     gutter baris nav: kiri ${g.padL} · kanan ${g.padR} · token ${g.gutter}`);
   ok(Math.abs(g.padL - g.padR) < 0.5, `${w}: gutter kiri == kanan (${g.padL} vs ${g.padR})`);
   ok(g.padL < 24, `${w}: gutter udah dikecilin dari 24 (${g.padL})`);
   ok(g.padL >= 14, `${w}: tapi gak kekecilan (${g.padL})`);
-  // emitted only on phones: a `w > 992 ||` short-circuit passes at desktop while
-  // PRINTING a phone-only claim next to desktop numbers, which reads like a real check.
   if (w <= 992) ok(Math.abs(g.padL - g.gutter) < 0.5, `${w}: di HP gutter nav == --container-x (${g.padL} vs ${g.gutter})`);
-  // Mirror of the old crumb check. The burger used to sit on the left, so it could be
-  // compared against the breadcrumb's left inset; on the right the equivalent claim is
-  // that it stops one gutter short of the viewport edge. Still measured against the
-  // page's own --container-x, never a number typed here.
   if (w <= 992) ok(Math.abs((w - g.sr) - g.gutter) < 2, `${w}: slot akun berhenti satu gutter dari tepi kanan (${Math.round(w - g.sr)} vs ${g.gutter})`);
 
-  // JARAK ANTAR IKON WAJIB SAMA (27 Sep 2026, Wayan: "jarak antar icon disamakan, jarak
-  // antara my trip dan humberger kayaknya beda dari jarak my trip dan message"). He was
-  // right, and only on phones: 13.6 between chat and cart, 19.6 between cart and burger.
-  //
-  // Measured INK to INK, not box to box, and that distinction is the whole point. The
-  // burger is the one control whose glyph does not fill its own box - 20px of bars inside
-  // a 24px hit area - so equalising the boxes would still leave the eye seeing 2px more
-  // air on that side. Box gaps are 13.6/11.6 now and that is correct: they are unequal on
-  // purpose so the ink comes out even.
   const gaps = await page.evaluate(() => {
     const row = document.getElementById('hamburger').parentElement;
     function ink(el) {
       const svg = el.querySelector('svg');
       if (svg) return svg.getBoundingClientRect();
-      // the burger: its three bars, ignoring the absolutely-positioned status dot
       const bars = [...el.querySelectorAll('span')]
         .filter((s) => getComputedStyle(s).position === 'static')
         .map((s) => s.getBoundingClientRect());
@@ -268,10 +208,9 @@ for (const w of [390, 1280]) {
     const out = [];
     [...row.children].forEach((el) => {
       if (el.getBoundingClientRect().width === 0) return;
-      if (el.querySelector('img')) return; // the logo is not an icon
-      if (el.id === 'hamburger') return; // left of the logo now - not in the right cluster
-      if (el.matches('[data-desktop-nav], nav')) return; // page links / drawer
-      // the account slot: its icon on phones, its "Log in" box on desktop
+      if (el.querySelector('img')) return;
+      if (el.id === 'hamburger') return;
+      if (el.matches('[data-desktop-nav], nav')) return;
       const visSvg = [...el.querySelectorAll('svg')].some((v) => v.getBoundingClientRect().width > 0);
       const i = el.matches('[data-account-slot]') && !visSvg
         ? el.querySelector('button').getBoundingClientRect() : ink(el);
@@ -285,18 +224,11 @@ for (const w of [390, 1280]) {
   const spread = Math.max(...gaps.map((x) => x.gap)) - Math.min(...gaps.map((x) => x.gap));
   ok(spread < 0.6, `${w}: celah antar ikon SAMA semua (spread ${spread.toFixed(1)}px :: ${gaps.map((x) => x.gap).join(', ')})`);
 
-  // THE DRAWER OPENS FROM THE LEFT (WO1, 28 Sep 2026), from the burger's side. The panel
-  // covers the button that opened it, so the x stays the close affordance. Phones only:
-  // desktop has no burger.
   if (w > 992) { await ctx.close(); continue; }
   await page.click('#hamburger');
   await page.waitForTimeout(400);
   const d = await page.evaluate(() => {
     const b = document.getElementById('hamburger').getBoundingClientRect();
-    // Two wrong selectors before this one, both of which PASSED by measuring a 0x0
-    // box: nav[aria-label] matches AppBottomNav ('App', display:none outside app mode),
-    // and 'header nav' is only a wrapper whose single child is position:fixed, so the
-    // nav itself collapses to 0x0. The drawer panel is that child <ul>.
     const panel = document.querySelector('header nav > ul');
     const pr = panel.getBoundingClientRect();
     const el = document.elementFromPoint(b.left + b.width / 2, b.top + b.height / 2);
@@ -317,7 +249,6 @@ for (const w of [390, 1280]) {
   ok(d.panelL > -1 && d.panelL < 1, `${w}: panel drawer nempel tepi KIRI (kiri ${d.panelL})`);
   ok(d.overlaps, `${w}: panel nutupin burger - itu konsekuensi drawer sesisi, bukan bug (${d.burger} vs ${d.panel})`);
   ok(d.hit !== 'hamburger', `${w}: yang ke-tap di posisi burger itu panel, bukan burger (hit: ${d.hit})`);
-  // so the x is load-bearing: it is the only close affordance the guest can see
   ok(d.closeVisible, `${w}: tombol x keliatan di dalam drawer`);
   await page.click('#nav-menu button[aria-label="Close menu"]');
   await page.waitForTimeout(400);
@@ -326,11 +257,6 @@ for (const w of [390, 1280]) {
   await ctx.close();
 }
 
-// ---------- 4. HAMBURGER SIZE, AND THE X THAT HAS TO CLOSE ----------
-// Sizes are read off the page, never typed in here: what is asserted is the RULE -
-// the outer bars travel exactly far enough to meet the middle one. An offset that no
-// longer matches the gap leaves a visibly broken X, and nothing else would catch it.
-// Phones only since WO1 (28 Sep 2026): desktop has no hamburger.
 for (const w of [390]) {
   const ctx = await br.newContext({ viewport: { width: w, height: 900 } });
   const page = await ctx.newPage();
@@ -341,10 +267,6 @@ for (const w of [390]) {
   function read() {
     return page.evaluate(() => {
       const b = document.getElementById('hamburger');
-      // The bars are the STATIC spans; the badge dot is the absolute one. Do NOT filter by
-      // height: an open bar is rotated 45deg, so its rect is ~18px tall, and a height filter
-      // silently drops two of the three and leaves spread measuring ONE element against
-      // itself - which is how a stale offset passed this gate the first time.
       const bars = [...b.querySelectorAll(':scope > span')]
         .filter((s) => getComputedStyle(s).position === 'static');
       const br = b.getBoundingClientRect();
@@ -381,16 +303,6 @@ for (const w of [390]) {
   await ctx.close();
 }
 
-// ---------- 5. HERO DOES NOT ZOOM ON HOVER ----------
-// 27 Sep 2026, Wayan: "di page tour, destination, experience sekarang ada howver untuk
-// heronya, gua gamau ada itu kalo di howver hero no zoom". The mosaic tiles used to
-// scale their photo to 1.04.
-//
-// The rule is measured on the PHOTO, not read off a class: getBoundingClientRect
-// reflects transforms, so a scale of 1.04 on a 700px tile is a 28px change - if the
-// box is identical with the pointer on it, nothing zoomed, whatever the class says.
-// Checked on all three page types Wayan named, because they are three different page
-// components even though they share one hero.
 for (const [label, url] of [['tour', '/ubud-tour.html'], ['destination', '/attractions/monkey-forest.html'], ['experience', '/attractions/atv-ride.html']]) {
   const ctx = await br.newContext({ viewport: { width: 1280, height: 900 } });
   const page = await ctx.newPage();
@@ -411,7 +323,7 @@ for (const [label, url] of [['tour', '/ubud-tour.html'], ['destination', '/attra
   ok(before && before.w > 200, `hero ${label}: foto hero ke-ukur (${before ? before.w : 'NULL'}) - rect kosong = harness rusak, bukan lolos`);
   const box = await page.locator('img').first().boundingBox();
   await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
-  await page.waitForTimeout(650); // lebih lama dari --dur-slow, jadi zoom sempat jalan kalau ada
+  await page.waitForTimeout(650);
   const after = await shot();
   ok(before.w === after.w && before.h === after.h,
     `hero ${label}: foto NOL berubah pas di-hover (${before.w}x${before.h} -> ${after.w}x${after.h})`);

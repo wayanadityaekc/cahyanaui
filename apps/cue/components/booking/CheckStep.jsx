@@ -6,7 +6,6 @@ import {
   ROW, GROUP_LABEL, ROWSET, PBAR, PBAR_L, PBAR_V, BACK_LINK, DETAILS_LI_ROW, DETAILS_TOGGLE, DETAILS_LI,
 } from './bookingModalClasses';
 
-// Step 2: read-back of the trip and the guest, the total, then Continue (payment on) or Book Now (payment off).
 export default function CheckStep({
   view, singleLine, dateOf, timeOf, isAirportRoute, flightNumberDisplay, displayGuests, priced,
   detailsOpen, setDetailsOpen, f, price, payOn, onContinue, error, busy, submit, openWhatsApp, onEdit,
@@ -35,7 +34,6 @@ export default function CheckStep({
       {view.detailLines && view.detailLines.length > 0 && (
         <>
           <p className={GROUP_LABEL}>{view.detailsTitle || "What's included"}</p>
-          {/* Item list is open by default; above 4 rows it folds behind a toggle to avoid scrolling on small phones. */}
           {view.detailLines.length > 4 ? (
             <div className="mb-4">
               <button type="button" className={DETAILS_TOGGLE} onClick={() => setDetailsOpen((v) => !v)}>
@@ -75,7 +73,6 @@ export default function CheckStep({
       {!payOn && (
         <BookActions error={error} busy={busy} submit={submit} openWhatsApp={openWhatsApp} />
       )}
-      {/* Edit details goes last as a text link, so Book Now stays the one primary action. */}
       <button type="button" className={BACK_LINK} onClick={onEdit}>&lsaquo; Edit details</button>
     </>
   );

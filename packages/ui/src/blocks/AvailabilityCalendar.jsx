@@ -9,7 +9,6 @@ import { canCheckIn, canCheckOut, isBookedNight, nightsBetween, stayLimits } fro
 const DOW = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
 const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 const ARROW = 'w-10 h-10 inline-flex items-center justify-center rounded-base [border:1px_solid_var(--line)] bg-white text-gold cursor-pointer hover:[border-color:var(--color-gold)] disabled:opacity-30 disabled:cursor-not-allowed';
-// Square cells on phones (big thumb targets); a fixed 56px row from md up, or two months would stand ~900px tall.
 const DAY = 'relative w-full aspect-square md:w-14 md:h-14 md:mx-auto flex items-center justify-center font-body text-[1rem] border-none p-0';
 
 function localIso(date) {
@@ -34,7 +33,6 @@ function monthCells(year, month) {
   return cells;
 }
 
-// Airbnb-style stay calendar: big, booked nights struck through, one month on phones and two side by side from md up (`months={1}` keeps one at every width).
 export default function AvailabilityCalendar({
   value = {},
   onChange = () => {},
@@ -66,7 +64,6 @@ export default function AvailabilityCalendar({
   }
 
   function selectable(day) {
-    // Once a check-in is set, later days can only end the stay; earlier days restart it.
     if (choosingEnd) return day > checkIn ? canCheckOut(day, checkIn, { busy, limits }) : canCheckIn(day, { busy, limits });
     return canCheckIn(day, { busy, limits });
   }
@@ -100,7 +97,6 @@ export default function AvailabilityCalendar({
           className={cn(
             DAY,
             'rounded-base',
-            // Background set per state only: bg-transparent next to bg-gold is a coin flip on CSS order.
             edge ? 'bg-gold text-white' : 'bg-transparent',
             !edge && ok && 'text-green cursor-pointer hover:[box-shadow:inset_0_0_0_1.5px_var(--color-gold)]',
             !edge && booked && 'text-muted line-through opacity-50 cursor-not-allowed',

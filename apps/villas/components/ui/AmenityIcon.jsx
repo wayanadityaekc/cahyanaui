@@ -1,6 +1,5 @@
 import { Bath, Bike, CookingPot, ShowerHead, Trees, Tv, Waves } from 'lucide-react';
 
-// Only amenities lib/villas.js really lists; always size icons, Lucide defaults to 24px.
 const ICONS = {
   'Private Pool': Waves,
   'Full Kitchen': CookingPot,

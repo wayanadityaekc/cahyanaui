@@ -1,6 +1,4 @@
 #!/usr/bin/env node
-// GATE (villa version of CUE's check-urls): links, sitemap, canonicals and robots.txt all agree with what the build wrote.
-// Every internal link lands on a built page, out/sitemap.xml lists exactly lib/routes.js indexablePaths(), every sitemap URL was built, every indexable page's canonical is its own sitemap URL, and robots.txt points at the sitemap.
 const fs = require('fs');
 const path = require('path');
 const { importApp } = require('./app-import');
@@ -48,7 +46,6 @@ async function run() {
   const pages = builtPages();
   const builtUrls = new Set(pages.map((page) => page.url));
 
-  // 1. Internal links: every <a href> on our own site must land on a built page (the #hash part is not checked).
   let linksChecked = 0;
   pages.forEach(({ url: pageUrl, file }) => {
     const html = fs.readFileSync(file, 'utf8');
@@ -66,7 +63,6 @@ async function run() {
     });
   });
 
-  // 2. Sitemap = indexablePaths(), in both directions, and every entry was built.
   const sitemapFile = path.join(OUT, 'sitemap.xml');
   const sitemapLocs = fs.existsSync(sitemapFile)
     ? [...fs.readFileSync(sitemapFile, 'utf8').matchAll(/<loc>([^<]+)<\/loc>/g)].map((match) => match[1].trim())
@@ -81,7 +77,6 @@ async function run() {
     if (!builtUrls.has(loc.slice(SITE.length))) problems.push(`SITEMAP       ${loc} was not built`);
   });
 
-  // 3. Every built page without noindex is in the sitemap, and its canonical is its own sitemap URL.
   let indexablePages = 0;
   pages.forEach(({ url: pageUrl, file }) => {
     if (/^\/(404|_not-found)(\/|\.html)/.test(pageUrl)) return;
@@ -95,7 +90,6 @@ async function run() {
     else if (decode(canonical) !== own) problems.push(`CANONICAL     ${pageUrl} points at ${canonical}, expected ${own}`);
   });
 
-  // 4. robots.txt names the sitemap and does not shut the whole site.
   const robotsFile = path.join(OUT, 'robots.txt');
   const robots = fs.existsSync(robotsFile) ? fs.readFileSync(robotsFile, 'utf8') : '';
   if (!robots) problems.push('ROBOTS        out/robots.txt is missing');

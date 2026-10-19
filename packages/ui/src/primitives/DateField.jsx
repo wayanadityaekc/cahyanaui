@@ -25,7 +25,6 @@ export default function DateField({ label = 'Date', value, onChange, min, max, p
   const [open, setOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
   const [cursor, setCursor] = useState(() => {
-    // No value yet: open on the earliest pickable month, so a stay next year does not open on today.
     const base = value ? new Date(value) : min ? new Date(min) : new Date();
     return new Date(base.getFullYear(), base.getMonth(), 1);
   });
@@ -104,8 +103,6 @@ export default function DateField({ label = 'Date', value, onChange, min, max, p
           <Calendar className={CHEV_CAL} strokeWidth={1.8} aria-hidden="true" />
         )}
       </button>
-      {/* Always portal-mounted once mounted (not gated on `open`) so the panel has a
-          "closed" frame to transition FROM - see Select.jsx for the same fix. */}
       {mounted && createPortal(panel, document.body)}
       {mounted && <Overlay open={open} onClose={() => setOpen(false)} />}
     </div>

@@ -1,4 +1,3 @@
-// One source for every trail (visible crumb and JSON-LD); zero imports so client components can read it cheaply.
 export const HOME_CRUMB = { label: 'Home', href: '/' };
 export const GUIDE_CRUMBS = [HOME_CRUMB, { label: 'Ubud Guide', href: '/guide/' }];
 export const COMPANY_CRUMBS = [HOME_CRUMB, { label: 'Our Company', href: '/our-company/' }];

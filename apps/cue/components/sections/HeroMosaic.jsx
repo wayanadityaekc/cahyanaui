@@ -8,29 +8,22 @@ import Slider from '@/components/ui/Slider';
 import { BLEED_MOBILE } from '@/components/ui/gridClasses';
 import useBodyLock from '@/components/ui/useBodyLock';
 
-// Sliding gallery hero built from a photo pool; 1 photo = wide tile, 2 = side by side, 3+ = mosaic.
 
-// Show the 'all photos' pill only from this many photos; a judgment call, tune freely.
 const PILL_FROM = 10;
 
-// Tiles fill a track that owns the height; no radius and no hover zoom/transition on purpose (ask before adding).
 const TILE_BASE =
   'relative block w-full h-full overflow-hidden p-0 bg-cream border-none cursor-pointer ' +
   '[&>img]:absolute [&>img]:inset-0 [&>img]:w-full [&>img]:h-full [&>img]:object-cover [&>img]:object-center';
 const BIG = `${TILE_BASE} flex-[0_0_62%] [scroll-snap-align:start]`;
-// Column of two small photos; a lone tail photo fills the whole column.
 const PAIR = 'flex-[0_0_35%] h-full flex flex-col gap-1 [scroll-snap-align:start] [&>*]:flex-[1_1_0] [&>*]:min-h-0';
-// Track aspect sets the crop (1.6/1 phone, 2.7/1 desktop); never a pixel height.
 const TRACK =
   'flex gap-1 aspect-[1.6/1] min-[769px]:aspect-[2.7/1] ' +
   'overflow-x-auto overflow-y-hidden overscroll-x-contain ' +
   '[scroll-snap-type:x_mandatory] [touch-action:pan-x_pan-y] ' +
   '[scrollbar-width:none] [&::-webkit-scrollbar]:hidden ' +
   BLEED_MOBILE;
-// Static (non-sliding) layouts for 1 and 2 photos - no track, so no snap needed.
 const STATIC_1 = 'aspect-[16/10] min-[769px]:aspect-[2.7/1]';
 const STATIC_2 = `flex gap-1 ${STATIC_1} [&>*]:flex-1 [&>*]:min-w-0`;
-// Corner pill, not an overlay; keep scale in its transition list or press feedback snaps (check-motion).
 const MORE_BTN =
   `absolute bottom-3 right-3 z-[6] inline-flex ${BTN_SM} bg-white [border:1px_solid_var(--line)] ` +
   'font-body text-gold cursor-pointer ' +
@@ -73,7 +66,6 @@ export default function HeroMosaic({ photos = [], title }) {
     );
   }
 
-  // Flat alternating children (big, pair, big, pair) so the rhythm continues past the third photo.
   const children = [];
   [...Array(Math.ceil(photos.length / 3)).keys()].map((k) => k * 3).forEach((i) => {
     children.push(tile(i, BIG));
@@ -126,7 +118,6 @@ export default function HeroMosaic({ photos = [], title }) {
             </div>
 
             <div className="flex-[1_1_auto] min-h-0 grid place-items-center overflow-hidden px-4">
-              {/* Cap height in viewport units; max-h-full does not constrain here. 12rem reserves header and caption rows. */}
               <img
                 src={photos[openIndex].src}
                 alt={photos[openIndex].alt || ''}

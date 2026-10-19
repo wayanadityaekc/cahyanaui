@@ -1,8 +1,6 @@
 import { Clock, Landmark, Leaf, Mountain, Star, UserRound, VenetianMask } from 'lucide-react';
 import { cn } from '../lib/cn.js';
 
-// Copied from CUE's HomepageCard (components/cards/HomepageCard.jsx), Oct 2026. CUE does not use this library, so a change there is copied over by hand.
-// A 4:5 photo with a dark gradient, category badge and rating on top, the title and a glass bar (duration, private tour, price) at the bottom.
 const FRAME =
   "relative block overflow-hidden rounded-base text-white no-underline bg-white aspect-[4/5] shadow-card " +
   "after:content-[''] after:absolute after:inset-0 after:z-[1] " +
@@ -17,7 +15,6 @@ const RATE =
   'bg-[rgba(255,255,255,0.92)] text-ink text-small font-semibold ' +
   '[&>svg]:w-[13px] [&>svg]:h-[13px] [&>svg]:text-amber-d';
 const OVERLAY = 'absolute left-0 right-0 bottom-0 z-[2] px-[15px] pb-[14px]';
-// CUE's heading size is 1.125rem; this site's text-h2 is a larger section-heading size, so the value is written out.
 const TITLE = 'mt-0 mb-[9px] font-semibold text-[1.125rem] leading-[1.2] text-white line-clamp-2 [text-shadow:0_2px_12px_rgba(0,0,0,0.5)]';
 const ACCENT = 'block w-[38px] h-[3px] rounded-base mb-3';
 const BAR = 'flex items-center justify-between gap-2 px-[11px] py-2 rounded-md bg-[rgba(12,14,10,0.42)] border border-[rgba(255,255,255,0.2)]';
@@ -25,7 +22,6 @@ const META =
   'inline-flex items-center gap-[6px] text-[rgba(255,255,255,0.92)] text-[0.62rem] min-w-0 flex-[0_1_auto] whitespace-nowrap ' +
   '[&_svg]:w-3 [&_svg]:h-3 [&_svg]:flex-[0_0_auto]';
 
-// Category -> badge tone and icon, as in CUE.
 const CATS = {
   Culture: { tone: 'gold', Icon: VenetianMask },
   Temple: { tone: 'gold', Icon: Landmark },
@@ -46,7 +42,6 @@ export default function ProgramCard({
   return (
     <a className={cn(FRAME, className)} href={href} {...linkProps}>
       {image && (
-        // eslint-disable-next-line @next/next/no-img-element
         <img className={IMG} src={image.src} alt={image.alt || title} width={image.width || 600} height={image.height || 600} loading="lazy" />
       )}
       {image && <span aria-hidden="true" className="absolute inset-0 pointer-events-none mix-blend-multiply [background:linear-gradient(180deg,rgba(214,178,120,0.18),rgba(120,80,40,0.30))]" />}

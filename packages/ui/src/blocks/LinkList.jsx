@@ -1,17 +1,5 @@
 import { cn } from '../lib/cn.js';
 
-/**
- * A stack of links with a chevron - "Add to your stay", "Also at your villa".
- * Rows separated by hairlines, the last one without.
- *
- * `blurb` is optional and most rows should not have one: this is a list of
- * places to go, and a second line under every row turns it into a menu to read
- * instead of a list to scan. Use it where the label alone genuinely is not
- * enough - a tour name, say, against a service everybody already understands.
- *
- * An item with `external: true` gets target/rel and renders as a plain anchor;
- * everything else goes through `linkAs`, so in-app routing still applies.
- */
 export default function LinkList({ items = [], linkAs: Link = 'a', className }) {
   return (
     <ul className={cn('flex flex-col list-none', className)}>

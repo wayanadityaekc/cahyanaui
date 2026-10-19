@@ -1,12 +1,3 @@
-// Homepage reviews section, Sep 2026 (Wayan: "reviews section need to be as a
-// slider side, not scrolling to bottom because it's too long ... create a fix
-// box per review and it can see details when got clicked, button see all
-// reviews go to the page review"). Pins: uniform card height, the section is
-// a horizontal slider (not a grid that grows with review count), clicking a
-// card opens the full text in a popup, "See all reviews" actually links to
-// /all-reviews.html (was missing `.html`, a straight 404 on this static
-// export), and that page's own cards are click-to-detail too.
-// Run against the built pages: npm run build && npm run serve (port 4000).
 import { chromium } from '/home/user/CUE/node_modules/playwright-core/index.mjs';
 const b = await chromium.launch({ executablePath: '/opt/pw-browsers/chromium_headless_shell-1194/chrome-linux/headless_shell' });
 
@@ -40,33 +31,25 @@ for (const w of [390, 1280]) {
   const n = await cards.count();
   console.log(`${w}: cards rendered = ${n}`);
   ok(n === 8, `${w}: expected 8 review cards, got ${n}`);
-  // uniform height
   const heights = await cards.evaluateAll((els) => els.map((e) => Math.round(e.getBoundingClientRect().height)));
   ok(new Set(heights).size === 1, `${w}: card heights not uniform: ${heights.join(',')}`);
   await page.screenshot({ path: `shots/reviews-slider-${w}.png` });
 
-  // scrollable on desktop / overflow works
   const track = page.locator('#reviews .flex.overflow-x-auto').first();
   const overflowing = await track.evaluate((el) => el.scrollWidth > el.clientWidth);
   ok(overflowing, `${w}: track does not overflow (not a slider)`);
 
-  // click a card -> modal opens with full text
   await cards.nth(2).click();
   await page.waitForTimeout(500);
-  // Several [role="dialog"] instances are always mounted (AuthModal x2, this
-  // one) - toggled via opacity/visibility, not unmounted. Scope to the one
-  // this popup actually is.
   const reviewDialog = page.locator('[role="dialog"][aria-label="Guest review"]');
   const modalText = await reviewDialog.innerText();
   ok(modalText.includes(REVIEWS[2].name), `${w}: modal missing clicked review's name`);
   ok(modalText.length > REVIEWS[2].message.length / 2, `${w}: modal text looks truncated`);
   await page.screenshot({ path: `shots/reviews-modal-${w}.png` });
 
-  // check-all-reviews link fixed
   const href = await page.locator('#reviews a', { hasText: 'See all reviews' }).getAttribute('href');
   ok(href === '/all-reviews.html', `${w}: See all reviews href is "${href}", not /all-reviews.html`);
 
-  // close via escape
   await page.keyboard.press('Escape');
   await page.waitForTimeout(400);
   ok(!(await reviewDialog.isVisible()), `${w}: modal did not close on Escape`);
@@ -75,7 +58,6 @@ for (const w of [390, 1280]) {
   await ctx.close();
 }
 
-// visit /all-reviews.html itself
 {
   const ctx = await b.newContext({ viewport: { width: 1280, height: 1000 } });
   await ctx.route('**/api/**', (route) => {

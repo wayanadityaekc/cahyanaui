@@ -1,4 +1,3 @@
-// Cross-sell slides for the listing promo band; copy and images reused from each program's own page.
 export const PROGRAM_PROMO = [
   {
     id: 'tour',
@@ -22,9 +21,7 @@ export const PROGRAM_PROMO = [
     id: 'charter',
     kicker: 'Charter',
     title: 'Private Car Charter in Bali',
-    // Mirrors the first two sentences of CHARTER.sub; update both together.
     text: 'Your own car and local driver for the day. You choose the route, your driver knows the roads.',
-    // Same photo as the charter page itself.
     img: 'handara-gate.webp',
     href: '/charter.html',
     cta: 'Build charter',

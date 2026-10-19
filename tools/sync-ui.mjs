@@ -1,25 +1,4 @@
 #!/usr/bin/env node
-/**
- * Push the monorepo's villa app + library into the STANDALONE villa repo, which
- * is what actually deploys the site today.
- *
- * WHY THIS EXISTS. The villa site is served from wayanadityaekc/ubud-private-villas
- * and its CI runs `npm ci`. npm cannot resolve a pnpm workspace package that
- * lives in a different repository, so the library is vendored there and
- * referenced as `file:packages/ui`. That is a COPY, and a copy drifts - so
- * copying is mechanical and one-way, never by hand, and never in reverse.
- *
- * This goes away when Hostinger is pointed at the monorepo. That is a change in
- * the hosting panel, not in code.
- *
- *   node tools/sync-ui.mjs [path-to-villa-repo]
- *
- * TWO THINGS DIFFER BETWEEN THE REPOS, and both fail SILENTLY if missed:
- *   1. package.json      workspace:*  ->  file:packages/ui
- *   2. globals.css       the @source path is one level shorter
- * A wrong @source does not error: every class used inside a library component
- * is purged and the component renders unstyled.
- */
 import fs from 'node:fs';
 import path from 'node:path';
 
@@ -37,18 +16,10 @@ const copyDir = (from, to) => {
   fs.cpSync(from, to, { recursive: true });
 };
 
-// Source trees. These are REPLACED - the monorepo owns the code, and a file
-// deleted here has to disappear there too.
 for (const d of ['app', 'components', 'lib', 'content']) {
   copyDir(path.join(APP, d), path.join(DEST, d));
 }
 
-// public/ is MERGED, never replaced, and the difference matters: photographs
-// are the one thing that might exist in the live repo and not in this checkout
-// (they arrive by upload, not by code), and replacing the directory would
-// delete them. So files are copied ON TOP - added and overwritten, never
-// removed. That makes apps/villas/public the place to put a new photo and have
-// it reach the site, without making this script able to lose one.
 const mergeDir = (from, to) => {
   if (!fs.existsSync(from)) return;
   fs.mkdirSync(to, { recursive: true });
@@ -65,18 +36,15 @@ for (const f of ['next.config.js', 'jsconfig.json', 'postcss.config.mjs']) {
   if (fs.existsSync(src)) fs.copyFileSync(src, path.join(DEST, f));
 }
 
-// The library, minus anything installed.
 copyDir(path.join(HERE, 'packages', 'ui'), path.join(DEST, 'packages', 'ui'));
 fs.rmSync(path.join(DEST, 'packages', 'ui', 'node_modules'), { recursive: true, force: true });
 
-// 1. the dependency form
 const pkgPath = path.join(DEST, 'package.json');
 const pkg = JSON.parse(fs.readFileSync(path.join(APP, 'package.json'), 'utf8'));
 pkg.dependencies['@cahyana/ui'] = 'file:packages/ui';
 pkg.dependencies = Object.fromEntries(Object.entries(pkg.dependencies).sort());
 fs.writeFileSync(pkgPath, JSON.stringify(pkg, null, 2) + '\n');
 
-// 2. the @source path
 const cssPath = path.join(DEST, 'app', 'globals.css');
 let css = fs.readFileSync(cssPath, 'utf8');
 const MONO = '@source "../../../packages/ui/src";';

@@ -2,7 +2,6 @@ import { ABOUT } from '@/content/shared/about';
 import RegistrationBlock from '@/components/sections/RegistrationBlock';
 import { infoList } from '@/components/ui/infoClasses';
 
-// About Us section for Our Company: heading and story paragraphs only.
 export default function AboutPage() {
   return (
     <div>

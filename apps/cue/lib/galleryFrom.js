@@ -1,17 +1,14 @@
-// Hero gallery from the page's own photos, deduped by filename; an explicit `gallery` wins; never invent captions.
 function FILE(s) { return String(s || '').replace(/^\/?assets\/images\//, '').replace(/^images\//, '').trim(); }
 
 export function galleryFrom(data) {
   if (!data) return [];
   if (Array.isArray(data.gallery) && data.gallery.length) return data.gallery;
 
-  // Tours keep their sections in `items` (type: 'stop'), attraction pages in `stops`.
   const sections = [
     ...(Array.isArray(data.items) ? data.items.filter((i) => i && i.type === 'stop') : []),
     ...(Array.isArray(data.stops) ? data.stops : []),
   ];
 
-  // Map each file to the alt text and size its stop already has.
   const meta = new Map();
   sections.forEach((s) => {
     const f = FILE(s.img);
@@ -25,7 +22,7 @@ export function galleryFrom(data) {
   });
 
   const order = [
-    FILE(data.heroBg),                                     // the photo the page already leads with
+    FILE(data.heroBg),
     ...(data.heroSlides || []).map((s) => FILE(s.src || s.img || s)),
     ...sections.map((s) => FILE(s.img)),
   ];

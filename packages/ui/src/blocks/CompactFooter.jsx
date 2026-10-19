@@ -1,15 +1,6 @@
 import { cn } from '../lib/cn.js';
 import { FOOT_COMPACT, FOOT_CONTACT_LINK, FOOT_CONTACT_SVG } from './footerClasses.js';
 
-/**
- * CUE's compact footer: one fixed bar for pages that fill the screen (Our Company, My Booking, Settings).
- * The `footerbar` class is load-bearing: the site's body padding and the rail frame height key off it.
- * Under 561px the links collapse to icons.
- *
- *   brand    { label, href }
- *   links    [{ label, href, Icon, external }]
- *   note     short copyright text, hidden on phones
- */
 export default function CompactFooter({ brand, links = [], note = '', surface = 'bg-[#ebe8e2]', linkAs: Link = 'a', className }) {
   return (
     <footer className={cn(FOOT_COMPACT, surface, className)}>

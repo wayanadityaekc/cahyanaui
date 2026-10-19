@@ -1,7 +1,6 @@
 import Link from 'next/link';
 import { BOOKING_TERMS } from '@/content/policies';
 
-// Booking terms shown before commit, read from content/policies.js; hairlines, not bullets, on purpose.
 export default function BookingTerms({ className = '' }) {
   return (
     <div className={`text-label text-muted ${className}`}>

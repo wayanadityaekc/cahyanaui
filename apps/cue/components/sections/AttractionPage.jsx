@@ -21,12 +21,9 @@ import { toursContaining, priceFallbackFor } from '@/lib/tourIndex';
 export default function AttractionPage({ data }) {
   const bookType = data.bookDefault || 'tour';
   const perPerson = bookType === 'experience' || bookType === 'performance';
-  // Tours that stop here (reverse lookup on refId), for the comparison box in the booking card.
   const slug = (data.__page || '').replace('attractions/', '');
   const onTours = toursContaining(slug);
-  // Gallery built from the hero and section photos; a hand-picked `gallery` in content overrides it.
   const gallery = galleryFrom(data);
-  // Last crumb step reads the short name from data.title so crumb and title can't drift.
   const crumb = (data.crumb || []).map((p, i, a) =>
     i === a.length - 1 && p.type === 'text' ? { ...p, text: data.title } : p);
   return (
@@ -54,7 +51,6 @@ export default function AttractionPage({ data }) {
       <div className={data.bookItem ? TOUR_LAYOUT_MAIN : undefined}>
       <DetailTabs
         overview={gallery.length ? (
-          // Gallery hero holds the photos, so the sections are text only.
           <AttractionOverview stops={data.stops} id={data.stopsId} />
         ) : (
           <div className={STOPS} id={data.stopsId}>
@@ -78,7 +74,6 @@ export default function AttractionPage({ data }) {
         bookType={bookType}
         included={data.included}
         excluded={data.excluded}
-        // Reviews are written and read under the catalog key (bookItem), not the display title.
         reviewService={data.bookItem || data.title}
       />
       </div>
@@ -95,12 +90,10 @@ export default function AttractionPage({ data }) {
       )}
       </div>
       <BookCta item={data.bookItem} />
-      {/* Pass the same perPerson flag as the sidebar so the bar's unit matches the form's. */}
       <BookBar item={data.bookItem} priceFallback={priceFallbackFor(data.bookItem)} perPerson={perPerson} />
       <Related href={data.__href} />
       {data.bookItem && <ReviewCtaBand />}
 
-      {/* With the gallery hero the crumb is at the top, so the footer crumb only renders without one. */}
       {data.crumb && !gallery.length && (
         <Breadcrumb items={itemsFromLegacy(data.crumb)} className={CRUMB_FOOT} />
       )}

@@ -3,7 +3,6 @@
 import { useRef, useState } from 'react';
 import { BTN_SM } from '../primitives/btnClasses.js';
 
-// Ported from CUE ProgramPromoSlider. No autoplay (Wayan): slides move only on tap, swipe or dot.
 export default function PromoSlider({ slides = [], label = 'Other Cahyana programs', external = false }) {
   const [cur, setCur] = useState(0);
   const touch = useRef({ x: 0, y: 0 });
@@ -15,7 +14,6 @@ export default function PromoSlider({ slides = [], label = 'Other Cahyana progra
     setCur((n + total) % total);
   }
 
-  // Only the current slide and its two neighbours load a photo, so the band costs 3 images, not 8.
   function near(i) {
     const gap = Math.abs(i - cur);
     return gap <= 1 || gap === total - 1;

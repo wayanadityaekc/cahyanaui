@@ -1,4 +1,3 @@
-// Booking-detail 2-column layout for TourPage/AttractionPage; keep 'tour-layout--book', the check-detail gate needs it.
 export const TOUR_LAYOUT_BOOK =
   'tour-layout--book relative z-[2] mt-0 pt-[1.6rem] px-[max(var(--container-x),calc((100%_-_1280px)_/_2))] pb-12 ' +
   'bg-white rounded-none [box-shadow:none] min-[993px]:flex min-[993px]:items-start min-[993px]:gap-[2.2rem]';

@@ -13,28 +13,6 @@ import {
   FOOT_SOCIAL_ICON_AIRBNB,
 } from './footerClasses.js';
 
-/**
- * The footer, as a shell: one grid row, five columns, one hairline.
- *
- *   brand     node - the wordmark and whatever sits under it (contact lines)
- *   columns   [{ heading, items: [{ href, label, external }] }]
- *   social    { heading, links: [{ name, href }] }
- *   featured  { heading, names: [string] } - text wordmarks above Follow, CUE's order
- *   bottom    node - overrides the default copyright row
- *   surface   the band's background. The villa site runs a LIGHT footer
- *             (#ebe8e2); CUE's is darker. Passed in rather than themed, because
- *             this is the one place the two brands genuinely differ.
- *   gridClass the grid row; pass FOOT_GRID_SIX when a sixth column arrives as `children`
- *   linkAs    the link component (pass next/link's Link); defaults to 'a'
- *
- * THE BRAND IS A TEXT WORDMARK, not the logo image. At footer size the mark
- * stops being legible and the name has to be readable - same call CUE made.
- *
- * A social link with `href: null` renders with aria-disabled instead of a bare
- * href="#". An account that exists but has no URL on file yet should say so to
- * a screen reader rather than silently jumping to the top of the page. Fill the
- * href in and the attribute goes away on its own.
- */
 export default function FooterShell({
   brand,
   columns = [],
@@ -50,8 +28,6 @@ export default function FooterShell({
   return (
     <footer className={cn(FOOT_ROOT, surface, className)}>
       <div className={gridClass}>
-        {/* The brand block spans both columns once the grid drops to two: it is
-            a paragraph of contact lines, not a list of links. */}
         <div className="max-[900px]:col-span-full">{brand}</div>
 
         {columns.map((col) => (

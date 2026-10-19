@@ -5,7 +5,6 @@ import { ChevronDown } from 'lucide-react';
 import { useTripPrefs } from '@/state/TripPrefsProvider';
 import { CURRENCIES } from '@/lib/constants';
 
-// Currency dropdown; variants 'navbar' (ml-auto), 'hero' (field-sized) and 'default'. Active option has no highlight.
 function wrap(v) { return `relative${v === 'navbar' ? ' ml-auto flex-none' : ''}`; }
 const CURBTN_BASE = 'flex items-center gap-[0.45rem] w-full bg-white font-body text-field text-green cursor-pointer';
 function curbtn(v) {
@@ -15,7 +14,6 @@ function curbtn(v) {
 }
 const CURCODE = 'flex-[1_1_auto] text-left';
 const CURCARET = 'w-[14px] h-[14px] text-muted flex-none [transition:transform_var(--dur-fast)_ease] [[aria-expanded=true]_&]:[transform:rotate(180deg)]';
-// List fades in (stays mounted so the transition plays) and is capped + scrollable for 12 currencies.
 function curlist(v, open) {
   return `absolute left-0 right-0 mt-1 mx-0 mb-0 p-1 list-none bg-white [border:1px_solid_var(--line)] z-10 max-h-[15rem] overflow-y-auto overscroll-contain ` +
     `transition-[opacity,transform] duration-[var(--dur)] ease-[var(--ease-out)] motion-reduce:transition-none ` +

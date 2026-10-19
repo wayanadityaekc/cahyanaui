@@ -2,7 +2,6 @@ import PayChips from './PayChips';
 import { BTN, BTN_WA, STACK } from '@/components/ui/modalClasses';
 import { PAY_CHIPS } from './bookingModalClasses';
 
-// Payment logos, error line, Book Now and the WhatsApp fallback (check step when payment is off, and the payment step).
 export default function BookActions({ error, busy, submit, openWhatsApp }) {
   return (
     <>

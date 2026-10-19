@@ -4,7 +4,6 @@ import { AnimatePresence, LazyMotion, domAnimation, m, useReducedMotion } from '
 import { useCurrency } from '@/components/providers/CurrencyProvider';
 import { priceBreakdown } from '@/lib/villas';
 
-// Nights and total for the picked stay, fading in once both dates are set (Wayan: Framer Motion on date selection).
 export default function StaySummary({ villaSlug = '', checkIn = '', checkOut = '' }) {
   const { formatAmount, breakdown: convert } = useCurrency();
   const reduce = useReducedMotion();

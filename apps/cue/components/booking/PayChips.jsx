@@ -1,4 +1,3 @@
-// Card brands shown at the booking step (Visa, Mastercard, JCB, Amex); brand marks stay hand-drawn, not Lucide.
 export default function PayChips({ className = '', logosClass = '', chipClass = '', svgClass = '' }) {
   return (
     <div className={className}>

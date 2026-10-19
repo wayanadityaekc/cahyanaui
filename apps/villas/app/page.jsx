@@ -25,8 +25,6 @@ const WHY_STAY = [
   { title: 'Transparent Pricing', desc: 'No hidden fees. What you see is what you pay.', Icon: ShieldCheck },
 ];
 
-// CEK WAYAN: photos hidden until Wayan supplies real ones; each band shows the dark fallback.
-// Three of the four at-villa services; Live Dinner is left out on purpose: four bands starts to read as a list.
 const SERVICES_HOME = [
   {
     href: '/services/spa',
@@ -55,24 +53,19 @@ export default function HomePage() {
   return (
     <>
       <JsonLd data={siteSchema(VILLA_LIST)} />
-      {/* Hero: the shell (height ladder, scrims, container, text stack) is Hero in @cahyana/ui. */}
       <Hero
         size="page"
         image="/images/cahyana-tibuah.webp"
         alt="Cahyana Tibuah pool at dusk, surrounded by rice fields"
-        /* Attribution goes in the eyebrow, the promise in the H1: the H1 is what guests read first and what Google prints. */
         eyebrow="Ubud Private Villas by Cahyana Ubud Experience"
         title="A private retreat in the heart of Bali"
         lede="Two exclusive villas, designed for comfort, privacy and a true Balinese experience."
-        /* No actions: the hero's one control is the booking form below, and Hero skips the empty row. */
       >
-        {/* Booking form inside the hero: under the copy on a phone, a tall panel on the right from 993px. */}
         <div className="mt-8 min-[993px]:mt-0 min-[993px]:absolute min-[993px]:top-1/2 min-[993px]:-translate-y-1/2 min-[993px]:right-[var(--container-x)] min-[993px]:w-[22rem]">
           <SearchCard layout="panel" />
         </div>
       </Hero>
 
-      {/* id="villas": the /villas page is gone, so every "see both villas" link on the site lands on this band. */}
       <Section id="villas" tone="cream">
         <div className="grid md:grid-cols-[1fr_1fr] gap-8 items-end mb-9">
           <div>
@@ -85,7 +78,6 @@ export default function HomePage() {
             Each villa is thoughtfully designed with a private pool, open living space and a calming view of the tropical gardens. Whether you&apos;re here for a romantic escape or a family getaway, you&apos;ll find your place in Ubud.
           </p>
         </div>
-        {/* Villa, why-stay, villa: on desktop `order` moves the panel; never render it twice or screen readers read it twice. */}
         <div className={GRID_PAIR}>
           <VillaCard villa={VILLA_LIST[0]} className="min-[993px]:order-1" />
 
@@ -107,7 +99,6 @@ export default function HomePage() {
         </div>
 </Section>
 
-      {/* One photo band out to Cahyana Ubud Experience, replacing both old CUE bands; the copy lives in EXPLORE_MORE. */}
       <Hero
         size="band"
         as="h2"
@@ -125,7 +116,6 @@ export default function HomePage() {
       />
 
 
-      {/* Services: photo sides alternate, and copy is lifted from each service page so the homepage never over-promises. */}
       {SERVICES_HOME.map((service, i) => (
         <SplitFeature
           key={service.href}
@@ -140,7 +130,6 @@ export default function HomePage() {
         />
       ))}
 
-      {/* Reviews */}
       <Section>
         <p className={EYEBROW_LINE}>Guest Reviews</p>
         <h2 className="text-h2 font-medium text-gold">What our guests say</h2>
@@ -159,7 +148,6 @@ export default function HomePage() {
 </Section>
 
 
-      {/* Add-ons framed as extras to a reservation; mixed on purpose, and each card says where it goes. */}
       <Section>
         <SectionHeading
           eyebrow="Add to your reservation"
@@ -191,21 +179,18 @@ export default function HomePage() {
       </Section>
 
 
-      {/* G8: CUE charter plans, prices live from cahyana-api; booked on CUE, not in this site's booking. */}
       <Section tone="cream" id="private-driver">
         <div className="max-w-[44rem]">
           <CharterCard />
         </div>
       </Section>
 
-      {/* CTA */}
       <Section tone="dark" className="text-center">
         <h2 className="text-h2 font-medium text-white">Dates in mind?</h2>
         <p className="mt-2 text-small text-white/75">
           Open the booking flow, or message us and we&apos;ll tell you straight if it&apos;s free.
         </p>
         <div className="flex flex-wrap justify-center gap-3 mt-6">
-          {/* onDark: this band is the action colour, so a primary button would vanish against it. */}
           <CheckAvailabilityButton variant="onDark" />
           <Button as={Link} variant="light" href="/services/scooter-rental">Scooter rental</Button>
         </div>

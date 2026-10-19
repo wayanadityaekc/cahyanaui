@@ -1,9 +1,3 @@
-// The payment step prices with the server's live rate (29 Sep 2026).
-//   API: node ../cahyana-api/tools/chat-dev-server.js (4599)
-//   build with NEXT_PUBLIC_API_BASE=http://127.0.0.1:4599/api, serve on 4000.
-// A cart of one Ubud Tour in AUD and in JPY: the deposit row must read the
-// catalog's deposit (never a rate the site keeps), and pay-in-full must be the
-// quote total the server would charge.
 import { chromium } from 'playwright-core';
 
 const API = 'http://127.0.0.1:4599/api';
@@ -20,8 +14,6 @@ for (const [cur, w] of [['AUD', 390], ['JPY', 1280]]) {
     body: JSON.stringify({ currency: cur, lines: [{ service: 'Ubud Tour', guests: 2 }] }),
   })).json();
   const ctx = await b.newContext({ viewport: { width: w, height: 900 } });
-  // Accounts are not what this is about - keep them out of the way.
-  // Checkout sits behind sign-in (BookingGate), so the guest is signed in.
   await ctx.route('**/api/account/**', (r) =>
     r.request().url().includes('/account/session')
       ? r.fulfill({ json: { account: { id: 9, name: 'Test Guest', email: 'guest@example.com' } } })

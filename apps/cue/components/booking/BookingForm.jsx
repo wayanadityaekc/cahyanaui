@@ -18,7 +18,6 @@ const SERVICE_TYPES = [
   { value: 'transfer', label: 'Route Transfer' },
 ];
 
-// Picker categories; 'place' belongs under tour, or destination presets get cleared and Book Now dies.
 const CATEGORY_OF = { tour: ['tour', 'combo', 'place'], experience: ['experience'], performance: ['performance'], transfer: ['transfer'] };
 
 const MODE_INFO = {
@@ -26,7 +25,6 @@ const MODE_INFO = {
   exclusive: { label: 'Exclusive', desc: 'Everything in Standard, plus all entrance tickets prepaid.' },
 };
 
-// Activities/performances have no ticket-less tier: Exclusive is the only option, Standard shows locked.
 const ACTIVITY_MODE_INFO = {
   exclusive: { label: 'Exclusive', desc: 'Entrance ticket and return transport are already included in this price.' },
 };
@@ -50,7 +48,6 @@ export default function BookingForm({ presetItem = '', presetType = '', perPerso
   const [mode, setMode] = useState('standard');
 
   const catalog = pricing && pricing.catalog;
-  // A preset item (detail pages) hides the service pickers; generic use (ui-kit) keeps them.
   const locked = !!presetItem;
 
   const itemOptions = useMemo(() => {
@@ -60,7 +57,6 @@ export default function BookingForm({ presetItem = '', presetType = '', perPerso
     return catalog.items.filter((i) => cats.includes(i.category) && i.active).map((i) => ({ value: i.name, label: i.name }));
   }, [catalog, type]);
 
-  // Only the generic picker clears an item missing from the list; never clear a preset item.
   useEffect(() => {
     if (locked) return;
     if (itemOptions.length && item && !itemOptions.some((o) => o.value === item)) setItem('');
@@ -69,7 +65,6 @@ export default function BookingForm({ presetItem = '', presetType = '', perPerso
   const entry = catalog && item ? catalog.items.find((i) => i.name === item) : null;
   const transferEntry = catalog && item ? catalog.transfers.find((t) => t.route === item) : null;
   const hasExclusive = !!(entry && entry.hasExclusive);
-  // Activities show the toggle locked on Exclusive rather than hiding it, to match tour pages.
   const isActivity = !!(entry && (entry.category === 'experience' || entry.category === 'performance'));
   const showToggle = hasExclusive || isActivity;
   const effectiveMode = isActivity ? 'exclusive' : mode;
@@ -84,10 +79,8 @@ export default function BookingForm({ presetItem = '', presetType = '', perPerso
 
   const surcharge = entry && entry.surcharge && entry.surcharge.display ? entry.surcharge.display : 0;
 
-  // Time-slot category comes from the catalog entry, never from `type` (detail pages preset 'tour' for all).
   const timeCategory = entry ? entry.category : type === 'transfer' ? 'transfer' : null;
 
-  // Price unit: 'per car' for tours; for experiences the figure is already the total for N guests.
   const unit = priceUnit(perPerson, displayGuests);
   const guestWord = displayGuests === 1 ? 'guest' : 'guests';
   const unitLine = perPerson ? unit : `${unit} · ${displayGuests} ${guestWord}`;
@@ -118,7 +111,6 @@ export default function BookingForm({ presetItem = '', presetType = '', perPerso
     });
   }
 
-  // variant 'sidebar' (BookSidebar) vs standalone card; keep the bookcard__cta class, check-detail needs it.
   const isSidebar = variant === 'sidebar';
   const sectionCls = isSidebar
     ? 'relative z-10 p-0 m-0 bg-transparent min-h-0'
@@ -148,7 +140,6 @@ export default function BookingForm({ presetItem = '', presetType = '', perPerso
           <span className="block mt-[0.45rem] text-small text-muted">{unitLine}</span>
         </div>
 
-        {/* Slot under the price; attraction pages put the tour comparison here. */}
         {belowPrice}
 
         {showToggle && (

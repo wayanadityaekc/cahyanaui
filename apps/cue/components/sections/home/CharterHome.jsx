@@ -3,12 +3,10 @@
 import { useEffect, useState } from 'react';
 import CharterSurcharge from '@/components/CharterSurcharge';
 import { BTN_BOOK } from '@/components/ui/btnBookClasses';
-// Same CharterPlans component the charter page renders, not a copy.
 import CharterPlans from '@/components/sections/CharterPlans';
 import { readCharterDraft, saveCharterDraft } from '@/lib/charterDraft';
 import { CHARTER } from '@/content/shared/charter';
 
-// Cards only, no fields (pick is saved for the charter page); paired drops width/gutters from 993px.
 const SECTION = 'max-w-[var(--container)] my-[var(--space-5)] mx-auto px-[var(--container-x)]';
 const SECTION_PAIRED =
   'max-w-[var(--container)] mx-auto px-[var(--container-x)] my-0 ' +
@@ -17,7 +15,6 @@ const SECTION_PAIRED =
 export default function CharterHome({ paired = false }) {
   const [dur, setDur] = useState(CHARTER.durations[0].dur);
 
-  // Read the saved draft in an effect, never in initial state, or the static-export hydration breaks.
   useEffect(() => {
     const d = readCharterDraft();
     if (d && CHARTER.durations.some((x) => x.dur === d.dur)) setDur(d.dur);
@@ -39,7 +36,6 @@ export default function CharterHome({ paired = false }) {
 
         <CharterPlans value={dur} onChange={pick} />
 
-        {/* The page is where the trip gets filled in, so the button says so. */}
         <a className={`${BTN_BOOK} block max-w-[320px] mx-auto text-center`} href="/charter.html">Build charter</a>
 
         <p className="text-center mt-[var(--space-3)] text-small text-muted">

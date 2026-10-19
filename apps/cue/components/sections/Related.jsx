@@ -5,7 +5,6 @@ import Slider from '@/components/ui/Slider';
 import { CAROUSEL_SECTION, CAROUSEL_TITLE } from '@/components/ui/carouselSection';
 import { isHiddenTour } from '@/lib/routes';
 
-// Same type, same zone first, then closest by price; renders nothing when fewer than 4 qualify.
 export default function Related({ href }) {
   const current = RELATED_ITEMS.find((it) => it.href === href);
   if (!current) return null;
@@ -20,7 +19,6 @@ export default function Related({ href }) {
 
   const all = RELATED_ALL[current.type];
 
-  // Carousel section (with its top divider) rendered before the page crumb.
   return (
     <section className={CAROUSEL_SECTION}>
       <h2 className={CAROUSEL_TITLE}>You might also like</h2>

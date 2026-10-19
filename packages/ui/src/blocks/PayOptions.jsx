@@ -2,7 +2,6 @@
 
 import { cn } from '../lib/cn.js';
 
-// CUE's PaymentStep look: rail tiles (icon only, name in aria-label) above plain option rows; amounts come from the site.
 const METHOD = 'flex items-center justify-center h-[2.9rem] rounded-md bg-white cursor-pointer';
 const METHOD_ON = '[border:1.5px_solid_var(--color-gold)] bg-cream';
 const METHOD_OFF = '[border:1.5px_solid_var(--line)] hover:[border-color:var(--color-gold)]';

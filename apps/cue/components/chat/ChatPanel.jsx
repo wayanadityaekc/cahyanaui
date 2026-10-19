@@ -19,7 +19,6 @@ import {
   SIGNIN_BAR, SIGNIN_TEXT, SIGNIN_BTN,
 } from './chatClasses';
 
-// Support chat panel; answers only come from lib/chatAnswers (published facts), shown after a short 400ms pause.
 const THINK_MS = 400;
 
 let seq = 0;
@@ -36,14 +35,11 @@ export default function ChatPanel({ open, onClose }) {
   const bodyRef = useRef(null);
   const inputRef = useRef(null);
 
-  // Sign-in popup for the chat; optional, guests can chat without signing in.
   const [authOpen, setAuthOpen] = useState(false);
-  // Tracks whether we've greeted by name so a mid-conversation sign-in greets only once.
   const greeted = useRef(false);
 
   const [thread, setThread] = useState(null);
   const [sending, setSending] = useState(false);
-  // Email ask after handover, only when useful: 'idle' not asked, 'ask' on screen, 'done' | 'skip' settled.
   const [mail, setMail] = useState('idle');
   const [mailDraft, setMailDraft] = useState('');
   const [mailErr, setMailErr] = useState('');
@@ -51,14 +47,11 @@ export default function ChatPanel({ open, onClose }) {
   const lastSeen = useRef(0);
   const heard = useRef(false);
 
-  // Socket state: `live` switches between socket updates and the polling fallback; never shown to the guest.
   const [live, setLive] = useState(false);
   const [ownerHere, setOwnerHere] = useState(false);
   const [typingUntil, setTypingUntil] = useState(0);
   const sock = useRef(null);
-  // Dedupe messages by database id; the socket and a reconnect catch-up can both deliver the same one.
   const seenIds = useRef(new Set());
-  // Presence kept in a ref so connect() and ask() are not re-memoised (a stale ask() once sent nameless handovers).
   const ownerHereRef = useRef(false);
   const lastTyped = useRef(0);
 
@@ -67,25 +60,21 @@ export default function ChatPanel({ open, onClose }) {
     [pricing],
   );
 
-  // Greet a signed-in guest by first name once per conversation, on open or right after signing in.
   useEffect(() => {
     const name = account && String(account.name || '').trim().split(/\s+/)[0];
     if (!name || greeted.current) return;
     greeted.current = true;
     const line = { id: uid(), from: 'bot', text: CHAT_COPY.hello.replace('{name}', name), chips: SUGGESTIONS };
     setLog((prev) => (
-      // Replace the unread opener when opened signed-in (avoids two greetings); append when signing in mid-chat.
       prev.length === 1 && prev[0].from === 'bot' ? [line] : [...prev, line]
     ));
   }, [account]);
 
-  // Restore an earlier thread in an effect, not during render, so first paint matches the static HTML.
   useEffect(() => {
     const id = readThread();
     if (id) setThread(id);
   }, []);
 
-  // Turns owner messages into log lines from any source; every message advances lastSeen to keep catch-ups small.
   const takeOwner = useCallback((list) => {
     const fresh = [];
     list.forEach((m) => {
@@ -99,7 +88,6 @@ export default function ChatPanel({ open, onClose }) {
     setLog((prev) => [...prev, ...fresh.map((m) => ({ id: uid(), from: 'wayan', text: m.body }))]);
   }, []);
 
-  // Fetch everything since the last seen id; must run on EVERY socket connect, or replies sent while it was down are lost.
   const catchUp = useCallback(async () => {
     try {
       const { gone, messages } = await pollThread(thread, lastSeen.current);
@@ -110,11 +98,9 @@ export default function ChatPanel({ open, onClose }) {
       }
       takeOwner(messages);
     } catch (e) {
-      /* a dropped read is not worth a message on screen; the next one retries */
     }
   }, [thread, takeOwner]);
 
-  // Open the socket only while the panel is open and a thread exists.
   useEffect(() => {
     if (!open || !thread) return undefined;
     const s = openChatSocket(thread, {
@@ -128,7 +114,6 @@ export default function ChatPanel({ open, onClose }) {
     return () => { sock.current = null; s.close(); };
   }, [open, thread, catchUp, takeOwner]);
 
-  // Polling fallback every 5s whenever the socket is down; this is the whole behaviour for guests without WebSockets.
   useEffect(() => {
     if (!open || !thread || live) return undefined;
     catchUp();
@@ -136,7 +121,6 @@ export default function ChatPanel({ open, onClose }) {
     return () => clearInterval(t);
   }, [open, thread, live, catchUp]);
 
-  // Catch up when the tab becomes visible again; a slept phone's socket looks open but isn't.
   useEffect(() => {
     if (!open || !thread) return undefined;
     function onShow() { if (document.visibilityState === 'visible') catchUp(); }
@@ -144,7 +128,6 @@ export default function ChatPanel({ open, onClose }) {
     return () => document.removeEventListener('visibilitychange', onShow);
   }, [open, thread, catchUp]);
 
-  // Typing indicator expires on its own so a stale 'typing' never stays on screen.
   const wayanTyping = typingUntil > Date.now();
   useEffect(() => {
     const remainingMs = typingUntil - Date.now();
@@ -153,7 +136,6 @@ export default function ChatPanel({ open, onClose }) {
     return () => clearTimeout(t);
   }, [typingUntil]);
 
-  // New message, or the dots appearing: keep the newest line in view.
   useEffect(() => {
     const body = bodyRef.current;
     if (body) body.scrollTop = body.scrollHeight;
@@ -167,14 +149,12 @@ export default function ChatPanel({ open, onClose }) {
     return () => { clearTimeout(t); document.removeEventListener('keydown', onKey); };
   }, [open, onClose, authOpen]);
 
-  // Hand the question to Wayan straight away, without asking for details first.
   const connect = useCallback(async (question) => {
     if (sending) return;
     setSending(true);
     try {
       const id = await startThread({
         question,
-        // Send whatever we know about the guest so the thread opens with a name and email.
         name: (account && account.name) || '',
         email: (account && account.email) || '',
         page: typeof window !== 'undefined' ? window.location.pathname : '',
@@ -182,7 +162,6 @@ export default function ChatPanel({ open, onClose }) {
       setThread(id);
       setLog((prev) => [...prev, {
         id: uid(), from: 'bot',
-        // Owner presence beats the office-hours guess when choosing the status line.
         text: `${CHAT_COPY.connected} ${
           ownerHereRef.current ? CHAT_COPY.hoursHere
             : wayanIsAround() ? CHAT_COPY.hoursOpen : CHAT_COPY.hoursClosed
@@ -200,7 +179,6 @@ export default function ChatPanel({ open, onClose }) {
     setDraft('');
     setLog((prev) => [...prev, { id: uid(), from: 'me', text: text }]);
 
-    // Handed over already: this goes to Wayan, not to the matcher.
     if (thread) {
       sendToThread(thread, text).catch(() => {
         setLog((prev) => [...prev, { id: uid(), from: 'bot', text: 'That did not send. Try again in a moment.' }]);
@@ -213,17 +191,14 @@ export default function ChatPanel({ open, onClose }) {
     setTimeout(() => {
       const res = answerFor(text, ctx);
       const msg = { id: uid(), from: 'bot', text: res.text, rows: res.rows, link: res.link };
-      // Only two outcomes: answered here or handed to Wayan; never a dead end or a polite decline.
       if (res.kind === 'handoff') { msg.text = CHAT_COPY.connecting; connect(text); }
       setLog((prev) => [...prev, msg]);
       setThinking(false);
     }, THINK_MS);
   }, [ctx, thinking, sending, thread, connect]);
 
-  // Ask for an email right away outside Wayan's hours; inside them only after a wait with no reply.
   useEffect(() => {
     if (!thread || mail !== 'idle') return undefined;
-    // We already have an address - nothing to ask for.
     if (account && account.email) { setMail('skip'); return undefined; }
     if (!wayanIsAround()) { setMail('ask'); return undefined; }
     const t = setTimeout(() => setQuiet(true), CHAT_COPY.quietMs);
@@ -234,7 +209,6 @@ export default function ChatPanel({ open, onClose }) {
     if (quiet && mail === 'idle' && !heard.current) setMail('ask');
   }, [quiet, mail]);
 
-  // Send a typing frame at most every 2s, enough to keep the other side's indicator alive.
   function onDraft(v) {
     setDraft(v);
     if (!thread || !sock.current) return;
@@ -258,7 +232,6 @@ export default function ChatPanel({ open, onClose }) {
     }
   }
 
-  // data-live marks socket vs polling for tests; not shown or styled, both look identical to the guest.
   return (
     <>
       <AuthModal open={authOpen} onClose={() => setAuthOpen(false)} />
@@ -281,7 +254,6 @@ export default function ChatPanel({ open, onClose }) {
         </div>
 
         <div className={BODY} ref={bodyRef}>
-          {/* Optional sign-in offer for guests; chatting works without it and it disappears once signed in. */}
           {hydrated && !account && (
             <p className={SIGNIN_BAR}>
               <span className={SIGNIN_TEXT}>{CHAT_COPY.signedOut}</span>
@@ -373,7 +345,6 @@ export default function ChatPanel({ open, onClose }) {
   );
 }
 
-// One bot reply: the sentence plus any price rows, page link, handoff or suggested questions.
 function BotReply({ m, onAsk }) {
   return (
     <>

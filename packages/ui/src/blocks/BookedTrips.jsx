@@ -22,20 +22,6 @@ const COPY = {
   emptyPastSub: 'Trips you have already taken will appear here.',
 };
 
-/**
- * CUE's Booked / Past tab body. Presentational: the site passes the trips and
- * the helpers that know its money, dates and photos.
- *
- *   trips       the array for this tab (null while loading)
- *   signedIn    false shows `signIn` instead of the list
- *   signIn      node for the logged-out state
- *   money       (usd, idr) => string, the stored charged amount
- *   range       (start, end) => string
- *   lineDate    (date) => string, optional, for a detail line
- *   imageFor    (trip) => url | null, the card photo
- *   cancelHref  (trip) => url, the "contact us" link on upcoming cards
- *   copy        overrides for any string in COPY
- */
 export default function BookedTrips({
   trips = null,
   past = false,

@@ -12,13 +12,12 @@ import { CART_TOAST } from '@/components/ui/cartToastClasses';
 import LiveRegion from '@/components/ui/LiveRegion';
 import useBodyLock from '@/components/ui/useBodyLock';
 
-// Save trip = pick date, add to cart, stay; Book Now = same then go to My Trips. The date is asked first, never undated.
 export default function BookCta({ item, perPerson = false }) {
   const { displayGuests } = useTripPrefs();
   const { state, save } = useItinerary();
   const pricing = usePricing();
 
-  const [ask, setAsk] = useState(null); // 'book' | 'add' | null
+  const [ask, setAsk] = useState(null);
   const [toast, setToast] = useState('');
   const [confirm, setConfirm] = useState(null);
 
@@ -49,7 +48,6 @@ export default function BookCta({ item, perPerson = false }) {
     return () => clearTimeout(t);
   }, [toast]);
 
-  // Real category from the pricing catalog for start-time rules (the page type is not reliable).
   function categoryOf(name) {
     const c = pricing && pricing.catalog && pricing.catalog.items.find((i) => i.name === name);
     return c ? c.category : null;
@@ -57,7 +55,6 @@ export default function BookCta({ item, perPerson = false }) {
 
   function pick(date, time) {
     const goto = ask === 'book';
-    // Same guard the old cartAddChecked used: two full-day programmes on one date.
     const probe = { ...state, days: [...(state.days || []), { items: [item], itemModes: ['standard'], date }] };
     if (isFullDay(item) && clashDates(probe, isFullDay).length > 0) {
       setConfirm({ date, goto, time });

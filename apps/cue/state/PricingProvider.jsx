@@ -6,7 +6,6 @@ import { useTripPrefs } from './TripPrefsProvider';
 
 const PricingContext = createContext(null);
 
-// Normalize the catalog so missing transfers/charters become [] instead of crashing consumers; null if no items.
 function normalizeCatalog(c) {
   if (!c || !Array.isArray(c.items)) return null;
   return {
@@ -25,7 +24,6 @@ export function PricingProvider({ children, initialCatalog = null }) {
     if (!hydrated) return;
     let cancelled = false;
     const query = new URLSearchParams({ currency, guests: String(displayGuests), stay: stay || '' });
-    // load the live catalog for this currency / group / pickup
     async function load() {
       try {
         const r = await fetch(`${API_BASE}/pricing/catalog?${query}`);
@@ -40,7 +38,6 @@ export function PricingProvider({ children, initialCatalog = null }) {
     };
   }, [currency, displayGuests, stay, hydrated]);
 
-  // Look up a catalog item, or a transfer route normalized to the item shape so <Price> works for both.
   function lookup(name) {
     if (!catalog) return null;
     const item = catalog.items.find((i) => i.name === name);

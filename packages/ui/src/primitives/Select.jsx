@@ -54,8 +54,6 @@ export default function Select({
 
   const selected = options.find((o) => String(o.value) === String(value));
 
-  // Panel = mode popup (default; semua pemakaian Select popup). Kalau nanti butuh
-  // popup=false (dropdown nempel field / bottom-sheet), mode itu perlu ditambah lagi.
   const panel = (
     <div className={panelPopup(open)} data-portal="select" data-open={open ? '' : undefined}>
       <div className={PANEL_HEAD}>
@@ -121,10 +119,6 @@ export default function Select({
         <Chevron />
       </button>
 
-      {/* Panel is portal-mounted as soon as it's a portal context, not just while
-          open - otherwise it renders straight into its "open" state on first paint
-          (no prior "closed" frame for the CSS transition to animate from), which is
-          what made it pop in instantly instead of transitioning in smoothly. */}
       {mounted && asPortal && createPortal(panel, document.body)}
       {mounted && asPortal && <Overlay open={open} elevated={popup} onClose={() => setOpen(false)} />}
       {(!asPortal || !mounted) && panel}

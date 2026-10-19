@@ -36,14 +36,12 @@ function EmptyState() {
       </p>
       <div className="flex flex-wrap justify-center gap-3 mt-6">
         <Button as={Link} href="/#villas">See villas</Button>
-        {/* Tours belong to the sister site, so this button leaves the site. */}
         <Button as="a" variant="ghost" href={CUE_LINK} target="_blank" rel="noopener">Bali tours</Button>
       </div>
     </div>
   );
 }
 
-// My Booking: the stay (paid in full), CUE extras from the price list (deposit now), villa services paid at the villa.
 export default function MyBookingCart() {
   const { cart, ready, clearStay, toggleService, addExtra, removeExtra, updateExtra, clear } = useCart();
   const { currency, formatAmount, breakdown: convert } = useCurrency();
@@ -52,14 +50,12 @@ export default function MyBookingCart() {
   const [checkoutOpen, setCheckoutOpen] = useState(false);
   const [waitingRef, setWaitingRef] = useState('');
 
-  // Back from DOKU (?ref=): climb out of its iframe if we landed inside it, then wait for the server to say paid.
   useEffect(() => {
     const ref = new URLSearchParams(window.location.search).get('ref');
     if (!ref) return;
     try {
       if (window.top !== window.self) { window.top.location.replace(window.location.href); return; }
     } catch (e) {
-      // A browser that refuses the climb keeps the page where it is.
     }
     setWaitingRef(ref);
   }, []);
@@ -69,7 +65,6 @@ export default function MyBookingCart() {
     window.history.replaceState({}, '', window.location.pathname);
   }
 
-  // Draw nothing until the stored booking is read, or 'nothing here yet' flashes at guests who have one.
   if (!ready) return <div className="min-h-[40vh]" aria-busy="true" />;
 
   const stay = cart.stay;
@@ -102,7 +97,6 @@ export default function MyBookingCart() {
             {stay && villa && (
               <div className={`${CARD} p-5`}>
                 <div className="flex items-start gap-4">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img src={villa.cardImg} alt="" width={72} height={72} className="w-[72px] h-[72px] object-cover shrink-0" />
                   <div className="flex-1 min-w-0">
                     <h2 className={ROW_H}>{villa.name}</h2>

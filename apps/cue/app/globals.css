@@ -1,27 +1,6 @@
-/* Tailwind WITHOUT preflight. style.css already ships its own reset
-   (* { margin:0; padding:0; box-sizing:border-box }) and preflight would
-   change rendering under it - block images, unstyled headings, zeroed
-   borders. style.css stays the only reset until it is fully retired.
-
-   Utilities imported UNLAYERED (Fase 1 migrasi Tailwind): style.css reset
-   `* { margin:0; padding:0 }` itu UNLAYERED, dan rule unlayered SELALU menang
-   atas rule di @layer apa pun - jadi utilities di layer(utilities) kalah, mis.
-   `px-6` ke-nol-in reset. Dengan unlayered, utilities menang lewat SPECIFICITY:
-   `.px-6` (0,1,0) > `*` (0,0,0). Komponen legacy pakai class BEM (.btn--primary
-   dst) yang gak tabrakan nama sama utility, jadi aman. Theme tetap di layer(theme)
-   (cuma variabel, gak kena cascade). */
 @layer theme, base, components, utilities;
 @import "tailwindcss/theme.css" layer(theme);
 @import "tailwindcss/utilities.css";
-
-/* app mode = halaman ini dibuka dari ikon home screen, bukan dari tab browser.
-   DUA selector, sengaja, karena satu gak nutup semua device:
-     - @media (display-mode: standalone) = Chrome/Android dan Safari iOS 16.4+.
-     - html[data-standalone] = iPhone yang lebih tua, yang cuma punya
-       navigator.standalone dan gak pernah match media query di atas. Atribut
-       itu ditulis PwaRegister pas mount.
-   Ditulis sekali di sini, bukan dua kali di tiap komponen, biar device yang
-   ketinggalan gak bisa ketinggalan di satu tempat doang. */
 @custom-variant standalone {
   @media (display-mode: standalone) { @slot; }
   html[data-standalone] & { @slot; }
@@ -60,42 +39,6 @@
   --radius-lg: 16px;
   --radius-xl: 22px;
   --radius-pill: 999px;
-
-  /* NO ELEVATION SHADOWS, WITH EXACTLY ONE EXCEPTION: --shadow-card (27 Sep 2026).
-     Earlier that day every shadow came out (Wayan: "hilangin shadow di semua web
-     gaada lagi shadow di bawah navbar, di bawah card") and --shadow-sm/md/lg/xl were
-     DELETED, not set to none - a token set to none leaves dozens of shadow-md classes
-     reading like they do something. 53 usages went in that commit.
-
-     Then the listing card turned out to have had no OTHER boundary. Measured: #fff
-     card on a #fff section on a #fff body, border 0px none - so it stopped being
-     visible as a card at all, and its 16px radius had nothing to round. Asked whether
-     he wanted a hairline border or a shadow back, Wayan picked the shadow: "pakai
-     shadow aja dah bro, tapi setipis mungkin ya". So this one token exists and no
-     other does.
-
-     The value is MEASURED, not taste - darkest pixel just below the card edge against
-     the page white, at 1280: none = 0 (literally invisible), .06 = 10, .09 = 15,
-     .12 = 18. .09 is the thinnest that still reads as a card. Want it thinner again:
-     change this one number, it is the only definition.
-
-     Used by exactly three card families, so listing / homepage / guide cards cannot
-     drift apart: CARD in ListingRow, CARD_FRAME in cardClasses, FRAME in HomepageCard.
-     ReviewCard is deliberately NOT one of them - it already carries border-line and
-     reads as a card without help; giving it both would be the only doubled edge on
-     the site.
-
-     Everything else still drawn with box-shadow, because none of it is elevation:
-     --focus-ring below (keyboard focus - accessibility, not decoration), the
-     invalid-field ring in formClasses.js, the charter row inset 1px (a border), three
-     flag hairlines (0 offset / 0 blur / 1px spread), and the hero slider dot halo
-     (0 0 2px, keeps a white dot readable on a bright photo).
-
-     Guarded by verify-noshadow.mjs: no computed box-shadow anywhere may carry a real
-     offset or blur EXCEPT this one, AND the card shadow must still be THERE. That
-     second half matters - a sweep quietly deleting it is exactly how the cards went
-     invisible the first time, with every gate green. Re-adding any other shadow is a
-     decision, not a stray class. */
   --shadow-card: 0 1px 2px rgba(34, 32, 28, 0.09);
   --container-wide: 1200px;
   --container-mid: 1080px;
@@ -138,7 +81,7 @@
   --container-x: var(--space-3);
 
   --field-h: 2.1rem;
-  --btn-h: 2.1rem; /* tinggi SEMUA tombol aksi - mirror style.css */
+  --btn-h: 2.1rem;
   --icon-sm: 16px;
   --icon-md: 20px;
   --icon-lg: 24px;
@@ -150,12 +93,6 @@
   --focus-ring: 0 0 0 3px rgba(34, 32, 28, 0.18);
   --gold-edge: linear-gradient(150deg, var(--color-gold), rgba(34, 32, 28, 0.25));
 }
-
-/* HP = gutter 16px (Sep 2026, Wayan: "samain 16px semua biar rapi"). Slider full-bleed
-   nge-inset kartu pertamanya 1rem, jadi kalau container-nya tetep 24px judul section
-   dan kartu pertama gak lurus - ini yang bikin kerasa berantakan. Breakpoint-nya 992px
-   BIAR SAMA persis sama band-nya BLEED_MOBILE; kalau dipasang di 768 nanti di 769-992
-   mismatch-nya balik lagi. Desktop tetep 1.5rem. */
 @media (max-width: 992px) {
   :root { --container-x: 1rem; }
 }

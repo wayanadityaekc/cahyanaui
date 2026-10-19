@@ -8,7 +8,6 @@ const ItineraryContext = createContext(null);
 
 const EMPTY = { days: [], transfers: [], charters: [] };
 
-// Map renamed products in old saved trips to their current name; the API prices by name.
 function currentName(name) {
   return LEGACY_ITEM_NAMES[name] || name;
 }

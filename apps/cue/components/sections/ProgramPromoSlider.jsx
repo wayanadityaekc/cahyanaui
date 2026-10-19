@@ -6,7 +6,6 @@ import { PROGRAM_PROMO } from '@/content/shared/programPromo';
 
 const AUTO_MS = 3000;
 
-// Auto-sliding promo band for listing pages; stacked-slide crossfade, and any manual interaction stops autoplay for good.
 export default function ProgramPromoSlider() {
   const slides = PROGRAM_PROMO;
   const [cur, setCur] = useState(0);
@@ -28,7 +27,6 @@ export default function ProgramPromoSlider() {
     setCur((n + total) % total);
   }
 
-  // Arrows appear on desktop hover only; phones navigate by swipe and dots.
   const ARROW =
     'absolute top-1/2 -translate-y-1/2 z-[2] w-9 h-9 flex items-center justify-center border-none rounded-[50%] bg-[rgba(0,0,0,0.32)] text-white text-[1.4rem] leading-none cursor-pointer opacity-0 transition-[opacity,scale] duration-200 ease-[ease] group-hover:opacity-100 hover:bg-[rgba(0,0,0,0.52)] max-[768px]:hidden';
 

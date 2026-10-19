@@ -1,6 +1,3 @@
-// tools/tw/diffx.mjs — diff for snapx.mjs snapshots (element main + ::before + ::after).
-// Prints "IDENTICAL" (exit 0) or per-element/pseudo property diffs (exit 1).
-// Usage: node tools/tw/diffx.mjs <before.json> <after.json>
 import fs from 'node:fs';
 const [, , bF, aF] = process.argv;
 if (!bF || !aF) { console.error('usage: node tools/tw/diffx.mjs <before.json> <after.json>'); process.exit(2); }

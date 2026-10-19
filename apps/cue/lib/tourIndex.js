@@ -2,7 +2,6 @@ import { TOUR_CONTENT } from '@/content/tours';
 import { LISTINGS } from '@/content/shared/listings';
 import { HIDDEN_TOURS, tourPath } from '@/lib/routes';
 
-// Which live tours stop at each attraction (from refIds); skips parked tours and multi-day packages. Server-only.
 const parked = new Set(HIDDEN_TOURS);
 function isPackage({ items }) { return (items || []).some((i) => i.type === 'sub'); }
 
@@ -19,7 +18,6 @@ export function toursForAttraction(slug) {
   return INDEX[slug] || [];
 }
 
-// 'Included in |A and B|' label; ExperienceCard splits on the pipes to bold the names. Undefined when none.
 export function inclLabel(slug) {
   const names = toursForAttraction(slug).map((t) => t.name);
   if (!names.length) return undefined;
@@ -27,7 +25,6 @@ export function inclLabel(slug) {
   return `Included in |${list}|`;
 }
 
-// Fills blank fields on attraction cards from their pages (stops, time, driver); server-only, prices stay on cards.
 export function withAttractionCards(listing, attractions = {}) {
   function walk(node) {
     if (Array.isArray(node)) return node.map(walk);
@@ -40,14 +37,11 @@ export function withAttractionCards(listing, attractions = {}) {
       if (label) next.inclText = label;
       else delete next.inclText;
     }
-    // Key off the href, not `variant`, since not every attraction card carries a variant.
     if (m) {
       const place = attractions[m[1]];
       if (place) {
-        // Destination cards: time takes the meta slot and the area moves to its own line; experiences keep their meta.
         if (next.metaIcon === 'pin' || !next.meta) {
           if (next.metaIcon === 'pin' && next.meta && !next.area) next.area = next.meta;
-          // Destinations label it 'Time here', experiences 'Duration'; match both or a card loses its time.
           const timeHere = ((place.hooks || []).find((h) => /time here|duration/i.test(h.label))
             || (place.facts || []).find((f) => /time here|duration/i.test(f.label))
             || {}).value;
@@ -66,7 +60,6 @@ export function withAttractionCards(listing, attractions = {}) {
   return walk(listing);
 }
 
-// Tours containing each attraction (packages included), priced from the listing card, not the stale `facts` Price row.
 const TOUR_CARDS = {};
 (function collect(node) {
   if (Array.isArray(node)) return node.forEach(collect);
@@ -75,7 +68,6 @@ const TOUR_CARDS = {};
   Object.values(node).forEach(collect);
 })(LISTINGS.tour);
 
-// Card fallback prices by item name across all listings; the book bar reads these before the catalog arrives.
 const CARD_PRICE = {};
 (function collect(node) {
   if (Array.isArray(node)) return node.forEach(collect);
@@ -109,12 +101,10 @@ Object.entries(TOUR_CONTENT).forEach(([slug, t]) => {
   });
 });
 
-// Day tours sort before multi-day packages.
 export function toursContaining(refId) {
   return (CONTAINS[refId] || []).slice().sort((a, b) => Number(a.isPackage) - Number(b.isPackage));
 }
 
-// A tour's stops resolved to attraction pages for the card grid; photo and name come from the attraction.
 export function tourDestinations(tourSlug, attractions) {
   const t = TOUR_CONTENT[tourSlug];
   if (!t) return [];
@@ -129,7 +119,6 @@ export function tourDestinations(tourSlug, attractions) {
       name: a.title,
       img: it.img || a.heroBg,
       alt: it.alt || a.title,
-      // Card meta = the attraction's own Area, same as on the Destinations listing.
       meta: ((a.hooks || []).find((h) => h.label === 'Area') || (a.facts || []).find((f) => f.label === 'Area') || {}).value || '',
     });
   });

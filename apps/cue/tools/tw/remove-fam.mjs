@@ -1,28 +1,3 @@
-// tools/tw/remove-fam.mjs — Tailwind migration helper (epic #321).
-// Removes CSS rules for a "dead" class family from a stylesheet, comment/string-safe.
-// A style rule is dropped when EVERY selector in its list references a class matching
-// <deadRegex> (unless it also matches <keepRegex>). Grouped rules keep their live
-// selectors. @media/@supports are recursed; emptied media blocks are dropped.
-//
-// Usage:
-//   node tools/tw/remove-fam.mjs <file.css> "<deadRegex>" ["<keepRegex>"]
-//
-// REGEX GOTCHA: use a negative-lookahead boundary `(?![a-z0-9])`, NOT `\b`.
-// `\b` does NOT sit between `q` and `_`, so `\.faq\b` misses `.faq__container`.
-// `\.faq(?![a-z0-9])` matches `.faq`, `.faq__x`, `.faq-x` but not a different `.faqx`.
-//
-// Example (drop the whole .booking/.book-bar/.summary family; grid engine + tokens are
-// left alone automatically because they don't match the regex):
-//   node tools/tw/remove-fam.mjs style.css "\\.(booking|book-bar|booksidebar|bookcard|summary)(?![a-z0-9])"
-//
-// keepRegex protects a selector you must NOT drop yet — e.g. a grouped rule that also
-// styles content HTML (`.faq__a p` alongside `.subhero__text`). If your component
-// already restyles that part via `[&_p]:` utilities, you don't need keepRegex.
-//   node tools/tw/remove-fam.mjs style.css "\\.faq(?![a-z0-9])" "\\.faq__a"
-//
-// ALWAYS: verify computed-style diff = 0 (tools/tw/snap.mjs + diff.mjs) BEFORE running
-// this, and re-verify + check `{}` brace balance AFTER. Idempotent — safe to re-run
-// after a rebase if a sibling PR already removed part of the family.
 import fs from 'node:fs';
 
 const [, , file, deadSrc, keepSrc] = process.argv;
@@ -64,10 +39,6 @@ function processBlock(s) {
     const prelude = s.slice(i, brace);
     const close = matchClose(s, brace);
     const body = s.slice(brace + 1, close);
-    // Strip leading comment(s) before testing for @-rules: a comment glued to the
-    // prelude (e.g. `/* ... */\n@media (...)`) would otherwise hide the @media/@supports
-    // branch, so dead selectors nested inside the block never get recursed + dropped.
-    // The original `prelude` (comment included) is still what we re-emit below.
     const t = prelude.replace(/^\s*(?:\/\*[\s\S]*?\*\/\s*)*/, '').trim();
     if (/^@media|^@supports/.test(t)) {
       const inner = processBlock(body);
@@ -78,7 +49,7 @@ function processBlock(s) {
       const clean = prelude.replace(/\/\*[\s\S]*?\*\//g, '');
       const sels = clean.split(',').map((x) => x.replace(/\n/g, ' ').trim()).filter(Boolean);
       const keep = sels.filter((sx) => !selectorIsDead(sx));
-      if (keep.length === 0) { /* whole rule dead -> drop */ }
+      if (keep.length === 0) {   }
       else if (keep.length === sels.length) out += `${prelude}{${body}}`;
       else {
         const lead = (prelude.match(/^(\s*(?:\/\*[\s\S]*?\*\/\s*)*)/) || [''])[0];

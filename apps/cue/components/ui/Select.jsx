@@ -54,7 +54,6 @@ export default function Select({
 
   const selected = options.find((o) => String(o.value) === String(value));
 
-  // Panel is always popup mode; a dropdown/bottom-sheet mode (popup=false) would need to be added back.
   const panel = (
     <div className={panelPopup(open)} data-portal="select" data-open={open ? '' : undefined}>
       <div className={PANEL_HEAD}>
@@ -120,7 +119,6 @@ export default function Select({
         <Chevron />
       </button>
 
-      {/* Keep the portal panel mounted while closed so the open transition has a closed frame to animate from. */}
       {mounted && asPortal && createPortal(panel, document.body)}
       {mounted && asPortal && <Overlay open={open} elevated={popup} onClose={() => setOpen(false)} />}
       {(!asPortal || !mounted) && panel}

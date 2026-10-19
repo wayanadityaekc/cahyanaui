@@ -7,13 +7,11 @@ const PLACEHOLDER_GRADIENT = 'linear-gradient(135deg, rgba(31, 61, 43, 0.92), rg
 function ClockIcon() { return <Clock strokeWidth={1.7} />; }
 function PinIcon() { return <MapPin strokeWidth={1.7} />; }
 function UserIcon() { return <UserRound strokeWidth={1.7} />; }
-// Badge icons keep fill so they stay solid, not outline.
 function LeafIcon() { return <Leaf fill="currentColor" aria-hidden="true" />; }
 function MaskIcon() { return <VenetianMask fill="currentColor" aria-hidden="true" />; }
 function MountainIcon() { return <Mountain fill="currentColor" aria-hidden="true" />; }
 function TempleIcon() { return <Landmark fill="currentColor" aria-hidden="true" />; }
 
-// Category -> badge tone + icon; labels are the real category, no invented tags.
 const CATS = {
   Culture: { tone: 'gold', Icon: MaskIcon },
   Temple: { tone: 'gold', Icon: TempleIcon },
@@ -21,7 +19,6 @@ const CATS = {
   Adventure: { tone: 'green', Icon: MountainIcon },
 };
 
-// Glass-overlay card, fully self-styled; the hcard class is only a grid/slider layout hook.
 const FRAME =
   "hcard relative block overflow-hidden text-white no-underline bg-white rounded-xl aspect-[4/5] shadow-card " +
   "after:content-[''] after:absolute after:inset-0 after:z-[1] " +
@@ -41,7 +38,6 @@ const ACCENT = 'block w-[38px] h-[3px] rounded-[2px] mb-3';
 const BAR =
   'flex items-center justify-between gap-2 px-[11px] py-2 rounded-md bg-[rgba(12,14,10,0.42)] ' +
   'border border-[rgba(255,255,255,0.2)]';
-// Duration stays fixed-width; 'Private Tour' shrinks with ellipsis so the meta row never overflows the price.
 const META_ITEM = 'flex-[0_0_auto]';
 const META_TRUNC = 'min-w-0 truncate';
 const META =

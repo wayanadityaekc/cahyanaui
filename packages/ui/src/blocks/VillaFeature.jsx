@@ -1,14 +1,5 @@
 import { cn } from '../lib/cn.js';
 
-/**
- * One villa as a section of its own: a large photo and two smaller ones in a
- * grid, with the name, facts, price and action in a bar underneath.
- *
- *   photos    [{ src, alt }]  first is the large one, then two small ones
- *   mirrored  put the large photo on the right (the second villa)
- *   facts     [{ icon, label }]
- *   action    rendered node (the app passes its own link or button)
- */
 export default function VillaFeature({ id, eyebrow = '', name, text = '', photos = [], facts = [], price = '', priceNote = '', action = null, mirrored = false, className }) {
   const [main, ...rest] = photos;
   const tile = 'relative overflow-hidden bg-cream';
@@ -18,14 +9,12 @@ export default function VillaFeature({ id, eyebrow = '', name, text = '', photos
       <div className={cn('grid gap-2 min-[993px]:grid-cols-[2fr_1fr] min-[993px]:grid-rows-2 min-[993px]:h-[34rem]', mirrored && 'min-[993px]:grid-cols-[1fr_2fr]')}>
         {main ? (
           <div className={cn(tile, 'aspect-[4/3] min-[993px]:aspect-auto min-[993px]:row-span-2', mirrored && 'min-[993px]:col-start-2 min-[993px]:row-start-1')}>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={main.src} alt={main.alt} loading="lazy" className={img} />
           </div>
         ) : null}
         <div className="grid grid-cols-2 gap-2 min-[993px]:contents">
           {rest.slice(0, 2).map((photo, index) => (
             <div key={`${photo.src}-${index}`} className={cn(tile, 'aspect-[4/3] min-[993px]:aspect-auto', mirrored && 'min-[993px]:col-start-1', mirrored && index === 0 && 'min-[993px]:row-start-1', mirrored && index === 1 && 'min-[993px]:row-start-2')}>
-              {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={photo.src} alt={photo.alt} loading="lazy" className={img} />
             </div>
           ))}

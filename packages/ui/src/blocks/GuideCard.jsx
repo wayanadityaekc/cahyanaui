@@ -1,6 +1,5 @@
 import { cn } from '../lib/cn.js';
 
-// Ported 1:1 from CUE's GuideCard: square photo, title over a bottom gradient, tag below (or overlaid on the photo).
 export default function GuideCard({
   href,
   img,
@@ -26,7 +25,6 @@ export default function GuideCard({
     >
       <div className={cn("relative aspect-square overflow-hidden rounded-base bg-green after:content-[''] after:absolute after:inset-0", scrim)}>
         {img ? (
-          // eslint-disable-next-line @next/next/no-img-element
           <img className="absolute inset-0 w-full h-full object-cover object-center" src={img} alt={alt || title} width={w} height={hgt} loading="lazy" />
         ) : null}
         {overlayTag ? (

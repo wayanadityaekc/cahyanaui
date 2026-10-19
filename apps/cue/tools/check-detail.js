@@ -1,7 +1,4 @@
 #!/usr/bin/env node
-// The 71 bookable detail pages deliberately differ from the originals
-// (Wayan, 3 Sep 2026), so the class diff cannot police them. This checks the
-// shape they are meant to have instead, so a regression still fails the build.
 const fs = require('fs');
 const path = require('path');
 const ROOT = path.join(__dirname, '..');

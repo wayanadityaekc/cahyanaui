@@ -5,7 +5,6 @@ import TimeChoice from './TimeChoice';
 import DateField from './DateField';
 import { allowedSlots, defaultSlot } from '@/content/shared/timeSlots';
 
-// Demo for the noindexed /ui-kit page only: TimeChoice against real catalog items; unused in the live flow.
 const ITEMS = [
   ['performance', 'Kecak Dance', 'satu jam saja'],
   ['experience', 'Mount Batur Trekking', 'dua jam'],
@@ -19,7 +18,6 @@ export default function TimeChoiceKit() {
   const [vals, setVals] = useState(() =>
     Object.fromEntries(ITEMS.map(([c, n]) => [n, defaultSlot(c, n)]))
   );
-  // the merged control: one panel holding the date AND the start time
   const [d, setD] = useState('');
   const [t, setT] = useState(defaultSlot('tour', 'Ubud Tour'));
   return (

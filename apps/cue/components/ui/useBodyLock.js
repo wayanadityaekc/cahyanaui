@@ -2,7 +2,6 @@
 
 import { useEffect } from 'react';
 
-// Scroll lock while active: hs-locked on both html and body (iOS scrolls html); overflow only, no position:fixed jump.
 export default function useBodyLock(active) {
   useEffect(() => {
     if (!active) return;

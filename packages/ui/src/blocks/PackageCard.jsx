@@ -1,19 +1,6 @@
 import { cn } from '../lib/cn.js';
 import { UPPER } from '../primitives/Eyebrow.jsx';
 
-/**
- * A stay package: a name, one line, what it includes (each with its own price),
- * then the extras' worth, the package price and the saving.
- *
- *   name, tagline   heading and its one line
- *   badge           optional small label (for example "Popular")
- *   items           [{ label, price }] what the package adds to the villa
- *   worth, price    the extras booked one by one, and the package price for them
- *   labels          { includes, worth, price } wording, passed by the app
- *   save, note      the saving line and a small rule line (for example a minimum stay)
- *   action          the button; the app passes its own so the library never reaches into a cart
- *   The price is soft black, not amber: it sits right above a green button (the CUE exception).
- */
 export default function PackageCard({
   name = '',
   tagline = '',

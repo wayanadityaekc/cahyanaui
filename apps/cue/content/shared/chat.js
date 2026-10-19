@@ -1,6 +1,4 @@
-// Chat routing and the chat's own lines; answers come from FAQ or the live catalog, never copied here.
 
-// Suggestion chips, phrased the way a guest would type them.
 export const SUGGESTIONS = [
   'How much is a day tour?',
   'What time do tours start?',
@@ -10,7 +8,6 @@ export const SUGGESTIONS = [
   'What if I need to cancel?',
 ];
 
-// Each topic names an exact FAQ question or a catalog builder; a stale faq string throws at load.
 export const TOPICS = [
   { id: 'price-tour', build: 'tourPrices',
     strong: ['day tour', 'tour price', 'how much is a tour'],
@@ -89,7 +86,6 @@ export const TOPICS = [
     words: ['fee', 'fees', 'commission', 'hidden', 'extra charge', 'service charge'] },
 ];
 
-// Situations only a person should answer; err toward adding words here (they hand over to Wayan).
 export const HUMAN_WORDS = [
   'wheelchair', 'disabled', 'disability', 'accessible', 'accessibility',
   'baby', 'infant', 'toddler', 'newborn', 'stroller', 'pram', 'pregnant',
@@ -104,14 +100,11 @@ export const HUMAN_WORDS = [
   'complaint', 'complain', 'problem with', 'went wrong', 'lost', 'left behind',
 ];
 
-// Greetings and thanks get a friendly canned reply instead of a handoff.
 export const GREETINGS = ['hi', 'hey', 'hello', 'halo', 'hai', 'good morning', 'good afternoon', 'good evening', 'morning', 'evening'];
 export const THANKS = ['thanks', 'thank you', 'thankyou', 'makasih', 'terima kasih', 'ok thanks', 'cheers', 'great thanks'];
 
-// Wayan's reply window in Bali time; both sentences that mention it follow these numbers.
 export const REPLY_HOURS = { from: 8, to: 21, tz: 'Asia/Makassar', label: '8am and 9pm Bali time' };
 
-// True when Bali time is inside the reply window, wherever the guest is.
 export function wayanIsAround(now = new Date()) {
   const h = Number(new Intl.DateTimeFormat('en-GB', {
     timeZone: REPLY_HOURS.tz, hour: '2-digit', hour12: false,
@@ -121,41 +114,31 @@ export function wayanIsAround(now = new Date()) {
 
 export const CHAT_COPY = {
   title: 'Cahyana Support',
-  // Panel header: says up front that it answers instantly and hands the rest to Wayan.
   sub: 'Instant answers. Wayan takes the rest.',
   greeting:
     "Hi! Ask me about our tours, prices, pickup or payment and I'll answer straight from our price list. Anything I can't answer goes to Wayan.",
   placeholder: 'Ask about tours, prices, pickup...',
-  // Reply for anything the code can't answer; there is deliberately no decline message.
   handoff:
     "That one is better answered by Wayan himself - he knows the roads, the timing and what is realistic on the day.",
   moreCta: 'Ask something else',
-  // Sign-in offer, worded as a gain since chatting works without it.
   signedOut: 'Chatting as a guest.',
   signIn: 'Sign in',
-  // Greeting by name, shown once as soon as the name is known.
   hello: 'Hi {name}! What can I help you with?',
   thanks: "You're welcome. Anything else you want to check before you book?",
-  // Handover asks nothing first; email is only asked if the chat can't finish live.
   connecting: 'Will connect you to Wayan for this one. Give me a moment.',
   connected: 'You are with Wayan now.',
-  // Email offer, shown only outside hours or after a quiet wait; skippable.
   emailAsk: 'Want his answer by email too, in case you close this?',
   emailField: 'Your email',
   emailSend: 'Send',
   emailSkip: 'No thanks',
   emailDone: 'Got it. He will reach you there.',
   emailBad: 'That does not look like an email address.',
-  // Two versions of the same fact, picked by the clock.
   hoursOpen: `He usually replies between ${REPLY_HOURS.label}. Keep this open and his answer lands right here.`,
   hoursClosed: `It is outside his hours in Bali right now, so he is probably asleep. He answers from ${REPLY_HOURS.from}am Bali time.`,
   connectedStrip: 'You are talking to Wayan now.',
-  // Live presence (dashboard socket open) outranks the reply-hours lines above.
   ownerHere: 'Wayan is online right now.',
   hoursHere: 'He is at the dashboard right now, so this should be quick.',
-  // Typing indicator names Wayan instead of showing bare dots.
   typing: 'Wayan is typing',
-  // How long to wait, inside his hours, before offering email at all.
   quietMs: 120000,
   threadGone: 'That conversation has expired. Ask again and I will start a new one.',
 };

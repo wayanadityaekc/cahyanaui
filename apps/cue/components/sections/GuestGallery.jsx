@@ -11,10 +11,8 @@ const GUESTS = [
   { img: 'guest-snorkeling.jpg', alt: 'Guests snorkelling in east Bali' },
 ];
 
-// Track duplicated so translateX(-50%) loops seamlessly (matches vanilla partials/guest-gallery.html).
 const TRACK = [...GUESTS, ...GUESTS];
 
-// Guest photo marquee; the guestScroll keyframe still lives in style.css.
 export default function GuestGallery() {
   return (
     <section className="pt-12 pb-[3.2rem] bg-white" id="guest-gallery" aria-label="Photos with our guests">

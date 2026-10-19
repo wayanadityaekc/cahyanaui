@@ -1,6 +1,3 @@
-// Verify the global scroll-lock (hs-locked on <html> AND <body>) actually applies
-// across popups, and specifically on the Add Program popup that was reported broken
-// (Wayan, Sep 2026 - background scroll wasn't locked on iPhone).
 import http from 'node:http';
 import fs from 'node:fs';
 import path from 'node:path';
@@ -43,7 +40,6 @@ function lockState(pg) {
   }));
 }
 
-// ---- 1) Add Program popup (My Trips) - the exact reported bug ----
 {
   const pg = await b.newPage({ viewport: { width: 390, height: 844 } });
   await pg.goto(`http://localhost:${port}/my-trips.html`, { waitUntil: 'networkidle' });
@@ -52,9 +48,6 @@ function lockState(pg) {
   await pg.waitForTimeout(400);
   const st = await lockState(pg);
   check('Add Program popup: html+body both locked, overflow hidden on both', st.html && st.body && st.htmlOv === 'hidden' && st.bodyOv === 'hidden');
-  // Close via THIS dialog's own close button - the page also mounts a hidden
-  // "Sign in" Modal globally (present in the DOM but opacity:0), so a bare
-  // [role="dialog"] selector matches that one first too.
   await pg.click('[aria-label="Add to your trip"] button[aria-label="Close"]');
   await pg.waitForTimeout(300);
   const st2 = await lockState(pg);
@@ -62,7 +55,6 @@ function lockState(pg) {
   await pg.close();
 }
 
-// ---- 2) Regression check: other popups that used to hand-roll the same lock still work ----
 {
   const pg = await b.newPage({ viewport: { width: 390, height: 844 } });
   await pg.goto(`http://localhost:${port}/index.html`, { waitUntil: 'networkidle' });

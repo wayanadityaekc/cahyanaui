@@ -2,9 +2,7 @@ const SOURCE_LOGO = {
   cahyana: { src: '/assets/images/logo.webp', alt: 'Cahyana Ubud Experience' },
 };
 
-// Fixed-height review card with a clamped message, same box everywhere; clicking opens the full review.
 const CLS = {
-  // No overflow-hidden on the card: line-clamp clips the <p> cleanly, clipping the card too cuts text mid-word.
   card: 'relative flex flex-col gap-2 w-full h-[248px] bg-white border border-line rounded-lg px-[1.3rem] pt-[1.4rem] pb-[2.3rem] text-left font-body cursor-pointer focus:outline-none focus:[box-shadow:var(--focus-ring)]',
   head: 'flex items-center gap-2',
   name: 'font-semibold text-small text-green',

@@ -4,7 +4,6 @@ import { useEffect } from 'react';
 import { useAccount } from '@/state/AccountProvider';
 import { ROW_RULE } from '@/components/ui/separatorClasses';
 
-// The guest's own reviews on Settings: plain rows with a status note, not the public ReviewCard slider.
 function fmtDate(iso) {
   if (!iso) return '';
   try {
@@ -21,7 +20,7 @@ export default function MyReviews() {
     refreshMyReviews();
   }, [refreshMyReviews]);
 
-  if (myReviews === null) return null; // still loading - say nothing rather than flash an empty state
+  if (myReviews === null) return null;
   if (myReviews.length === 0) {
     return <p className="text-body text-muted m-0">You haven&apos;t written a review yet.</p>;
   }

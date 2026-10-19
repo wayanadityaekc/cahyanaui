@@ -9,7 +9,6 @@ const BOX =
   'aria-[invalid=true]:[border-color:var(--color-err)] aria-[invalid=true]:[box-shadow:0_0_0_3px_rgba(154,74,63,0.14)] ' +
   'disabled:opacity-50';
 
-// CUE's 6-box code input: auto-advance, backspace steps back, arrows move, paste fills all; flex-1 + max-w fits 320px.
 export default function OtpFields({ length = 6, value = '', onChange = () => {}, onComplete = null, error = false, disabled = false, autoFocus = false }) {
   const refs = useRef([]);
   const digits = Array.from({ length }, (_, index) => value[index] || '');
@@ -21,11 +20,9 @@ export default function OtpFields({ length = 6, value = '', onChange = () => {},
   function commit(next) {
     const joined = next.join('');
     onChange(joined);
-    // next.every(Boolean), not joined.includes(''): every string includes '', so that never completed.
     if (joined.length === length && next.every(Boolean) && onComplete) onComplete(joined);
   }
 
-  // Paste, autofill or IME can land several digits in one box; spread them across the following boxes.
   function spread(start, raw) {
     const next = [...digits];
     const fits = raw.slice(0, length - start).split('');
@@ -84,7 +81,6 @@ export default function OtpFields({ length = 6, value = '', onChange = () => {},
     <div className="flex gap-2 justify-center" role="group" aria-label="Verification code">
       {digits.map((digit, index) => (
         <input
-          // eslint-disable-next-line react/no-array-index-key
           key={index}
           ref={(input) => { refs.current[index] = input; }}
           type="text"

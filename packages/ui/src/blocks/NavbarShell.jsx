@@ -23,8 +23,6 @@ import {
   navLink,
 } from './navbarClasses.js';
 
-// The site header as a shell (CUE's WO1 navbar): burger + drawer on phones, links in the bar on desktop, account slot last.
-// Slots: logo, actions (chat/cart), extras, account, topBar (promo strip), fields, links, drawerFoot; no next/link import, pass linkAs.
 export default function NavbarShell({
   logo,
   actions = null,
@@ -49,10 +47,8 @@ export default function NavbarShell({
   const burgerRef = useRef(null);
   const headerRef = useRef(null);
   const barRef = useRef(null);
-  // `overlay`: the bar floats clear over the hero at the top of the page and turns solid after a short scroll.
   const [atTop, setAtTop] = useState(true);
 
-  // Header heights on :root (nav row, nav + top bar, top bar); set on resize only, never on scroll.
   useEffect(() => {
     const header = headerRef.current;
     if (!header) return undefined;
@@ -68,7 +64,6 @@ export default function NavbarShell({
         root.style.setProperty('--header-h-max', `${height}px`);
       }
     }
-    // A viewport change resets the max so a rotated phone re-measures.
     function onResize() { max = 0; set(); }
     set();
     const resizeObserver = new ResizeObserver(set);
@@ -82,7 +77,6 @@ export default function NavbarShell({
 
   useEffect(() => {
     if (!overlay) return undefined;
-    // Clear while the hero (the first section of the page) is still under the bar; solid white once it has scrolled away.
     function onScroll() {
       const hero = document.querySelector('main > section');
       const barHeight = headerRef.current ? headerRef.current.offsetHeight : 0;
@@ -93,19 +87,16 @@ export default function NavbarShell({
     return () => window.removeEventListener('scroll', onScroll);
   }, [overlay]);
 
-  // Tapping outside, or Escape, closes the drawer.
   useEffect(() => {
     if (!menuOpen) return undefined;
     function onDoc(e) {
       const inNav = navRef.current && navRef.current.contains(e.target);
       const onBurger = burgerRef.current && burgerRef.current.contains(e.target);
-      // Clicks inside a portaled Select popup close only the popup, not the drawer.
       const inPopup = e.target.closest && e.target.closest('[data-portal]');
       if (!inNav && !onBurger && !inPopup) setMenuOpen(false);
     }
     function onKey(e) {
       if (e.key !== 'Escape') return;
-      // An open Select popup takes this Escape to close itself first.
       if (document.querySelector('[data-portal="select"][data-open]')) return;
       setMenuOpen(false);
     }
@@ -150,7 +141,6 @@ export default function NavbarShell({
             id={drawerId}
             className={cn(NAV_DRAWER, menuOpen ? 'translate-x-0 pointer-events-auto' : '-translate-x-full pointer-events-none')}
           >
-            {/* The x is the only visible close control while the drawer covers the burger. */}
             <li className={NAV_DRAWER_HEAD}>
               <b className="text-strong font-semibold text-gold">{drawerTitle}</b>
               <button type="button" className={NAV_CLOSE} aria-label="Close menu" onClick={close}>
@@ -165,7 +155,6 @@ export default function NavbarShell({
                 const open = openSub === link.label;
                 return (
                   <li key={link.label} className={cn('relative', NAV_LI)}>
-                    {/* With an href the label opens the page and only the arrow opens the list. */}
                     {link.href ? (
                       <div className="flex items-center">
                         <Link href={link.href} onClick={close} className={cn(navLink(isActive(link.href)), 'flex-1')}>

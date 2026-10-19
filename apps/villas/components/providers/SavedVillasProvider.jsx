@@ -2,7 +2,6 @@
 
 import { createContext, useContext, useEffect, useState } from 'react';
 
-// Saved villa slugs, per browser; read in an effect, never initial state, so first paint matches the static HTML.
 const KEY = 'upv_saved_v1';
 
 const SavedContext = createContext(null);
@@ -14,10 +13,8 @@ export function SavedVillasProvider({ children }) {
     try {
       const raw = window.localStorage.getItem(KEY);
       const parsed = raw ? JSON.parse(raw) : null;
-      // Storage can hold anything (another tab, an older shape, devtools), so keep only valid slugs and never throw.
       if (Array.isArray(parsed)) setSlugs(parsed.filter((entry) => typeof entry === 'string'));
     } catch (e) {
-      // Unreadable or unavailable: an empty shortlist is the honest fallback.
     }
   }, []);
 
@@ -26,7 +23,6 @@ export function SavedVillasProvider({ children }) {
     try {
       window.localStorage.setItem(KEY, JSON.stringify(next));
     } catch (e) {
-      // Storage full or blocked: the heart still fills for this visit, it just will not survive a reload.
     }
   }
 

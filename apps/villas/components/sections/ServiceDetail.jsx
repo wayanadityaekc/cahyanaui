@@ -4,7 +4,6 @@ import Mosaic from '@/components/ui/Mosaic';
 import ServiceAside from '@/components/sections/ServiceAside';
 import LoadFallback from '@/components/ui/LoadFallback';
 
-// Shared layout for every 'at your villa' service page, so styling lives in one place.
 export default function ServiceDetail({
   kicker = '',
   title = '',

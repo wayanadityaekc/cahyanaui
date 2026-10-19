@@ -11,7 +11,6 @@ import { ARTICLES, CATEGORIES, categoryLabel } from '@/content/articles';
 import { CAPS, Card, Container, EYEBROW_LINE, Section, Breadcrumb } from '@cahyana/ui';
 import { articleCrumbs } from '@/lib/crumbs';
 
-// Paragraph spacing lives here, not in Prose; max-w keeps lines readable (a full 950px line is ~145 chars).
 const PROSE =
   'max-w-[var(--container-read)] ' +
   '[&_p]:m-0 [&_p]:mb-4 [&_p]:text-body [&_p]:text-ink [&_p]:leading-[var(--lh-body)] ' +
@@ -37,7 +36,6 @@ function CatList({ activeId, onPick }) {
   });
 }
 
-// Guide article on CUE's layout: category column on the RIGHT (border-l on purpose), CatDropdown on mobile.
 export default function ArticlePage({ article }) {
   const more = ARTICLES.filter((other) => other.slug !== article.slug).slice(0, 3);
 

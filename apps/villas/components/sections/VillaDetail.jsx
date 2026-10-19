@@ -34,7 +34,6 @@ export default function VillaDetail({ villa }) {
   const [checkOut, setCheckOut] = useState('');
   const [guests, setGuests] = useState(Math.min(preferredGuests || 2, villa.guests));
   const [checkoutOpen, setCheckoutOpen] = useState(false);
-  // Today in Bali, read in the browser: the page is a static export, so a build-time date would be stale.
   const [today, setToday] = useState('');
   useEffect(() => setToday(baliToday()), []);
   const availability = useVillaAvailability(villa.slug);
@@ -61,7 +60,6 @@ export default function VillaDetail({ villa }) {
     router.push('/my-booking/');
   }
 
-  // Mobile book bar shows only when both the title and the booking card are off screen, so it never doubles a CTA.
   const titleRef = useRef(null);
   const cardRef = useRef(null);
   const showBookBar = useRevealWhenAway([titleRef, cardRef]);
@@ -192,10 +190,8 @@ export default function VillaDetail({ villa }) {
                   <button type="button" onClick={addExtrasFirst} className={SECONDARY_BTN}>Add tours or a transfer first</button>
                 )}
                 <a href={WHATSAPP_LINK} target="_blank" rel="noopener" className={SECONDARY_BTN}>WhatsApp</a>
-                {/* TODO: add the Airbnb hand-off as a second SECONDARY_BTN once a listing URL exists (same gap as Footer.jsx). */}
               </>
             )}
-            // Booking terms replace the old season-rate note: at checkout a guest needs to know the payment and cancel rules.
             note={<BookingTerms />}
           >
             <Card tone="cream" className="p-6">
@@ -203,7 +199,6 @@ export default function VillaDetail({ villa }) {
               <LinkList linkAs={Link} items={SERVICES} />
             </Card>
 
-            {/* Tours sit in the booking flow on purpose (Wayan): the guest who just picked dates is deciding those days. */}
             <Card tone="cream" className="p-6">
               <p className={`${CAPS} text-muted mb-1`}>Add a driver or a tour</p>
               <p className="text-label text-muted mb-3">
@@ -224,12 +219,10 @@ export default function VillaDetail({ villa }) {
         <h2 className="text-h2 font-medium text-white">{villa.name}, your dates</h2>
         <p className="mt-2 text-small text-white/75">See if the villa is free when you are.</p>
         <div className="flex justify-center mt-6">
-          {/* onDark - this band IS the action colour now. */}
           <Button variant="onDark" onClick={ready ? bookNow : scrollToCalendar}>{ready ? 'Book now' : 'See availability'}</Button>
         </div>
       </Section>
 
-      {/* Mobile-only book bar, flush like CUE's; chat lives in the navbar, so the bar holds one action. */}
       <StickyBar variant="flush" show={showBookBar}>
         <PriceBlock tight amount={format(villa.nightlyRateIdr)} unit="/ night" size="sm" />
         <Button className="flex-shrink-0" onClick={ready ? bookNow : scrollToCalendar}>

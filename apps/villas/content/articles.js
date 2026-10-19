@@ -1,4 +1,3 @@
-// Guide articles: plain and useful like CUE, no glorify words, and no price, partner or guarantee that is not set.
 export const CATEGORIES = [
   { id: 'getting-around', label: 'Getting around' },
   { id: 'the-area', label: 'The area' },

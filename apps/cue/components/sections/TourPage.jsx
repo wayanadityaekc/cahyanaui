@@ -20,13 +20,10 @@ import DetailTabs from '@/components/sections/DetailTabs';
 import { isHiddenTour } from '@/lib/routes';
 import Breadcrumb, { itemsFromLegacy } from '@/components/ui/Breadcrumb';
 
-// Stop text styles (number, name, description); the stop grid and image strings live in ui/stopClasses.
 export const STOP_NUM = 'inline-block mb-[0.6rem] text-label font-medium tracking-[0.14em] uppercase text-muted';
 export const STOP_NAME = 'mb-[0.6rem] font-body text-h3 font-semibold tracking-[0]';
 export const STOP_DESC = 'font-body text-body leading-[var(--lh-body)] font-normal';
-// Foot breadcrumb band for pages without the gallery hero; the trail's own type and colour belong to Breadcrumb.
 export const CRUMB_FOOT = 'crumb max-w-none m-0 py-5 px-6 [border-top:1px_solid_var(--line)] [border-bottom:1px_solid_var(--line)] [&>ol]:justify-center';
-// Hero class strings re-exported from DetailHero because other modules import them from here.
 export { HOOK_UL, HOOK_LABEL, HOOK_VALUE, HERO_DESC, HERO_CTA } from '@/components/sections/DetailHero';
 
 function Stop({ s }) {
@@ -46,14 +43,12 @@ function Stop({ s }) {
       </div>
     </>
   );
-  // Stops are plain text on purpose: linking them would show a second, single-destination price mid-decision.
   return <article className={STOP}>{inner}</article>;
 }
 
 export default function TourPage({ data }) {
   const slug = (data.__page || '').replace(/^\//, '');
   const destinations = tourDestinations(slug, ATTRACTION_CONTENT);
-  // Every tour uses the gallery hero (crumb on top, none at the foot); photos from galleryFrom unless `gallery` is set.
   const gallery = galleryFrom(data);
   return (
     <>
@@ -81,9 +76,7 @@ export default function TourPage({ data }) {
       <div className={data.bookItem ? TOUR_LAYOUT_MAIN : undefined}>
       <DetailTabs
         overview={gallery.length ? (
-          // Gallery hero carries the photos, so the overview is text only.
           <div id={data.stopsId}>
-            {/* The hero intro (`desc`) is shown here as the Overview intro. */}
             <TourOverview intro={data.desc} items={data.items} />
           </div>
         ) : (

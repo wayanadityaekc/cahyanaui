@@ -1,7 +1,5 @@
-// Guide card: square photo with the title over a gradient, tag below (or overlaid); frame is CARD_FRAME.
 import { CARD_FRAME } from '@/components/ui/cardClasses';
 
-// overlayTag puts the tag inside the photo with the title (guide hub); default keeps it in the strip below.
 export default function GuideCard({ href, img, alt, title, tag, cat, w = 600, hgt = 600, overlayTag = false }) {
   return (
     <a className={`${CARD_FRAME} flex flex-col`} data-cat={cat} href={href}>

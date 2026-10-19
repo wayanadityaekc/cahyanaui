@@ -1,18 +1,9 @@
 import { chromium } from '/home/user/CUE/node_modules/playwright-core/index.mjs';
 
-// The seasonal sale, as a guest sees it. The server side is pinned by
-// promo-test.js in cahyana-api; this is only about what reaches the screen.
-//
-// THE RULE BEING TESTED is "strike it through only when the two numbers really
-// differ" - not "a sale is running". A card that crosses a number out because a
-// flag was set somewhere is exactly the invented discount BookBar deliberately
-// refused to copy from GetYourGuide.
 const BASE = process.env.BASE || 'http://localhost:4000';
 let pass = 0, fail = 0;
 function ok(c, m) { c ? pass++ : (fail++, console.log('  FAIL:', m)); }
 
-// One item on sale, the rest not - so both branches are exercised on the same
-// page, in the same render, with the same code.
 const ON_SALE = 'Ubud Tour';
 const SALE = 40, LIST = 45;
 
@@ -61,8 +52,6 @@ for (const symbol of ['$', 'Rp']) {
       const errs = [];
       page.on('pageerror', (e) => errs.push(e.message));
       await page.goto(BASE + path, { waitUntil: 'load' });
-      // Wait for the catalog to land - before it does every price is its build-time
-      // fallback and there is nothing to strike through.
       await page.waitForFunction((name) => {
         const el = document.querySelector(`[data-price="${name}"]`);
         return el && el.querySelector('[data-price-was]');
@@ -85,8 +74,6 @@ for (const symbol of ['$', 'Rp']) {
                 size: parseFloat(cs.fontSize),
                 parentSize: parseFloat(parent.fontSize),
                 weight: cs.fontWeight,
-                // The struck number must come FIRST: it is what the price used
-                // to be, and reading it after the new one inverts the sentence.
                 first: el.firstElementChild === was,
               };
             }
@@ -106,7 +93,6 @@ for (const symbol of ['$', 'Rp']) {
         ok(s.first, `${tag}: the old price is rendered after the new one`);
         ok(s.size < s.parentSize, `${tag}: the old price is not smaller (${s.size} vs ${s.parentSize})`);
         ok(s.weight === '400', `${tag}: the old price is bold (${s.weight}) and competes with the real one`);
-        // Both numbers on screen, and the cheaper one is the one NOT struck.
         function digits(t) { return t.replace(/[^\d]/g, ''); }
         ok(digits(s.wasText).length > 0, `${tag}: the struck element has no number in it`);
         ok(digits(s.text).length > digits(s.wasText).length, `${tag}: the sale price is missing next to the struck one`);
@@ -124,7 +110,6 @@ for (const symbol of ['$', 'Rp']) {
   }
 }
 
-// ---- no sale running: not one struck number anywhere ----------------------
 {
   const plain = catalogFor('$');
   plain.promo = null;

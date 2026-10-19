@@ -1,6 +1,4 @@
-// Villa chat routing and the chat's own lines; answers come from this site's FAQ and villa data, never CUE's tours.
 
-// Suggestion chips, phrased the way a guest would type them.
 export const SUGGESTIONS = [
   'How many people can stay?',
   'What does a night cost?',
@@ -10,7 +8,6 @@ export const SUGGESTIONS = [
   'Is breakfast included?',
 ];
 
-// Each topic names an exact FAQ question (content/company.js) or a builder; a stale faq string throws at load.
 export const TOPICS = [
   { id: 'villa-prices', build: 'villaPrices',
     strong: ['per night', 'a night', 'nightly', 'night cost', 'room rate'],
@@ -93,9 +90,7 @@ export const TOPICS = [
     words: ['walk', 'walking', 'around', 'cafes', 'warung', 'restaurants'] },
 ];
 
-// Situations and topics only a person should answer; scooter terms are unconfirmed, so every scooter question goes to Wayan.
 export const HUMAN_WORDS = [
-  // Tours and day trips are the tour site's; Wayan runs both, so he answers rather than this villa chat.
   'tour', 'tours', 'day trip', 'excursion', 'sightseeing', 'itinerary',
   'scooter', 'scooters', 'motorbike', 'motorbikes', 'motorcycle', 'bike rental', 'moped',
   'available', 'availability', 'free on', 'vacancy', 'dates free',
@@ -109,18 +104,14 @@ export const HUMAN_WORDS = [
   'complaint', 'complain', 'problem with', 'went wrong', 'lost', 'left behind', 'broken',
 ];
 
-// Service prices are "Ask us" on every service page, so a price question about one goes to a person.
 export const SERVICE_WORDS = ['breakfast', 'spa', 'massage', 'dinner', 'chef', 'cooking class', 'treatment'];
 export const PRICE_WORDS = ['how much', 'price', 'prices', 'cost', 'costs', 'rate', 'rates', 'charge'];
 
-// Greetings and thanks get a friendly canned reply instead of a handoff.
 export const GREETINGS = ['hi', 'hey', 'hello', 'halo', 'hai', 'good morning', 'good afternoon', 'good evening', 'morning', 'evening'];
 export const THANKS = ['thanks', 'thank you', 'thankyou', 'makasih', 'terima kasih', 'ok thanks', 'cheers', 'great thanks'];
 
-// Wayan's reply window in Bali time, the same hours CUE's chat states; both sentences that mention it follow these numbers.
 export const REPLY_HOURS = { from: 8, to: 21, tz: 'Asia/Makassar', label: '8am and 9pm Bali time' };
 
-// True when Bali time is inside the reply window, wherever the guest is.
 export function wayanIsAround(now = new Date()) {
   const hour = Number(new Intl.DateTimeFormat('en-GB', {
     timeZone: REPLY_HOURS.tz, hour: '2-digit', hour12: false,
@@ -135,7 +126,6 @@ export const CHAT_COPY = {
     "Hi! Ask me about the two villas, rates, check-in, payment or cancelling and I'll answer from what is on this site. Anything I can't answer goes to Wayan.",
   placeholder: 'Ask about the villas, rates, check-in...',
   placeholderLive: 'Write to Wayan...',
-  // Reply for anything the site cannot answer itself; there is deliberately no decline message.
   handoff: 'That one is better answered by Wayan himself.',
   signedOut: 'Chatting as a guest.',
   signIn: 'Sign in',
@@ -153,7 +143,6 @@ export const CHAT_COPY = {
   hoursOpen: `He usually replies between ${REPLY_HOURS.label}. Keep this open and his answer lands right here.`,
   hoursClosed: `It is outside his hours in Bali right now, so he is probably asleep. He answers from ${REPLY_HOURS.from}am Bali time.`,
   connectedStrip: 'You are talking to Wayan now.',
-  // Live presence (his dashboard socket is open) outranks the reply-hours lines above.
   ownerHere: 'Wayan is online right now.',
   hoursHere: 'He is at the dashboard right now, so this should be quick.',
   typing: 'Wayan is typing',
@@ -162,7 +151,6 @@ export const CHAT_COPY = {
   threadGone: 'That conversation has expired. Ask again and I will start a new one.',
   sendFailed: 'That did not send. Try again in a moment.',
   reachFailed: 'Could not reach Wayan just now.',
-  // The switch to WhatsApp, always under the input; live chat stays the default.
   whatsappNote: 'Prefer WhatsApp?',
   whatsappLabel: 'Continue on WhatsApp',
 };

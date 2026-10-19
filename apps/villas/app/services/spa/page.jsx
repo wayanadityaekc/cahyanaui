@@ -9,7 +9,6 @@ export const metadata = pageMeta({
   path: '/services/spa/',
 });
 
-// CEK WAYAN: photos hidden until Wayan supplies real ones; the hero falls back to its dark gradient band.
 export default function SpaPage() {
   return (
     <>

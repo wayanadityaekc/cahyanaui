@@ -5,8 +5,6 @@ import { ChevronDown, Menu, Search } from 'lucide-react';
 import { cn } from '../lib/cn.js';
 import PopPanel from './PopPanel.jsx';
 
-// CUE's guide hub opener: a photo band with crumb, title, intro, and one bordered bar holding the
-// category menu and the search field. Left-aligned, content width follows the page container.
 const BAND =
   'relative flex items-center min-h-[60vh] px-[var(--container-x)] pb-[var(--space-6)] pt-12 text-left bg-green bg-cover bg-center';
 const MENU =
@@ -15,14 +13,6 @@ const MENU_ROW =
   'flex items-center gap-[0.6rem] py-[0.7rem] px-4 no-underline text-green font-semibold text-h3 [border-top:1px_solid_var(--line)] ' +
   'first:[border-top:none] hover:bg-[rgba(34,32,28,0.08)] [&_svg]:w-[var(--icon-sm)] [&_svg]:h-[var(--icon-sm)] [&_svg]:text-gold-d [&_svg]:shrink-0';
 
-/**
- *   image       photo url
- *   crumb       node (a <Breadcrumb> with white-on-photo link classes)
- *   categories  [{ id, label, Icon? }]  menu rows, each links to #id
- *   query / onQuery   the search field is controlled by the site
- *   pop         the site's own animation wrapper for the floating menu (PopMenu)
- *   labels      { categories, search, searchAria }
- */
 export default function GuideHubHero({
   image, crumb = null, title, text, categories = [], query = '', onQuery = () => {}, pop = null,
   labels = {},

@@ -8,13 +8,11 @@ import { readLocal } from '@/lib/storage';
 import { BTN, BTN_WA, STACK } from '@/components/ui/modalClasses';
 import useBodyLock from '@/components/ui/useBodyLock';
 
-// Locked screen after payment: polls /booking-status/:ref until the webhook marks it paid; no way to close while waiting.
 const POLL_MS = 4000;
-// Stop polling after two minutes and tell the guest the booking is saved and the email will follow.
 const GIVE_UP_MS = 120000;
 
 export default function PayWaiting({ bookingRef, onClose, onConfirmed }) {
-  const [phase, setPhase] = useState('waiting'); // waiting | paid | mismatch | slow | blind
+  const [phase, setPhase] = useState('waiting');
   const [idx, setIdx] = useState(0);
   const [mounted, setMounted] = useState(false);
   const timer = useRef(null);
@@ -22,7 +20,6 @@ export default function PayWaiting({ bookingRef, onClose, onConfirmed }) {
   useEffect(() => setMounted(true), []);
   useBodyLock(true);
 
-  // Background slideshow; holds on the first photo when prefers-reduced-motion is set.
   useEffect(() => {
     if (typeof window === 'undefined') return;
     const still = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -31,11 +28,9 @@ export default function PayWaiting({ bookingRef, onClose, onConfirmed }) {
     return () => clearInterval(t);
   }, []);
 
-  // --- ask the server, don't guess -----------------------------------------
   useEffect(() => {
     if (!bookingRef) { setPhase('blind'); return; }
     const token = readLocal(KEY.token, '');
-    // Without a session token the server can't verify ownership, so show the honest 'payment sent' state.
     if (!token) { setPhase('blind'); return; }
     let stop = false;
     const started = Date.now();
@@ -50,14 +45,11 @@ export default function PayWaiting({ bookingRef, onClose, onConfirmed }) {
         if (stop) return;
         if (d && d.payment === 'paid') {
           setPhase('paid');
-          // onConfirmed is for rails that leave the site (DOKU): clear the cart only once the server says paid.
           if (typeof onConfirmed === 'function') onConfirmed();
           return;
         }
-        // A mismatch is not paid (amount or currency disagreed); never tell the guest it is confirmed.
         if (d && d.payment === 'mismatch') { setPhase('mismatch'); return; }
       } catch (e) {
-        // A dropped request is not an answer - keep asking until we give up.
       }
       if (stop) return;
       if (Date.now() - started > GIVE_UP_MS) { setPhase('slow'); return; }
@@ -111,7 +103,6 @@ export default function PayWaiting({ bookingRef, onClose, onConfirmed }) {
 
   return createPortal(
     <div className="fixed inset-0 z-[300] overflow-hidden" role="dialog" aria-modal="true" aria-live="polite">
-      {/* Destination photos; only the current and next slide are mounted so not every file loads at once. */}
       {WAIT_PHOTOS.map((p, i) =>
         i <= idx + 1 || i === WAIT_PHOTOS.length - 1 ? (
           <img
@@ -123,7 +114,6 @@ export default function PayWaiting({ bookingRef, onClose, onConfirmed }) {
           />
         ) : null,
       )}
-      {/* The text has to stay readable over any of the photos. */}
       <div className="absolute inset-0 bg-[rgba(20,19,16,0.62)]" />
 
       <div className="relative z-10 flex flex-col items-center justify-center h-full px-[var(--container-x)] text-center">
@@ -145,7 +135,6 @@ export default function PayWaiting({ bookingRef, onClose, onConfirmed }) {
           </p>
         )}
 
-        {/* Buttons appear only once there is a real outcome; no way out while still waiting. */}
         {!waiting && (
           <div className="w-full max-w-[320px] mt-6">
             <button type="button" className={BTN} onClick={onClose}>Done</button>

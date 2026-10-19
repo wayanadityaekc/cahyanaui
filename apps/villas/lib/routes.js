@@ -3,7 +3,6 @@ import { ARTICLES } from '@/content/articles';
 
 export const SITE = 'https://ubudprivatevillas.com';
 
-// Sitemap paths are listed by hand (/my-booking is noindex and left out): add a new page here, no build step will notice.
 const STATIC_PATHS = [
   '/',
   '/guide',
@@ -14,7 +13,6 @@ const STATIC_PATHS = [
   '/services/scooter-rental',
 ];
 
-// Trailing slash on every path: the export writes folder/index.html, so /guide would be a 301 to /guide/.
 export function indexablePaths() {
   return [
     ...STATIC_PATHS,

@@ -1,21 +1,3 @@
-// Card (DOKU) is the default payment rail; PayPal is the guest's choice
-// (29 Sep 2026). Run against the built site + the local API:
-//   PAYPAL_CLIENT_ID=x PAYPAL_SECRET=x DOKU_CLIENT_ID=BRN-x DOKU_SECRET=SK-x \
-//     node ../cahyana-api/tools/chat-dev-server.js        # 4599, both rails "on"
-//   NEXT_PUBLIC_API_BASE=http://127.0.0.1:4599/api npm run build
-//   node tools/serve-out.js                               # 4000
-//   node verify-rail.mjs
-//
-// Per currency x width, at the payment step of a real checkout:
-//   - two rail choices, Card checked by default;
-//   - Card + a non-rupiah currency: every amount is the EXACT rupiah figure the
-//     server bills (quote lines' rupiah + the catalog's rupiah deposit), the
-//     guest's own figure beside it as an estimate, and the note says so;
-//   - Card + rupiah: no estimate, no note;
-//   - PayPal: amounts in the guest's own currency, no rupiah (IDR -> told USD);
-//   - after Book Now, the checkout shown is the CHOSEN rail's, and the DOKU
-//     request carries only booking_ref + option (never an amount).
-// Plus: an experience page says "for 2 guests", never "per person".
 import { chromium } from 'playwright-core';
 
 const API = 'http://127.0.0.1:4599/api';
@@ -35,15 +17,12 @@ async function toPayStep(cur, w, rail) {
       ? r.fulfill({ json: { account: { id: 9, name: 'Test Guest', email: 'guest@example.com' } } })
       : r.fulfill({ json: {} }));
   await ctx.route('**/api/bookings/**', (r) => r.fulfill({ json: { upcoming: [], history: [] } }));
-  // The dev API's stub database covers chat only, so saving a booking is stubbed
-  // here: a pending booking, as the real server answers when a payment is due.
   await ctx.route('**/api/inquiry', (r) => r.fulfill({ json: { status: 'saved', ref: 'CUE-099' } }));
   const dokuCalls = [];
   await ctx.route('**/api/doku/create-payment', async (r) => {
     dokuCalls.push(JSON.parse(r.request().postData() || '{}'));
     await r.fulfill({ json: { status: 'ok', url: 'about:blank#doku', checkout_js: null } });
   });
-  // No real PayPal SDK here - just enough to know which checkout mounted.
   await ctx.route('**/api/paypal/config', (r) => r.fulfill({ json: { ready: false, reason: 'harness' } }));
   await ctx.addInitScript(([day, c]) => {
     localStorage.setItem('cue_currency', c);
@@ -69,8 +48,6 @@ async function toPayStep(cur, w, rail) {
   return { ctx, page, errs, dokuCalls };
 }
 
-// The rail explanation lives behind the (i) beside the heading; open it, read
-// it, close it (Escape - the same way a guest would dismiss it).
 async function railInfo(page) {
   await page.locator('[data-infodot][aria-label="How the payment methods work"]').click();
   await page.waitForTimeout(350);
@@ -90,17 +67,14 @@ for (const [cur, w] of [['USD', 390], ['AUD', 1280], ['IDR', 390], ['USD', 1280]
   const totalIdr = q.lines.reduce((s, l) => s + l.was.idr, 0);
   const tag = `${cur}/${w}`;
 
-  // --- Card (default) ----------------------------------------------------
   const { ctx, page, errs, dokuCalls } = await toPayStep(cur, w);
   const choice = page.locator('[data-rail-choice] [role="radio"]');
   ok((await choice.count()) === 2, `${tag}: two rail choices (${await choice.count()})`);
   ok((await page.locator('[data-rail="doku"]').getAttribute('aria-checked')) === 'true', `${tag}: Card is checked by default`);
-  // Icon only (Wayan: "icon, no text"), still named for screen readers.
   const railBtns = await page.locator('[data-rail-choice] [role="radio"]').evaluateAll((els) =>
     els.map((e) => ({ text: e.innerText.trim(), svg: !!e.querySelector('svg'), name: e.getAttribute('aria-label') })));
   ok(railBtns.every((b) => b.text === '' && b.svg && b.name), `${tag}: rail buttons are icon-only & named (${JSON.stringify(railBtns)})`);
   ok((await page.locator('[data-rail-info]').count()) === 0, `${tag}: no explanation printed until the (i) is tapped`);
-  // The popup floats: opening it must not move Book Now.
   async function bookBox() { return (await page.locator('button:visible', { hasText: /^\s*Book Now\s*$/ }).boundingBox()); }
   const before = await bookBox();
   await page.locator('[data-infodot][aria-label="How the payment methods work"]').click();
@@ -143,7 +117,6 @@ for (const [cur, w] of [['USD', 390], ['AUD', 1280], ['IDR', 390], ['USD', 1280]
   ok(dot.w > 8 && dot.w < 16 && dot.op < 0.8 && dot.op > 0.3, `${tag}: (i) smaller + faint (${dot.w}px, opacity ${dot.op})`);
   await page.screenshot({ path: `${SHOT}/rail-card-${cur}-${w}.png` });
 
-  // --- PayPal ------------------------------------------------------------
   await page.locator('[data-rail="paypal"]').click();
   await page.waitForTimeout(250);
   ok((await page.locator('[data-rail="paypal"]').getAttribute('aria-checked')) === 'true', `${tag}: PayPal can be chosen`);
@@ -156,7 +129,6 @@ for (const [cur, w] of [['USD', 390], ['AUD', 1280], ['IDR', 390], ['USD', 1280]
   else ok(!/cannot charge|estimate/.test(ppInfo), `${tag}: no extra note on PayPal in own currency`);
   await page.screenshot({ path: `${SHOT}/rail-paypal-${cur}-${w}.png` });
 
-  // Back to Card and book: the DOKU checkout must be what mounts.
   await page.locator('[data-rail="doku"]').click();
   await page.locator('button:visible', { hasText: /^\s*Book Now\s*$/ }).click();
   await page.waitForTimeout(1500);
@@ -171,7 +143,6 @@ for (const [cur, w] of [['USD', 390], ['AUD', 1280], ['IDR', 390], ['USD', 1280]
   ok(errs.length === 0, `${tag}: no page errors (${errs.join(' | ')})`);
   await ctx.close();
 
-  // PayPal chosen -> PayPal checkout mounts, not DOKU.
   const r2 = await toPayStep(cur, w);
   await r2.page.locator('[data-rail="paypal"]').click();
   await r2.page.locator('button:visible', { hasText: /^\s*Book Now\s*$/ }).click();
@@ -182,7 +153,6 @@ for (const [cur, w] of [['USD', 390], ['AUD', 1280], ['IDR', 390], ['USD', 1280]
   await r2.ctx.close();
 }
 
-// Experience unit label.
 for (const w of [390, 1280]) {
   const ctx = await b.newContext({ viewport: { width: w, height: 900 } });
   const page = await ctx.newPage();

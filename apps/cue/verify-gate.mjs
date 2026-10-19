@@ -1,20 +1,3 @@
-// WO2: booking needs an account; browsing and the cart do not.
-// Sign-in is by a 6-digit CODE now (28 Sep 2026, Wayan), not a link - the whole
-// thing happens in one popup, on the same page, with no navigation at all.
-// Drives the built pages (npm run build && npm run serve, port 4000):
-//   A. logged out -> Pay now = sign-in popup, NOT the booking form; cart untouched
-//   C. send code -> wrong code shows an error, does not sign in -> right code
-//      signs in AND opens the held booking, right there, no navigation
-//   B. create account on an email that already has one -> lands in the SAME
-//      code stage (one door, whichever way it's reached) -> right code opens
-//      the held booking
-//   G. create a genuinely NEW account -> signs in immediately, no code needed
-//   D. signed in already -> Pay now opens the form, no popup
-//   E. dismissing the popup opens nothing; the cart is untouched
-//   F. a stale resume marker (> 1h) does NOT yank a guest off the homepage -
-//      dead code on the code-entry path now (nothing sets that marker's
-//      redirect in motion any more), kept for regression insurance since the
-//      mechanism itself is untouched.
 import { chromium } from '/home/user/CUE/node_modules/playwright-core/index.mjs';
 
 const BASE = 'http://127.0.0.1:4000';
@@ -33,16 +16,12 @@ async function setup(w, { signedIn = false, marker = null } = {}) {
     const body = route.request().postDataJSON ? (route.request().postDataJSON() || {}) : {};
     if (url.includes('/account/session')) return route.fulfill({ json: session ? { account: ACC } : { status: 'error' } });
     if (url.includes('/account/login')) return route.fulfill({ json: { status: 'ok' } });
-    // A stubbed server that mimics a real one closely enough to test the UI
-    // against: '000000' is always wrong, anything else 6-digit is right.
     if (url.includes('/account/verify')) {
       if (body.code === '000000') return route.fulfill({ json: { status: 'error', detail: 'That code is incorrect or has expired.' } });
       session = true;
       return route.fulfill({ json: { status: 'ok', token: 'tok-verified', account: ACC } });
     }
     if (/\/api\/account(\?|$)/.test(url)) {
-      // The email in ACC already "has an account" - mirror the real server:
-      // no token handed over, a code sent to that inbox instead.
       if (body.email === ACC.email) return route.fulfill({ json: { status: 'ok', signin_sent: true, email: ACC.email } });
       session = true;
       return route.fulfill({ json: { status: 'ok', token: 'tok-new', account: { ...ACC, email: body.email, name: body.name } } });
@@ -69,16 +48,12 @@ function codeOpen(p) { return p.locator('text=Enter your code').isVisible(); }
 function formOpen(p) { return p.locator('text=Booking Confirmation').isVisible(); }
 function marker(p) { return p.evaluate(() => localStorage.getItem('cue_resume_book')); }
 function cartLen(p) { return p.evaluate(() => (JSON.parse(localStorage.getItem('cue_itinerary_v1') || '{}').days || []).length); }
-// The 6 boxes fill left-to-right as one field each (OtpFields), so typing into
-// the first one and letting auto-advance carry it is how a guest actually
-// uses it - not Playwright's .fill() on a single input.
 async function typeCode(p, digits) {
   await p.locator('input[inputmode="numeric"]:visible').first().click();
   await p.keyboard.type(digits, { delay: 20 });
 }
 
 for (const w of [390, 1280]) {
-  // A + C: logged out, code round trip (wrong then right), same tab throughout
   {
     const { ctx, page, errs } = await setup(w);
     await page.goto(`${BASE}/my-trips.html`, { waitUntil: 'networkidle' });
@@ -95,14 +70,12 @@ for (const w of [390, 1280]) {
     ok(/wayan@example\.com/.test(await page.locator('body').innerText()), `${w}/C: the code-sent message does not say which address`);
     await page.screenshot({ path: `shots/gate-code-${w}.png` });
 
-    // wrong code first
     await typeCode(page, '000000');
     await page.waitForTimeout(500);
     ok(!(await formOpen(page)), `${w}/C: A WRONG CODE OPENED THE BOOKING FORM`);
     ok(await codeOpen(page), `${w}/C: a wrong code left the code stage instead of showing an error there`);
     ok(/incorrect|expired/i.test(await page.locator('body').innerText()), `${w}/C: no error shown for a wrong code`);
 
-    // right code - typed after the wrong one, same tab, no navigation
     await typeCode(page, '135791');
     await page.waitForTimeout(700);
     ok(await formOpen(page), `${w}/C: booking form did not open after a correct code, in the same tab`);
@@ -115,7 +88,6 @@ for (const w of [390, 1280]) {
     ok(errs.length === 0, `${w}/A+C: page errors ${errs.join(' | ')}`);
     await ctx.close();
   }
-  // B: create account on an email that already has one -> same code stage
   {
     const { ctx, page, errs } = await setup(w);
     await page.goto(`${BASE}/my-trips.html`, { waitUntil: 'networkidle' });
@@ -135,7 +107,6 @@ for (const w of [390, 1280]) {
     ok(errs.length === 0, `${w}/B: page errors ${errs.join(' | ')}`);
     await ctx.close();
   }
-  // G: a genuinely new account still signs in immediately, no code
   {
     const { ctx, page, errs } = await setup(w);
     await page.goto(`${BASE}/my-trips.html`, { waitUntil: 'networkidle' });
@@ -151,7 +122,6 @@ for (const w of [390, 1280]) {
     ok(errs.length === 0, `${w}/G: page errors ${errs.join(' | ')}`);
     await ctx.close();
   }
-  // D: already signed in
   {
     const { ctx, page, errs } = await setup(w, { signedIn: true });
     await page.goto(`${BASE}/my-trips.html`, { waitUntil: 'networkidle' });
@@ -161,7 +131,6 @@ for (const w of [390, 1280]) {
     ok(errs.length === 0, `${w}/D: page errors ${errs.join(' | ')}`);
     await ctx.close();
   }
-  // E: dismiss
   {
     const { ctx, page, errs } = await setup(w);
     await page.goto(`${BASE}/my-trips.html`, { waitUntil: 'networkidle' });
@@ -173,7 +142,6 @@ for (const w of [390, 1280]) {
     ok(errs.length === 0, `${w}/E: page errors ${errs.join(' | ')}`);
     await ctx.close();
   }
-  // F: stale marker (see file header - this is regression insurance on dead code)
   {
     const { ctx, page, errs } = await setup(w, { marker: { path: '/my-trips.html', at: Date.now() - 2 * 3600000 } });
     await page.goto(`${BASE}/?token=tok-link`, { waitUntil: 'networkidle' });

@@ -1,4 +1,3 @@
-// Opens transfer/airport detail cards in charter's order: title, facts, included/not included, then the page's prose.
 export function detailBlocks(title, { facts, included, excluded }, rest = []) {
   return [
     { type: 'heading', sub: false, html: title },

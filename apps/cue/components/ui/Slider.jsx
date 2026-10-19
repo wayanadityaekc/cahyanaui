@@ -4,7 +4,6 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import clsx from 'clsx';
 import { GRID_SLIDER } from '@/components/ui/gridClasses';
 
-// Slider arrows: hidden on phones, fade in on hover from 993px.
 const ARROW =
   'absolute top-[calc(50%-0.5rem)] [transform:translateY(-50%)] z-[5] hidden items-center justify-center w-11 h-11 ' +
   'border-none rounded-[50%] text-[1.7rem] leading-none text-green bg-[rgba(255,255,255,0.96)] ' +
@@ -34,7 +33,6 @@ export default function Slider({ children, className = '', gridClassName = GRID_
       track.removeEventListener('scroll', measure);
       window.removeEventListener('resize', measure);
     };
-    // children in deps: cards that arrive after mount (reviews) must re-measure, or Next never appears.
   }, [measure, children]);
 
   function step(dir) {
@@ -47,7 +45,6 @@ export default function Slider({ children, className = '', gridClassName = GRID_
 
   return (
     <div className={clsx('group relative', className)}>
-      {/* Rendered only when it can move: the hidden attribute loses to the arrow's own min-[993px]:flex. */}
       {canPrev && (
         <button type="button" className={`${ARROW} left-[-6px]`} aria-label="Previous" onClick={() => step(-1)}>
           &lsaquo;

@@ -23,7 +23,6 @@ import { EXPLORE_OPTIONS } from '@/content/shared/explore-options';
 
 const GUESTS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
-// .hsearch__field > label (dulu di style.css) - dipake berkali di file ini.
 
 export default function HeroSearch({ onClose, sheetOpen = false }) {
   const { guests, setGuests, currency } = useTripPrefs();
@@ -70,7 +69,6 @@ export default function HeroSearch({ onClose, sheetOpen = false }) {
       if (!arr.length) return;
       const low = Math.min(...arr);
       const high = Math.max(...arr);
-      // Only the low end carries the currency symbol; the high end still gets IDR small-thousands styling.
       const hiText = isIdr ? withDeemphasizedThousands(high.toLocaleString(loc)) : high.toLocaleString(loc);
       out[cat] = low === high ? <>from {fmt(low)}</> : <>{fmt(low)}–{hiText}</>;
     });
@@ -170,7 +168,6 @@ export default function HeroSearch({ onClose, sheetOpen = false }) {
           <span className={picked ? CONTROL_VAL : CONTROL_VAL_PLACEHOLDER}>{picked ? picked.name : 'Choose'}</span>
           <ChevronDown className={CHEV} />
         </button>
-        {/* Portal-mounted once mobile and mounted (not gated on `open`) so the sheet has a closed frame to animate from. */}
         {mounted && isMobile && createPortal(panel, document.body)}
         {mounted && isMobile && <Overlay open={open} onClose={() => setOpen(false)} />}
         {(!isMobile || !mounted) && panel}

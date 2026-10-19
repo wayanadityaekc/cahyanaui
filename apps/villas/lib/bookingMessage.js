@@ -1,4 +1,3 @@
-// The WhatsApp text for My Booking: stay (paid in full), CUE extras (deposit now, rest on the day), villa services (paid at the villa).
 import { formatRupiah } from '@/lib/currency';
 import { fmtDate, fmtTime } from '@/lib/timeSlots';
 import { priceFor, programByKey, transferById } from '@/lib/extras';

@@ -1,4 +1,3 @@
-// CUE's footer payment logos, hand-drawn SVG (Lucide has no brand logos); copied as is so both sites show the same marks.
 export default function FooterPayChips({ chipClass, svgClass = 'block h-[13px] w-auto' }) {
   return (
     <>

@@ -1,12 +1,3 @@
-// The review popup, in the browser, on the built pages.
-//
-// What is being pinned: a submit that partly succeeds must SAY so. It used to
-// throw on the first refusal, so reviews already published were reported as a
-// single red error - the guest read "nothing happened", tried again, and got
-// "you've already submitted a review for this tour".
-// Run it against the BUILT pages, not `next dev`:
-//   npm run build && npm run serve   (port 4000)
-//   node verify-review.mjs
 import { chromium } from '/home/user/CUE/node_modules/playwright-core/index.mjs';
 
 const BASE = 'http://127.0.0.1:4000';
@@ -15,9 +6,6 @@ function ok(c, m) { c ? pass++ : (fail++, console.log('  FAIL:', m)); }
 
 const b = await chromium.launch({ executablePath: '/opt/pw-browsers/chromium_headless_shell-1194/chrome-linux/headless_shell' });
 
-// Two past bookings the account may review. The SECOND is refused by the server
-// (something changed between the page loading and the submit) - the case that
-// used to hide the first one's success.
 const MINE = {
   upcoming: [],
   history: [
@@ -38,12 +26,8 @@ for (const w of [390, 1280]) {
     page.on('pageerror', (e) => errs.push(String(e)));
 
     const posted = [];
-    // What the server has accepted, so /bookings/mine answers the way the real
-    // one does: a reviewed trip stops being offered.
     const reviewed = new Set();
     let mineHits = 0;
-    // ONE branching handler. A catch-all registered later wins in Playwright, so
-    // separate route() calls for /api/** would swallow the specific ones.
     await ctx.route('**/api/**', async (route) => {
       const url = route.request().url();
       if (url.includes('/account/me') || url.includes('/account/session')) {
@@ -75,7 +59,6 @@ for (const w of [390, 1280]) {
 
     await page.goto(`${BASE}/my-trips.html`, { waitUntil: 'networkidle' });
 
-    // Open the popup from Past trips.
     if (w < 1024) {
       const back = page.locator('button:visible', { hasText: /^(Back|My trips)$/i }).first();
       if (await back.count()) await back.click().catch(() => {});
@@ -90,7 +73,6 @@ for (const w of [390, 1280]) {
     const modal = page.locator('#modal-form, [data-step="write"]').first();
     await page.locator('[data-step="write"]').waitFor({ timeout: 10000 });
 
-    // Both trips offered and pre-ticked.
     const boxes = page.locator('[data-step="write"] input[type=checkbox]');
     ok(await boxes.count() === 2, `${w}/${mode}: expected 2 trips ticked, got ${await boxes.count()}`);
 
@@ -104,7 +86,6 @@ for (const w of [390, 1280]) {
     const shell = page.locator('div.fixed.inset-0').filter({ hasText: 'Leave a Review' }).last();
     const txt = await shell.innerText();
     ok(/Leave a Review/.test(txt), `${w}/${mode}: HARNESS READ THE WRONG BOX`);
-    // EVERY ticked trip is attempted, not just up to the first refusal.
     ok(posted.length === 2, `${w}/${mode}: ${posted.length} of 2 reviews were attempted`);
 
     if (mode === 'all-ok') {
@@ -121,9 +102,6 @@ for (const w of [390, 1280]) {
          `${w}/${mode}: the trip that SUCCEEDED is listed as a failure`);
     }
 
-    // Close, then look again. Before refreshTrips the list was read once per page
-    // load, so a trip reviewed a moment ago was still offered - tick it again and
-    // the gate answered "you've already submitted a review for this tour".
     const hitsBefore = mineHits;
     await shell.locator('button', { hasText: 'Done' }).click();
     await page.waitForFunction(() => !document.querySelector('[data-step="write"]'), { timeout: 5000 }).catch(() => {});
@@ -137,8 +115,6 @@ for (const w of [390, 1280]) {
       if (await again.count()) {
         await again.click();
         await page.locator('[data-step="write"]').waitFor({ timeout: 10000 });
-        // With one trip left the popup shows no checklist at all, so reading its
-        // text proves nothing. What it SENDS is the truth.
         const n = posted.length;
         await page.locator('[data-step="write"] button[aria-label="5 stars"]').click();
         await page.fill('#rvm-message', 'Second try for the one that was left.');
@@ -150,7 +126,6 @@ for (const w of [390, 1280]) {
       }
     }
 
-    // The page must not grow sideways with the modal open.
     const over = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
     ok(over <= 0, `${w}/${mode}: page overflows by ${over}px`);
     ok(errs.length === 0, `${w}/${mode}: page errors ${errs.join(' | ')}`);

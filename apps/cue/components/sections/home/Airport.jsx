@@ -1,7 +1,6 @@
 import { BTN_SM } from '@/components/ui/btnClasses';
 import Price from '@/components/Price';
 
-// Airport band: dark photo overlay via after:, horizontal gradient on desktop, darker vertical one at <=560px.
 const CLS = {
   section:
     "relative overflow-hidden bg-cover bg-center py-8 text-white " +
@@ -45,7 +44,6 @@ export default function Airport() {
             <span className={CLS.price}>
               from <Price name="Airport – Ubud" fallback="$28" className={CLS.amt} as="b" />
             </span>
-            {/* Anchor text must say 'airport': this is a main internal link to /airport-transfer. */}
             <a className={CLS.btn} href="/airport-transfer.html">
               Airport transfer &rsaquo;
             </a>

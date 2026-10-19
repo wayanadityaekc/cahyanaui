@@ -10,17 +10,14 @@ import { PAY_COPY, payOptions } from '@/lib/payment';
 import { usePricing } from '@/state/PricingProvider';
 import { noteFor, railFor, RAIL_CHOICES } from '@/lib/rails';
 
-// Pay option rows stay plain (no per-row toggles); amounts are display only, the server recomputes every charge.
 const CARD = 'rounded-md bg-white [transition:border-color_var(--dur)_ease,background-color_var(--dur)_ease]';
 const CARD_ON = '[border:1.5px_solid_var(--color-cta)] bg-cream';
 const CARD_OFF = '[border:1.5px_solid_var(--line)] hover:[border-color:var(--color-gold)]';
 const CARD_DIM = '[border:1.5px_solid_var(--line)] opacity-55';
-// No transition of its own, so the global :active press feedback in style.css still applies (check-motion SNAP).
 const PICK =
   'w-full flex items-start gap-3 text-left bg-transparent border-none p-[0.85rem] cursor-pointer';
 const PICK_TIGHT = 'pb-[0.35rem]';
 const PICK_DIM = 'cursor-not-allowed';
-// Lines up under the label, not under the radio.
 const FOOT = 'px-[0.85rem] pb-[0.6rem] pl-[calc(0.85rem+30px)]';
 const DOT = 'flex-none w-[18px] h-[18px] mt-[0.1rem] rounded-[50%] flex items-center justify-center';
 const LABEL = 'font-semibold text-green text-[1rem] leading-tight';
@@ -29,31 +26,25 @@ const AMOUNT = 'font-semibold text-amber text-[1rem] whitespace-nowrap';
 const BADGE =
   'inline-block ml-2 px-[0.45rem] py-[0.1rem] rounded-sm bg-[rgba(201,164,92,0.16)] text-amber-d text-small font-semibold align-middle';
 const HEAD = 'text-label font-medium tracking-[0.08em] uppercase text-muted mb-[0.6rem]';
-// Rail choice (Card / PayPal): two equal halves in the option cards' border style; no own transition (SNAP rule).
 const METHODS = 'grid grid-cols-2 gap-2 mb-2';
-// Icon only: the name is the aria-label, the explanation is behind the (i).
 const METHOD = 'flex items-center justify-center h-[2.9rem] rounded-md bg-white cursor-pointer';
 const METHOD_ICON = 'w-[var(--icon-lg)] h-[var(--icon-lg)]';
 const INFO_ROW = 'flex items-center gap-[var(--space-1)] mb-[0.6rem]';
 const INFO_TERM = 'block font-semibold text-green';
-// Guest's own-currency figure under the amount when the rail charges another currency, marked as an estimate.
 const APPROX = 'block text-small text-muted font-normal whitespace-nowrap text-right';
 const FINE = 'text-small text-green leading-[var(--lh-body)]';
 const FINE_DIM = 'text-small text-muted leading-[var(--lh-body)]';
 const MORE =
   'inline-flex items-center gap-1 mt-[0.35rem] bg-transparent border-none p-0 text-small text-gold-d font-medium cursor-pointer';
 const LOCKED = 'mt-[0.3rem] text-small text-muted leading-[var(--lh-body)]';
-// Sits ON TOP of the booking popup, so one step above its z-[200].
 const FINE_SHELL =
   'fixed inset-0 z-[210] flex items-center justify-center p-3 bg-[rgba(0,0,0,0.5)] pointer-events-auto';
 const FINE_BOX =
   'relative w-full max-w-[420px] max-h-[calc(100dvh-24px)] overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden p-5 rounded-md bg-white';
 const FINE_TITLE = 'mb-3 font-body text-h3 font-semibold tracking-normal';
-// Button geometry copied from BTN_SM; colour and width set here since BTN_SM is geometry only.
 const FINE_CLOSE =
   'mt-5 w-full flex items-center justify-center text-center leading-none h-[var(--btn-h)] px-4 py-0 rounded-sm text-small font-semibold text-white bg-cta border-none cursor-pointer';
 
-// PayPal mark drawn by hand like the other payment logos (Lucide has no brand icons).
 function PayPalMark({ className }) {
   return (
     <svg viewBox="0 0 24 24" className={className} aria-hidden="true">
@@ -85,26 +76,20 @@ export default function PaymentStep({
   total, totalIdr = null, totalUsd = null, symbol = '$', currency = 'USD', stay = '', hasReferral = false,
   referral, onReferral, onApplyReferral, refMsg,
 }) {
-  // Deposit comes from the catalog (server rate); only trusted when the catalog is for this currency.
   const pricing = usePricing();
   const cat = pricing && pricing.catalog;
   const deposit = cat && cat.currency === currency && cat.deposit ? cat.deposit.display : null;
-  // The flat deposit in rupiah is the same in every catalog (rupiah is the base).
   const depositIdr = cat && cat.deposit && cat.deposit.idr != null ? cat.deposit.idr : null;
   const options = payOptions({ total, currency, stay, hasReferral, deposit, totalIdr, depositIdr, totalUsd });
   const rail = railFor(railChoice);
-  // Card (DOKU) always charges rupiah, so for non-IDR guests the rupiah figure is exact and theirs an estimate.
   const inRupiah = rail === 'doku' && String(currency).toUpperCase() !== 'IDR';
-  // PayPal cannot charge rupiah, so a rupiah guest there is billed dollars and the dollar figure is exact.
   const inUsd = rail === 'paypal' && String(currency).toUpperCase() === 'IDR';
   const [openFine, setOpenFine] = useState(false);
-  // Set only when the chosen rail charges a currency other than the one prices are shown in.
   const railNote = noteFor(currency, rail);
   function money(v) { return withSymbol(symbol + v.toLocaleString(symbol === 'Rp' ? 'id-ID' : 'en-US')); }
   function rupiah(v) { return withSymbol(`Rp${v.toLocaleString('id-ID')}`); }
   function dollars(v) { return withSymbol(`$${v.toLocaleString('en-US')}`); }
 
-  // Fall back to deposit if the selected option becomes unavailable (e.g. referral lost on a quote refresh).
   useEffect(() => {
     const picked = options.find((o) => o.id === option);
     if (picked && !picked.available) onOption('deposit');
@@ -129,13 +114,11 @@ export default function PaymentStep({
                 {m.how}
               </span>
             ))}
-            {/* Only when the chosen rail charges a currency other than the page's display currency. */}
             {railNote && <span className="text-muted">{railNote}</span>}
           </span>
         </InfoDot>
       </div>
 
-      {/* Rail choice first, then amount; Card (DOKU) is the default for every currency, PayPal the alternative. */}
       <div className={METHODS} role="radiogroup" aria-label={PAY_COPY.methodHeading} data-rail-choice>
         {RAIL_CHOICES.map((m) => {
           const selected = rail === m.id;
@@ -185,7 +168,6 @@ export default function PaymentStep({
                   </span>
                   <span className={SUB}>
                     {o.sub}
-                    {/* Spell out the balance left to pay the driver on the day. */}
                     {o.balance != null && <> Then {money(o.balance)} cash to your driver on the day.</>}
                   </span>
                 </span>
@@ -204,7 +186,6 @@ export default function PaymentStep({
                 )}
               </button>
 
-              {/* The code lives in the row it unlocks, not in a block of its own. */}
               {isRef && (
                 <div className={FOOT}>
                   <div className="flex gap-2">
@@ -228,7 +209,6 @@ export default function PaymentStep({
         })}
       </div>
 
-      {/* One line, then everything else behind Details. */}
       <div className="mt-[0.9rem]">
         <p className={FINE}>{PAY_COPY.cancelShort}</p>
         <button

@@ -3,7 +3,6 @@
 import { useTripPrefs } from '@/state/TripPrefsProvider';
 import { usePricing } from '@/state/PricingProvider';
 
-// Format prices in the guest's currency: symbol from the pricing context (fallback '$'), locale from currency.
 export default function useMoney() {
   const { currency } = useTripPrefs();
   const pricing = usePricing();

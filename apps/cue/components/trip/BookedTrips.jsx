@@ -17,12 +17,10 @@ import {
   MTC_CANCEL_BOX, MTC_CANCEL_BTN,
 } from './myTripsClasses';
 
-// Booked / Past tab: sign-in prompt, loading and empty states, trip cards, one Leave-a-review button.
 export default function BookedTrips({ isPast, openRef, setOpenRef, setReview }) {
   const { account, trips, reviewableItems } = useAccount();
   const { currency } = useTripPrefs();
 
-  // Booked trips show the stored charged amount, not a live conversion.
   function bookedMoney(usd, idr) {
     return currency === 'IDR'
         ? `Rp${Number(idr || 0).toLocaleString('id-ID')}`

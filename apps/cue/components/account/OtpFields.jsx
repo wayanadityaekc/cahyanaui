@@ -2,7 +2,6 @@
 
 import { useEffect, useRef } from 'react';
 
-// 6-box code input: auto-advance, backspace steps back, arrows move, paste fills all; flex-1 + max-w fits 320px.
 export default function OtpFields({ length = 6, value, onChange, onComplete, error, disabled, autoFocus }) {
   const refs = useRef([]);
   const digits = Array.from({ length }, (_, i) => value[i] || '');
@@ -14,11 +13,9 @@ export default function OtpFields({ length = 6, value, onChange, onComplete, err
   function commit(next) {
     const joined = next.join('');
     onChange(joined);
-    // Use next.every(Boolean), not joined.includes('') - every string includes '', so that never completed.
     if (joined.length === length && next.every(Boolean)) onComplete && onComplete(joined);
   }
 
-  // Paste, autofill or IME can land several digits in one box; spread them across the following boxes.
   function spread(i, raw) {
     const next = digits.slice();
     let pos = i;
@@ -73,7 +70,6 @@ export default function OtpFields({ length = 6, value, onChange, onComplete, err
     <div className="flex gap-2 justify-center" role="group" aria-label="Verification code">
       {digits.map((d, i) => (
         <input
-          // eslint-disable-next-line react/no-array-index-key
           key={i}
           ref={(input) => { refs.current[i] = input; }}
           type="text"

@@ -1,4 +1,3 @@
-// Real reviews ported as-is: the source has no reviewer names or photos, so these fields are left out on purpose.
 export const OVERALL_RATING = '4.96';
 export const OVERALL_REVIEW_COUNT = 306;
 

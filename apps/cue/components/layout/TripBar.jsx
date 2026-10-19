@@ -6,13 +6,10 @@ import { normalizePath } from '@/lib/pathname';
 import { Tag, ShieldCheck, CalendarDays, Info, Car } from 'lucide-react';
 import { promoFor } from '@/content/shared/promo';
 
-// Promo strip above the navbar, text per page from promo.js; one line only (nowrap + truncate, needs min-w-0).
 const BAR = 'flex items-center justify-center gap-2 w-full py-[0.5rem] px-5 [border-bottom:1px_solid_var(--line)] bg-cream text-[0.72rem] font-normal leading-[1.3] text-muted no-underline whitespace-nowrap [@media(max-width:560px)]:gap-[0.35rem] [@media(max-width:560px)]:px-[0.9rem]';
 const CTA = 'ml-2 shrink-0 text-gold underline [@media(max-width:560px)]:ml-[0.3rem]';
-// Fade for rotating messages only; motion-reduce drops the fade but the text still swaps.
 const FADE = 'flex items-center min-w-0 max-w-full gap-2 [transition:opacity_var(--dur)_var(--ease)] motion-reduce:transition-none [@media(max-width:560px)]:gap-[0.35rem]';
 
-// Lucide needs an explicit size or it renders at 24px.
 const ICON = 'w-[var(--icon-sm)] h-[var(--icon-sm)] shrink-0 text-gold';
 const ICONS = { tag: Tag, shield: ShieldCheck, calendar: CalendarDays, info: Info, car: Car };
 
@@ -30,7 +27,6 @@ export default function TripBar() {
   useEffect(() => {
     setIdx(0);
     if (count < 2) return undefined;
-    // Fade out, swap, then fade in on the next frame; setting idx and dim in one tick pops instead of fading.
     const tick = setInterval(() => {
       setDim(true);
       const t = setTimeout(() => {

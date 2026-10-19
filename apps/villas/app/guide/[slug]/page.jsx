@@ -5,12 +5,10 @@ import { JsonLd } from '@cahyana/ui';
 import { pageMeta } from '@/lib/seo';
 import { articleCrumbs, articleSchema, breadcrumbList } from '@/lib/schema';
 
-// Static export, so every article path is enumerated at build time.
 export function generateStaticParams() {
   return ARTICLES.map((article) => ({ slug: article.slug }));
 }
 
-// `params` is a Promise in this Next: read without await, every article silently exported as the 404 page.
 export async function generateMetadata({ params }) {
   const { slug } = await params;
   const article = articleBySlug(slug);

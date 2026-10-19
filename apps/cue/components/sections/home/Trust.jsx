@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react';
 import clsx from 'clsx';
 import { API_BASE } from '@/lib/constants';
 
-// Featured-on / stats band; the cream background is opt-in via the `cream` prop.
 const CLS = {
   base:
     "max-w-[1100px] mx-auto mt-0 mb-6 py-9 px-[var(--container-x)] text-center flex flex-wrap items-center justify-center " +
@@ -25,7 +24,6 @@ export default function Trust({ showStat = true, showSocials = false, cream = fa
 
   useEffect(() => {
     let cancelled = false;
-    // fetch the live account count once
     async function load() {
       try {
         const r = await fetch(`${API_BASE}/accounts/count`);

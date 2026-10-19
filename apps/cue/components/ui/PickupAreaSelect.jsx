@@ -5,12 +5,10 @@ import { useTripPrefs } from '@/state/TripPrefsProvider';
 import { usePricing } from '@/state/PricingProvider';
 import Select from './Select';
 
-// Label shows the bare area ('Kuta'); the value stays the full route key used to price the pick-up.
 function areaName(route) {
   return route.replace(/ – Ubud$/, '').replace(/ Area$/, '');
 }
 
-// Self-contained pickup-area picker that reads and writes TripPrefs' `stay` itself.
 export default function PickupAreaSelect({ id, className = '' }) {
   const { stay, setStay } = useTripPrefs();
   const pricing = usePricing();

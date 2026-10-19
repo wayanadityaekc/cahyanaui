@@ -2,7 +2,6 @@ import ServiceReviews from '@/components/reviews/ServiceReviews';
 import TransferSection from '@/components/sections/TransferSection';
 import JsonLd from '@/components/JsonLd';
 
-// SEO: this page owns the non-airport routes; keep "airport transfer" out of its title/meta (/airport-transfer owns it).
 export const metadata = {
   title: 'Bali Private Car Transfers | Ubud to Canggu, Kuta, Amed',
   description:
@@ -15,7 +14,6 @@ export default function Page() {
     <>
       <JsonLd page="transfer" />
       <TransferSection />
-      {/* Reviews by group, not service: the server resolves every priced transfer route from the catalog. */}
       <ServiceReviews
         group="transfers"
         title="What guests say about our transfers"

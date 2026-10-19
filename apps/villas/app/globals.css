@@ -1,12 +1,7 @@
 @import "tailwindcss";
-
-/* Library tokens; tokens are defined once in @cahyana/ui for both sites, never copied here. */
 @import "@cahyana/ui/tokens.css";
 @source "../../../packages/ui/src";
-
-/* Base: kept in @layer base, because un-layered CSS here would beat every component class (white CTA text once lost to a { color: inherit }). */
 @layer base {
-  /* overflow-x CLIP not hidden, on html AND body: hides the off-screen drawer and slider bleed but keeps the sticky navbar working. */
   html {
     scroll-behavior: smooth;
     overflow-x: clip;
@@ -16,10 +11,8 @@
     font-family: var(--font-body);
     font-size: 16px;
     font-weight: 400;
-    /* CUE's body: green text and the browser's normal line-height (preflight would make it 1.5); copy sets its own 1.6. */
     line-height: normal;
     color: var(--color-green);
-    /* The surface token, not a literal: it is what lets the library switch brand background per site. */
     background: var(--surface);
     overflow-x: clip;
   }
@@ -33,36 +26,22 @@
   }
 
   h1, h2, h3 {
-    /* --font-head, not the never-defined --font-display, so a library change cannot silently restyle headings. */
     font-family: var(--font-head);
     color: var(--color-gold);
   }
-
-  /* CUE's h1 and h2 are set tight; its h3 keep the normal line-height and tracking. */
   h1, h2 {
     line-height: 1.15;
     letter-spacing: -0.01em;
   }
 }
-
-/* Layout primitives */
 @layer components {
-  /* Page box, rhythm, caps and card live in @cahyana/ui: never redeclare them, and never name a class .container (Tailwind's own wins). */
 
 
 }
-
-/* Prose helpers and the loading splash moved to @cahyana/ui (PROSE_COPY, ICON_CIRCLE, STARS, blocks/LoadingScreen.jsx). */
-
-/* Scroll lock for useBodyLock.js: on html AND body because iOS scrolls html; overflow only, since position:fixed jumps to top. */
 .hs-locked { overflow: hidden !important; }
-
-/* Header entrance, from CUE's style.css. */
 @keyframes navbarIn {
   from { opacity: 0; }
 }
-
-/* Press feedback from CUE: standalone `scale` so it composes with hover transforms; element specificity so components can override. */
 @layer base {
   button,
   [role="button"],

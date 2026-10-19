@@ -1,12 +1,5 @@
 import { cn } from '../lib/cn.js';
 
-/**
- * One featured item on a dark card beside a plain list of the others. Built for
- * add-ons, but it holds anything with an icon, a name, a line and an action.
- *
- *   featured   { icon, label, title, text, action }  the dark card; action is a rendered node
- *   items      [{ icon, title, text, meta, action }]  the list rows
- */
 export default function FeaturedList({ featured, items = [], className }) {
   return (
     <div className={cn('grid gap-6 min-[993px]:grid-cols-2 min-[993px]:gap-10', className)}>

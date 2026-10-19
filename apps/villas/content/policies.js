@@ -1,7 +1,5 @@
-// Booking terms set by Wayan (Sep 2026), the single source for every page: never edit a number to make a page read better.
 import { REGISTRATION } from '@/content/registration';
 
-// Full payment up front, no deposit option: with only two villas, a held date that never turns up costs a whole week.
 export const PAYMENT = {
   mode: 'full',
   headline: 'Full payment when you book',
@@ -10,7 +8,6 @@ export const PAYMENT = {
   appliesTo: ['Villa stays', 'Scooter rental'],
 };
 
-// Airbnb "Firm" tier on purpose; bands run longest notice first, and refund is the percent RETURNED, not withheld.
 export const CANCELLATION = {
   name: 'Firm',
   basis: 'Matches the Airbnb "Firm" policy, so booking direct is not stricter than booking through the listing.',
@@ -22,21 +19,18 @@ export const CANCELLATION = {
   note: 'Notice is counted from your check-in date, in Bali time (WITA, UTC+8).',
 };
 
-/** Arrival and departure. Both are local Bali time. */
 export const TIMES = {
   checkIn: '2:00 PM',
   checkOut: '11:00 AM',
   note: 'Earlier check-in or a later check-out is sometimes possible - ask, and we will tell you honestly whether the villa is free.',
 };
 
-// The three lines a guest sees before paying, shared by the booking sheet and villa panel so both say the same.
 export const BOOKING_TERMS = [
   PAYMENT.short,
   `Free cancellation up to 30 days before check-in, 50% up to 7 days.`,
   `Check-in from ${TIMES.checkIn}, check-out by ${TIMES.checkOut}.`,
 ];
 
-/** Long form, for Our Company. Same facts, room to explain them. */
 export const TERMS_BLOCKS = [
   { type: 'heading', html: 'Who you are booking with' },
   { type: 'para', html: `Stays are booked with <strong>${REGISTRATION.name}</strong> (${REGISTRATION.type}, NIB ${REGISTRATION.nib}), based in ${REGISTRATION.location}. Cahyana House and Cahyana Tibuah are both run by the company.` },

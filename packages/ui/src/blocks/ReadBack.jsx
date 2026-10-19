@@ -3,12 +3,6 @@
 import { useState } from 'react';
 import { GROUP_LABEL, ROWSET, ROW, PBAR, PBAR_L, PBAR_V, DETAILS_LI_ROW, DETAILS_TOGGLE, DETAILS_LI } from './confirmClasses.js';
 
-/**
- * CUE's check step, as pieces the site assembles.
- *   ReadBackRows   a labelled group of label/value rows        rows: [[label, value]]
- *   ReadBackList   the "what's included" list; open by default, folds behind a toggle above 4 lines
- *   TotalBar       the amount the guest agrees to
- */
 export function ReadBackRows({ label, rows = [] }) {
   const shown = rows.filter(([, value]) => value !== '' && value != null);
   if (!shown.length) return null;

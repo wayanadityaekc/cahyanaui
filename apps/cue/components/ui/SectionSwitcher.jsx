@@ -4,13 +4,11 @@ import { useEffect, useState } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { BAR_SHELL, BAR_UPTO_MD } from '@/components/ui/stickyBar';
 
-// Size comes from the parent button's [&>svg] rule, same as before.
 function Chevron({ dir }) {
   const Icon = dir === 'left' ? ChevronLeft : ChevronRight;
   return <Icon aria-hidden="true" />;
 }
 
-// Mobile listing bar: current category name with prev/next arrows; shares BookBar's shell so only one bar is pinned.
 export default function SectionSwitcher({ zones = [] }) {
   const [idx, setIdx] = useState(0);
 

@@ -1,4 +1,3 @@
-// Always-mounted sr-only live region (status/polite, or alert if assertive) so screen readers reliably announce changes.
 export default function LiveRegion({ children, assertive = false }) {
   return (
     <div

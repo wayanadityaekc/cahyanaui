@@ -3,7 +3,6 @@ import { MessageCircle } from 'lucide-react';
 import ContactForm from '@/components/contact/ContactForm';
 import { WHATSAPP_NUMBER } from '@/lib/constants';
 
-// Contact section; `company` renders it inside Our Company (no top padding, bold gold heading).
 export default function ContactSection({ company = false }) {
   return (
     <>

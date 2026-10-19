@@ -3,7 +3,6 @@ import { useState } from 'react';
 import { API_BASE } from '@/lib/constants';
 import { BTN_SM } from '@cahyana/ui';
 
-// Ported from CUE components/booking/DokuCheckout.jsx. Loads DOKU's checkout script on demand; never clears the cart here and never trusts what the browser reports back.
 function loadScript(src) {
   return new Promise((resolve, reject) => {
     const had = document.querySelector(`script[data-doku="${src}"]`);
@@ -23,17 +22,14 @@ function loadScript(src) {
   });
 }
 
-// Styles the backdrop/container DOKU injects by diffing body children, never by DOKU class names (they can change).
 function adoptShell(before) {
   const added = [...document.body.children].filter((node) => !before.has(node));
   added.forEach((node) => {
     if (node.tagName === 'SCRIPT' || node.tagName === 'STYLE') return;
     node.dataset.dokuShell = '1';
     const style = getComputedStyle(node);
-    // Tell backdrop from panel by shape (full-width or not), not by name, so a DOKU rename can't break it.
     const wide = node.offsetWidth >= window.innerWidth - 2;
     if (wide) {
-      // Same scrim colour as the site's own modals.
       node.style.background = 'rgba(34,32,28,0.55)';
       node.style.backdropFilter = 'blur(2px)';
     }
@@ -62,7 +58,6 @@ export default function DokuCheckout({ bookingRef, option, amountText }) {
       });
       const d = await r.json().catch(() => null);
       if (!r.ok || !d || !d.url) {
-        // A switched-off rail says so instead of sending the guest to a page that won't load.
         setErr(
           d && d.code === 'not_ready'
             ? 'Card payments are not available right now. Please go back and choose PayPal, or contact us.'
@@ -72,24 +67,20 @@ export default function DokuCheckout({ bookingRef, option, amountText }) {
         return;
       }
 
-      // Try the overlay first; on any failure fall through to full navigation so the pay button never dead-ends.
       if (d.checkout_js) {
         try {
           await loadScript(d.checkout_js);
           if (typeof window.loadJokulCheckout === 'function') {
             const before = new Set(document.body.children);
             window.loadJokulCheckout(d.url);
-            // Adopt the shell now and again next frame in case DOKU builds it asynchronously.
             adoptShell(before);
             requestAnimationFrame(() => adoptShell(before));
             setBusy(false);
             return;
           }
         } catch (e) {
-          /* falls through to the redirect below */
         }
       }
-      // Same-tab navigation, not a new tab, so a popup blocker can't swallow the payment page.
       window.location.href = d.url;
     } catch (e) {
       setErr('We could not reach the payment page. Please check your connection and try again.');

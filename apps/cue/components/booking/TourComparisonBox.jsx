@@ -1,7 +1,6 @@
 import { ChevronRight } from 'lucide-react';
 import Price from '@/components/Price';
 
-// Tours that include this attraction (reverse lookup from lib/tourIndex), as white buttons; renders nothing if none.
 const BTN =
   'group flex items-center gap-3 w-full py-[0.7rem] px-[0.85rem] rounded-md no-underline text-left ' +
   'bg-white [border:1px_solid_var(--line)] cursor-pointer ' +

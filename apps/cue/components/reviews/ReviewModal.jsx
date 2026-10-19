@@ -17,10 +17,8 @@ import { useAccount } from '@/state/AccountProvider';
 
 const COUNTRY_OPTIONS = COUNTRIES.map((c) => ({ value: c.code, label: c.name, flag: c.code }));
 
-// Item key = (booking_ref, service), the pair the server de-dupes on; a service can repeat across bookings.
 function itemKey({ ref, service }) { return `${ref}::${service}`; }
 
-// Login-only review popup: one rating + message posted to every ticked past trip.
 export default function ReviewModal({ open = false, prefill = null, onClose = () => {} }) {
   const [mounted, setMounted] = useState(false);
   const [name, setName] = useState('');
@@ -34,7 +32,6 @@ export default function ReviewModal({ open = false, prefill = null, onClose = ()
   const [done, setDone] = useState(false);
   const [partial, setPartial] = useState([]);
   const { refreshTrips } = useAccount() || {};
-  // Trips are re-read on CLOSE, not on success: prefill is a new object each render, so a mid-popup re-read resets the form.
   const sent = useRef(false);
 
   useEffect(() => setMounted(true), []);
@@ -43,7 +40,6 @@ export default function ReviewModal({ open = false, prefill = null, onClose = ()
     if (!open || !prefill) return;
     setName(view.name || '');
     setCountryCode('');
-    // Every trip starts checked; the guest unticks what to skip.
     setChecked((view.items || []).map(itemKey));
     setRating(0);
     setMessage('');
@@ -57,7 +53,6 @@ export default function ReviewModal({ open = false, prefill = null, onClose = ()
   const lastPrefill = useRef(null);
   useBodyLock(open);
 
-  // Render from the last prefill while the exit animation runs, since the live one is already gone.
   if (prefill) lastPrefill.current = prefill;
   const view = prefill || lastPrefill.current;
   if (!mounted || !view) return null;
@@ -85,7 +80,6 @@ export default function ReviewModal({ open = false, prefill = null, onClose = ()
     const token = readLocal(KEY.token, '');
     const country = (COUNTRIES.find((c) => c.code === countryCode) || {}).name || '';
     const results = [];
-    // One POST per ticked trip, all attempted; never stop at the first refusal (earlier ones are already live).
     for (const it of picked) {
       try {
         const res = await fetch(`${API_BASE}/reviews`, {
@@ -110,12 +104,10 @@ export default function ReviewModal({ open = false, prefill = null, onClose = ()
     if (results.some((r) => r.ok)) sent.current = true;
     const failed = results.filter((r) => !r.ok);
     if (failed.length === results.length) { setError(failed[0].reason); return; }
-    // Partial success: show thank-you and list the trips that failed with the server's reason.
     setPartial(failed.map((r) => ({ service: r.it.service, reason: r.reason })));
     setDone(true);
   }
 
-  // Star buttons and checklist rows for this modal; shell/box/title strings come from modalClasses.
   function star(active) { return `p-0 border-none bg-transparent text-[1.9rem] leading-none cursor-pointer transition-[color] duration-[var(--dur-fast)] ${active ? 'text-amber' : 'text-[#d8d2c4]'}`; }
   const CHECK_ROW = `flex items-start gap-[0.6rem] py-[0.5rem] ${ROW_RULE} cursor-pointer`;
   const CHECK_INPUT = 'mt-[0.2rem] w-4 h-4 flex-none accent-[var(--color-cta)]';
@@ -128,7 +120,6 @@ export default function ReviewModal({ open = false, prefill = null, onClose = ()
         <h3 className={TITLE}>Leave a Review</h3>
 
         {!done && !items.length ? (
-          // No trips to review (callers never open it empty): say so instead of a form that cannot submit.
           <div className="text-center">
             <LoadFallback className="mb-4" />
             <button type="button" className={BTN} onClick={close}>Close</button>
@@ -227,7 +218,6 @@ export default function ReviewModal({ open = false, prefill = null, onClose = ()
           <div className="text-center">
             <div className={SUCCESS_ICON}>&#10003;</div>
             <h3 className={TITLE}>Thank you!</h3>
-            {/* Reviews publish immediately once accepted, so never say "once approved". */}
             <p className={SUCCESS_TEXT}>
               {partial.length
                 ? `Your review is live on the site. ${partial.length} of the trips you ticked could not be included:`

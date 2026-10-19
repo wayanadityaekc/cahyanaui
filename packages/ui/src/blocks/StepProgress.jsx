@@ -1,6 +1,5 @@
 import { STEPS, stepBar, STEP_LABEL } from './confirmClasses.js';
 
-// CUE's step chrome: one bar per step, then "Step 2 of 3 · Check".
 export default function StepProgress({ names = [], step = 1, word = 'Step', of = 'of' }) {
   return (
     <>

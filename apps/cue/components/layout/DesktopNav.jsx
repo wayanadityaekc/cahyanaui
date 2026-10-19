@@ -4,7 +4,6 @@ import { useEffect, useId, useRef, useState } from 'react';
 import { ChevronDown } from 'lucide-react';
 import { PopMenu } from '@/components/ui/Reveal';
 
-// Desktop page links in the bar; min-[993px] pairs with the drawer's max-[992px] (neither matches at exactly 992).
 
 export const PROGRAM_LINKS = [
   ['/tour.html', 'Tours'],
@@ -53,7 +52,6 @@ export default function DesktopNav({ isActive }) {
           <ChevronDown className={`w-[var(--icon-sm)] h-[var(--icon-sm)] transition-[rotate] duration-200 ${open ? 'rotate-180' : ''}`} strokeWidth={1.8} aria-hidden="true" />
         </button>
         <PopMenu open={open}>
-          {/* pt instead of a gap, so the pointer can move from trigger to panel without leaving the hover area. */}
           <div className="absolute left-0 top-full pt-[var(--space-1)] z-[130]">
             <ul id={panelId} className="list-none m-0 w-[12rem] bg-white border border-line rounded-[var(--r-md)] p-[var(--space-1)]">
               {PROGRAM_LINKS.map(([href, label]) => (

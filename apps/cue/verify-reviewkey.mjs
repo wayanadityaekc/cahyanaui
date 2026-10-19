@@ -1,6 +1,3 @@
-// Reviews show on the page they belong to, and each page has one Write review button.
-// Run: npm run build && npm run serve, then node verify-reviewkey.mjs
-// Reviews are stored under the booking name (bookItem); every lookup (list, hero stars, card stars) must use it.
 import { chromium } from 'playwright-core';
 import fs from 'node:fs';
 
@@ -23,7 +20,6 @@ async function open(path, w) {
     if (u.pathname.endsWith('/reviews')) {
       const svc = u.searchParams.get('service'), grp = u.searchParams.get('group');
       asked.push(svc ?? (grp ? `group:${grp}` : '(all)'));
-      // Server behaviour: a service filter returns only that service; no filter returns everything.
       return r.fulfill({ json: !svc && !grp ? [REVIEW] : svc === 'Ubud Tour' ? [REVIEW] : [] });
     }
     return r.fulfill({ status: 503, body: '{}' });
@@ -37,7 +33,6 @@ async function open(path, w) {
   return { ctx, page, asked, errors, status: res.status() };
 }
 
-// Visible buttons that open the review popup.
 function writeButtons(page) {
   return page.evaluate(() => [...document.querySelectorAll('button, a')].filter((b) => {
     if (b.textContent.trim() !== 'Write review') return false;
@@ -46,7 +41,6 @@ function writeButtons(page) {
   }).length);
 }
 
-// 1. Every tour page asks for its reviews by its booking name.
 for (const [slug, t] of Object.entries(TOURS)) {
   if (!fs.existsSync(`out/${slug}.html`)) continue;
   const { ctx, asked, status, errors } = await open(`/${slug}.html`, 1280);
@@ -58,7 +52,6 @@ for (const [slug, t] of Object.entries(TOURS)) {
 }
 
 for (const w of [390, 1280]) {
-  // 2. Ubud Tour's own page shows its review, stars and one button.
   {
     const { ctx, page } = await open('/ubud-tour.html', w);
     const body = await page.evaluate(() => document.body.innerText);
@@ -70,21 +63,18 @@ for (const w of [390, 1280]) {
     ok(await page.evaluate(() => document.documentElement.scrollWidth - innerWidth) <= 0, `${w} ubud-tour: page overflows`);
     await ctx.close();
   }
-  // 3. Homepage shows reviews from every program (unfiltered request).
   {
     const { ctx, page, asked } = await open('/', w);
     ok(asked.includes('(all)'), `${w} home: reviews request was filtered ${JSON.stringify(asked)}`);
     ok((await page.evaluate(() => document.body.innerText)).includes(MSG), `${w} home: review not shown`);
     await ctx.close();
   }
-  // 4. Listing card shows the stars.
   {
     const { ctx, page } = await open('/tour.html', w);
     const card = await page.evaluate(() => (document.querySelector('[data-rating="Ubud Tour"]') || {}).textContent || '');
     ok(/5\.0/.test(card), `${w} tour listing: card stars read "${card}"`);
     await ctx.close();
   }
-  // 5. Exactly one Write review button on every page that has reviews (empty state included).
   for (const path of ['/east-bali-tour-lempuyang.html', '/transfer.html', '/charter.html', '/airport-transfer.html', '/attractions/atv-ride.html', '/lempuyang-tirta-gangga.html']) {
     if (!fs.existsSync(`out${path}`)) continue;
     const { ctx, page, status } = await open(path, w);

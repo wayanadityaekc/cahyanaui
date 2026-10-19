@@ -1,7 +1,6 @@
 import OtpFields from '@/components/account/OtpFields';
 import { REFMSG_ERR } from '@/components/ui/modalClasses';
 
-// Sign-in code entry shown on both success screens; the booking is already saved either way.
 export default function SigninNote({ otpVerified, signinEmail, otpCode, setOtpCode, doOtpVerify, otpMsg, otpBusy, otpCooldown, resendOtp }) {
   return (
     <div data-signin-note className="-mt-3 mb-6">

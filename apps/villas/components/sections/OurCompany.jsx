@@ -11,7 +11,6 @@ import { CONTACT_EMAIL, CUE_LINK, WHATSAPP_LINK } from '@/lib/constants';
 import { Button, Card, Breadcrumb } from '@cahyana/ui';
 import { COMPANY_CRUMBS } from '@/lib/crumbs';
 
-// Every section stays in the DOM (one shown via `hidden`) so crawlers read it all; do not simplify to one mounted tab.
 const TABS = [
   { id: 'about', label: 'About Us' },
   { id: 'contact', label: 'Contact' },
@@ -27,7 +26,6 @@ function idFromHash() {
   return TABS.some((item) => item.id === id) ? id : null;
 }
 
-// Same width as the contact panel, so the right-hand padding matches on every tab.
 const BODY_TEXT = '[&_p]:leading-[var(--lh-body)] [&_p]:m-0 [&_p]:mb-4 [&_p]:text-ink [&_p]:text-body';
 const HEADING = 'font-head text-h2 font-bold text-gold mb-4';
 
@@ -64,7 +62,6 @@ function ContactBody() {
   );
 }
 
-// Grouped by category, CUE's arrangement: the group headings keep a long list scannable.
 const FAQ_CATS = FAQ.map((group) => group.cat);
 
 function FAQBody() {
@@ -117,7 +114,6 @@ export default function OurCompany() {
   return (
     <div className="max-w-[1180px] mx-auto px-[var(--container-x)] pt-[1.9rem] pb-[var(--space-5)]">
       <div className="flex gap-10 items-start max-[992px]:flex-col max-[992px]:gap-3">
-        {/* Desktop: plain sticky sidebar, no pills. */}
         <nav
           className="max-[992px]:hidden flex flex-col gap-[var(--space-2)] flex-none w-[200px] sticky top-[calc(var(--header-h,58px)+1.5rem)] self-start max-h-[calc(100vh-var(--header-h,58px)-3rem)] overflow-y-auto pr-[var(--space-3)] border-r border-line"
           aria-label="Our company"
@@ -135,7 +131,6 @@ export default function OurCompany() {
           ))}
         </nav>
 
-        {/* Mobile: shared CatDropdown, floating so opening it does not push the section you are reading down. */}
         <CatDropdown
           className="min-[993px]:hidden w-full pb-[var(--space-1)] border-b border-line"
           label={active.label}

@@ -3,15 +3,6 @@
 import { useState } from 'react';
 import { cn } from '../lib/cn.js';
 
-/**
- * A row of photo panels where the chosen one opens wide and the rest stay as
- * narrow strips. From 993px they sit side by side and open sideways; on a phone
- * they stack and the chosen one opens downward, the others staying 64px strips
- * with a plus sign. Tapping a strip opens it and closes the previous one.
- *
- *   items   [{ id, label, title, text, images: [{ src, alt }] }]  first image is the panel photo
- *   label   accessible name for the group
- */
 export default function ExpandPanels({ items = [], label = '', className }) {
   const [activeId, setActiveId] = useState(items[0]?.id);
   if (!items.length) return null;
@@ -33,16 +24,13 @@ export default function ExpandPanels({ items = [], label = '', className }) {
               open ? 'h-[19rem] min-[993px]:h-auto min-[993px]:flex-[5_1_0%]' : 'h-16 min-[993px]:h-auto min-[993px]:flex-[1_1_0%]',
             )}
           >
-            {/* eslint-disable-next-line @next/next/no-img-element */}
             {photo ? <img src={photo.src} alt={open ? photo.alt || '' : ''} loading="lazy" className="absolute inset-0 w-full h-full object-cover" /> : null}
             <span className={cn('absolute inset-0 transition-[background-color] duration-200', open ? 'bg-[linear-gradient(transparent_45%,rgba(20,19,15,0.78))]' : 'bg-[rgba(20,19,15,0.42)]')} />
-            {/* Closed: the name (sideways on desktop) and a plus on a phone. */}
             <span className={cn('absolute flex items-center justify-between inset-x-4 top-0 h-16 text-strong font-semibold min-[993px]:hidden', open && 'hidden')}>
               {item.label}
               <span aria-hidden="true">+</span>
             </span>
             <span className={cn('absolute left-4 bottom-4 hidden text-strong font-semibold [writing-mode:vertical-rl] rotate-180 min-[993px]:block', open && 'min-[993px]:hidden')}>{item.label}</span>
-            {/* Open: the name, its headline and the words. */}
             <span className={cn('absolute inset-x-5 bottom-5 flex-col gap-1', open ? 'flex' : 'hidden')}>
               <b className="text-h3 font-semibold">{item.label}</b>
               <span className="text-small text-white/90 leading-[1.5] max-w-[48ch]">{item.title}</span>

@@ -48,7 +48,6 @@ function DeleteSheet({ open = false, onClose = () => {}, onConfirm = async () =>
   );
 }
 
-// The villa's Account Settings: CUE's page, minus trip reviews, which the villa site does not collect.
 export default function SettingsPage() {
   const { account, hydrated, updateAccount, deleteAccount, logout } = useAccount();
   const [authOpen, setAuthOpen] = useState(false);

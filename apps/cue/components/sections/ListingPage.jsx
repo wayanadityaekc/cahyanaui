@@ -23,28 +23,24 @@ function UserIcon() { return <UserRound strokeWidth={1.7} aria-hidden="true" />;
 function CheckIcon() { return <Check aria-hidden="true" />; }
 function PinIcon() { return <MapPin strokeWidth={1.7} aria-hidden="true" />; }
 
-// Search placeholder noun per listing page.
 const NOUN = { tours: 'tours', activities: 'experiences', destinations: 'destinations' };
 
 export default function ListingPage({ data, page }) {
   const { heroBg, title, sub, listTitle, sectionId, chips, cats, info } = data;
   const [query, setQuery] = useState('');
-  const [zone, setZone] = useState('all'); // 'all' | category id (desktop dim filter)
+  const [zone, setZone] = useState('all');
 
   const term = query.trim().toLowerCase();
   const noun = NOUN[sectionId] || 'programs';
 
-  // One flat grid; the first shown card of each category carries the anchor id for the switcher.
   const allCards = [];
   cats.forEach((cat) => {
-    // Anchor goes on the first card shown, since parked tours are dropped.
     const shown = cat.cards.filter((card) => !isHiddenTour(card.href));
     shown.forEach((card, i) => allCards.push({ card, catId: cat.id, anchor: i === 0 ? cat.id : null }));
   });
   const shownCards = term ? allCards.filter((x) => x.card.name.toLowerCase().includes(term)) : allCards;
   const tabs = [{ id: 'all', label: listTitle }, ...chips];
 
-  // Sticky nav only shows once the hero's Browse-all button scrolls away, so they never show together.
   const browseRef = useRef(null);
   const [heroInView, setHeroInView] = useState(true);
   useEffect(() => {
@@ -58,8 +54,6 @@ export default function ListingPage({ data, page }) {
 
   return (
     <div className="tourprog pb-20">
-      {/* Split hero: text left and photo right on desktop, photo over a white sheet on mobile; search filters cards. */}
-      {/* Mobile photo gradient is a [.tourprog_&]:after utility; keep the `tourprog` ancestor as its hook. */}
       <section className="min-[769px]:grid min-[769px]:grid-cols-[45%_55%] min-[769px]:items-stretch min-[769px]:min-h-[62vh] min-[769px]:pt-[6.5rem]">
         <div
           className="min-h-[48vh] bg-green bg-cover bg-center min-[769px]:order-1 min-[769px]:min-h-0 max-[768px]:[.tourprog_&]:relative max-[768px]:[.tourprog_&]:after:content-[''] max-[768px]:[.tourprog_&]:after:absolute max-[768px]:[.tourprog_&]:after:inset-0 max-[768px]:[.tourprog_&]:after:[background:linear-gradient(to_bottom,rgba(0,0,0,0.34)_0%,rgba(0,0,0,0)_32%,rgba(0,0,0,0.58)_100%)]"
@@ -68,10 +62,8 @@ export default function ListingPage({ data, page }) {
         <div className="relative z-[1] -mt-7 pt-9 px-[var(--container-x)] pb-3 bg-white rounded-t-[var(--r-xl)] flex flex-col items-start text-left
           min-[769px]:mt-0 min-[769px]:pt-12 min-[769px]:pr-12 min-[769px]:pb-12 min-[769px]:pl-[max(var(--container-x),calc(50vw_-_var(--container)/2_+_var(--container-x)))]
           min-[769px]:bg-transparent min-[769px]:rounded-none min-[769px]:justify-center">
-          {/* Visible breadcrumb matching the JSON-LD trail; hidden while a search is open, like the title. */}
           {!term && <Breadcrumb items={crumbsFor(page)} className="mb-2 self-start" />}
           {!term && <h1 className={`${SUBHERO_TITLE} mb-3`}>{title}</h1>}
-          {/* was .tour-hero__desc (CSS dihapus, migrasi Fase 2) -> utilities inline */}
           {!term && <p className="max-w-[460px] m-0 text-[#3d3d3d]">{sub}</p>}
           <div className="flex items-center gap-[6px] w-full max-w-[430px] mt-6 h-[2.9rem] pl-[18px] pr-[6px] bg-white [border:1px_solid_var(--line)] rounded-md max-[768px]:absolute max-[768px]:left-[1.2rem] max-[768px]:right-[1.2rem] max-[768px]:top-[-3.9rem] max-[768px]:w-auto max-[768px]:z-[4] max-[768px]:mt-0 max-[768px]:max-w-none">
             <input
@@ -108,7 +100,6 @@ export default function ListingPage({ data, page }) {
           <h2 className={`${SECTION_TITLE} ${ST_LEFT} !text-[1.5rem] max-[768px]:hidden`}>{listTitle}</h2>
         </div>
 
-        {/* Desktop floating area tabs that dim cards outside the chosen area; phones get SectionSwitcher instead. */}
         {showStickyNav && (
           <div className="fixed left-1/2 [transform:translateX(-50%)] bottom-[1.3rem] z-50 flex items-center gap-[4px] p-[6px] max-w-[calc(100vw-2rem)] bg-white [border:1px_solid_var(--line)] rounded-md overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden max-[768px]:hidden" role="tablist" aria-label="Filter by area">
             {tabs.map((t) => (
@@ -153,9 +144,7 @@ export default function ListingPage({ data, page }) {
         <section className={INFO_SECTION_DETAIL}>
           <div className={INFO_CARD}>
             <h2 className={`${SECTION_TITLE} ${ST_LEFT}`}>{info.title}</h2>
-            {/* Same fact chips as transfer and airport. */}
             <InfoFacts items={info.facts} />
-            {/* Shared InfoBoxes; legacy cls maps to a variant, which must go to BOTH InfoBox and InfoBoxList. */}
             <InfoBoxes>
               {info.cols.map((c) => {
                 const variant = String(c.cls).includes('no') ? 'no' : 'yes';

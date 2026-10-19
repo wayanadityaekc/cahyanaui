@@ -1,20 +1,3 @@
-// tools/tw/snap.mjs — Tailwind migration verifier (epic #321).
-// Snapshots computed styles of every element under a selector, across 3 viewports
-// (1280 desktop / 560 tablet / 390 mobile), from the built static export in `out/`.
-// Serves `out/` over a local http server + drives headless Chromium (headless_shell)
-// via playwright-core. Writes a JSON snapshot to compare with tools/tw/diff.mjs.
-//
-// Usage:
-//   node tools/tw/snap.mjs <page.html> "<cssSelector>" <out.json>
-// Example:
-//   node tools/tw/snap.mjs faq.html ".faq" /tmp/before.json
-//   node tools/tw/snap.mjs guide/ubud.html ".guide-more" /tmp/after.json
-//
-// Client-rendered UI (itinerary/cart/modal) won't be in static HTML — for those,
-// write a small custom script that seeds localStorage / clicks to open, then reuses
-// the same PROPS/serve logic. See tools/tw/README.md.
-//
-// Requires: playwright-core (devDependency) + headless_shell under /opt/pw-browsers.
 import http from 'node:http';
 import fs from 'node:fs';
 import path from 'node:path';
@@ -29,12 +12,11 @@ if (!page || !selAll || !outfile) {
 const ROOT = 'out';
 if (!fs.existsSync(ROOT)) { console.error('no out/ — run `npm run build` first'); process.exit(2); }
 
-// Locate headless_shell (version dir may differ across environments).
 function findShell() {
   try {
     const hit = execSync('ls -d /opt/pw-browsers/*/chrome-linux/headless_shell 2>/dev/null | head -1').toString().trim();
     if (hit) return hit;
-  } catch (e) { /* ignore */ }
+  } catch (e) {   }
   return '/opt/pw-browsers/chromium_headless_shell-1194/chrome-linux/headless_shell';
 }
 const EXE = findShell();
@@ -55,7 +37,6 @@ function serve(root, port) {
   });
 }
 
-// Computed-style props that catch layout + type + color regressions.
 const PROPS = ['position', 'top', 'display', 'flexDirection', 'flexBasis', 'flexGrow', 'flexShrink', 'alignItems', 'justifyContent', 'gap', 'width', 'height', 'maxWidth', 'marginTop', 'marginBottom', 'marginLeft', 'paddingTop', 'paddingBottom', 'paddingLeft', 'paddingRight', 'borderTopWidth', 'borderTopStyle', 'borderTopColor', 'borderBottomWidth', 'borderRadius', 'backgroundColor', 'boxShadow', 'fontFamily', 'fontSize', 'fontWeight', 'letterSpacing', 'textTransform', 'textAlign', 'color', 'lineHeight', 'scrollMarginTop', 'listStyleType', 'overflowX', 'aspectRatio', 'gridTemplateColumns', 'gridTemplateAreas'];
 
 const port = 8000 + Math.floor(Math.random() * 1500);

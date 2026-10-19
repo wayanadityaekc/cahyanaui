@@ -4,12 +4,10 @@ import { AnimatePresence, LazyMotion, domAnimation, m, useReducedMotion } from '
 import { SHELL, BOX } from './modalClasses';
 import useDialog from './useDialog';
 
-// AnimatePresence wrapper so modals that mount only while open can animate out as well as in.
 const EASE_OUT = [0.16, 1, 0.3, 1];
 const BOX_FROM = { opacity: 0, y: 14, scale: 0.96 };
 const BOX_TO = { opacity: 1, y: 0, scale: 1 };
 
-// `label` is the dialog's accessible name (read out when it opens). Every caller passes one.
 export default function ModalPresence({ open, onClose, label, box = BOX, shellClass = SHELL, children }) {
   const boxRef = useDialog({ shown: open, onClose });
   const reduced = useReducedMotion();
@@ -25,10 +23,8 @@ export default function ModalPresence({ open, onClose, label, box = BOX, shellCl
             className={shellClass}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            // pointerEvents must be in `exit`, not a style keyed on `open`, or the leaving card stays clickable.
             exit={{ opacity: 0, pointerEvents: 'none' }}
             transition={{ duration: shell, ease: EASE_OUT }}
-            // Backdrop click closes; clicks inside the card don't count.
             onClick={(e) => e.target === e.currentTarget && onClose?.()}
           >
             <m.div

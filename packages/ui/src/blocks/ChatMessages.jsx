@@ -3,7 +3,6 @@ import {
   CHAT_ROW_PRICE, CHAT_LINK, CHAT_CHIPS, CHAT_CHIP,
 } from './chatClasses.js';
 
-// One bot reply: the sentence plus any rows, a page link, or suggested questions.
 function BotReply({ message, onAsk, onNavigate, linkAs: LinkTag }) {
   const { text, rows = [], link = null, chips = [] } = message;
   return (
@@ -33,7 +32,6 @@ function BotReply({ message, onAsk, onNavigate, linkAs: LinkTag }) {
   );
 }
 
-// The conversation: guest bubbles right, bot answers left, the owner's replies named.
 export default function ChatMessages({ log = [], ownerName = 'Wayan', onAsk = () => {}, onNavigate, linkAs = 'a' }) {
   return log.map((message) => {
     if (message.from === 'me') return <p key={message.id} className={CHAT_BUBBLE_ME}>{message.text}</p>;

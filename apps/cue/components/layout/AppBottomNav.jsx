@@ -7,7 +7,6 @@ import { useItinerary } from '@/state/ItineraryProvider';
 import ChatLauncher from '@/components/chat/ChatLauncher';
 import { APP_ONLY } from '@/components/ui/pwaClasses';
 
-// Installed-app bottom bar (navbar hands it chat/cart); hidden on pages with a bookbar, stickybar (<768) or footerbar.
 const BAR =
   `${APP_ONLY} [body:has(.bookbar)_&]:hidden max-md:[body:has(.stickybar)_&]:hidden [body:has(.footerbar)_&]:hidden ` +
   'fixed inset-x-0 bottom-0 z-[95] items-stretch ' +
@@ -50,7 +49,6 @@ export default function AppBottomNav() {
         </span>
         My Trip
       </a>
-      {/* Only one chat launcher is reachable at a time (navbar in a tab, this in app mode), so the panel never mounts twice. */}
       <ChatLauncher className={cellClass(false)} label="Chat" iconClass="w-[22px] h-[22px]" />
     </nav>
   );

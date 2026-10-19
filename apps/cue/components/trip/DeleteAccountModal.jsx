@@ -5,7 +5,6 @@ import Modal from '@/components/ui/Modal';
 import { BTN_SM } from '@/components/ui/btnClasses';
 import { REFMSG_ERR } from '@/components/ui/modalClasses';
 
-// Delete-account confirm in the shared Modal; BTN_DANGER is local, move it to btnClasses if reused.
 const BTN_DANGER = `inline-flex ${BTN_SM} font-body border-none text-white bg-err cursor-pointer hover:brightness-90`;
 const BTN_GHOST = `inline-flex ${BTN_SM} font-body [border:1px_solid_var(--line)] bg-white text-green cursor-pointer hover:bg-cream`;
 

@@ -10,15 +10,13 @@ import { FIELD_LABEL } from '@/components/ui/formClasses';
 import { useAccount } from '@/state/AccountProvider';
 import OtpFields from './OtpFields';
 
-// Resend cooldown for the code; UX only, the server's loginLimiter is the real rate limit.
 const RESEND_SECONDS = 30;
 
-// Sign-in/create modal; both views share one email -> 6-digit code stage; reason='book' fires onSignedIn.
 export default function AuthModal({ open, onClose, reason, onSignedIn }) {
   const forBook = reason === 'book';
   const { requestLogin, verifyCode, createAccount } = useAccount();
-  const [view, setView] = useState('signin'); // 'signin' | 'create'
-  const [stage, setStage] = useState('email'); // 'email' | 'code'
+  const [view, setView] = useState('signin');
+  const [stage, setStage] = useState('email');
   const [f, setF] = useState({ name: '', email: '', phone: '' });
   const [codeEmail, setCodeEmail] = useState('');
   const [code, setCode] = useState('');
@@ -73,7 +71,6 @@ export default function AuthModal({ open, onClose, reason, onSignedIn }) {
     const res = await createAccount({ name: data.name, email: data.email, phone: data.phone });
     setBusy(false);
     if (res.ok) { reset(); setF({ name: '', email: '', phone: '' }); (onSignedIn || onClose)(); return; }
-    // Email already has an account: the server emailed a code, so go to the code stage (no login handed over).
     if (res.signin) { setCodeEmail(res.email); setCode(''); setStage('code'); setCooldown(RESEND_SECONDS); setOk(`You already have an account as ${res.email}.`); return; }
     setMsg(res.error || 'Sorry, we could not create your account. Please try again.');
   }

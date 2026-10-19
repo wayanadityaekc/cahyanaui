@@ -1,5 +1,4 @@
 import { BTN_SM } from '@/components/ui/btnClasses';
-// Shared button: primary | ghost use BTN_SM; plain is a text link on BASE_LINK and must never get BTN_SM (CSS order wins).
 const SHARED = 'font-body border cursor-pointer no-underline ' +
   'transition-[color,background-color,border-color,scale] duration-200 ease-in-out';
 

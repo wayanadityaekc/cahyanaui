@@ -2,7 +2,6 @@ import { CUE_LINK } from '@/lib/constants';
 
 function cue(path) { return `${CUE_LINK}${path}`; }
 
-// No prices on purpose: copied prices go stale, so each card links to the live price on CUE. Four tours only (Wayan).
 export const CUE_TOURS = [
   {
     id: 'ubud-tour',
@@ -30,8 +29,6 @@ export const CUE_TOURS = [
   },
 ];
 
-// CEK WAYAN: photos hidden until Wayan supplies real ones; each card shows the dark fallback.
-// Homepage row, ours and CUE's mixed on purpose; airport pickup leads because it is the one guests regret missing.
 export const STAY_ADDONS = [
   {
     id: 'airport-pickup',

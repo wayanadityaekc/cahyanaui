@@ -5,7 +5,6 @@ export default function Mosaic({ images = [] }) {
   return (
     <div className="grid grid-cols-3 gap-3 mt-4">
       {images.map((img) => (
-        // eslint-disable-next-line @next/next/no-img-element
         <img
           key={img.src}
           src={img.src}

@@ -18,7 +18,6 @@ export default function Hero() {
   useBodyLock(sheetOpen);
 
   return (
-    // Homepage hero; the section-gap rule skips it via :first-of-type, so it needs no marker class.
     <section
       className="relative flex items-center min-h-[88vh] pt-28 px-[var(--container-x)] pb-12 bg-green
         min-[993px]:min-h-[92vh] min-[993px]:pt-36 min-[993px]:pb-20
@@ -29,7 +28,6 @@ export default function Hero() {
         max-[992px]:after:bg-[image:linear-gradient(rgba(0,0,0,0.18),rgba(0,0,0,0.3)_45%,rgba(0,0,0,0.6)),url(/assets/images/ubud-saraswati-temple-hero-mobile.webp)]"
       id="hero"
     >
-      {/* Hero inner; z-index is raised on mobile while the plan sheet is open. */}
       <div className={clsx(
         'relative z-[1] w-full max-w-[1200px] mx-auto flex items-center gap-8 min-[993px]:gap-12 max-[992px]:flex-col max-[992px]:items-stretch',
         sheetOpen && 'max-[992px]:z-[46]',
@@ -56,7 +54,6 @@ export default function Hero() {
           <HeroSearch sheetOpen={sheetOpen} onClose={() => setSheetOpen(false)} />
         </div>
 
-        {/* Mobile scrim behind the plan-your-trip sheet; visibility driven by sheetOpen. */}
         <div
           className={`max-[992px]:fixed max-[992px]:inset-0 max-[992px]:z-[44]
             max-[992px]:bg-[rgba(26,26,26,0.42)] max-[992px]:[transition:opacity_var(--dur-slow)_var(--ease),visibility_var(--dur-slow)]

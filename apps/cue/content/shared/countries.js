@@ -1,4 +1,3 @@
-// ISO 3166-1 country list (code -> flag svg, Intl name) for the ReviewModal country picker.
 export const COUNTRIES = [
   { code: 'af', name: 'Afghanistan' },
   { code: 'ax', name: 'Åland Islands' },

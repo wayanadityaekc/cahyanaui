@@ -1,11 +1,8 @@
-// One review posted for 3 trips: one card on mixed lists ("Ubud Tour + 2 more"), its own copy on each trip's page.
-// Run: npm run build && npm run serve, then node verify-reviewgroup.mjs
 import { chromium } from 'playwright-core';
 
 const SITE = process.env.BASE || 'http://127.0.0.1:4000';
 const MSG = 'Three days with the same driver, every pickup on time.';
 const ANDRAS = { name: 'Andras', country: 'Hungary', rating: 5, message: MSG, source: 'cahyana' };
-// What the server stores after one submit with 3 trips ticked: 3 rows, newest first.
 const ROWS = [
   { ...ANDRAS, service: 'Airport – Ubud', created_at: '2026-09-20T10:00:03Z' },
   { ...ANDRAS, service: 'Ubud Culture Day', created_at: '2026-09-20T10:00:02Z' },
@@ -39,7 +36,6 @@ async function open(path, w) {
   return { ctx, page, errors };
 }
 
-// Review cards on the page: [name, trip line] per card.
 function cards(page) {
   return page.evaluate(() => [...document.querySelectorAll('button')]
     .filter((b) => b.querySelector('p') && /Read more/.test(b.textContent))
@@ -47,7 +43,6 @@ function cards(page) {
 }
 
 for (const w of [390, 1280]) {
-  // Mixed lists: one Andras card with the combined trip line.
   for (const path of ['/', '/all-reviews.html']) {
     const { ctx, page, errors } = await open(path, w);
     const list = await cards(page);
@@ -55,7 +50,6 @@ for (const w of [390, 1280]) {
     ok(andras.length === 1, `${w} ${path}: ${andras.length} Andras cards`);
     ok(andras[0] && andras[0].trip === 'Ubud Tour + 2 more', `${w} ${path}: trip line "${andras[0] && andras[0].trip}"`);
     ok(list.some((c) => c.name === 'Santos' && c.trip === 'Ubud Tour'), `${w} ${path}: single-trip review changed`);
-    // The popup names every trip.
     await page.locator('button', { hasText: MSG }).first().click();
     await page.waitForTimeout(400);
     const modal = await page.evaluate(() => { const d = [...document.querySelectorAll('[role=dialog]')].find((x) => /Guest review/.test(x.textContent)); return d ? d.innerText : ''; });
@@ -63,7 +57,6 @@ for (const w of [390, 1280]) {
     ok(errors.length === 0, `${w} ${path}: page errors ${errors}`);
     await ctx.close();
   }
-  // Each booked item's own page keeps its own copy.
   for (const [path, trip] of [['/ubud-tour.html', 'Ubud Tour'], ['/ubud-culture-day.html', 'Ubud Culture Day'], ['/airport-transfer.html', 'Airport – Ubud']]) {
     const { ctx, page } = await open(path, w);
     const andras = (await cards(page)).filter((c) => c.name === 'Andras');

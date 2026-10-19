@@ -1,6 +1,5 @@
 import { z } from 'zod';
 
-// Zod form rules; email uses EMAIL_RE, not z.email() (stricter), so accepted addresses don't change.
 export const EMAIL_RE = /^\S+@\S+\.\S+$/;
 
 function email(msg = 'Please enter a valid email address.') { return z.string().trim().regex(EMAIL_RE, msg); }
@@ -28,7 +27,6 @@ export const reviewSchema = z.object({
   message: required('Please write your review.'),
 });
 
-// Booking schema is built per open; flags mirror BookConfirmModal's derived booking context.
 export function bookingSchema({ pickupOptional = false, dropoffRequired = false, needsTime = false, needsFlight = false } = {}) {
   return z.object({
     name: required('Please enter your name.'),
@@ -39,7 +37,6 @@ export function bookingSchema({ pickupOptional = false, dropoffRequired = false,
     time: needsTime ? z.string().min(1, 'Please select a pickup time.') : z.string(),
     flightNumber: needsFlight ? required('Please enter your flight number.') : z.string(),
     flightDatetime: needsFlight ? z.string().min(1, 'Please enter your flight date & time.') : z.string(),
-    // Never validated - it has its own Apply button and its own message.
     referral: z.string().optional(),
   });
 }

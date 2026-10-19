@@ -2,7 +2,6 @@
 
 import CatDropdown, { CAT_ITEM_TAP } from '@/components/ui/CatDropdown';
 
-// Phone-only guide category dropdown (links to hub anchors), passed to RailLayout as mobileNav.
 export default function GuideCatNav({ tabs = [] }) {
   if (!tabs.length) return null;
   const active = tabs.find((t) => t.active) || tabs[0];

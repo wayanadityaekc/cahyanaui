@@ -1,7 +1,3 @@
-// WO3 (Sep 2026): settings page grows a large avatar, "My reviews", and
-// "Delete account" (deletes the account, keeps bookings + reviews - the
-// confirmation modal has to say so plainly, per the brief). Run against the
-// built pages: npm run build && npm run serve (port 4000).
 import { chromium } from '/home/user/CUE/node_modules/playwright-core/index.mjs';
 const b = await chromium.launch({ executablePath: '/opt/pw-browsers/chromium_headless_shell-1194/chrome-linux/headless_shell' });
 
@@ -40,7 +36,6 @@ async function mkCtx(w, { loggedIn = true, deleteFails = false } = {}) {
 }
 
 for (const w of [390, 1280]) {
-  // ---- logged out ----
   {
     const ctx = await mkCtx(w, { loggedIn: false });
     const page = await ctx.newPage();
@@ -53,7 +48,6 @@ for (const w of [390, 1280]) {
     await ctx.close();
   }
 
-  // ---- logged in ----
   {
     const ctx = await mkCtx(w, { loggedIn: true });
     const page = await ctx.newPage();
@@ -63,16 +57,13 @@ for (const w of [390, 1280]) {
     const root = page.locator('[data-settings]');
     ok((await root.innerText()).includes(ACC.name), `${w}/loggedin: name not shown`);
     ok((await root.innerText()).includes(ACC.email), `${w}/loggedin: email not shown`);
-    // large avatar present with initials
     const avatarText = await page.locator('[data-settings] span.bg-gold').first().innerText();
     ok(avatarText.trim().length > 0, `${w}/loggedin: avatar initials empty`);
-    // my reviews rendered
     await page.waitForTimeout(300);
     ok((await root.innerText()).includes('Fantastic trip'), `${w}/loggedin: my review text missing`);
     ok((await root.innerText()).includes('Not currently shown'), `${w}/loggedin: hidden-review note missing`);
     await page.screenshot({ path: `shots/settings-loggedin-${w}.png`, fullPage: true });
 
-    // edit + save
     await page.fill('#st-name', 'Wayan Edited');
     await page.locator('button', { hasText: 'Save changes' }).click();
     await page.waitForTimeout(400);
@@ -82,7 +73,6 @@ for (const w of [390, 1280]) {
     await ctx.close();
   }
 
-  // ---- delete account flow: open modal, cancel ----
   {
     const ctx = await mkCtx(w, { loggedIn: true });
     const page = await ctx.newPage();
@@ -104,7 +94,6 @@ for (const w of [390, 1280]) {
     await ctx.close();
   }
 
-  // ---- delete account flow: confirm, server fails ----
   {
     const ctx = await mkCtx(w, { loggedIn: true, deleteFails: true });
     const page = await ctx.newPage();
@@ -122,7 +111,6 @@ for (const w of [390, 1280]) {
     await ctx.close();
   }
 
-  // ---- delete account flow: confirm, succeeds ----
   {
     const ctx = await mkCtx(w, { loggedIn: true, deleteFails: false });
     const page = await ctx.newPage();

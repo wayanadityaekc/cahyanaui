@@ -5,9 +5,7 @@ import { API_BASE } from '@/lib/constants';
 import { chargeCurrency } from '@/lib/rails';
 import { CONTROL } from '@cahyana/ui';
 
-// Ported from CUE components/booking/PayPalCheckout.jsx. Inline PayPal checkout: hosted Card Fields (card data stays in PayPal iframes) plus PayPal buttons as fallback.
 
-// SDK is loaded per currency under its own namespace; PayPal rejects orders in a currency the SDK wasn't loaded with.
 function sdkId(cur) { return `paypal-sdk-${cur}`; }
 function sdkNs(cur) { return `paypal_${cur}`; }
 
@@ -25,7 +23,6 @@ function loadSdk({ clientId, currency }) {
     const s = document.createElement('script');
     s.id = id;
     s.setAttribute('data-namespace', sdkNamespace);
-    // card-fields is always requested; on an ineligible account isEligible() is false and buttons are used instead.
     s.src =
       `https://www.paypal.com/sdk/js?client-id=${encodeURIComponent(clientId)}` +
       `&currency=${encodeURIComponent(currency)}&components=buttons,card-fields&intent=capture`;
@@ -36,12 +33,11 @@ function loadSdk({ clientId, currency }) {
 }
 
 const LABEL = 'block text-label font-medium tracking-[0.08em] uppercase text-muted mb-[0.4rem]';
-// Box around PayPal's card field iframe; uses the shared field style.
 const FIELD = `${CONTROL} [&>*]:w-full`;
 const NOTE = 'mt-[0.6rem] text-small leading-[var(--lh-body)]';
 
 export default function PayPalCheckout({ bookingRef, option, copy, currency = 'USD', onPaid, onError }) {
-  const [state, setState] = useState('loading'); // loading | ready | paying | done | error
+  const [state, setState] = useState('loading');
   const [msg, setMsg] = useState('');
   const [cardsOn, setCardsOn] = useState(false);
   const buttonsRef = useRef(null);
@@ -53,7 +49,6 @@ export default function PayPalCheckout({ bookingRef, option, copy, currency = 'U
   useEffect(() => {
     let cancelled = false;
 
-    // Never send an amount from here: the server prices the booking itself, this only names the option.
     async function createOrder() {
       const r = await fetch(`${API_BASE}/paypal/create-order`, {
         method: 'POST',
@@ -68,7 +63,6 @@ export default function PayPalCheckout({ bookingRef, option, copy, currency = 'U
       return d.id;
     }
 
-    // Capture only; the booking is confirmed by the webhook, so don't claim it is confirmed from this response.
     async function capture(orderId) {
       const r = await fetch(`${API_BASE}/paypal/capture-order`, {
         method: 'POST',
@@ -101,7 +95,6 @@ export default function PayPalCheckout({ bookingRef, option, copy, currency = 'U
       try {
         const cfg = await (await fetch(`${API_BASE}/paypal/config`)).json();
         if (!cfg.ready) throw new Error(cfg.reason || 'Payments are not available right now.');
-        // Load the SDK in the currency the order is billed in (USD for rupiah), or every order is rejected.
         const billCurrency = chargeCurrency(currency, 'paypal');
         const sdk = await loadSdk({ clientId: cfg.clientId, currency: billCurrency });
         if (cancelled) return;
@@ -116,7 +109,6 @@ export default function PayPalCheckout({ bookingRef, option, copy, currency = 'U
           })
           .render(buttonsRef.current);
 
-        // Card Fields, when the account is allowed them.
         const cardFields = sdk.CardFields
           ? sdk.CardFields({
               createOrder,
@@ -147,7 +139,6 @@ export default function PayPalCheckout({ bookingRef, option, copy, currency = 'U
     setMsg('');
     try {
       await cardRef.current.submit();
-      // onApprove resolves the rest; submit() rejects on a declined card.
     } catch (e) {
       if (mounted.current) { setState('ready'); setMsg(copy.declined); }
     }

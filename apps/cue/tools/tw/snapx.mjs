@@ -1,7 +1,3 @@
-// tools/tw/snapx.mjs — like snap.mjs but ALSO captures ::before/::after pseudo-element
-// computed styles for every matched element. Needed to verify pseudo-driven UI
-// (section-title underline `::after`, section dividers `::before`) that snap.mjs misses.
-// Usage: node tools/tw/snapx.mjs <page.html> "<selector>" <out.json>
 import http from 'node:http';
 import fs from 'node:fs';
 import path from 'node:path';

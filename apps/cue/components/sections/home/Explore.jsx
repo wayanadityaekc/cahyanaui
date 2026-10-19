@@ -3,7 +3,6 @@ import HomepageCard from '@/components/cards/HomepageCard';
 import { EXPLORE_TOURS, EXPLORE_EXPERIENCES } from '@/content/shared/home';
 import { BTN_PILL } from '@/components/ui/btnClasses';
 
-// Homepage program section: 4 tours + 4 experiences in one grid (server component); CTA goes to /tour.html, not /programs.
 const CARDS = [...EXPLORE_TOURS, ...EXPLORE_EXPERIENCES];
 
 export default function Explore() {

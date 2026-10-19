@@ -1,4 +1,3 @@
-// Compares @cahyana/ui lib/money.js with cahyana-api fx.js; needs the cahyana-api clone beside this repo.
 import { createRequire } from 'node:module';
 import { existsSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';

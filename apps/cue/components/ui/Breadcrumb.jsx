@@ -1,13 +1,11 @@
 import { isHiddenTour } from '@/lib/routes';
 
-// Site-wide breadcrumb: <nav> + <ol>, --fs-small, last item is plain text with aria-current="page".
 export const CRUMB_NAV = 'font-body text-small text-muted';
 export const CRUMB_OL = 'flex flex-wrap items-center gap-0 m-0 p-0 list-none';
 export const CRUMB_LINK = 'text-muted no-underline hover:text-gold hover:underline';
 export const CRUMB_HERE = 'text-gold font-medium';
 export const CRUMB_SEP = 'mx-[0.4rem] opacity-[0.55]';
 
-// Items without href (current page or a hidden tour) print as plain text, not links.
 export default function Breadcrumb({ items = [], className = '' }) {
   if (!items.length) return null;
   return (
@@ -34,7 +32,6 @@ export default function Breadcrumb({ items = [], className = '' }) {
   );
 }
 
-// Converts the detail pages' legacy [{type:'link'|'sep'|'text'}] trail into items.
 export function itemsFromLegacy(crumb = []) {
   return crumb
     .filter((p) => p.type !== 'sep')

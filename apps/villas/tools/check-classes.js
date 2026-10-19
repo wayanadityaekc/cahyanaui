@@ -1,7 +1,4 @@
 #!/usr/bin/env node
-// GATE (ported from CUE): malformed Tailwind utilities in SOURCE, the only place they exist.
-// A dangling prefix (`hover:`) or a doubled one (`hover:hover:bg-cta`) generates no CSS at all, so out/ and every browser check are blind to it.
-// In a concatenated class string a dangling `hover:` also glues onto the next segment and turns it into a hover-only rule.
 const fs = require('node:fs');
 const path = require('node:path');
 
@@ -9,7 +6,6 @@ const ROOT = path.join(__dirname, '..');
 
 const VARIANT = /^(hover|focus|focus-within|focus-visible|active|visited|target|disabled|checked|required|invalid|open|group-open|group-hover|group-focus|peer-[\w-]+|first|last|only|odd|even|first-of-type|last-of-type|empty|before|after|placeholder|file|marker|selection|backdrop|motion-reduce|motion-safe|standalone|dark|light|print|portrait|landscape|rtl|ltr|sm|md|lg|xl|2xl|min|max|aria-\[[^\]]*\]|data-\[[^\]]*\]|has-\[[^\]]*\]|not-has-\[[^\]]*\]|group-has-\[[^\]]*\]|peer-has-\[[^\]]*\]|max-\[[^\]]*\]|min-\[[^\]]*\]|supports-\[[^\]]*\]|\[@[^\]]*\]|\[&[^\]]*\])$/;
 
-// The library is vendored at packages/ui in this repo and lives two levels up in the cahyanaui monorepo.
 function libraryDir() {
   const vendored = path.join(ROOT, 'packages/ui/src');
   return fs.existsSync(vendored) ? vendored : path.join(ROOT, '../../packages/ui/src');
@@ -26,7 +22,6 @@ function sourceFiles(dir) {
   });
 }
 
-// Splits on colons that sit outside [] and ().
 function segments(token) {
   const parts = [];
   let depth = 0;
@@ -40,7 +35,6 @@ function segments(token) {
   return parts;
 }
 
-// Returns the contents of every string literal as { text, start }: class names only ever live in strings, object keys like `sm:` never do.
 function stringLiterals(src) {
   const found = [];
   const stack = [{ kind: 'code', depth: 0 }];
@@ -65,7 +59,6 @@ function stringLiterals(src) {
     } else if (ch === top.kind) {
       close();
     } else if (ch === '\n' && top.kind !== '`') {
-      // A quote or apostrophe cannot span lines: this was JSX text (It's...), so drop it rather than scan prose.
       chunk = null;
       stack.pop();
     } else if (top.kind === '`' && ch === '$' && src[i + 1] === '{') {
@@ -98,7 +91,6 @@ files.forEach((file) => {
   const rel = path.relative(ROOT, file);
   const src = fs.readFileSync(file, 'utf8');
   stringLiterals(src).forEach(({ text, start }) => {
-    // Split on whitespace only: arbitrary values are full of brackets, parens and commas.
     let offset = 0;
     text.split(/(\s+)/).forEach((token) => {
       const at = start + offset;

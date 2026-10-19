@@ -1,7 +1,5 @@
 import { BTN_SM } from '../primitives/btnClasses.js';
 
-// CUE's detail hero, split variant (guide articles): photo on the left 45%, white sheet on the right with
-// crumb, title, intro, a short fact list and one CTA. On phones the sheet overlaps the photo with a rounded top.
 export const SPLIT_TITLE = 'font-head text-[length:var(--fs-display)] leading-[var(--lh-heading)] text-gold font-bold tracking-[-0.01em]';
 export const SPLIT_DESC = 'max-w-[460px] m-0 text-[#3d3d3d]';
 export const SPLIT_CTA =
@@ -13,14 +11,6 @@ export const SPLIT_FACTS =
 export const SPLIT_FACT_LABEL = 'text-small font-normal tracking-[0] normal-case text-muted';
 export const SPLIT_FACT_VALUE = 'mt-[0.2rem] text-small font-medium text-ink min-[769px]:text-h3 min-[769px]:whitespace-nowrap';
 
-/**
- *   image     photo url (left side)
- *   crumb     node, a <Breadcrumb> already built by the site
- *   hooks     [{ label, value }]  the three facts
- *   cta/href  one button, hidden on phones like CUE's
- *   offsetHeader  adds the fixed header's height as top padding. Leave false when the
- *             layout's <main> already reserves it (the villa site does).
- */
 export default function SplitHero({ image, crumb = null, title, desc, hooks = [], cta, href, linkAs: LinkAs = 'a', offsetHeader = false }) {
   const top = offsetHeader ? 'pt-[var(--header-h-max,92px)] min-[769px]:pt-[var(--header-h-max,98px)]' : '';
   return (

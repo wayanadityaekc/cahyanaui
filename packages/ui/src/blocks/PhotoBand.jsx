@@ -1,6 +1,5 @@
 import Button from '../primitives/Button.jsx';
 
-// Full-bleed photo band, centred. paired: from 993px it becomes a rounded, left-aligned card for a two-column row.
 export default function PhotoBand({ image = '', eyebrow = '', title = '', text = '', cta = '', href = '#', external = false, paired = false, id }) {
   const linkProps = external ? { target: '_blank', rel: 'noopener' } : {};
   return (

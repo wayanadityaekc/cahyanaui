@@ -1,13 +1,5 @@
 import { cn } from '../lib/cn.js';
 
-/**
- * A "Find us on" row of round icon links (listing sites and social accounts).
- * Entries without an href are skipped, so a channel with no real address yet
- * never shows as a dead icon.
- *
- *   label   the small line before the icons
- *   links   [{ name, href, icon }]  icon is a rendered node; name is the aria-label
- */
 export default function FindUsOn({ label = '', links = [], className }) {
   const live = links.filter((link) => link.href);
   if (!live.length) return null;

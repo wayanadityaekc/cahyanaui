@@ -6,7 +6,6 @@ export const metadata = {
   robots: { index: false, follow: true },
 };
 
-// The site's own 404: says what happened and offers the pages people usually want.
 export default function NotFound() {
   return (
     <Container className="py-16 text-center">

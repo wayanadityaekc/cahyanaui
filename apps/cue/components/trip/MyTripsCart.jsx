@@ -33,23 +33,19 @@ export default function MyTripsCart() {
   const checkoutRef = useRef(null);
   const pricing = usePricing();
 
-  // Return from the hosted payment page: show PayWaiting, which asks the server; never trust the URL.
   const { returnRef, clearReturn } = usePaymentReturn();
 
   const [review, setReview] = useState(null);
   const [adding, setAdding] = useState(false);
   const [editDate, setEditDate] = useState(null);
   const [tab, setTab] = useState('custom');
-  // Phone opens straight on the cart, not the section list; Back still reaches the list.
   const [reading, setReading] = useState(true);
-  // Which booked card is expanded; kept here so it survives switching between Booked and Past.
   const [openRef, setOpenRef] = useState(null);
 
   useReviewLink({ trips, reviewableItems, account, setTab, setReading, setReview });
 
   const rows = useMemo(() => cartRows(state, displayGuests), [state, displayGuests]);
 
-  // Row category from the catalog for time slots; transfer/charter rows are unrestricted.
   function categoryOfRow({ kind, service }) {
     if (kind !== 'day') return kind;
     const c = pricing && pricing.catalog && pricing.catalog.items.find((i) => i.name === service);
@@ -65,7 +61,6 @@ export default function MyTripsCart() {
   });
   const { format } = useMoney();
 
-  // Resume a booking after sign-in; must run above the early return (hooks order), checkout via a ref.
   useResumeBooking(hydrated && rows.length > 0 && rows.every((r) => r.date), () => checkoutRef.current && checkoutRef.current());
 
   if (!hydrated) return <div data-mytrips-cart />;
@@ -107,7 +102,6 @@ export default function MyTripsCart() {
     { id: 'past', label: 'Past Trip', Icon: History },
   ];
 
-  // Payment-return waiting screen, a full-screen portal shown above the cart.
   const payReturn = returnRef ? (
     <PayWaiting
       bookingRef={returnRef}

@@ -7,17 +7,14 @@ import ReviewsStrip from '@/components/reviews/ReviewsStrip';
 import LoadFallback from '@/components/ui/LoadFallback';
 import { CARD, CARD_WRAP, STRIP, TRACK, segment, SEC, SEC_H } from '@/components/ui/detailCardClasses';
 
-// Icons for the Standard / Exclusive rows in the Details list.
 function CarIcon() { return <Car strokeWidth={1.7} aria-hidden="true" />; }
 function TicketIcon() { return <Banknote strokeWidth={1.7} aria-hidden="true" />; }
 
-// Icons for the practical notes rows in the Details list.
 function ClockIcon() { return <Clock strokeWidth={1.7} aria-hidden="true" />; }
 function BagIcon() { return <Backpack strokeWidth={1.7} aria-hidden="true" />; }
 function InfoIcon() { return <Info strokeWidth={1.7} aria-hidden="true" />; }
 function CardIcon() { return <CreditCard strokeWidth={1.7} aria-hidden="true" />; }
 
-// Details list: tour tiers plus generic pick-up/bring/notes rows; activities get one 'included' row and no temple line.
 function GoodToKnow({ isActivity }) {
   const rows = isActivity
     ? [
@@ -49,7 +46,6 @@ function GoodToKnow({ isActivity }) {
   );
 }
 
-// Shared InfoBoxes pair; pass variant to BOTH InfoBox (frame, tint) and InfoBoxList (row rules, muted text).
 function Inclusions({ included, excluded }) {
   return (
     <InfoBoxes>
@@ -67,7 +63,6 @@ function Inclusions({ included, excluded }) {
   );
 }
 
-// Detail page sections stacked on one page; the sticky strip is a jump nav whose active item follows scroll.
 export default function DetailTabs({ overview = null, priceItem = '', bookType = 'tour', included = [], excluded = [], reviewService = '' }) {
   const sections = [{ id: 'overview', label: 'Overview', content: overview || <LoadFallback /> }];
   if (priceItem) {
@@ -78,7 +73,6 @@ export default function DetailTabs({ overview = null, priceItem = '', bookType =
     });
   }
   if ((included && included.length) || (excluded && excluded.length)) {
-    // No visible heading (the boxes already say it); the label stays on the jump nav and as the section aria-label.
     sections.push({
       id: 'included',
       label: 'Included',
@@ -96,7 +90,6 @@ export default function DetailTabs({ overview = null, priceItem = '', bookType =
   const stripRef = useRef(null);
   const secRefs = useRef({});
 
-  // Scrollspy; only the strip is sticky (no nested scroll area), and stripRef includes its opaque top padding.
   useEffect(() => {
     const ids = sections.map((s) => s.id);
     function onScroll() {
@@ -118,7 +111,6 @@ export default function DetailTabs({ overview = null, priceItem = '', bookType =
       window.removeEventListener('scroll', onScroll);
       window.removeEventListener('resize', onScroll);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   function pick(id) {
@@ -131,11 +123,9 @@ export default function DetailTabs({ overview = null, priceItem = '', bookType =
     window.scrollTo({ top, behavior: 'smooth' });
   }
 
-  // Card with the sticky jump-nav strip on top and the stacked sections below.
   return (
     <div className={CARD_WRAP}>
       <div className={CARD}>
-        {/* Breathing room above the track is opaque padding (bg-white), so content never shows through once it sticks. */}
         <div ref={stripRef} className={STRIP}>
           <nav
             className={TRACK}

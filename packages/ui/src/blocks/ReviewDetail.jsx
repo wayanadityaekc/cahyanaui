@@ -17,15 +17,8 @@ function fmtDate(iso) {
   return Number.isNaN(d.getTime()) ? '' : d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
 }
 
-/**
- * The full text of one review, over a dimmed page. Open = `review` is set.
- * Escape, the X and a tap on the backdrop close it; focus moves onto the box
- * (never onto a field, which would raise a phone keyboard) and returns to
- * whatever opened it. A merged review (groupReviews) lists every trip it covers.
- */
 export default function ReviewDetail({ review, onClose, title = 'Guest review' }) {
   const boxRef = useRef(null);
-  // Latest onClose in a ref, so a parent re-render never re-runs the open/close effect.
   const closeRef = useRef(onClose);
   closeRef.current = onClose;
   const open = !!review;
@@ -42,7 +35,6 @@ export default function ReviewDetail({ review, onClose, title = 'Guest review' }
     };
   }, [open]);
 
-  // Nothing until it opens: portaling the backdrop during the first render would not match the static HTML.
   if (!open || typeof document === 'undefined') return null;
   const r = review;
   const { n, stars } = starText(r.rating);

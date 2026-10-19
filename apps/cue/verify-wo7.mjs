@@ -1,22 +1,3 @@
-// WO7 - the fixes from the component audit, measured in a real browser.
-//
-//   npm run build && cp -r out /tmp/out-after          (the build under test)
-//   (a build of the previous main, copied to /tmp/out-before)
-//   BEFORE=/tmp/out-before AFTER=/tmp/out-after node verify-wo7.mjs
-//
-// Two builds are served side by side (ports 4711 / 4712) so "what changed" is a
-// measurement, not a claim. Sections:
-//   1. borders   - histogram of every computed border colour, before vs after: the
-//                  off-token hairline shades must be GONE and --line must gain exactly
-//                  what they lost; page heights must not move.
-//   2. cards     - hover a card: it must not move (and on the BEFORE build it DID -
-//                  proves the check can fail).
-//   3. menus     - disclosure, not role=menu; aria-expanded/controls; Escape returns focus.
-//   4. tabs      - the programs tab page is gone, so the site has no role=tab at all;
-//                  jump-nav and rail are navigation, not tabs.
-//   5. dialogs   - role/label, focus lands inside, Tab trapped, Escape closes,
-//                  focus returns to the opener. Modal (AuthModal) + ModalPresence (review).
-//   6. live      - toast region always mounted; form errors are role=alert.
 import http from 'http';
 import fs from 'fs';
 import path from 'path';
@@ -47,8 +28,6 @@ const sB = await serve(BEFORE, 4711);
 const sA = await serve(AFTER, 4712);
 const OLD = 'http://127.0.0.1:4711';
 const NEW = 'http://127.0.0.1:4712';
-// UNDER=before runs sections 3-6 against the OLD build: they must FAIL there, which is
-// the proof the checks can see the bugs they were written for.
 const UNDER = process.env.UNDER === 'before' ? OLD : NEW;
 
 let pass = 0, fail = 0;
@@ -56,7 +35,6 @@ function ok(c, m) { c ? pass++ : (fail++, console.log('  FAIL:', m)); }
 function info(m) { return console.log('  ..', m); }
 const br = await chromium.launch({ executablePath: '/opt/pw-browsers/chromium_headless_shell-1194/chrome-linux/headless_shell' });
 
-// ONE branching handler (a later route() would swallow an earlier one).
 const MINE = { upcoming: [], history: [
   { ref: 'CUE-100', name: 'Ubud Tour', start_date: '2026-08-20', end_date: '2026-08-20', guests: '2', price_usd: 40, price_idr: 700000,
     status: 'new', upcoming: false, review_items: ['Ubud Tour'], lines: [{ type: 'tour', service: 'Ubud Tour', date: '2026-08-20', guests: '2' }] } ] };
@@ -81,7 +59,6 @@ async function open(base, url, w, { loggedIn = false, h = 900 } = {}) {
   return { ctx, page, errs };
 }
 
-// ---------------------------------------------------------------- 1. borders
 console.log('1. border colours + layout, before vs after');
 const HEX = /rgb\((\d+), (\d+), (\d+)\)/;
 function hex(c) { const m = HEX.exec(c); return m ? `#${[1, 2, 3].map((i) => (+m[i]).toString(16).padStart(2, '0')).join('')}` : c; }
@@ -122,15 +99,11 @@ for (const w of [390, 1280]) {
     const lineB = Object.entries(hb).filter(([k]) => k.startsWith(LINE)).reduce((s, [, v]) => s + v, 0);
     gained = lineB - lineA;
     lostTotal += lost; gainedTotal += gained;
-    // No off-token hairline may remain on any page.
     OFF.forEach((o) => { ok(!Object.keys(hb).some((k) => k.startsWith(`${o}|`)), `${url}@${w}: no ${o} border left`); });
-    // /settings swaps two <hr> (which drew their line as a BORDER) for Separators (a
-    // background): those two --line borders disappear by design.
     const expect = url === '/settings.html' ? lost - 2 : lost;
     ok(gained === expect, `${url}@${w}: --line gained ${gained} = off-token lost ${lost}${url === '/settings.html' ? ' - 2 hr' : ''}`);
     if (a.h !== b.h) heightDiffs.push(`${url}@${w}: ${a.h} -> ${b.h}`);
     ok(b.over <= 0, `${url}@${w}: no horizontal overflow (${b.over})`);
-    // Everything else must be identical, count for count.
     function rest(h) { return Object.fromEntries(Object.entries(h).filter(([k]) => !OFF.some((o) => k.startsWith(`${o}|`)) && !k.startsWith(LINE))); }
     ok(JSON.stringify(rest(ha)) === JSON.stringify(rest(hb)), `${url}@${w}: every other border unchanged`);
   }
@@ -138,7 +111,6 @@ for (const w of [390, 1280]) {
 info(`off-token borders moved onto --line: ${lostTotal} (line gained ${gainedTotal})`);
 ok(heightDiffs.length === 0, `document heights unchanged (${heightDiffs.join('; ') || 'all equal'})`);
 
-// ---------------------------------------------------------------- 2. cards
 console.log('2. cards do not move on hover');
 async function hoverShift(base, url, w, sel) {
   const { ctx, page } = await open(base, url, w);
@@ -169,7 +141,6 @@ for (const [url, sel] of CARD_SELS) {
 }
 ok(movedBefore > 0, `the check can fail: ${movedBefore} card(s) lifted on the BEFORE build`);
 
-// ---------------------------------------------------------------- 3. menus
 console.log('3. menus are disclosures');
 for (const loggedIn of [false, true]) {
   const { ctx, page, errs } = await open(UNDER, '/tour.html', 1280, { loggedIn });
@@ -199,8 +170,6 @@ for (const loggedIn of [false, true]) {
 {
   const { ctx, page } = await open(UNDER, '/tour.html', 1280);
   const prog = page.locator('[data-desktop-nav] button[aria-controls]');
-  // Keyboard, not click: the list also opens on hover, so a mouse click on an
-  // already-hovered trigger toggles it shut again (existing behaviour, noted).
   await prog.focus();
   await page.keyboard.press('Enter');
   await page.waitForTimeout(400);
@@ -214,7 +183,6 @@ for (const loggedIn of [false, true]) {
   await ctx.close();
 }
 
-// ---------------------------------------------------------------- 4. tabs
 console.log('4. tabs only where they are tabs');
 {
   const { ctx, page } = await open(UNDER, '/ubud-tour.html', 1280);
@@ -230,9 +198,8 @@ console.log('4. tabs only where they are tabs');
   await ctx.close();
 }
 
-// ---------------------------------------------------------------- 5. dialogs
 console.log('5. dialogs');
-{ // Modal.jsx via the Log in button on a phone (AuthModal)
+{
   const { ctx, page } = await open(UNDER, '/tour.html', 390);
   const opener = page.locator('[data-account-slot="out"] > button');
   await opener.focus();
@@ -260,7 +227,7 @@ console.log('5. dialogs');
   ok(await opener.evaluate((n) => n === document.activeElement), 'AuthModal: focus returns to the Log in button');
   await ctx.close();
 }
-{ // ModalPresence via the review popup (?review=1 lands on it)
+{
   const { ctx, page } = await open(UNDER, '/my-trips.html?review=1', 390, { loggedIn: true });
   await page.waitForTimeout(800);
   const dlg = page.locator('[role="dialog"][aria-label="Leave a review"]');
@@ -282,7 +249,6 @@ console.log('5. dialogs');
   await ctx.close();
 }
 
-// ---------------------------------------------------------------- 6. live regions
 console.log('6. announcements');
 {
   const { ctx, page } = await open(UNDER, '/ubud-tour.html', 390);

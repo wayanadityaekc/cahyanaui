@@ -8,11 +8,9 @@ import Rating from '@/components/Rating';
 function CheckIcon() { return <Check strokeWidth={2.4} aria-hidden="true" />; }
 function PinIcon() { return <MapPin strokeWidth={1.7} aria-hidden="true" />; }
 function ClockIcon() { return <Clock strokeWidth={1.7} aria-hidden="true" />; }
-// A region, not a point - so not the pin the stop count already uses.
 function AreaIcon() { return <Map strokeWidth={1.7} aria-hidden="true" />; }
 function UserIcon() { return <UserRound strokeWidth={1.7} aria-hidden="true" />; }
 
-// Listing card: horizontal row on phones, flips to a vertical card at 769px and up.
 const CARD =
   'scroll-mt-[110px] flex bg-white rounded-lg p-[10px] no-underline text-ink shadow-card ' +
   'transition-[opacity] duration-200 ease-in-out ' +

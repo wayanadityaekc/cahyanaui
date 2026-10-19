@@ -20,11 +20,9 @@ import MyReviews from './MyReviews';
 import DeleteAccountModal from './DeleteAccountModal';
 import SignInPrompt from '@/components/account/SignInPrompt';
 
-// Ghost red button that only opens the delete confirmation; the destructive button is in DeleteAccountModal.
 const BTN_DANGER_GHOST = `inline-flex ${BTN_SM} font-body [border:1px_solid_var(--color-err)] bg-white text-err cursor-pointer hover:bg-err hover:text-white`;
 const SECTION_TITLE = 'font-head font-medium text-h3 text-green m-0 mb-3';
 
-// Same RailLayout shell as My Trips and Our Company; one item, so mobileNav skips the phone list/back screen.
 const RAIL_ITEMS = [{ id: 'account', label: 'Account Settings', Icon: UserRound }];
 
 function SettingsShell({ children }) {
@@ -55,7 +53,6 @@ export default function AccountSettings() {
   const [msg, setMsg] = useState('');
   const [busy, setBusy] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
-  // Keeps a confirmation screen after delete, since clearing `account` would otherwise swap to the sign-in prompt.
   const [deleted, setDeleted] = useState(false);
 
   useEffect(() => {
@@ -120,7 +117,6 @@ export default function AccountSettings() {
   return (
     <SettingsShell>
     <div id="settings-root" data-settings>
-      {/* Initials avatar (no photo upload), using the same initialsOf() as the navbar. */}
       <div className="flex items-center gap-4 mb-6">
         <span
           className="w-[72px] h-[72px] shrink-0 rounded-[50%] bg-gold text-white grid place-items-center text-h2 font-semibold tracking-[0.02em]"
@@ -162,7 +158,6 @@ export default function AccountSettings() {
         <input className={CONTACT_INPUT} type="text" id="st-stay" value={stay} onChange={(e) => setStay(e.target.value)} placeholder="Ubud & nearby" />
       </div>
       {msg && <small role="status" className={REFMSG}>{msg}</small>}
-      {/* Use BTN_CTA, not a bare className: a class with no CSS rule renders as a raw browser button with no warning. */}
       <button className={`inline-flex ${BTN_CTA}`} onClick={save} disabled={busy}>{busy ? 'Saving...' : 'Save changes'}</button>
       <button className={BTN_PILL} onClick={logout}>Sign out</button>
 

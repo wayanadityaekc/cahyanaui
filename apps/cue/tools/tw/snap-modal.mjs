@@ -1,5 +1,3 @@
-// Interaction snapshot for the driver profile modal (portaled, opens on click).
-// Usage: node tools/tw/snap-modal.mjs <page.html> <out.json>
 import http from 'node:http';
 import fs from 'node:fs';
 import path from 'node:path';

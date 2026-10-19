@@ -1,6 +1,4 @@
-// Live chat socket (replies, typing, presence), ported from CUE; sends stay HTTP, onOpen fires on every (re)connect.
 
-// Socket URL derived from the site's apiBase (no second setting), so HTTP and WS always hit the same host.
 export function chatSocketUrl(apiBase, thread) {
   const url = new URL(apiBase, typeof window === 'undefined' ? 'https://localhost' : window.location.href);
   url.protocol = url.protocol === 'http:' ? 'ws:' : 'wss:';
@@ -9,14 +7,12 @@ export function chatSocketUrl(apiBase, thread) {
   return url.toString();
 }
 
-// Client ping every 25s (the server pings at 30s); an unanswered ping is how a dead socket is found.
 const PING_MS = 25000;
 const PONG_GRACE_MS = 10000;
 const BACKOFF_MS = [1000, 2000, 4000, 8000, 15000, 20000];
 
 export function openChatSocket({ apiBase, thread, onMessage, onTyping, onPresence, onOpen, onLive } = {}) {
   if (typeof window === 'undefined' || typeof WebSocket === 'undefined') {
-    // No socket here: the caller stays on polling, which still works.
     if (onLive) onLive(false);
     return { close() {}, typing() {}, live: () => false };
   }
@@ -43,7 +39,7 @@ export function openChatSocket({ apiBase, thread, onMessage, onTyping, onPresenc
   }
 
   function closeQuietly() {
-    try { ws.close(); } catch (e) { /* already gone */ }
+    try { ws.close(); } catch (e) {   }
   }
 
   function beat() {
@@ -51,19 +47,16 @@ export function openChatSocket({ apiBase, thread, onMessage, onTyping, onPresenc
     pingTimer = setInterval(() => {
       if (!ws || ws.readyState !== WebSocket.OPEN) return;
       try { ws.send(JSON.stringify({ type: 'ping' })); } catch (e) { return; }
-      // No pong in time = half-open socket; closing it triggers the reconnect and its catch-up fetch.
       clearTimeout(pongTimer);
       pongTimer = setTimeout(closeQuietly, PONG_GRACE_MS);
     }, PING_MS);
   }
 
-  // Reconnect forever with backoff; the caller polls meanwhile.
   function schedule() {
     if (closedByUs) return;
     const wait = BACKOFF_MS[Math.min(tries, BACKOFF_MS.length - 1)];
     tries += 1;
     clearTimeout(retryTimer);
-    // Jitter so sockets dropped by a deploy don't all reconnect at once.
     retryTimer = setTimeout(connect, wait + Math.floor(Math.random() * 400));
   }
 
@@ -98,11 +91,9 @@ export function openChatSocket({ apiBase, thread, onMessage, onTyping, onPresenc
       tries = 0;
       setLive(true);
       beat();
-      // Runs on every connect, not just the first, so messages missed while disconnected are fetched.
       if (onOpen) onOpen();
     };
     sock.onmessage = handleFrame;
-    // A refused handshake fires error then close, so retry is handled only in onclose.
     sock.onerror = () => {};
     sock.onclose = () => {
       stopTimers();
@@ -125,10 +116,9 @@ export function openChatSocket({ apiBase, thread, onMessage, onTyping, onPresenc
         closeQuietly();
       }
     },
-    // Best-effort typing ping: sent only while open, never queued.
     typing() {
       if (!ws || ws.readyState !== WebSocket.OPEN) return;
-      try { ws.send(JSON.stringify({ type: 'typing' })); } catch (e) { /* dropped, and that is fine */ }
+      try { ws.send(JSON.stringify({ type: 'typing' })); } catch (e) {   }
     },
     live: () => live,
   };

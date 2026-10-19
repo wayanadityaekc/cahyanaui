@@ -13,7 +13,6 @@ import {
 
 const FALLBACK = 'Sorry, we could not load this information. Please try again.';
 
-// Inside of CUE's chat panel (head, conversation, input, a way out); the site owns the frame, its motion and the state.
 export default function ChatPanel({
   chat = null,
   copy = {},
@@ -26,7 +25,6 @@ export default function ChatPanel({
   const log = chat ? chat.log : [];
   const thinking = chat ? chat.thinking : false;
 
-  // New message, or the dots appearing: keep the newest line in view.
   useEffect(() => {
     const body = bodyRef.current;
     if (body) body.scrollTop = body.scrollHeight;
@@ -51,7 +49,6 @@ export default function ChatPanel({
       </div>
 
       <div className={CHAT_BODY} ref={bodyRef}>
-        {/* Optional sign-in offer; chatting works without it, and the site hides it once signed in. */}
         {onSignIn && (
           <p className={CHAT_SIGNIN_BAR}>
             <span className={CHAT_SIGNIN_TEXT}>{copy.signedOut}</span>

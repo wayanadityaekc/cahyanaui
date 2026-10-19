@@ -11,7 +11,6 @@ import {
   MTC_ITEM, MTC_ADD_FULL, MTC_DATEBTN,
 } from './myTripsClasses';
 
-// My Trip tab: cart rows with date buttons, total, add button, notes and Pay now.
 export default function CartPanel({
   rows, priced, format, totalText, undated, setAdding, setEditDate, remove, checkout,
 }) {

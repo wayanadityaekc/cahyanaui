@@ -28,7 +28,6 @@ export default function GuideHubPage() {
         </Container>
       </section>
 
-      {/* One section per category: article category links point at /guide#<id>, so the id lives here. */}
       {CATEGORIES.map((cat) => {
         const items = ARTICLES.filter((article) => article.cat === cat.id);
         if (items.length === 0) return null;

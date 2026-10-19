@@ -1,7 +1,6 @@
 import { BTN_SM } from '@/components/ui/btnClasses';
 import { ArrowUpRight } from 'lucide-react';
 
-// Villa promo band: two photos side by side (stacked at <=768px) under an after: overlay.
 const CLS = {
   section:
     "relative min-h-[420px] flex items-center justify-center text-center px-[var(--container-x)] py-12 max-[768px]:min-h-[380px] " +

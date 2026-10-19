@@ -1,9 +1,3 @@
-// Run against the built pages: npm run build && npm run serve (port 4000), then node verify-bcm-otp.mjs
-// Ad-hoc check: BookConfirmModal's own sign-in note now takes an interactive
-// 6-digit code instead of a passive "check your email" line (wired in 28 Sep
-// 2026, after AuthModal). Exercises a SIGNED-IN guest whose typed contact
-// email belongs to a DIFFERENT existing account - the one case where the
-// server still answers a booking with signin_sent instead of a token.
 import { chromium } from '/home/user/CUE/node_modules/playwright-core/index.mjs';
 
 const BASE = 'http://127.0.0.1:4000';
@@ -51,7 +45,6 @@ async function run(w) {
   ok(await page.locator('input[inputmode="numeric"]:visible').count() === 6, `${w}: no 6-box code entry inside the note`);
   await page.screenshot({ path: `shots/bcm-otp-${w}.png` });
 
-  // wrong code
   await page.locator('input[inputmode="numeric"]:visible').first().click();
   await page.keyboard.type('000000', { delay: 20 });
   await page.waitForTimeout(500);
@@ -59,7 +52,6 @@ async function run(w) {
   const tokAfterWrong = await page.evaluate(() => localStorage.getItem('cue_token'));
   ok(tokAfterWrong === 'tok-signed-in', `${w}: a WRONG code changed the session (${tokAfterWrong})`);
 
-  // right code
   await page.locator('input[inputmode="numeric"]:visible').first().click();
   await page.keyboard.type('246810', { delay: 20 });
   await page.waitForTimeout(700);

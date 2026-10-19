@@ -3,10 +3,8 @@
 import { Star } from 'lucide-react';
 import { useReviews } from '@/state/ReviewsProvider';
 
-// Rating star stays solid - fill makes it read as a filled badge, not an outline.
 function StarIcon() { return <Star fill="currentColor" stroke="none" aria-hidden="true" />; }
 
-// Live review average + count for a service name, or "New" with no reviews; withWord spells out "reviews".
 export default function Rating({ name, className, minReviews = 1, withWord = false }) {
   const ctx = useReviews();
   const r = ctx && ctx.lookup ? ctx.lookup(name) : null;

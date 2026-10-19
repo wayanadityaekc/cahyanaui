@@ -16,7 +16,6 @@ import {
   NAV_CHEVRON,
 } from './navbarClasses.js';
 
-// Two letters for the avatar: first + last name, else the start of the name or email.
 export function initialsOf(name, email) {
   const source = (name || '').trim() || (email || '').split('@')[0] || '';
   const parts = source.split(/\s+/).filter(Boolean);
@@ -29,7 +28,6 @@ export function firstNameOf(name, email) {
   return first || (email || '').split('@')[0] || 'Account';
 }
 
-// The navbar's account slot (CUE's WO1 AccountMenu); the site passes the account, the handlers and its own fields.
 export default function AccountMenu({
   account = null,
   hydrated = true,
@@ -45,7 +43,6 @@ export default function AccountMenu({
   const Link = linkAs;
   const { open, setOpen, boxRef, triggerRef, panelId } = useDisclosure();
 
-  // Guests/Currency live in the desktop menu only; on a phone the drawer holds them.
   const prefsBlock = prefs ? (
     <div className="max-[992px]:hidden mt-1">
       <Separator />
@@ -55,7 +52,6 @@ export default function AccountMenu({
 
   if (!account) {
     return (
-      // Hidden until the session check answers, so a signed-in guest never sees "Log in" flash.
       <div className={cn('relative', !hydrated && 'invisible')} ref={boxRef} data-account-slot="out">
         <button type="button" className={ACCOUNT_ICON_BTN} aria-label="Log in" onClick={onLogin}>
           <UserRound className="w-5 h-5" strokeWidth={1.6} aria-hidden="true" />

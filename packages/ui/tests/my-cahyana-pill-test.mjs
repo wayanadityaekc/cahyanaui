@@ -1,7 +1,3 @@
-// MyCahyanaPill: one link to my., person | bag, the dot only until seen, no count, onTap wired, the EN button's box.
-// Run: node packages/ui/tests/my-cahyana-pill-test.mjs [node_modules dir]
-// Needs a node_modules with @swc/core, react, react-dom, lucide-react and clsx; default: the sibling villa repo's
-// (../ubud-private-villas/node_modules next to this repo). Measured layout is checked in each site's verify-my-pill.mjs.
 import { createRequire } from 'node:module';
 import fs from 'node:fs';
 import os from 'node:os';
@@ -15,7 +11,6 @@ const swc = require('@swc/core');
 const React = require('react');
 const { renderToStaticMarkup } = require('react-dom/server');
 
-// Compile the two source files to plain ESM in a temp folder, with bare imports pointed at `deps`.
 const out = fs.mkdtempSync(path.join(os.tmpdir(), 'pill-'));
 function compile(rel, name) {
   const code = fs.readFileSync(path.join(here, '../src', rel), 'utf8');

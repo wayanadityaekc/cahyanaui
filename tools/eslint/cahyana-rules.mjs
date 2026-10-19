@@ -411,7 +411,7 @@ export const plugin = {
   },
 };
 
-export function buildCahyanaConfig({
+export function cahyanaConfig({
   files,
   globals = {},
   sourceType = 'module',

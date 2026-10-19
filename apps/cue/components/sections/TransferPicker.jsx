@@ -30,7 +30,7 @@ export default function TransferPicker() {
     }));
   }, [catalog]);
 
-  const { from, to, pickFrom, pickTo, pickerRef } = useTransferRoute();
+  const { from, to, pickFrom: handleFromPick, pickTo: handleToPick, pickerRef } = useTransferRoute();
   const [isReturn, setIsReturn] = useState(false);
 
   const area = from === UBUD ? to : to === UBUD ? from : '';
@@ -47,9 +47,9 @@ export default function TransferPicker() {
     ...areas.map((areaItem) => ({ value: areaItem.area, label: areaItem.area })),
   ];
 
-  function swap() {
-    pickFrom(to);
-    pickTo(from);
+  function handleRouteSwap() {
+    handleFromPick(to);
+    handleToPick(from);
   }
 
   function addToTrip(goto) {
@@ -76,13 +76,20 @@ export default function TransferPicker() {
           <label className={FIELD_LABEL} htmlFor="tp-from">
             From
           </label>
-          <Select id="tp-from" label="From" value={from} onChange={pickFrom} options={options} placeholder="Select" />
+          <Select
+            id="tp-from"
+            label="From"
+            value={from}
+            onChange={handleFromPick}
+            options={options}
+            placeholder="Select"
+          />
         </div>
         <button
           type="button"
           className="inline-flex items-center justify-center w-[var(--btn-h)] h-[var(--btn-h)] rounded-sm border border-line bg-white text-gold-d text-small leading-none mb-[0.15rem] cursor-pointer [@media(max-width:600px)]:justify-self-center [@media(max-width:600px)]:[transform:rotate(90deg)]"
           aria-label="Swap direction"
-          onClick={swap}
+          onClick={handleRouteSwap}
         >
           &#8646;
         </button>
@@ -90,7 +97,7 @@ export default function TransferPicker() {
           <label className={FIELD_LABEL} htmlFor="tp-to">
             To
           </label>
-          <Select id="tp-to" label="To" value={to} onChange={pickTo} options={options} placeholder="Select" />
+          <Select id="tp-to" label="To" value={to} onChange={handleToPick} options={options} placeholder="Select" />
         </div>
       </div>
 

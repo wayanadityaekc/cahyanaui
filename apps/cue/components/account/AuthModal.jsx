@@ -46,7 +46,7 @@ export default function AuthModal({ open, onClose, reason, onSignedIn }) {
     setOk('');
     setErrors({});
   }
-  function close() {
+  function handleClose() {
     reset();
     setForm({ name: '', email: '', phone: '' });
     setStage('email');
@@ -146,7 +146,7 @@ export default function AuthModal({ open, onClose, reason, onSignedIn }) {
         : 'Create your account';
 
   return (
-    <Modal open={open} onClose={close} title={title}>
+    <Modal open={open} onClose={handleClose} title={title}>
       {stage === 'code' ? (
         <>
           <p className="m-0 mb-[1.1rem] text-muted text-small leading-[1.5] text-center">

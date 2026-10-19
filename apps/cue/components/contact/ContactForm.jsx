@@ -26,7 +26,7 @@ export default function ContactForm({ company = false }) {
     };
   }
 
-  async function send() {
+  async function handleMessageSend() {
     const { ok, errors: fieldErrors, data } = validateWith(contactSchema, form);
     setErrors(fieldErrors);
     if (!ok) {
@@ -127,7 +127,7 @@ export default function ContactForm({ company = false }) {
             {error}
           </small>
         )}
-        <button className={`flex w-full ${BTN_CTA}`} id="c-send" onClick={send} disabled={isBusy}>
+        <button className={`flex w-full ${BTN_CTA}`} id="c-send" onClick={handleMessageSend} disabled={isBusy}>
           {isBusy ? 'Sending...' : 'Send Message'}
         </button>
       </div>

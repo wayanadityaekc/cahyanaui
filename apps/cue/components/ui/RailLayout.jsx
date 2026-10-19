@@ -49,7 +49,7 @@ export default function RailLayout({
   useEffect(() => {
     if (collapsible) setIsCollapsed(readLocal(KEY.railCollapsed, '') === '1');
   }, [collapsible]);
-  function toggleCollapsed() {
+  function handleCollapsedToggle() {
     const isNextCollapsed = !isCollapsed;
     setIsCollapsed(isNextCollapsed);
     writeLocal(KEY.railCollapsed, isNextCollapsed ? '1' : '0');
@@ -120,7 +120,7 @@ export default function RailLayout({
               <button
                 type="button"
                 className={RAIL_TRIGGER}
-                onClick={toggleCollapsed}
+                onClick={handleCollapsedToggle}
                 aria-label={isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
                 aria-expanded={!isCollapsed}
               >

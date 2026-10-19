@@ -55,7 +55,7 @@ export default function RailLayout({
       setIsOwnCollapsed(window.localStorage.getItem(storageKey) === '1');
     } catch (e) {}
   }, [storageKey]);
-  function toggleCollapsed() {
+  function handleCollapsedToggle() {
     const isNextCollapsed = !collapsed;
     if (collapsedProp === undefined) setIsOwnCollapsed(isNextCollapsed);
     if (storageKey) {
@@ -132,7 +132,7 @@ export default function RailLayout({
               <button
                 type="button"
                 className={RAIL_TRIGGER}
-                onClick={toggleCollapsed}
+                onClick={handleCollapsedToggle}
                 aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
                 aria-expanded={!collapsed}
               >

@@ -13,7 +13,7 @@ function DeleteSheet({ open = false, onClose = () => {}, onConfirm = async () =>
   const [isBusy, setIsBusy] = useState(false);
   const [message, setMessage] = useState('');
 
-  async function confirm() {
+  async function handleConfirm() {
     setIsBusy(true);
     setMessage('');
     const result = await onConfirm();
@@ -55,7 +55,7 @@ function DeleteSheet({ open = false, onClose = () => {}, onConfirm = async () =>
         <Button variant="ghost" onClick={onClose} disabled={isBusy}>
           Keep account
         </Button>
-        <Button onClick={confirm} disabled={isBusy} className="!bg-err hover:!brightness-90">
+        <Button onClick={handleConfirm} disabled={isBusy} className="!bg-err hover:!brightness-90">
           {isBusy ? 'Deleting...' : 'Delete account'}
         </Button>
       </div>
@@ -64,12 +64,12 @@ function DeleteSheet({ open = false, onClose = () => {}, onConfirm = async () =>
 }
 
 export default function SettingsPage() {
-  const { account, hydrated, updateAccount, deleteAccount, logout } = useAccount();
+  const { account, hydrated, updateAccount: handleAccountUpdate, deleteAccount, logout: handleLogout } = useAccount();
   const [isAuthOpen, setIsAuthOpen] = useState(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const [isDeleted, setIsDeleted] = useState(false);
 
-  async function confirmDelete() {
+  async function handleDeleteConfirm() {
     const result = await deleteAccount();
     if (result.ok) {
       setIsDeleteOpen(false);
@@ -103,8 +103,8 @@ export default function SettingsPage() {
       <AccountSettings
         account={account}
         prefs={<TripPrefsFields idPrefix="st" />}
-        onSave={updateAccount}
-        onLogout={logout}
+        onSave={handleAccountUpdate}
+        onLogout={handleLogout}
         onDelete={() => setIsDeleteOpen(true)}
       />
     );
@@ -119,7 +119,7 @@ export default function SettingsPage() {
         {body}
       </div>
       <AuthSheet open={isAuthOpen} onClose={() => setIsAuthOpen(false)} />
-      <DeleteSheet open={isDeleteOpen} onClose={() => setIsDeleteOpen(false)} onConfirm={confirmDelete} />
+      <DeleteSheet open={isDeleteOpen} onClose={() => setIsDeleteOpen(false)} onConfirm={handleDeleteConfirm} />
     </Container>
   );
 }

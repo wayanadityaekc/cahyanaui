@@ -55,7 +55,7 @@ export default function ChatPanel({
   const {
     draft,
     onDraft,
-    ask,
+    ask: handleQuestionAsk,
     sending,
     thread,
     ownerHere,
@@ -64,8 +64,8 @@ export default function ChatPanel({
     mailDraft,
     setMailDraft,
     mailErr,
-    saveEmail,
-    skipMail,
+    saveEmail: handleEmailSave,
+    skipMail: handleMailSkip,
   } = chat;
 
   return (
@@ -93,10 +93,16 @@ export default function ChatPanel({
           </p>
         )}
 
-        <ChatMessages log={log} ownerName={copy.ownerName} onAsk={ask} onNavigate={onClose} linkAs={linkAs} />
+        <ChatMessages
+          log={log}
+          ownerName={copy.ownerName}
+          onAsk={handleQuestionAsk}
+          onNavigate={onClose}
+          linkAs={linkAs}
+        />
 
         {mail === 'ask' && (
-          <form className={CHAT_MAIL_FORM} onSubmit={saveEmail} data-mail-ask>
+          <form className={CHAT_MAIL_FORM} onSubmit={handleEmailSave} data-mail-ask>
             <p className={CHAT_NOTE}>{copy.emailAsk}</p>
             <Input
               type="email"
@@ -115,7 +121,7 @@ export default function ChatPanel({
               <button type="submit" className={CHAT_CTA} data-mailsend disabled={!mailDraft.trim()}>
                 {copy.emailSend}
               </button>
-              <button type="button" className={CHAT_TEXT_BTN} onClick={skipMail}>
+              <button type="button" className={CHAT_TEXT_BTN} onClick={handleMailSkip}>
                 {copy.emailSkip}
               </button>
             </span>
@@ -151,7 +157,7 @@ export default function ChatPanel({
         className={CHAT_FOOT}
         onSubmit={(event) => {
           event.preventDefault();
-          ask(draft);
+          handleQuestionAsk(draft);
         }}
       >
         <Input

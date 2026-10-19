@@ -243,7 +243,7 @@ export default function ChatPanel({ open, onClose }) {
     [isSending, account],
   );
 
-  const ask = useCallback(
+  const handleQuestionAsk = useCallback(
     (question) => {
       const text = String(question || '').trim();
       if (!text || isThinking || isSending) return;
@@ -303,7 +303,7 @@ export default function ChatPanel({ open, onClose }) {
     sock.current.typing();
   }
 
-  async function saveEmail(event) {
+  async function handleEmailSave(event) {
     event.preventDefault();
     const emailAddress = mailDraft.trim();
     if (!emailAddress || !thread) return;
@@ -367,11 +367,11 @@ export default function ChatPanel({ open, onClose }) {
                 </p>
               );
             }
-            return <BotReply key={entry.id} m={entry} onAsk={ask} />;
+            return <BotReply key={entry.id} m={entry} onAsk={handleQuestionAsk} />;
           })}
 
           {mail === 'ask' && (
-            <form className={HANDOFF_FORM} onSubmit={saveEmail}>
+            <form className={HANDOFF_FORM} onSubmit={handleEmailSave}>
               <p className={NOTE}>{CHAT_COPY.emailAsk}</p>
               <span className={HANDOFF_ROW}>
                 <input
@@ -425,7 +425,7 @@ export default function ChatPanel({ open, onClose }) {
           className={FOOT}
           onSubmit={(event) => {
             event.preventDefault();
-            ask(draft);
+            handleQuestionAsk(draft);
           }}
         >
           <input

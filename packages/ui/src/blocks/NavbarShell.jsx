@@ -113,7 +113,7 @@ export default function NavbarShell({
 
   useBodyLock(isMenuOpen);
 
-  function close() {
+  function handleClose() {
     setIsMenuOpen(false);
   }
 
@@ -156,7 +156,7 @@ export default function NavbarShell({
           >
             <li className={NAV_DRAWER_HEAD}>
               <b className="text-strong font-semibold text-gold">{drawerTitle}</b>
-              <button type="button" className={NAV_CLOSE} aria-label="Close menu" onClick={close}>
+              <button type="button" className={NAV_CLOSE} aria-label="Close menu" onClick={handleClose}>
                 <CloseIcon strokeWidth={2} aria-hidden="true" />
               </button>
             </li>
@@ -170,7 +170,11 @@ export default function NavbarShell({
                   <li key={link.label} className={cn('relative', NAV_LI)}>
                     {link.href ? (
                       <div className="flex items-center">
-                        <Link href={link.href} onClick={close} className={cn(navLink(isActive(link.href)), 'flex-1')}>
+                        <Link
+                          href={link.href}
+                          onClick={handleClose}
+                          className={cn(navLink(isActive(link.href)), 'flex-1')}
+                        >
                           {link.icon}
                           {link.label}
                         </Link>
@@ -217,7 +221,7 @@ export default function NavbarShell({
                       <ul className={NAV_SUBLIST}>
                         {link.items.map((item) => (
                           <li key={item.href} className="py-[0.4rem]">
-                            <Link href={item.href} onClick={close} className={NAV_SUBLINK}>
+                            <Link href={item.href} onClick={handleClose} className={NAV_SUBLINK}>
                               {item.label}
                             </Link>
                           </li>
@@ -229,7 +233,7 @@ export default function NavbarShell({
               }
               return (
                 <li key={link.href} className={NAV_LI}>
-                  <Link href={link.href} onClick={close} className={navLink(isActive(link.href))}>
+                  <Link href={link.href} onClick={handleClose} className={navLink(isActive(link.href))}>
                     {link.icon}
                     {link.label}
                     {link.end}
@@ -239,7 +243,9 @@ export default function NavbarShell({
             })}
 
             {drawerFoot ? (
-              <li className="mt-auto pt-4">{typeof drawerFoot === 'function' ? drawerFoot(close) : drawerFoot}</li>
+              <li className="mt-auto pt-4">
+                {typeof drawerFoot === 'function' ? drawerFoot(handleClose) : drawerFoot}
+              </li>
             ) : null}
           </ul>
         </nav>
@@ -247,7 +253,10 @@ export default function NavbarShell({
         {account}
       </div>
 
-      <div className={cn(NAV_SCRIM, isMenuOpen ? 'opacity-100 visible' : 'opacity-0 invisible')} onClick={close} />
+      <div
+        className={cn(NAV_SCRIM, isMenuOpen ? 'opacity-100 visible' : 'opacity-0 invisible')}
+        onClick={handleClose}
+      />
     </header>
   );
 }

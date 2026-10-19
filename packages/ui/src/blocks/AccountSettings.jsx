@@ -30,7 +30,7 @@ export default function AccountSettings({
   if (!account)
     return <p className="m-0 text-body text-muted">Sorry, we could not load this information. Please try again.</p>;
 
-  async function save() {
+  async function handleSave() {
     setIsBusy(true);
     setMessage(null);
     const result = await onSave(form);
@@ -85,7 +85,7 @@ export default function AccountSettings({
         </p>
       )}
       <div className="flex flex-wrap gap-2 mt-5">
-        <Button onClick={save} disabled={isBusy}>
+        <Button onClick={handleSave} disabled={isBusy}>
           {isBusy ? 'Saving...' : 'Save changes'}
         </Button>
         <Button variant="ghost" onClick={onLogout}>

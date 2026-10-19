@@ -14,14 +14,14 @@ export default function AddToBooking({ serviceId, variant = 'ghost', className =
 
   const on = ready && cart.services.includes(serviceId);
 
-  function toggle() {
+  function handleToggle() {
     toggleService(serviceId);
     setAnnouncement(on ? `${service.label} removed from My Booking` : `${service.label} added to My Booking`);
   }
 
   return (
     <>
-      <Button variant={variant} full onClick={toggle} aria-pressed={on} className={className}>
+      <Button variant={variant} full onClick={handleToggle} aria-pressed={on} className={className}>
         {on ? (
           <>
             <Check className="w-[var(--icon-sm)] h-[var(--icon-sm)]" strokeWidth={2} aria-hidden="true" /> Added

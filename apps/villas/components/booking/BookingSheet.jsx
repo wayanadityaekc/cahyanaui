@@ -20,7 +20,15 @@ import StayCheckout from '@/components/booking/StayCheckout';
 import useVillaAvailability from '@/components/booking/useVillaAvailability';
 
 export default function BookingSheet() {
-  const { isOpen, step, booking, closeBooking, updateBooking, goToSummary, goToDetails } = useBooking();
+  const {
+    isOpen,
+    step,
+    booking,
+    closeBooking: handleBookingClose,
+    updateBooking: handleBookingUpdate,
+    goToSummary,
+    goToDetails: handleDetailsOpen,
+  } = useBooking();
   const { currency, format, formatAmount, breakdown: convert } = useCurrency();
   const { setStay } = useCart();
   const isPhone = useMobile('(max-width: 639px)');
@@ -34,18 +42,18 @@ export default function BookingSheet() {
     setAvailability('');
   }, [booking.villaSlug, booking.checkIn, booking.checkOut]);
 
-  function bookNow() {
+  function handleBookNow() {
     const stay = {
       villaSlug: villa.slug,
       checkIn: booking.checkIn,
       checkOut: booking.checkOut,
       guests: booking.guests,
     };
-    closeBooking();
+    handleBookingClose();
     setCheckoutStay(stay);
   }
 
-  async function checkAvailability() {
+  async function handleAvailabilityCheck() {
     setAvailability('checking');
     const answer = await checkStay(booking.villaSlug, booking.checkIn, booking.checkOut);
     setAvailability(answer);
@@ -83,14 +91,14 @@ export default function BookingSheet() {
     <>
       <SheetPresence
         open={isOpen}
-        onClose={closeBooking}
+        onClose={handleBookingClose}
         label={step === 'details' ? 'Book Your Stay' : 'Price Summary'}
         shell="fixed inset-0 z-[100] flex items-end sm:items-center justify-center bg-black/45"
         box="relative w-full sm:max-w-md"
       >
         <DragSheet
           enabled={isPhone}
-          onDismiss={closeBooking}
+          onDismiss={handleBookingClose}
           handleClassName="absolute top-0 left-0 right-0 h-5 z-20 [touch-action:none] cursor-grab active:cursor-grabbing"
           className="relative bg-surface-raised rounded-t-xl sm:rounded-xl [box-shadow:var(--shadow-xl)] max-h-[92vh] overflow-y-auto max-[639px]:pt-5"
         >
@@ -103,7 +111,12 @@ export default function BookingSheet() {
           <div className="flex items-center justify-between px-5 py-4 border-b border-line sticky top-0 max-[639px]:top-5 bg-surface-raised z-10">
             <div className="flex items-center gap-2">
               {step === 'summary' && (
-                <button type="button" onClick={goToDetails} aria-label="Back" className="text-gold cursor-pointer">
+                <button
+                  type="button"
+                  onClick={handleDetailsOpen}
+                  aria-label="Back"
+                  className="text-gold cursor-pointer"
+                >
                   <ChevronLeft className="w-[var(--icon-md)] h-[var(--icon-md)]" strokeWidth={1.8} aria-hidden="true" />
                 </button>
               )}
@@ -111,7 +124,7 @@ export default function BookingSheet() {
                 {step === 'details' ? 'Book Your Stay' : 'Price Summary'}
               </h3>
             </div>
-            <button type="button" onClick={closeBooking} aria-label="Close" className="text-gold cursor-pointer">
+            <button type="button" onClick={handleBookingClose} aria-label="Close" className="text-gold cursor-pointer">
               <CloseIcon className="w-[var(--icon-md)] h-[var(--icon-md)]" strokeWidth={1.8} aria-hidden="true" />
             </button>
           </div>
@@ -133,7 +146,7 @@ export default function BookingSheet() {
                     id="bk-villa"
                     label="Villa"
                     value={villa.slug}
-                    onChange={(slug) => updateBooking({ villaSlug: slug })}
+                    onChange={(slug) => handleBookingUpdate({ villaSlug: slug })}
                     options={VILLA_LIST.map((villaEntry) => ({ value: villaEntry.slug, label: villaEntry.name }))}
                   />
                 </div>
@@ -144,7 +157,7 @@ export default function BookingSheet() {
                 <DateRangeField
                   id="bk-checkin"
                   value={{ checkIn: booking.checkIn, checkOut: booking.checkOut }}
-                  onChange={updateBooking}
+                  onChange={handleBookingUpdate}
                   min={today || undefined}
                   busy={calendar.busy}
                   minNights={STAY_RULES.minNights}
@@ -158,7 +171,7 @@ export default function BookingSheet() {
                   id="bk-guests"
                   label="Guests"
                   value={String(booking.guests)}
-                  onChange={(value) => updateBooking({ guests: Number(value) })}
+                  onChange={(value) => handleBookingUpdate({ guests: Number(value) })}
                   options={Array.from({ length: villa.guests }, (unusedValue, index) => index + 1).map((count) => ({
                     value: String(count),
                     label: `${count} guest${count > 1 ? 's' : ''}`,
@@ -169,7 +182,7 @@ export default function BookingSheet() {
               <Button
                 full
                 disabled={!canContinue || availability === 'checking'}
-                onClick={checkAvailability}
+                onClick={handleAvailabilityCheck}
                 className="disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {availability === 'checking' ? 'Checking...' : 'Check availability'}
@@ -234,11 +247,11 @@ export default function BookingSheet() {
                   Continue to WhatsApp
                 </Button>
               ) : (
-                <Button full onClick={bookNow} data-book-now>
+                <Button full onClick={handleBookNow} data-book-now>
                   Book now
                 </Button>
               )}
-              <Button as={Link} href="/my-booking" variant="ghost" full onClick={closeBooking}>
+              <Button as={Link} href="/my-booking" variant="ghost" full onClick={handleBookingClose}>
                 Add extras
               </Button>
               <p className="text-label text-muted text-center -mt-3">

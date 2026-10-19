@@ -45,7 +45,7 @@ export default function CharterBuilder() {
     if (CHARTER.durations.some((duration) => duration.dur === draft.dur)) setDur(draft.dur);
   }, []);
 
-  function pick(charterDraft) {
+  function handlePick(charterDraft) {
     setDur(charterDraft);
     saveCharterDraft({ dur: charterDraft });
   }
@@ -57,7 +57,7 @@ export default function CharterBuilder() {
   const selected = CHARTER.durations.find((duration) => duration.dur === dur) || CHARTER.durations[0];
   const total = tier(dur);
 
-  function book() {
+  function handleBook() {
     if (!isReady || total == null) return;
     save({
       ...state,
@@ -86,7 +86,7 @@ export default function CharterBuilder() {
       </h2>
 
       <div className="flex flex-col gap-[var(--space-2)] min-[993px]:grid min-[993px]:grid-cols-[1fr_340px] min-[993px]:gap-[var(--space-3)] min-[993px]:items-start">
-        <CharterPlans value={dur} onChange={pick} area={area} heading="How long do you need the car?" />
+        <CharterPlans value={dur} onChange={handlePick} area={area} heading="How long do you need the car?" />
 
         <div>
           <div className="flex items-center gap-[var(--space-1)] mb-[var(--space-1)]">
@@ -153,7 +153,7 @@ export default function CharterBuilder() {
             </span>
           </div>
 
-          <button className={BTN_BOOK} type="button" disabled={!isReady || total == null} onClick={book}>
+          <button className={BTN_BOOK} type="button" disabled={!isReady || total == null} onClick={handleBook}>
             Book charter
           </button>
 

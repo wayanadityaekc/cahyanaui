@@ -107,13 +107,13 @@ export default function OurCompany() {
     return () => window.removeEventListener('hashchange', applyHash);
   }, []);
 
-  function goTo(id) {
+  function handleSectionSelect(id) {
     setTab(id);
     setIsReading(true);
     window.history.replaceState(null, '', `#${id}`);
   }
 
-  function goBack() {
+  function handleBack() {
     setIsReading(false);
     window.history.replaceState(null, '', window.location.pathname);
   }
@@ -124,9 +124,9 @@ export default function OurCompany() {
         label="Our company"
         items={TABS}
         active={tab}
-        onSelect={goTo}
+        onSelect={handleSectionSelect}
         reading={isReading}
-        onBack={goBack}
+        onBack={handleBack}
         help={<HelpCard />}
         collapsible
         breadcrumb={buildCrumbs('our-company')}

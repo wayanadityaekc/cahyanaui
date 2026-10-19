@@ -72,7 +72,7 @@ export default function ReviewModal({ open = false, prefill = null, onClose = ()
   const view = prefill || lastPrefill.current;
   if (!isMounted || !view) return null;
 
-  function close() {
+  function handleClose() {
     if (sent.current && refreshTrips) {
       sent.current = false;
       refreshTrips();
@@ -83,7 +83,7 @@ export default function ReviewModal({ open = false, prefill = null, onClose = ()
   const items = view.items || [];
   const hasMultipleItems = items.length > 1;
 
-  async function submit() {
+  async function handleReviewSubmit() {
     const picked = items.filter((it) => checked.includes(buildItemKey(it)));
     const { ok, errors: fieldErrors } = validateWith(reviewSchema, {
       picked: picked.map(buildItemKey),
@@ -145,8 +145,8 @@ export default function ReviewModal({ open = false, prefill = null, onClose = ()
   const CHECK_META = 'block text-small text-muted mt-[0.1rem]';
 
   return createPortal(
-    <ModalPresence open={!!open && !!prefill} onClose={close} label="Leave a review" box={BOX}>
-      <button className={CLOSE} aria-label="Close" onClick={close}>
+    <ModalPresence open={!!open && !!prefill} onClose={handleClose} label="Leave a review" box={BOX}>
+      <button className={CLOSE} aria-label="Close" onClick={handleClose}>
         &times;
       </button>
       <h3 className={TITLE}>Leave a Review</h3>
@@ -154,7 +154,7 @@ export default function ReviewModal({ open = false, prefill = null, onClose = ()
       {!isDone && !items.length ? (
         <div className="text-center">
           <LoadFallback className="mb-4" />
-          <button type="button" className={BTN} onClick={close}>
+          <button type="button" className={BTN} onClick={handleClose}>
             Close
           </button>
         </div>
@@ -284,7 +284,7 @@ export default function ReviewModal({ open = false, prefill = null, onClose = ()
           </div>
 
           {error && <p className="mt-[-0.4rem] mb-4 text-small text-err">{error}</p>}
-          <button type="button" className={BTN} onClick={submit} disabled={isBusy}>
+          <button type="button" className={BTN} onClick={handleReviewSubmit} disabled={isBusy}>
             {isBusy ? 'Sending...' : 'Submit review'}
           </button>
         </div>
@@ -306,7 +306,7 @@ export default function ReviewModal({ open = false, prefill = null, onClose = ()
               ))}
             </ul>
           ) : null}
-          <button type="button" className={BTN} onClick={close}>
+          <button type="button" className={BTN} onClick={handleClose}>
             Done
           </button>
         </div>

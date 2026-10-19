@@ -43,7 +43,7 @@ const ACCOUNT_ROWS = [{ href: '/settings', label: 'Settings', icon: <Settings {.
 
 export default function Navbar() {
   const pathname = usePathname();
-  const { account, hydrated, logout } = useAccount();
+  const { account, hydrated, logout: handleLogout } = useAccount();
   const [isAuthOpen, setIsAuthOpen] = useState(false);
   const { count } = useCart();
 
@@ -98,7 +98,7 @@ export default function Navbar() {
             hydrated={hydrated}
             linkAs={Link}
             onLogin={() => setIsAuthOpen(true)}
-            onLogout={logout}
+            onLogout={handleLogout}
             loginTitle="Plan your stay"
             loginNote="Sign in with your email. No password needed."
             prefs={<TripPrefsFields idPrefix="menu" />}

@@ -33,7 +33,7 @@ export default function AddItemPicker({ open, onClose, onPick, mode = 'link' }) 
     return catalog.items.filter((item) => cat.cats.includes(item.category) && item.active);
   }, [catalog, cat]);
 
-  function close() {
+  function handleClose() {
     setCat(null);
     onClose();
   }
@@ -62,7 +62,7 @@ export default function AddItemPicker({ open, onClose, onPick, mode = 'link' }) 
   }
 
   return (
-    <Modal open={open} onClose={close} title="Add to your trip">
+    <Modal open={open} onClose={handleClose} title="Add to your trip">
       {!cat ? (
         <>
           <p className={SUB}>Pick a category to add to your trip.</p>
@@ -91,7 +91,7 @@ export default function AddItemPicker({ open, onClose, onPick, mode = 'link' }) 
                 key={item.name}
                 onClick={() => {
                   onPick(item.name);
-                  close();
+                  handleClose();
                 }}
               >
                 {item.name}

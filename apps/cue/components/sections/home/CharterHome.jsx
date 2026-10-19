@@ -20,7 +20,7 @@ export default function CharterHome({ paired = false }) {
     if (draft && CHARTER.durations.some((duration) => duration.dur === draft.dur)) setDur(draft.dur);
   }, []);
 
-  function pick(charterDraft) {
+  function handlePick(charterDraft) {
     setDur(charterDraft);
     saveCharterDraft({ dur: charterDraft });
   }
@@ -43,7 +43,7 @@ export default function CharterHome({ paired = false }) {
           </p>
         </div>
 
-        <CharterPlans value={dur} onChange={pick} />
+        <CharterPlans value={dur} onChange={handlePick} />
 
         <a className={`${BTN_BOOK} block max-w-[320px] mx-auto text-center`} href="/charter.html">
           Build charter

@@ -165,7 +165,7 @@ export default function PayPalCheckout({ bookingRef, option, copy, currency = 'U
     };
   }, [bookingRef, option, copy, currency, onPaid, onError]);
 
-  async function payByCard() {
+  async function handleCardPay() {
     if (!cardRef.current) return;
     setState('paying');
     setMessage('');
@@ -195,7 +195,7 @@ export default function PayPalCheckout({ bookingRef, option, copy, currency = 'U
           </div>
           <button
             type="button"
-            onClick={payByCard}
+            onClick={handleCardPay}
             disabled={state === 'paying'}
             className="flex w-full mt-3 items-center justify-center text-center leading-none whitespace-nowrap h-[var(--btn-h)] py-0 px-4 rounded-sm text-small font-semibold border-none bg-cta text-white font-body
               text-[1rem] cursor-pointer disabled:opacity-60

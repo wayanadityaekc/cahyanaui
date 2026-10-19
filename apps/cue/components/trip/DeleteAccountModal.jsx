@@ -12,7 +12,7 @@ export default function DeleteAccountModal({ open, onClose, onConfirm }) {
   const [isBusy, setIsBusy] = useState(false);
   const [message, setMessage] = useState('');
 
-  async function confirm() {
+  async function handleConfirm() {
     setIsBusy(true);
     setMessage('');
     const result = await onConfirm();
@@ -49,7 +49,7 @@ export default function DeleteAccountModal({ open, onClose, onConfirm }) {
         <button type="button" className={BTN_GHOST} onClick={onClose} disabled={isBusy}>
           Keep my account
         </button>
-        <button type="button" className={BTN_DANGER} onClick={confirm} disabled={isBusy}>
+        <button type="button" className={BTN_DANGER} onClick={handleConfirm} disabled={isBusy}>
           {isBusy ? 'Deleting...' : 'Delete my account'}
         </button>
       </div>

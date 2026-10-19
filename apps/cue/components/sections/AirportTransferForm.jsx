@@ -46,7 +46,7 @@ export default function AirportTransferForm() {
   const date = flightTime.slice(0, 10);
   const isReady = !!(date && address && flightNumber);
 
-  function book() {
+  function handleBook() {
     if (!isReady) return;
     save({
       ...state,
@@ -139,7 +139,7 @@ export default function AirportTransferForm() {
         </span>
       </div>
 
-      <button className={BTN_BOOK} id="at-book" disabled={!isReady} onClick={book}>
+      <button className={BTN_BOOK} id="at-book" disabled={!isReady} onClick={handleBook}>
         Book transfer
       </button>
     </div>

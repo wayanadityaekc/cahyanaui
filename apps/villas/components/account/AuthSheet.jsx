@@ -43,7 +43,7 @@ export default function AuthSheet({ open = false, onClose = () => {} }) {
     setMessage('');
     setNote('');
   }
-  function close() {
+  function handleClose() {
     reset();
     setForm(EMPTY_FORM);
     setStage('email');
@@ -97,7 +97,7 @@ export default function AuthSheet({ open = false, onClose = () => {} }) {
     const result = await createAccount(data);
     setIsBusy(false);
     if (result.ok) {
-      close();
+      handleClose();
       return;
     }
     if (result.signin) {
@@ -114,7 +114,7 @@ export default function AuthSheet({ open = false, onClose = () => {} }) {
     const result = await verifyCode(codeEmail, fullCode);
     setIsBusy(false);
     if (result.ok) {
-      close();
+      handleClose();
       return;
     }
     setCode('');
@@ -144,14 +144,14 @@ export default function AuthSheet({ open = false, onClose = () => {} }) {
   return (
     <SheetPresence
       open={open}
-      onClose={close}
+      onClose={handleClose}
       label={title}
       shell="fixed inset-0 z-[130] flex items-center justify-center p-6 bg-[rgba(0,0,0,0.55)]"
       box="relative w-full max-w-[420px] max-h-[90vh] overflow-y-auto p-8 rounded-md bg-white"
     >
       <button
         type="button"
-        onClick={close}
+        onClick={handleClose}
         aria-label="Close"
         className="absolute top-3 right-4 text-green bg-transparent border-none cursor-pointer"
       >

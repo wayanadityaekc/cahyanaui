@@ -112,13 +112,13 @@ export default function CheckoutSheet({ open = false, onClose = () => {}, cart =
     return (event) => setGuest((current) => ({ ...current, [key]: event.target.value }));
   }
 
-  function toPayment() {
+  function handlePaymentOpen() {
     const problems = collectGuestProblems(guest);
     setErrors(problems);
     if (!Object.keys(problems).length) setStep('pay');
   }
 
-  async function book() {
+  async function handleBook() {
     setIsBusy(true);
     setMessage('');
     try {
@@ -204,7 +204,7 @@ export default function CheckoutSheet({ open = false, onClose = () => {}, cart =
               invalid={!!errors.phone}
             />
           </Field>
-          <Button full onClick={toPayment}>
+          <Button full onClick={handlePaymentOpen}>
             Continue
           </Button>
         </div>
@@ -234,7 +234,7 @@ export default function CheckoutSheet({ open = false, onClose = () => {}, cart =
               {message}
             </p>
           )}
-          <Button full onClick={book} disabled={isBusy || !chosen}>
+          <Button full onClick={handleBook} disabled={isBusy || !chosen}>
             {isBusy ? 'Booking...' : 'Book now'}
           </Button>
           <button

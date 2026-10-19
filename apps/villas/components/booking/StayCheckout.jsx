@@ -11,7 +11,7 @@ function isExtraWithinStay(extra, stay) {
 }
 
 export default function StayCheckout({ stay = null, open = false, onClose = () => {} }) {
-  const { cart, clear } = useCart();
+  const { cart, clear: handleStayClear } = useCart();
   const [waitingRef, setWaitingRef] = useState('');
   const booking = stay
     ? { ...cart, stay, extras: cart.extras.filter((extra) => isExtraWithinStay(extra, stay)) }
@@ -30,7 +30,9 @@ export default function StayCheckout({ stay = null, open = false, onClose = () =
           }}
         />
       )}
-      {waitingRef && <PayWaiting bookingRef={waitingRef} onClose={() => setWaitingRef('')} onConfirmed={clear} />}
+      {waitingRef && (
+        <PayWaiting bookingRef={waitingRef} onClose={() => setWaitingRef('')} onConfirmed={handleStayClear} />
+      )}
     </>
   );
 }

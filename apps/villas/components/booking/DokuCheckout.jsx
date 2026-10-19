@@ -50,7 +50,7 @@ export default function DokuCheckout({ bookingRef, option, amountText }) {
   const [isBusy, setIsBusy] = useState(false);
   const [error, setErr] = useState('');
 
-  async function startPayment() {
+  async function handlePaymentStart() {
     setIsBusy(true);
     setErr('');
     try {
@@ -95,7 +95,7 @@ export default function DokuCheckout({ bookingRef, option, amountText }) {
       <button
         type="button"
         className={`flex w-full ${BTN_SM} border-none font-body no-underline text-white bg-cta cursor-pointer transition-[background-color,color,scale] duration-[var(--dur)] ease-[ease] hover:bg-cta-d disabled:opacity-60`}
-        onClick={startPayment}
+        onClick={handlePaymentStart}
         disabled={isBusy || !bookingRef}
       >
         {isBusy ? 'Opening...' : `Pay ${amountText || 'now'}`}

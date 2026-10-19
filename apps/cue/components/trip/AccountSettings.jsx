@@ -49,7 +49,7 @@ function SettingsShell({ children }) {
 }
 
 export default function AccountSettings() {
-  const { account, setAccount, logout, deleteAccount } = useAccount();
+  const { account, setAccount, logout: handleLogout, deleteAccount } = useAccount();
   const { guests, setGuests, stay, setStay } = useTripPrefs();
   const [form, setForm] = useState({ name: '', email: '', phone: '' });
   const [message, setMessage] = useState('');
@@ -61,7 +61,7 @@ export default function AccountSettings() {
     if (account) setForm({ name: account.name || '', email: account.email || '', phone: account.phone || '' });
   }, [account]);
 
-  async function confirmDelete() {
+  async function handleDeleteConfirm() {
     const result = await deleteAccount();
     if (result.ok) setIsDeleted(true);
     return result;
@@ -96,7 +96,7 @@ export default function AccountSettings() {
     );
   }
 
-  async function save() {
+  async function handleSave() {
     setIsBusy(true);
     setMessage('');
     try {
@@ -193,10 +193,10 @@ export default function AccountSettings() {
             {message}
           </small>
         )}
-        <button className={`inline-flex ${BTN_CTA}`} onClick={save} disabled={isBusy}>
+        <button className={`inline-flex ${BTN_CTA}`} onClick={handleSave} disabled={isBusy}>
           {isBusy ? 'Saving...' : 'Save changes'}
         </button>
-        <button className={BTN_PILL} onClick={logout}>
+        <button className={BTN_PILL} onClick={handleLogout}>
           Sign out
         </button>
 
@@ -212,7 +212,11 @@ export default function AccountSettings() {
         <button type="button" className={BTN_DANGER_GHOST} onClick={() => setIsDeleteOpen(true)}>
           Delete account
         </button>
-        <DeleteAccountModal open={isDeleteOpen} onClose={() => setIsDeleteOpen(false)} onConfirm={confirmDelete} />
+        <DeleteAccountModal
+          open={isDeleteOpen}
+          onClose={() => setIsDeleteOpen(false)}
+          onConfirm={handleDeleteConfirm}
+        />
       </div>
     </SettingsShell>
   );

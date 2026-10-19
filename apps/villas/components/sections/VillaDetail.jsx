@@ -70,7 +70,7 @@ export default function VillaDetail({ villa }) {
     setCheckOut(next.checkOut || '');
   }
 
-  function bookNow() {
+  function handleBookNow() {
     if (!stay) {
       scrollToCalendar();
       return;
@@ -79,7 +79,7 @@ export default function VillaDetail({ villa }) {
     setIsCheckoutOpen(true);
   }
 
-  function addExtrasFirst() {
+  function handleExtrasAddFirst() {
     if (!stay) return;
     setStay(stay);
     router.push('/my-booking/');
@@ -225,7 +225,7 @@ export default function VillaDetail({ villa }) {
                 </div>
               ) : (
                 <div className="flex flex-col gap-2">
-                  <Button full onClick={bookNow} disabled={calendar.status === 'loading'} data-book-now>
+                  <Button full onClick={handleBookNow} disabled={calendar.status === 'loading'} data-book-now>
                     Book now
                   </Button>
                   {!ready && (
@@ -241,7 +241,7 @@ export default function VillaDetail({ villa }) {
             secondary={
               <>
                 {ready && (
-                  <button type="button" onClick={addExtrasFirst} className={SECONDARY_BTN}>
+                  <button type="button" onClick={handleExtrasAddFirst} className={SECONDARY_BTN}>
                     Add tours or a transfer first
                   </button>
                 )}
@@ -282,7 +282,7 @@ export default function VillaDetail({ villa }) {
         <h2 className="text-h2 font-medium text-white">{villa.name}, your dates</h2>
         <p className="mt-2 text-small text-white/75">See if the villa is free when you are.</p>
         <div className="flex justify-center mt-6">
-          <Button variant="onDark" onClick={ready ? bookNow : scrollToCalendar}>
+          <Button variant="onDark" onClick={ready ? handleBookNow : scrollToCalendar}>
             {ready ? 'Book now' : 'See availability'}
           </Button>
         </div>
@@ -290,7 +290,7 @@ export default function VillaDetail({ villa }) {
 
       <StickyBar variant="flush" show={showBookBar}>
         <PriceBlock tight amount={format(villa.nightlyRateIdr)} unit="/ night" size="sm" />
-        <Button className="flex-shrink-0" onClick={ready ? bookNow : scrollToCalendar}>
+        <Button className="flex-shrink-0" onClick={ready ? handleBookNow : scrollToCalendar}>
           {ready ? 'Book now' : 'Pick dates'}
         </Button>
       </StickyBar>

@@ -59,7 +59,7 @@ export default function BookCta({ item, perPerson = false }) {
     return catalogItem ? catalogItem.category : null;
   }
 
-  function pick(date, time) {
+  function handlePick(date, time) {
     const shouldGoToBooking = ask === 'book';
     const probe = { ...state, days: [...(state.days || []), { items: [item], itemModes: ['standard'], date }] };
     if (isFullDay(item) && findClashDates(probe, isFullDay).length > 0) {
@@ -90,7 +90,7 @@ export default function BookCta({ item, perPerson = false }) {
       <DatePopup
         open={!!ask}
         title={item}
-        onPick={pick}
+        onPick={handlePick}
         onClose={() => setAsk(null)}
         withTime
         category={findCategory(item)}

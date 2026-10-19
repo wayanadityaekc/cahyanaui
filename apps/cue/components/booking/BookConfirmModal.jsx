@@ -51,7 +51,7 @@ const EMPTY = {
 const RESEND_SECONDS = 30;
 
 export default function BookConfirmModal() {
-  const { ctx: bookingContext, closeBooking } = useBooking();
+  const { ctx: bookingContext, closeBooking: handleBookingClose } = useBooking();
   const { currency, stay, displayGuests } = useTripPrefs();
   const { referral, apply } = useReferral();
   const { account, setAccount, requestLogin, verifyCode } = useAccount();
@@ -321,7 +321,7 @@ export default function BookConfirmModal() {
     return quotedPrice(priced);
   }
 
-  async function applyRef() {
+  async function handleReferralApply() {
     const percent = await apply(form.referral);
     setRefMsg(percent ? { ok: true, text: PAY_COPY.referralOk } : { ok: false, text: PAY_COPY.referralBad });
   }
@@ -353,13 +353,13 @@ export default function BookConfirmModal() {
   return createPortal(
     <ModalPresence
       open={!!bookingContext}
-      onClose={isPaid ? () => {} : closeBooking}
+      onClose={isPaid ? () => {} : handleBookingClose}
       label="Booking confirmation"
       box={BOX_WIDE}
       shellClass={SHELL_WIDE}
     >
       {!isPaid && (
-        <button className={CLOSE} aria-label="Close" onClick={closeBooking}>
+        <button className={CLOSE} aria-label="Close" onClick={handleBookingClose}>
           &times;
         </button>
       )}
@@ -439,7 +439,7 @@ export default function BookConfirmModal() {
                 hasReferral={!!(priced && priced.referral)}
                 referral={form.referral}
                 onReferral={(referralCode) => setForm((previousForm) => ({ ...previousForm, referral: referralCode }))}
-                onApplyReferral={applyRef}
+                onApplyReferral={handleReferralApply}
                 refMsg={refMsg}
               />
 
@@ -456,7 +456,7 @@ export default function BookConfirmModal() {
           <h3 className={TITLE}>Booking Received!</h3>
           <p className={SUCCESS_TEXT}>Thank you. We will email you shortly to confirm your booking.</p>
           {signinNote}
-          <button className={BTN} onClick={closeBooking}>
+          <button className={BTN} onClick={handleBookingClose}>
             Done
           </button>
         </div>
@@ -464,7 +464,7 @@ export default function BookConfirmModal() {
         <PaymentScreen
           paid={isPaid}
           bookingRef={bookingRef}
-          closeBooking={closeBooking}
+          closeBooking={handleBookingClose}
           signinNote={signinNote}
           payRail={payRail}
           payOption={payOption}

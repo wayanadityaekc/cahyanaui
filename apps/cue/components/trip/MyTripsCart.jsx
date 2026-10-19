@@ -33,7 +33,7 @@ export default function MyTripsCart() {
   const checkoutRef = useRef(null);
   const pricing = usePricing();
 
-  const { returnRef, clearReturn } = usePaymentReturn();
+  const { returnRef, clearReturn: handleReturnClear } = usePaymentReturn();
 
   const [review, setReview] = useState(null);
   const [isAdding, setIsAdding] = useState(false);
@@ -111,7 +111,7 @@ export default function MyTripsCart() {
   const payReturn = returnRef ? (
     <PayWaiting
       bookingRef={returnRef}
-      onClose={clearReturn}
+      onClose={handleReturnClear}
       onConfirmed={() => save({ days: [], transfers: [], charters: [] })}
     />
   ) : null;

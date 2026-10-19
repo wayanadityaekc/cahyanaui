@@ -18,6 +18,10 @@ import { formatRupiah } from '@/lib/currency';
 import { CUE_LINK, buildWhatsappLink } from '@/lib/constants';
 import { Button, Container, EYEBROW_LINE } from '@cahyana/ui';
 
+const VILLA_THUMBNAIL_SIZE_PX = 72;
+const ICON_STROKE_WIDTH_THIN = 1.6;
+const ICON_STROKE_WIDTH_BOLD = 1.8;
+
 const CARD = 'bg-surface-raised border border-line [box-shadow:var(--shadow-md)]';
 const ROW_H = 'text-h3 font-semibold text-gold';
 const LABEL = 'caps text-muted';
@@ -131,8 +135,8 @@ export default function MyBookingCart() {
                   <img
                     src={villa.cardImg}
                     alt=""
-                    width={72}
-                    height={72}
+                    width={VILLA_THUMBNAIL_SIZE_PX}
+                    height={VILLA_THUMBNAIL_SIZE_PX}
                     className="w-[72px] h-[72px] object-cover shrink-0"
                   />
                   <div className="flex-1 min-w-0">
@@ -147,10 +151,11 @@ export default function MyBookingCart() {
                         href={`/villas/${villa.slug}`}
                         className="inline-flex items-center gap-1.5 text-body text-gold hover:text-cta"
                       >
-                        Change dates <ArrowRight className={ICON} strokeWidth={1.6} aria-hidden="true" />
+                        Change dates{' '}
+                        <ArrowRight className={ICON} strokeWidth={ICON_STROKE_WIDTH_THIN} aria-hidden="true" />
                       </Link>
                       <button type="button" className={ICON_BTN} onClick={handleStayClear}>
-                        <Trash2 className={ICON} strokeWidth={1.6} aria-hidden="true" /> Remove
+                        <Trash2 className={ICON} strokeWidth={ICON_STROKE_WIDTH_THIN} aria-hidden="true" /> Remove
                       </button>
                     </div>
                   </div>
@@ -276,7 +281,7 @@ export default function MyBookingCart() {
               }}
               className={`mt-2 ${isBlocked ? 'opacity-50 cursor-not-allowed' : ''}`}
             >
-              <MessageCircle className={ICON} strokeWidth={1.8} aria-hidden="true" />
+              <MessageCircle className={ICON} strokeWidth={ICON_STROKE_WIDTH_BOLD} aria-hidden="true" />
               Ask on WhatsApp
             </Button>
             {isBlocked && (

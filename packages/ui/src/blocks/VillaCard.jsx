@@ -1,6 +1,9 @@
 import { cn } from '../lib/cn.js';
 import { BTN_SM } from '../primitives/btnClasses.js';
 
+const IMAGE_WIDTH_PX = 1200;
+const IMAGE_HEIGHT_PX = 900;
+
 const SCRIM =
   'absolute inset-0 [background:linear-gradient(to_top,rgba(34,32,28,0.93)_0%,rgba(34,32,28,0.86)_22%,rgba(34,32,28,0.55)_44%,rgba(34,32,28,0.10)_70%,rgba(34,32,28,0.34)_100%)]';
 
@@ -45,8 +48,8 @@ export default function VillaCard({
       <img
         src={villa.cardImg}
         alt={`${villa.name} private pool and garden`}
-        width={1200}
-        height={900}
+        width={IMAGE_WIDTH_PX}
+        height={IMAGE_HEIGHT_PX}
         className="absolute inset-0 -z-[1] w-full h-full object-cover [transition:scale_var(--dur-slow)_var(--ease)]"
       />
       <div className={SCRIM} aria-hidden="true" />

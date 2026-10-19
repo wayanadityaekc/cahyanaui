@@ -1,5 +1,7 @@
 import { CARD_FRAME } from '@/components/ui/cardClasses';
 
+const DEFAULT_IMAGE_HEIGHT_PX = 600;
+
 export default function GuideCard({
   href,
   img: image,
@@ -8,7 +10,7 @@ export default function GuideCard({
   tag,
   cat,
   w: width = 600,
-  hgt = 600,
+  hgt = DEFAULT_IMAGE_HEIGHT_PX,
   overlayTag = false,
 }) {
   return (

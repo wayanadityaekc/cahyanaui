@@ -4,6 +4,9 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { createChatThread } from './chatThread.js';
 import { openChatSocket } from './chatSocket.js';
 
+const MAX_PAGE_LENGTH = 200;
+const DEFAULT_QUIET_DELAY_MS = 120000;
+
 const THINK_MS = 400;
 const POLL_MS = 5000;
 const TYPING_FRAME_MS = 2000;
@@ -175,7 +178,7 @@ export default function useChat({
           question,
           name: (account && account.name) || '',
           email: (account && account.email) || '',
-          page: String(page() || '').slice(0, 200),
+          page: String(page() || '').slice(0, MAX_PAGE_LENGTH),
         });
         setThread(id);
         let hours = words.hoursClosed;
@@ -234,7 +237,7 @@ export default function useChat({
       setMail('ask');
       return undefined;
     }
-    const timer = setTimeout(() => setIsQuiet(true), copyRef.current.quietMs || 120000);
+    const timer = setTimeout(() => setIsQuiet(true), copyRef.current.quietMs || DEFAULT_QUIET_DELAY_MS);
     return () => clearTimeout(timer);
   }, [thread, mail, account, isAround]);
 

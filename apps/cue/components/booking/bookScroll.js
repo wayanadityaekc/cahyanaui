@@ -1,3 +1,6 @@
+const MAX_SCROLL_OFFSET_PX = 160;
+const SCROLL_OFFSET_HEIGHT_RATIO = 0.5;
+
 export const BOOK_ON_SCREEN = '.booksidebar, .bookcard__cta, .booknowrow';
 
 export function scrollToBookCard(event) {
@@ -7,7 +10,7 @@ export function scrollToBookCard(event) {
 }
 
 function ENOUGH({ height }) {
-  return Math.min(160, height * 0.5);
+  return Math.min(MAX_SCROLL_OFFSET_PX, height * SCROLL_OFFSET_HEIGHT_RATIO);
 }
 
 export function observeBookCtas(self, onChange) {

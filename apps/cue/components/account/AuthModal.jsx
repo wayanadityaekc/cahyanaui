@@ -10,6 +10,9 @@ import { FIELD_LABEL } from '@/components/ui/formClasses';
 import { useAccount } from '@/state/AccountProvider';
 import OtpFields from './OtpFields';
 
+const COOLDOWN_TICK_MS = 1000;
+const OTP_CODE_LENGTH = 6;
+
 const RESEND_SECONDS = 30;
 
 export default function AuthModal({ open, onClose, reason, onSignedIn }) {
@@ -28,7 +31,10 @@ export default function AuthModal({ open, onClose, reason, onSignedIn }) {
 
   useEffect(() => {
     if (cooldown <= 0) return undefined;
-    const cooldownTimer = setInterval(() => setCooldown((secondsLeft) => Math.max(0, secondsLeft - 1)), 1000);
+    const cooldownTimer = setInterval(
+      () => setCooldown((secondsLeft) => Math.max(0, secondsLeft - 1)),
+      COOLDOWN_TICK_MS,
+    );
     return () => clearInterval(cooldownTimer);
   }, [cooldown]);
 
@@ -175,7 +181,7 @@ export default function AuthModal({ open, onClose, reason, onSignedIn }) {
             type="button"
             className={`${BTN} mt-4`}
             onClick={() => handleCodeVerify(code)}
-            disabled={isBusy || code.length < 6}
+            disabled={isBusy || code.length < OTP_CODE_LENGTH}
           >
             {isBusy ? 'Checking...' : 'Verify'}
           </button>

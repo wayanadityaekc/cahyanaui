@@ -1,5 +1,8 @@
 import { API_BASE } from '@/lib/constants';
 
+const DEFAULT_TYPING_DURATION_MS = 4000;
+const RECONNECT_JITTER_MAX_MS = 400;
+
 export function buildChatSocketUrl(thread) {
   const url = new URL(API_BASE, typeof window === 'undefined' ? 'https://localhost' : window.location.href);
   url.protocol = url.protocol === 'http:' ? 'ws:' : 'wss:';
@@ -96,7 +99,7 @@ export function openChatSocket(thread, { onMessage, onTyping, onPresence, onOpen
         return;
       }
       if (message.type === 'typing') {
-        if (onTyping) onTyping(message.expiresIn || 4000);
+        if (onTyping) onTyping(message.expiresIn || DEFAULT_TYPING_DURATION_MS);
         return;
       }
       if (message.type === 'message' && message.message && onMessage) onMessage(message.message);
@@ -117,7 +120,7 @@ export function openChatSocket(thread, { onMessage, onTyping, onPresence, onOpen
     const wait = BACKOFF_MS[Math.min(tries, BACKOFF_MS.length - 1)];
     tries += 1;
     clearTimeout(retryTimer);
-    retryTimer = setTimeout(connect, wait + Math.floor(Math.random() * 400));
+    retryTimer = setTimeout(connect, wait + Math.floor(Math.random() * RECONNECT_JITTER_MAX_MS));
   }
 
   connect();

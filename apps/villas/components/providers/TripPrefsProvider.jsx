@@ -2,6 +2,8 @@
 
 import { createContext, useContext, useEffect, useState } from 'react';
 
+const MAX_GUESTS = 12;
+
 const KEY = 'upv_trip_v1';
 const DEFAULT_GUESTS = 2;
 
@@ -13,7 +15,7 @@ export function TripPrefsProvider({ children }) {
   useEffect(() => {
     try {
       const saved = Number(window.localStorage.getItem(KEY));
-      if (saved >= 1 && saved <= 12) setGuestsState(saved);
+      if (saved >= 1 && saved <= MAX_GUESTS) setGuestsState(saved);
     } catch (e) {}
   }, []);
 

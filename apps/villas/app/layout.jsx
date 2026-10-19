@@ -16,6 +16,9 @@ import { SavedVillasProvider } from '@/components/providers/SavedVillasProvider'
 import BookingSheet from '@/components/booking/BookingSheet';
 import { BAR_BODY_PAD, IosZoomFix } from '@cahyana/ui';
 
+const ASSET_HASH_LENGTH = 8;
+const CATALOG_FETCH_TIMEOUT_MS = 10000;
+
 const inter = localFont({
   src: '../public/fonts/inter-latin.woff2',
   weight: '300 700',
@@ -29,7 +32,7 @@ function buildAssetVersion(...rel) {
   return createHash('sha1')
     .update(readFileSync(join(process.cwd(), 'public', ...rel)))
     .digest('hex')
-    .slice(0, 8);
+    .slice(0, ASSET_HASH_LENGTH);
 }
 
 export const metadata = {
@@ -54,7 +57,9 @@ export const metadata = {
 
 async function buildFx() {
   try {
-    const response = await fetch(`${API_BASE}/pricing/catalog?currency=USD`, { signal: AbortSignal.timeout(10000) });
+    const response = await fetch(`${API_BASE}/pricing/catalog?currency=USD`, {
+      signal: AbortSignal.timeout(CATALOG_FETCH_TIMEOUT_MS),
+    });
     if (!response.ok) return null;
     const catalog = await response.json();
     return catalog?.fx?.perUsd && catalog.fx.idrPerUsd ? catalog.fx : null;

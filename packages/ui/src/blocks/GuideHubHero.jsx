@@ -5,6 +5,8 @@ import { ChevronDown, Menu, Search } from 'lucide-react';
 import { cn } from '../lib/cn.js';
 import PopPanel from './PopPanel.jsx';
 
+const ICON_STROKE_WIDTH_REGULAR = 1.7;
+
 const BAND =
   'relative flex items-center min-h-[60vh] px-[var(--container-x)] pb-[var(--space-6)] pt-12 text-left bg-green bg-cover bg-center';
 const MENU =
@@ -68,7 +70,7 @@ export default function GuideHubHero({
                   <a className={MENU_ROW} href={`#${id}`} key={id} onClick={() => setIsOpen(false)}>
                     {Icon && (
                       <span>
-                        <Icon strokeWidth={1.7} aria-hidden="true" />
+                        <Icon strokeWidth={ICON_STROKE_WIDTH_REGULAR} aria-hidden="true" />
                       </span>
                     )}
                     {label}

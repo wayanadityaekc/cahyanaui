@@ -5,20 +5,23 @@ import { Check, Clock, Map, MapPin, UserRound } from 'lucide-react';
 import Price from '@/components/Price';
 import Rating from '@/components/Rating';
 
+const ICON_STROKE_WIDTH_BOLD = 2.4;
+const ICON_STROKE_WIDTH_REGULAR = 1.7;
+
 function CheckIcon() {
-  return <Check strokeWidth={2.4} aria-hidden="true" />;
+  return <Check strokeWidth={ICON_STROKE_WIDTH_BOLD} aria-hidden="true" />;
 }
 function PinIcon() {
-  return <MapPin strokeWidth={1.7} aria-hidden="true" />;
+  return <MapPin strokeWidth={ICON_STROKE_WIDTH_REGULAR} aria-hidden="true" />;
 }
 function ClockIcon() {
-  return <Clock strokeWidth={1.7} aria-hidden="true" />;
+  return <Clock strokeWidth={ICON_STROKE_WIDTH_REGULAR} aria-hidden="true" />;
 }
 function AreaIcon() {
-  return <Map strokeWidth={1.7} aria-hidden="true" />;
+  return <Map strokeWidth={ICON_STROKE_WIDTH_REGULAR} aria-hidden="true" />;
 }
 function UserIcon() {
-  return <UserRound strokeWidth={1.7} aria-hidden="true" />;
+  return <UserRound strokeWidth={ICON_STROKE_WIDTH_REGULAR} aria-hidden="true" />;
 }
 
 const CARD =

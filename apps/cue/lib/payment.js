@@ -1,3 +1,5 @@
+const IDR_ROUNDING_STEP = 1000;
+
 export const DEPOSIT_USD = 10;
 export const REFERRAL_DISCOUNT_PCT = 5;
 export const FREE_CANCEL_HOURS = 24;
@@ -9,7 +11,7 @@ export function readDepositUsd() {
 }
 
 function roundDown(amount, current) {
-  return current === 'IDR' ? Math.floor(amount / 1000) * 1000 : Math.floor(amount);
+  return current === 'IDR' ? Math.floor(amount / IDR_ROUNDING_STEP) * IDR_ROUNDING_STEP : Math.floor(amount);
 }
 
 function findDepositIn(current, deposit) {

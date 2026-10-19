@@ -1,6 +1,10 @@
 import { Clock, Landmark, Leaf, Mountain, Star, UserRound, VenetianMask } from 'lucide-react';
 import { cn } from '../lib/cn.js';
 
+const DEFAULT_IMAGE_WIDTH_PX = 600;
+const DEFAULT_IMAGE_HEIGHT_PX = 600;
+const ICON_STROKE_WIDTH_REGULAR = 1.7;
+
 const FRAME =
   'relative block overflow-hidden rounded-base text-white no-underline bg-white aspect-[4/5] shadow-card ' +
   "after:content-[''] after:absolute after:inset-0 after:z-[1] " +
@@ -58,8 +62,8 @@ export default function ProgramCard({
           className={IMG}
           src={image.src}
           alt={image.alt || title}
-          width={image.width || 600}
-          height={image.height || 600}
+          width={image.width || DEFAULT_IMAGE_WIDTH_PX}
+          height={image.height || DEFAULT_IMAGE_HEIGHT_PX}
           loading="lazy"
         />
       )}
@@ -86,10 +90,10 @@ export default function ProgramCard({
         <span className={`${ACCENT} ${accentTone}`} />
         <div className={BAR}>
           <span className={META}>
-            <Clock strokeWidth={1.7} aria-hidden="true" />
+            <Clock strokeWidth={ICON_STROKE_WIDTH_REGULAR} aria-hidden="true" />
             <span className="flex-[0_0_auto]">{meta}</span>
             <span className="w-px h-[11px] bg-[rgba(255,255,255,0.35)] flex-[0_0_auto]" />
-            <UserRound strokeWidth={1.7} aria-hidden="true" />
+            <UserRound strokeWidth={ICON_STROKE_WIDTH_REGULAR} aria-hidden="true" />
             <span className="min-w-0 truncate">{privateLabel}</span>
           </span>
           {price ? (

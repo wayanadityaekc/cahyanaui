@@ -3,6 +3,10 @@ import { LISTINGS } from '@/content/shared/listings';
 import { CHARTER } from '@/content/shared/charter';
 import { TOPICS, HUMAN_WORDS, GREETINGS, THANKS, CHAT_COPY } from '@/content/shared/chat';
 
+const MAX_ANSWER_MATCHES = 4;
+const STRONG_MATCH_MIN_WORD_LENGTH = 7;
+const KEYWORD_MATCH_SCORE = 3;
+
 function stripTags(html) {
   return String(html)
     .replace(/<[^>]+>/g, ' ')
@@ -117,7 +121,7 @@ function priceOf({ priceName, fallback }, context) {
 function buildTourPrices(context) {
   const picks = itemIndex()
     .filter((item) => item.section === 'tour')
-    .slice(0, 4)
+    .slice(0, MAX_ANSWER_MATCHES)
     .map((item) => ({ label: item.name, note: item.meta, price: priceOf(item, context), href: item.href }));
   return {
     text: 'Day tours are priced per car for up to 5 people, so a bigger group pays less each. A few of ours:',
@@ -187,7 +191,9 @@ function matchItem(question) {
     iw.forEach((word) => {
       if (questionWords.includes(word)) hits += 1;
     });
-    const hasStrongMatch = iw.some((word) => word.length >= 7 && questionWords.includes(word));
+    const hasStrongMatch = iw.some(
+      (word) => word.length >= STRONG_MATCH_MIN_WORD_LENGTH && questionWords.includes(word),
+    );
     if (hits >= 2 || (hits === 1 && hasStrongMatch)) {
       const score = hits + (hasStrongMatch ? 1 : 0);
       if (!best || score > best.score) best = { item, score };
@@ -205,13 +211,13 @@ function matchTopic(question) {
     let strong = false;
     topic.words.forEach((word) => {
       if (word.includes(' ')) {
-        if (normalizedQuestion.includes(word)) score += 3;
+        if (normalizedQuestion.includes(word)) score += KEYWORD_MATCH_SCORE;
       } else if (questionWords.includes(word)) score += 1;
     });
     (topic.strong || []).forEach((word) => {
       if (word.includes(' ') ? normalizedQuestion.includes(word) : questionWords.includes(word)) {
         strong = true;
-        score += 3;
+        score += KEYWORD_MATCH_SCORE;
       }
     });
     if (!score) return;

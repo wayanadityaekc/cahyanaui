@@ -15,15 +15,20 @@ import DateField from '@/components/ui/DateField';
 import InfoDot from '@/components/ui/InfoDot';
 import { withSymbol } from '@/components/Price';
 
+const CHARTER_START_SLOT_COUNT = 23;
+const CHARTER_FIRST_START_HOUR = 6;
+const MINUTES_PER_HOUR = 60;
+const SLOT_MINUTES = 30;
+
 const GUESTS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
 const TIMES = (() => {
   const timeOptions = [];
-  [...Array(23).keys()]
-    .map((slotIndex) => 6 * 60 + slotIndex * 30)
+  [...Array(CHARTER_START_SLOT_COUNT).keys()]
+    .map((slotIndex) => CHARTER_FIRST_START_HOUR * MINUTES_PER_HOUR + slotIndex * SLOT_MINUTES)
     .forEach((minutesSinceMidnight) => {
       timeOptions.push(
-        `${String(Math.floor(minutesSinceMidnight / 60)).padStart(2, '0')}:${String(minutesSinceMidnight % 60).padStart(2, '0')}`,
+        `${String(Math.floor(minutesSinceMidnight / MINUTES_PER_HOUR)).padStart(2, '0')}:${String(minutesSinceMidnight % MINUTES_PER_HOUR).padStart(2, '0')}`,
       );
     });
   return timeOptions;

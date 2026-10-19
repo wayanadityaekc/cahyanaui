@@ -23,6 +23,8 @@ import {
   navLink,
 } from './navbarClasses.js';
 
+const SCROLLED_PAST_TOP_THRESHOLD_PX = 40;
+
 export default function NavbarShell({
   logo,
   actions = null,
@@ -83,7 +85,9 @@ export default function NavbarShell({
     function handleWindowScroll() {
       const hero = document.querySelector('main > section');
       const barHeight = headerRef.current ? headerRef.current.offsetHeight : 0;
-      setIsAtTop(hero ? hero.getBoundingClientRect().bottom > barHeight : window.scrollY < 40);
+      setIsAtTop(
+        hero ? hero.getBoundingClientRect().bottom > barHeight : window.scrollY < SCROLLED_PAST_TOP_THRESHOLD_PX,
+      );
     }
     handleWindowScroll();
     window.addEventListener('scroll', handleWindowScroll, { passive: true });

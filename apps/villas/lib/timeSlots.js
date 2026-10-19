@@ -1,9 +1,16 @@
+const SLOTS_PER_DAY = 48;
+const SLOT_LENGTH_MINUTES = 30;
+const MINUTES_PER_HOUR = 60;
+const HOURS_PER_HALF_DAY = 12;
+
 export const TIME_SLOTS = (() => {
   const timeSlots = [];
-  [...Array(48).keys()]
-    .map((slotIndex) => slotIndex * 30)
+  [...Array(SLOTS_PER_DAY).keys()]
+    .map((slotIndex) => slotIndex * SLOT_LENGTH_MINUTES)
     .forEach((minutes) => {
-      timeSlots.push(`${String(Math.floor(minutes / 60)).padStart(2, '0')}:${String(minutes % 60).padStart(2, '0')}`);
+      timeSlots.push(
+        `${String(Math.floor(minutes / MINUTES_PER_HOUR)).padStart(2, '0')}:${String(minutes % MINUTES_PER_HOUR).padStart(2, '0')}`,
+      );
     });
   return timeSlots;
 })();
@@ -45,7 +52,7 @@ const RESTRICTABLE = new Set(['tour', 'experience', 'performance', 'combo', 'pla
 export function formatTime(time) {
   if (!time) return '';
   const [hours, minutes] = time.split(':').map(Number);
-  return `${hours % 12 === 0 ? 12 : hours % 12}:${String(minutes).padStart(2, '0')} ${hours < 12 ? 'AM' : 'PM'}`;
+  return `${hours % HOURS_PER_HALF_DAY === 0 ? HOURS_PER_HALF_DAY : hours % HOURS_PER_HALF_DAY}:${String(minutes).padStart(2, '0')} ${hours < HOURS_PER_HALF_DAY ? 'AM' : 'PM'}`;
 }
 
 export function formatDate(dateString) {
@@ -61,7 +68,7 @@ export function formatDate(dateString) {
 
 export function formatHour(hour) {
   const hourNumber = Number(hour);
-  return `${hourNumber % 12 === 0 ? 12 : hourNumber % 12} ${hourNumber < 12 ? 'AM' : 'PM'}`;
+  return `${hourNumber % HOURS_PER_HALF_DAY === 0 ? HOURS_PER_HALF_DAY : hourNumber % HOURS_PER_HALF_DAY} ${hourNumber < HOURS_PER_HALF_DAY ? 'AM' : 'PM'}`;
 }
 
 export function findAllowedSlots(category, itemName) {

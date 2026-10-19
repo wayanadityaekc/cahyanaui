@@ -2,6 +2,9 @@ import { FAQ } from '@/content/company';
 import { VILLAS } from '@/lib/villas';
 import { TOPICS, HUMAN_WORDS, SERVICE_WORDS, PRICE_WORDS, GREETINGS, THANKS, CHAT_COPY } from '@/content/chat';
 
+const PHRASE_TERM_SCORE = 3;
+const STRONG_TERM_SCORE = 3;
+
 const FAQ_ITEMS = FAQ.flatMap((group) => group.items);
 
 function findFaqAnswer(question) {
@@ -139,12 +142,12 @@ function matchTopic(question) {
     let score = 0;
     let strong = false;
     topic.words.forEach((term) => {
-      if (hasMention(term, text, questionWords)) score += term.includes(' ') ? 3 : 1;
+      if (hasMention(term, text, questionWords)) score += term.includes(' ') ? PHRASE_TERM_SCORE : 1;
     });
     (topic.strong || []).forEach((term) => {
       if (hasMention(term, text, questionWords)) {
         strong = true;
-        score += 3;
+        score += STRONG_TERM_SCORE;
       }
     });
     if (!score) return;

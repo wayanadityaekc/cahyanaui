@@ -1,3 +1,6 @@
+const RECONNECT_JITTER_MAX_MS = 400;
+const DEFAULT_TYPING_DURATION_MS = 4000;
+
 export function chatSocketUrl(apiBase, thread) {
   const url = new URL(apiBase, typeof window === 'undefined' ? 'https://localhost' : window.location.href);
   url.protocol = url.protocol === 'http:' ? 'ws:' : 'wss:';
@@ -62,7 +65,7 @@ export function openChatSocket({ apiBase, thread, onMessage, onTyping, onPresenc
     const wait = BACKOFF_MS[Math.min(tries, BACKOFF_MS.length - 1)];
     tries += 1;
     clearTimeout(retryTimer);
-    retryTimer = setTimeout(connect, wait + Math.floor(Math.random() * 400));
+    retryTimer = setTimeout(connect, wait + Math.floor(Math.random() * RECONNECT_JITTER_MAX_MS));
   }
 
   function handleFrame(event) {
@@ -79,7 +82,7 @@ export function openChatSocket({ apiBase, thread, onMessage, onTyping, onPresenc
     } else if (frame.type === 'ready' || frame.type === 'presence') {
       if (onPresence) onPresence(!!frame.ownerHere);
     } else if (frame.type === 'typing') {
-      if (onTyping) onTyping(frame.expiresIn || 4000);
+      if (onTyping) onTyping(frame.expiresIn || DEFAULT_TYPING_DURATION_MS);
     } else if (frame.type === 'message' && frame.message && onMessage) {
       onMessage(frame.message);
     }

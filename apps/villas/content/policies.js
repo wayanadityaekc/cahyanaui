@@ -1,5 +1,7 @@
 import { REGISTRATION } from '@/content/registration';
 
+const PARTIAL_REFUND_PERCENT = 50;
+
 export const PAYMENT = {
   mode: 'full',
   headline: 'Full payment when you book',
@@ -13,7 +15,7 @@ export const CANCELLATION = {
   basis: 'Matches the Airbnb "Firm" policy, so booking direct is not stricter than booking through the listing.',
   bands: [
     { when: '30 days or more before check-in', refund: 100, label: 'Full refund' },
-    { when: '7 to 30 days before check-in', refund: 50, label: '50% refund' },
+    { when: '7 to 30 days before check-in', refund: PARTIAL_REFUND_PERCENT, label: '50% refund' },
     { when: 'Less than 7 days before check-in', refund: 0, label: 'No refund' },
   ],
   note: 'Notice is counted from your check-in date, in Bali time (WITA, UTC+8).',

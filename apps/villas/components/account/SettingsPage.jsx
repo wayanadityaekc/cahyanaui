@@ -9,6 +9,8 @@ import AuthSheet from '@/components/account/AuthSheet';
 import TripPrefsFields from '@/components/layout/TripPrefsFields';
 import { useAccount } from '@/components/providers/AccountProvider';
 
+const ICON_STROKE_WIDTH_MEDIUM = 1.8;
+
 function DeleteSheet({ open = false, onClose = () => {}, onConfirm = async () => ({ ok: false }) }) {
   const [isBusy, setIsBusy] = useState(false);
   const [message, setMessage] = useState('');
@@ -36,7 +38,11 @@ function DeleteSheet({ open = false, onClose = () => {}, onConfirm = async () =>
         aria-label="Close"
         className="absolute top-3 right-4 text-green bg-transparent border-none cursor-pointer"
       >
-        <CloseIcon className="w-[var(--icon-md)] h-[var(--icon-md)]" strokeWidth={1.8} aria-hidden="true" />
+        <CloseIcon
+          className="w-[var(--icon-md)] h-[var(--icon-md)]"
+          strokeWidth={ICON_STROKE_WIDTH_MEDIUM}
+          aria-hidden="true"
+        />
       </button>
       <h3 className="mb-4 font-body text-h3 font-semibold text-gold">Delete your account?</h3>
       <p className="m-0 mb-3 text-body text-green leading-[var(--lh-body,1.6)]">

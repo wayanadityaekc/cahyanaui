@@ -6,6 +6,9 @@ import { VillaCard as VillaCardBlock } from '@cahyana/ui';
 import { useCurrency } from '@/components/providers/CurrencyProvider';
 import { useSavedVillas } from '@/components/providers/SavedVillasProvider';
 
+const ICON_STROKE_WIDTH_MEDIUM = 1.8;
+const ICON_STROKE_WIDTH_REGULAR = 1.7;
+
 export default function VillaCard({ villa }) {
   const { format } = useCurrency();
   const { isSaved, toggleSave } = useSavedVillas();
@@ -17,28 +20,34 @@ export default function VillaCard({ villa }) {
       linkAs={Link}
       place="Ubud, Bali"
       price={format(villa.nightlyRateIdr)}
-      ctaIcon={<ArrowRight className="w-4 h-4 shrink-0" strokeWidth={1.8} aria-hidden="true" />}
+      ctaIcon={<ArrowRight className="w-4 h-4 shrink-0" strokeWidth={ICON_STROKE_WIDTH_MEDIUM} aria-hidden="true" />}
       facts={[
         {
-          icon: <Users strokeWidth={1.7} aria-hidden="true" />,
+          icon: <Users strokeWidth={ICON_STROKE_WIDTH_REGULAR} aria-hidden="true" />,
           label: `Up to ${villa.guests} guests`,
           lines: ['Up to', `${villa.guests} guests`],
           short: `${villa.guests} guests`,
         },
         {
-          icon: <BedDouble strokeWidth={1.7} aria-hidden="true" />,
+          icon: <BedDouble strokeWidth={ICON_STROKE_WIDTH_REGULAR} aria-hidden="true" />,
           label: `${villa.bedrooms} bedrooms`,
           lines: [String(villa.bedrooms), 'bedrooms'],
           short: `${villa.bedrooms} beds`,
         },
         {
-          icon: <Waves strokeWidth={1.7} aria-hidden="true" />,
+          icon: <Waves strokeWidth={ICON_STROKE_WIDTH_REGULAR} aria-hidden="true" />,
           label: 'Private pool',
           lines: ['Private', 'pool'],
           short: 'Private pool',
         },
       ]}
-      saveIcon={<Heart className="w-[var(--icon-sm)] h-[var(--icon-sm)]" strokeWidth={1.8} aria-hidden="true" />}
+      saveIcon={
+        <Heart
+          className="w-[var(--icon-sm)] h-[var(--icon-sm)]"
+          strokeWidth={ICON_STROKE_WIDTH_MEDIUM}
+          aria-hidden="true"
+        />
+      }
       saved={isSaved(villa.slug)}
       onSave={() => toggleSave(villa.slug)}
     />

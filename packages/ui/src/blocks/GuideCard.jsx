@@ -1,5 +1,8 @@
 import { cn } from '../lib/cn.js';
 
+const DEFAULT_IMAGE_WIDTH_PX = 600;
+const DEFAULT_IMAGE_HEIGHT_PX = 600;
+
 export default function GuideCard({
   href,
   img: image,
@@ -7,8 +10,8 @@ export default function GuideCard({
   title,
   tag,
   cat,
-  w: viewportWidth = 600,
-  hgt = 600,
+  w: viewportWidth = DEFAULT_IMAGE_WIDTH_PX,
+  hgt = DEFAULT_IMAGE_HEIGHT_PX,
   overlayTag = false,
   linkAs: LinkAs = 'a',
   className,

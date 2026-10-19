@@ -1,5 +1,7 @@
 import { API_BASE, KEY } from '@/lib/constants';
 
+const HTTP_STATUS_NOT_FOUND = 404;
+
 export function readThread() {
   try {
     const threadId = localStorage.getItem(KEY.chatThread);
@@ -41,7 +43,7 @@ export async function sendToThread(id, body) {
 
 export async function pollThread(id, since) {
   const response = await fetch(`${API_BASE}/chat/${id}?since=${Number(since) || 0}`);
-  if (response.status === 404) {
+  if (response.status === HTTP_STATUS_NOT_FOUND) {
     writeThread(null);
     return { gone: true, messages: [] };
   }

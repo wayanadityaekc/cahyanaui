@@ -6,6 +6,9 @@ import { CAPS, Card, Container, EYEBROW_LINE, JsonLd, Section } from '@cahyana/u
 import { buildPageMeta } from '@/lib/seo';
 import { GUIDE_CRUMBS, buildBreadcrumbList } from '@/lib/schema';
 
+const ICON_STROKE_WIDTH_LIGHT = 1.6;
+const ICON_STROKE_WIDTH_REGULAR = 1.7;
+
 export const metadata = buildPageMeta({
   title: 'Ubud Guide | Ubud Private Villas',
   description:
@@ -49,10 +52,11 @@ export default function GuideHubPage() {
                   <p className="text-small text-muted">{article.sub}</p>
                   <span className="mt-auto pt-3 flex items-center justify-between gap-3">
                     <span className={`${CAPS} inline-flex items-center gap-1.5 text-cta`}>
-                      Read <ArrowRight className={ICON} strokeWidth={1.6} aria-hidden="true" />
+                      Read <ArrowRight className={ICON} strokeWidth={ICON_STROKE_WIDTH_LIGHT} aria-hidden="true" />
                     </span>
                     <span className="inline-flex items-center gap-1.5 text-label text-muted">
-                      <Clock className={ICON} strokeWidth={1.7} aria-hidden="true" />~{article.read} min
+                      <Clock className={ICON} strokeWidth={ICON_STROKE_WIDTH_REGULAR} aria-hidden="true" />~
+                      {article.read} min
                     </span>
                   </span>
                 </Card>

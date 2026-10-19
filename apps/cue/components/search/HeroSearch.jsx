@@ -35,6 +35,8 @@ import {
 } from '@/components/ui/hsClasses';
 import { EXPLORE_OPTIONS } from '@/content/shared/explore-options';
 
+const ICON_STROKE_WIDTH_LIGHT = 1.6;
+
 const GUESTS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
 export default function HeroSearch({ onClose, sheetOpen = false }) {
@@ -134,7 +136,7 @@ export default function HeroSearch({ onClose, sheetOpen = false }) {
             }}
           >
             <span className={HS_OPT_IC}>
-              <exploreOption.Icon strokeWidth={1.6} />
+              <exploreOption.Icon strokeWidth={ICON_STROKE_WIDTH_LIGHT} />
             </span>
             <span className={HS_OPT_NM}>
               {exploreOption.name}

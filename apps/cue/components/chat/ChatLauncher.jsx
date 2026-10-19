@@ -4,6 +4,8 @@ import { useState } from 'react';
 import dynamic from 'next/dynamic';
 import { MessageCircle } from 'lucide-react';
 
+const ICON_STROKE_WIDTH_LIGHT = 1.6;
+
 const ChatPanel = dynamic(() => import('./ChatPanel'), { ssr: false });
 
 export default function ChatLauncher({ className, label, iconClass = 'w-5 h-5' }) {
@@ -22,7 +24,7 @@ export default function ChatLauncher({ className, label, iconClass = 'w-5 h-5' }
           setIsOpen((wasOpen) => !wasOpen);
         }}
       >
-        <MessageCircle className={iconClass} strokeWidth={1.6} aria-hidden="true" />
+        <MessageCircle className={iconClass} strokeWidth={ICON_STROKE_WIDTH_LIGHT} aria-hidden="true" />
         {label}
       </button>
       {isTouched && <ChatPanel open={isOpen} onClose={() => setIsOpen(false)} />}

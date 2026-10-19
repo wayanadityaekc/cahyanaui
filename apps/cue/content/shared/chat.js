@@ -1,3 +1,7 @@
+const REPLY_START_HOUR = 8;
+const REPLY_END_HOUR = 21;
+const CHAT_QUIET_PERIOD_MS = 120000;
+
 export const SUGGESTIONS = [
   'How much is a day tour?',
   'What time do tours start?',
@@ -298,7 +302,12 @@ export const THANKS = [
   'great thanks',
 ];
 
-export const REPLY_HOURS = { from: 8, to: 21, tz: 'Asia/Makassar', label: '8am and 9pm Bali time' };
+export const REPLY_HOURS = {
+  from: REPLY_START_HOUR,
+  to: REPLY_END_HOUR,
+  tz: 'Asia/Makassar',
+  label: '8am and 9pm Bali time',
+};
 
 export function checkIsWayanAround(now = new Date()) {
   const replyHour = Number(
@@ -338,6 +347,6 @@ export const CHAT_COPY = {
   ownerHere: 'Wayan is online right now.',
   hoursHere: 'He is at the dashboard right now, so this should be quick.',
   typing: 'Wayan is typing',
-  quietMs: 120000,
+  quietMs: CHAT_QUIET_PERIOD_MS,
   threadGone: 'That conversation has expired. Ask again and I will start a new one.',
 };

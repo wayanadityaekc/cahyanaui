@@ -4,6 +4,8 @@ import { useEffect, useRef, useState } from 'react';
 import { Info } from 'lucide-react';
 import { PopMenu } from '@/components/ui/Reveal';
 
+const ICON_STROKE_WIDTH_REGULAR = 1.7;
+
 const BTN =
   'shrink-0 flex items-center p-0 bg-transparent border-none cursor-pointer text-muted ' +
   '[transition:color_var(--dur)_var(--ease),opacity_var(--dur)_var(--ease),scale_var(--dur-fast)_var(--ease)] hover:text-gold';
@@ -57,7 +59,7 @@ export default function InfoDot({ label = 'More information', align = 'start', s
         className={BTN + FADE[tone]}
         onClick={() => setIsOpen((wasOpen) => !wasOpen)}
       >
-        <Info strokeWidth={1.7} className={ICON[tone]} aria-hidden="true" />
+        <Info strokeWidth={ICON_STROKE_WIDTH_REGULAR} className={ICON[tone]} aria-hidden="true" />
       </button>
       <PopMenu open={isOpen}>
         <span className={`${PANEL_BASE} ${PANEL_ALIGN[align] || PANEL_ALIGN.start}`} role="note">

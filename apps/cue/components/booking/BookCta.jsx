@@ -12,6 +12,8 @@ import { CART_TOAST } from '@/components/ui/cartToastClasses';
 import LiveRegion from '@/components/ui/LiveRegion';
 import useBodyLock from '@/components/ui/useBodyLock';
 
+const TOAST_DURATION_MS = 2600;
+
 export default function BookCta({ item, perPerson = false }) {
   const { displayGuests } = useTripPrefs();
   const { state, save } = useItinerary();
@@ -50,7 +52,7 @@ export default function BookCta({ item, perPerson = false }) {
 
   useEffect(() => {
     if (!toast) return;
-    const toastTimer = setTimeout(() => setToast(''), 2600);
+    const toastTimer = setTimeout(() => setToast(''), TOAST_DURATION_MS);
     return () => clearTimeout(toastTimer);
   }, [toast]);
 

@@ -4,6 +4,8 @@ import { BTN_SM } from '@/components/ui/btnClasses';
 import { useEffect, useRef, useState } from 'react';
 import { PROGRAM_PROMO } from '@/content/shared/programPromo';
 
+const SWIPE_THRESHOLD_PX = 40;
+
 const AUTO_MS = 3000;
 
 export default function ProgramPromoSlider() {
@@ -42,7 +44,8 @@ export default function ProgramPromoSlider() {
       onTouchEnd={(event) => {
         const deltaX = event.changedTouches[0].clientX - touch.current.x;
         const deltaY = event.changedTouches[0].clientY - touch.current.y;
-        if (Math.abs(deltaX) > 40 && Math.abs(deltaX) > Math.abs(deltaY)) goTo(current + (deltaX < 0 ? 1 : -1));
+        if (Math.abs(deltaX) > SWIPE_THRESHOLD_PX && Math.abs(deltaX) > Math.abs(deltaY))
+          goTo(current + (deltaX < 0 ? 1 : -1));
       }}
     >
       {slides.map((slide, index) => (

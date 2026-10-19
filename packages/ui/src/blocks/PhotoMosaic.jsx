@@ -3,6 +3,10 @@
 import { cn } from '../lib/cn.js';
 import { BLEED_MOBILE } from './gridClasses.js';
 
+const DEFAULT_IMAGE_WIDTH_PX = 1200;
+const DEFAULT_IMAGE_HEIGHT_PX = 900;
+const MOSAIC_GROUP_SIZE = 3;
+
 const TILE =
   'relative block w-full h-full overflow-hidden p-0 bg-cream border-none cursor-pointer ' +
   '[&>img]:absolute [&>img]:inset-0 [&>img]:w-full [&>img]:h-full [&>img]:object-cover [&>img]:object-center';
@@ -43,8 +47,8 @@ export default function PhotoMosaic({ images = [], onOpen, moreLabel = null, ble
         <img
           src={image.src}
           alt={image.alt || ''}
-          width={image.w || 1200}
-          height={image.h || 900}
+          width={image.w || DEFAULT_IMAGE_WIDTH_PX}
+          height={image.h || DEFAULT_IMAGE_HEIGHT_PX}
           loading={imageIndex === 0 ? undefined : 'lazy'}
         />
       </button>
@@ -52,7 +56,7 @@ export default function PhotoMosaic({ images = [], onOpen, moreLabel = null, ble
   }
 
   const tileGroups = [];
-  for (let startIndex = 0; startIndex < images.length; startIndex += 3) {
+  for (let startIndex = 0; startIndex < images.length; startIndex += MOSAIC_GROUP_SIZE) {
     tileGroups.push(renderTile(startIndex, BIG));
     const pair = [startIndex + 1, startIndex + 2].filter((imageIndex) => imageIndex < images.length);
     if (pair.length) {

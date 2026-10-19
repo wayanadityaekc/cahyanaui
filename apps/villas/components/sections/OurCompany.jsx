@@ -11,6 +11,8 @@ import { CONTACT_EMAIL, CUE_LINK, WHATSAPP_LINK } from '@/lib/constants';
 import { Button, Card, Breadcrumb } from '@cahyana/ui';
 import { COMPANY_CRUMBS } from '@/lib/crumbs';
 
+const ICON_STROKE_WIDTH_BOLD = 1.8;
+
 const TABS = [
   { id: 'about', label: 'About Us' },
   { id: 'contact', label: 'Contact' },
@@ -43,7 +45,7 @@ function ContactBody() {
       <div className="grid sm:grid-cols-3 gap-5 mt-6">
         <Card className="p-6">
           <h2 className={CONTACT_H}>
-            <MessageCircle className={CONTACT_IC} strokeWidth={1.8} aria-hidden="true" />
+            <MessageCircle className={CONTACT_IC} strokeWidth={ICON_STROKE_WIDTH_BOLD} aria-hidden="true" />
             WhatsApp
           </h2>
           <p className="text-small text-muted my-3">
@@ -55,7 +57,7 @@ function ContactBody() {
         </Card>
         <Card className="p-6">
           <h2 className={CONTACT_H}>
-            <Mail className={CONTACT_IC} strokeWidth={1.8} aria-hidden="true" />
+            <Mail className={CONTACT_IC} strokeWidth={ICON_STROKE_WIDTH_BOLD} aria-hidden="true" />
             Email
           </h2>
           <p className="text-small text-muted my-3">
@@ -67,7 +69,7 @@ function ContactBody() {
         </Card>
         <Card className="p-6">
           <h2 className={CONTACT_H}>
-            <MapPin className={CONTACT_IC} strokeWidth={1.8} aria-hidden="true" />
+            <MapPin className={CONTACT_IC} strokeWidth={ICON_STROKE_WIDTH_BOLD} aria-hidden="true" />
             Where we are
           </h2>
           <p className="text-small text-muted my-3">

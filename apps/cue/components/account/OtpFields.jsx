@@ -2,7 +2,17 @@
 
 import { useEffect, useRef } from 'react';
 
-export default function OtpFields({ length = 6, value, onChange, onComplete, error, disabled, autoFocus }) {
+const OTP_CODE_LENGTH = 6;
+
+export default function OtpFields({
+  length = OTP_CODE_LENGTH,
+  value,
+  onChange,
+  onComplete,
+  error,
+  disabled,
+  autoFocus,
+}) {
   const refs = useRef([]);
   const digits = Array.from({ length }, (unusedValue, index) => value[index] || '');
 

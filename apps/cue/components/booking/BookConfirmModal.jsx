@@ -37,6 +37,13 @@ import { STEPS, stepBar, STEP_LABEL, BACK_LINK } from './bookingModalClasses';
 import ModalPresence from '@/components/ui/ModalPresence';
 import useBodyLock from '@/components/ui/useBodyLock';
 
+const COOLDOWN_TICK_MS = 1000;
+const DATE_STRING_LENGTH = 10;
+const TIME_START_INDEX = 11;
+const TIME_END_INDEX = 16;
+const STEP_COUNT_WITH_PAYMENT = 3;
+const PAYMENT_STEP_NUMBER = 3;
+
 const EMPTY = {
   name: '',
   phone: '',
@@ -145,7 +152,10 @@ export default function BookConfirmModal() {
   const [otpCooldown, setOtpCooldown] = useState(0);
   useEffect(() => {
     if (otpCooldown <= 0) return undefined;
-    const cooldownTimer = setInterval(() => setOtpCooldown((secondsLeft) => Math.max(0, secondsLeft - 1)), 1000);
+    const cooldownTimer = setInterval(
+      () => setOtpCooldown((secondsLeft) => Math.max(0, secondsLeft - 1)),
+      COOLDOWN_TICK_MS,
+    );
     return () => clearInterval(cooldownTimer);
   }, [otpCooldown]);
   async function verifyOtpCode(code) {
@@ -227,12 +237,12 @@ export default function BookConfirmModal() {
   }
   function findLineDate(line, lineIndex) {
     return isAirportLine(line) && lineIndex === 0 && needsFlight
-      ? (form.flightDatetime || '').slice(0, 10)
+      ? (form.flightDatetime || '').slice(0, DATE_STRING_LENGTH)
       : findLineDateTime(lineIndex).date;
   }
   function timeOf(line, lineIndex) {
     return isAirportLine(line) && lineIndex === 0 && needsFlight
-      ? (form.flightDatetime || '').slice(11, 16)
+      ? (form.flightDatetime || '').slice(TIME_START_INDEX, TIME_END_INDEX)
       : findLineDateTime(lineIndex).time;
   }
   const flightNumberDisplay = needsFlight ? form.flightNumber || singleLine.flight_number || '' : '';
@@ -337,7 +347,7 @@ export default function BookConfirmModal() {
     window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(buildWhatsappText())}`, '_blank');
   }
 
-  const lastStep = payOn ? 3 : 2;
+  const lastStep = payOn ? STEP_COUNT_WITH_PAYMENT : 2;
   const STEP_NAMES = payOn ? ['Your details', 'Check', 'Payment'] : ['Your details', 'Check & book'];
   const signinNote = signinEmail ? (
     <SigninNote
@@ -417,7 +427,7 @@ export default function BookConfirmModal() {
               payOn={payOn}
               onContinue={() => {
                 setError('');
-                setStep(3);
+                setStep(PAYMENT_STEP_NUMBER);
               }}
               error={error}
               busy={isBusy}

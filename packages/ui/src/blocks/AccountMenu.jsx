@@ -16,6 +16,10 @@ import {
   NAV_CHEVRON,
 } from './navbarClasses.js';
 
+const ICON_STROKE_WIDTH_THIN = 1.6;
+const ICON_STROKE_WIDTH_BOLD = 1.8;
+const ICON_STROKE_WIDTH_REGULAR = 1.7;
+
 export function initialsOf(name, email) {
   const source = (name || '').trim() || (email || '').split('@')[0] || '';
   const parts = source.split(/\s+/).filter(Boolean);
@@ -54,7 +58,7 @@ export default function AccountMenu({
     return (
       <div className={cn('relative', !hydrated && 'invisible')} ref={boxRef} data-account-slot="out">
         <button type="button" className={ACCOUNT_ICON_BTN} aria-label="Log in" onClick={onLogin}>
-          <UserRound className="w-5 h-5" strokeWidth={1.6} aria-hidden="true" />
+          <UserRound className="w-5 h-5" strokeWidth={ICON_STROKE_WIDTH_THIN} aria-hidden="true" />
         </button>
         <button
           type="button"
@@ -104,7 +108,7 @@ export default function AccountMenu({
         <span className="max-[992px]:hidden max-w-[9rem] overflow-hidden text-ellipsis whitespace-nowrap">{first}</span>
         <ChevronDown
           className={cn('max-[992px]:hidden', NAV_CHEVRON, open && 'rotate-180')}
-          strokeWidth={1.8}
+          strokeWidth={ICON_STROKE_WIDTH_BOLD}
           aria-hidden="true"
         />
       </button>
@@ -135,7 +139,7 @@ export default function AccountMenu({
               onLogout();
             }}
           >
-            <LogOut strokeWidth={1.7} aria-hidden="true" />
+            <LogOut strokeWidth={ICON_STROKE_WIDTH_REGULAR} aria-hidden="true" />
             Sign out
           </button>
         </div>

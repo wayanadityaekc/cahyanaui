@@ -29,6 +29,8 @@ import {
   RAIL_SCROLL_BODY,
 } from './railClasses';
 
+const ICON_STROKE_WIDTH_REGULAR = 1.7;
+
 export default function RailLayout({
   label,
   items,
@@ -64,9 +66,9 @@ export default function RailLayout({
       const cls = mobile ? buildRailMobileItemClass(isSelected) : buildRailItemClass(isSelected, railCollapsed);
       const inner = (
         <>
-          {item.Icon && <item.Icon strokeWidth={1.7} aria-hidden="true" />}
+          {item.Icon && <item.Icon strokeWidth={ICON_STROKE_WIDTH_REGULAR} aria-hidden="true" />}
           {(!railCollapsed || mobile) && item.label}
-          {mobile && <ChevronRight className={RAIL_MCHEV} strokeWidth={1.7} aria-hidden="true" />}
+          {mobile && <ChevronRight className={RAIL_MCHEV} strokeWidth={ICON_STROKE_WIDTH_REGULAR} aria-hidden="true" />}
         </>
       );
       const a11y = !mobile && railCollapsed ? { title: item.label, 'aria-label': item.label } : {};
@@ -124,7 +126,7 @@ export default function RailLayout({
                 aria-label={isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
                 aria-expanded={!isCollapsed}
               >
-                <PanelLeft strokeWidth={1.7} aria-hidden="true" />
+                <PanelLeft strokeWidth={ICON_STROKE_WIDTH_REGULAR} aria-hidden="true" />
               </button>
             )}
             {collapsible && breadcrumb && <span className={RAIL_HEADER_SEP} aria-hidden="true" />}
@@ -133,7 +135,7 @@ export default function RailLayout({
         )}
         {mobileNav || (
           <button type="button" className={RAIL_BACK} onClick={onBack}>
-            <ChevronLeft strokeWidth={1.7} aria-hidden="true" />
+            <ChevronLeft strokeWidth={ICON_STROKE_WIDTH_REGULAR} aria-hidden="true" />
             {label}
           </button>
         )}

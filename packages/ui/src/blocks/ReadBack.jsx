@@ -13,6 +13,8 @@ import {
   DETAILS_LI,
 } from './confirmClasses.js';
 
+const MAX_COLLAPSED_LINE_COUNT = 4;
+
 export function ReadBackRows({ label, rows = [] }) {
   const shownRows = rows.filter(([, value]) => value !== '' && value != null);
   if (!shownRows.length) return null;
@@ -37,7 +39,7 @@ export function ReadBackList({ label, lines = [], countLabel = (count) => `${cou
   return (
     <>
       <p className={GROUP_LABEL}>{label}</p>
-      {lines.length > 4 ? (
+      {lines.length > MAX_COLLAPSED_LINE_COUNT ? (
         <div className="mb-4">
           <button
             type="button"

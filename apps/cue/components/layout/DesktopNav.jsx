@@ -4,6 +4,8 @@ import { useEffect, useId, useRef, useState } from 'react';
 import { ChevronDown } from 'lucide-react';
 import { PopMenu } from '@/components/ui/Reveal';
 
+const ICON_STROKE_WIDTH_MEDIUM = 1.8;
+
 export const PROGRAM_LINKS = [
   ['/tour.html', 'Tours'],
   ['/destinations.html', 'Destinations'],
@@ -66,7 +68,7 @@ export default function DesktopNav({ isActive }) {
           Program
           <ChevronDown
             className={`w-[var(--icon-sm)] h-[var(--icon-sm)] transition-[rotate] duration-200 ${isOpen ? 'rotate-180' : ''}`}
-            strokeWidth={1.8}
+            strokeWidth={ICON_STROKE_WIDTH_MEDIUM}
             aria-hidden="true"
           />
         </button>

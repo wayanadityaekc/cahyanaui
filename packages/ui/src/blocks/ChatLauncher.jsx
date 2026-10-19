@@ -1,5 +1,7 @@
 import { MessageCircle } from 'lucide-react';
 
+const ICON_STROKE_WIDTH_THIN = 1.6;
+
 export default function ChatLauncher({
   open = false,
   onClick = () => {},
@@ -21,7 +23,7 @@ export default function ChatLauncher({
         onClick(event);
       }}
     >
-      <MessageCircle className={iconClass} strokeWidth={1.6} aria-hidden="true" />
+      <MessageCircle className={iconClass} strokeWidth={ICON_STROKE_WIDTH_THIN} aria-hidden="true" />
       {label}
     </button>
   );

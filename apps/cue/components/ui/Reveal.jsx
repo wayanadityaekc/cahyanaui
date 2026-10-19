@@ -3,6 +3,12 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import { AnimatePresence, LazyMotion, domAnimation, m as motionTags, useReducedMotion } from 'motion/react';
 
+const COLLAPSE_DURATION_SECONDS = 0.24;
+const OPACITY_DURATION_RATIO = 0.75;
+const FADE_DURATION_SECONDS = 0.18;
+const DROPDOWN_OFFSET_PX = 6;
+const ENTER_OFFSET_PX = 8;
+
 const EASE_OUT = [0.16, 1, 0.3, 1];
 
 function Shell({ children }) {
@@ -11,7 +17,7 @@ function Shell({ children }) {
 
 export function Collapse({ open, children }) {
   const reduced = useReducedMotion();
-  const duration = reduced ? 0 : 0.24;
+  const duration = reduced ? 0 : COLLAPSE_DURATION_SECONDS;
   return (
     <Shell>
       <AnimatePresence initial={false}>
@@ -21,7 +27,10 @@ export function Collapse({ open, children }) {
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: 'auto', opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
-            transition={{ height: { duration, ease: EASE_OUT }, opacity: { duration: duration * 0.75 } }}
+            transition={{
+              height: { duration, ease: EASE_OUT },
+              opacity: { duration: duration * OPACITY_DURATION_RATIO },
+            }}
             style={{ overflow: 'hidden' }}
           >
             {children}
@@ -34,16 +43,16 @@ export function Collapse({ open, children }) {
 
 export function PopMenu({ open, children }) {
   const reduced = useReducedMotion();
-  const duration = reduced ? 0 : 0.18;
+  const duration = reduced ? 0 : FADE_DURATION_SECONDS;
   return (
     <Shell>
       <AnimatePresence initial={false}>
         {open && (
           <motionTags.div
             key="pop"
-            initial={{ opacity: 0, y: -6 }}
+            initial={{ opacity: 0, y: -DROPDOWN_OFFSET_PX }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -6 }}
+            exit={{ opacity: 0, y: -DROPDOWN_OFFSET_PX }}
             transition={{ duration, ease: EASE_OUT }}
           >
             {children}
@@ -77,9 +86,13 @@ export function StaggerItem({ index = 0, children }) {
   if (reduced) return children;
   return (
     <motionTags.div
-      initial={entered ? { opacity: 0, y: 8 } : false}
+      initial={entered ? { opacity: 0, y: ENTER_OFFSET_PX } : false}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.18, ease: EASE_OUT, delay: Math.min(index * STAGGER_STEP, STAGGER_CAP) }}
+      transition={{
+        duration: FADE_DURATION_SECONDS,
+        ease: EASE_OUT,
+        delay: Math.min(index * STAGGER_STEP, STAGGER_CAP),
+      }}
     >
       {children}
     </motionTags.div>

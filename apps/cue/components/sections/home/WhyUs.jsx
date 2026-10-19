@@ -1,5 +1,7 @@
 import { WHY_US } from '@/content/shared/home';
 
+const ICON_STROKE_WIDTH_LIGHT = 1.6;
+
 const CLS = {
   section: 'bg-cream',
   in: 'max-w-[var(--container)] mx-auto px-[var(--container-x)] py-12',
@@ -25,7 +27,7 @@ export default function WhyUs() {
           {WHY_US.map((reason) => (
             <div className={CLS.col} key={reason.title}>
               <span className={CLS.ic}>
-                <reason.Icon strokeWidth={1.6} />
+                <reason.Icon strokeWidth={ICON_STROKE_WIDTH_LIGHT} />
               </span>
               <h3 className={CLS.h3}>{reason.title}</h3>
               <p className={CLS.p}>{reason.text}</p>

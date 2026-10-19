@@ -15,6 +15,8 @@ import {
   DETAILS_LI,
 } from './bookingModalClasses';
 
+const MAX_COLLAPSED_DETAIL_LINES = 4;
+
 export default function CheckStep({
   view,
   singleLine,
@@ -83,7 +85,7 @@ export default function CheckStep({
       {view.detailLines && view.detailLines.length > 0 && (
         <>
           <p className={GROUP_LABEL}>{view.detailsTitle || "What's included"}</p>
-          {view.detailLines.length > 4 ? (
+          {view.detailLines.length > MAX_COLLAPSED_DETAIL_LINES ? (
             <div className="mb-4">
               <button
                 type="button"

@@ -6,6 +6,8 @@ import { SUB } from '@/components/ui/modalClasses';
 import { usePricing } from '@/state/PricingProvider';
 import { EXPLORE_OPTIONS } from '@/content/shared/explore-options';
 
+const ICON_STROKE_WIDTH_LIGHT = 1.6;
+
 const LINK_OPTIONS = EXPLORE_OPTIONS.filter((exploreOption) => exploreOption.cat !== 'destination');
 const PICK_CATS_SRC = [
   { key: 'tour', label: 'Tour Programs', cats: ['tour', 'combo'] },
@@ -48,7 +50,7 @@ export default function AddItemPicker({ open, onClose, onPick, mode = 'link' }) 
           {LINK_OPTIONS.map((linkOption) => (
             <a href={linkOption.href} className={LINK_CAT} key={linkOption.href}>
               <span className={LINK_ICON}>
-                <linkOption.Icon strokeWidth={1.6} />
+                <linkOption.Icon strokeWidth={ICON_STROKE_WIDTH_LIGHT} />
               </span>
               <span>
                 <span className={LINK_NAME}>{linkOption.name}</span>

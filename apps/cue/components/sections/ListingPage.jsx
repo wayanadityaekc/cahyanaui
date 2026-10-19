@@ -16,23 +16,26 @@ import { CATSEC, LROW_LIST } from '@/components/ui/listingClasses';
 import { isHiddenTour } from '@/lib/routes';
 import { SECTION_TITLE, ST_LEFT } from '@/components/ui/sectionTitle';
 
+const ICON_STROKE_WIDTH_MEDIUM = 1.8;
+const ICON_STROKE_WIDTH_REGULAR = 1.7;
+
 function SearchIcon() {
-  return <Search strokeWidth={1.8} aria-hidden="true" />;
+  return <Search strokeWidth={ICON_STROKE_WIDTH_MEDIUM} aria-hidden="true" />;
 }
 function CloseIcon() {
   return <CloseIconItem aria-hidden="true" />;
 }
 function CarIcon() {
-  return <Car strokeWidth={1.7} aria-hidden="true" />;
+  return <Car strokeWidth={ICON_STROKE_WIDTH_REGULAR} aria-hidden="true" />;
 }
 function UserIcon() {
-  return <UserRound strokeWidth={1.7} aria-hidden="true" />;
+  return <UserRound strokeWidth={ICON_STROKE_WIDTH_REGULAR} aria-hidden="true" />;
 }
 function CheckIcon() {
   return <Check aria-hidden="true" />;
 }
 function PinIcon() {
-  return <MapPin strokeWidth={1.7} aria-hidden="true" />;
+  return <MapPin strokeWidth={ICON_STROKE_WIDTH_REGULAR} aria-hidden="true" />;
 }
 
 const NOUN = { tours: 'tours', activities: 'experiences', destinations: 'destinations' };

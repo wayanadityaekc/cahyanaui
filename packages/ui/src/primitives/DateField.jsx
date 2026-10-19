@@ -32,6 +32,8 @@ import {
   BK_NATIVE,
 } from './controlClasses.js';
 
+const ICON_STROKE_WIDTH_BOLD = 1.8;
+
 const DOW = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
 const MONTHS = [
   'January',
@@ -203,7 +205,7 @@ export default function DateField({
         {hasIconOrHint ? (
           <ChevronDown className={CHEV} aria-hidden="true" />
         ) : (
-          <Calendar className={CHEV_CAL} strokeWidth={1.8} aria-hidden="true" />
+          <Calendar className={CHEV_CAL} strokeWidth={ICON_STROKE_WIDTH_BOLD} aria-hidden="true" />
         )}
       </button>
       {isMounted && createPortal(panel, document.body)}

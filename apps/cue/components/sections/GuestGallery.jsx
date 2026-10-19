@@ -1,4 +1,7 @@
 import { SECTION_TITLE } from '@/components/ui/sectionTitle';
+
+const GALLERY_IMAGE_SIZE_PX = 300;
+
 const GUESTS = [
   { img: 'guest-monkey-forest.jpg', alt: 'A guest at the Sacred Monkey Forest, Ubud' },
   { img: 'guest-jungle-swing.jpg', alt: 'A guest on a jungle swing near Ubud' },
@@ -26,8 +29,8 @@ export default function GuestGallery() {
                 className="w-[128px] h-full object-cover block"
                 src={`/assets/images/${photo.img}`}
                 alt={photo.alt}
-                width={300}
-                height={300}
+                width={GALLERY_IMAGE_SIZE_PX}
+                height={GALLERY_IMAGE_SIZE_PX}
               />
             </figure>
           ))}

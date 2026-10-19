@@ -7,24 +7,28 @@ import ReviewsStrip from '@/components/reviews/ReviewsStrip';
 import LoadFallback from '@/components/ui/LoadFallback';
 import { CARD, CARD_WRAP, STRIP, TRACK, buildSegmentClass, SEC, SEC_H } from '@/components/ui/detailCardClasses';
 
+const ICON_STROKE_WIDTH_REGULAR = 1.7;
+const TAB_SCROLL_LINE_OFFSET_PX = 12;
+const TAB_SCROLL_TOP_OFFSET_PX = 8;
+
 function CarIcon() {
-  return <Car strokeWidth={1.7} aria-hidden="true" />;
+  return <Car strokeWidth={ICON_STROKE_WIDTH_REGULAR} aria-hidden="true" />;
 }
 function TicketIcon() {
-  return <Banknote strokeWidth={1.7} aria-hidden="true" />;
+  return <Banknote strokeWidth={ICON_STROKE_WIDTH_REGULAR} aria-hidden="true" />;
 }
 
 function ClockIcon() {
-  return <Clock strokeWidth={1.7} aria-hidden="true" />;
+  return <Clock strokeWidth={ICON_STROKE_WIDTH_REGULAR} aria-hidden="true" />;
 }
 function BagIcon() {
-  return <Backpack strokeWidth={1.7} aria-hidden="true" />;
+  return <Backpack strokeWidth={ICON_STROKE_WIDTH_REGULAR} aria-hidden="true" />;
 }
 function InfoIcon() {
-  return <Info strokeWidth={1.7} aria-hidden="true" />;
+  return <Info strokeWidth={ICON_STROKE_WIDTH_REGULAR} aria-hidden="true" />;
 }
 function CardIcon() {
-  return <CreditCard strokeWidth={1.7} aria-hidden="true" />;
+  return <CreditCard strokeWidth={ICON_STROKE_WIDTH_REGULAR} aria-hidden="true" />;
 }
 
 function GoodToKnow({ isActivity }) {
@@ -162,7 +166,7 @@ export default function DetailTabs({
       const stripH = stripRef.current ? stripRef.current.offsetHeight : 0;
       const header = document.querySelector('header');
       const headerH = header ? header.getBoundingClientRect().height : 0;
-      const line = headerH + stripH + 12;
+      const line = headerH + stripH + TAB_SCROLL_LINE_OFFSET_PX;
       let current = ids[0];
       ids.forEach((id) => {
         const section = secRefs.current[id];
@@ -185,7 +189,7 @@ export default function DetailTabs({
     const stripH = stripRef.current ? stripRef.current.offsetHeight : 0;
     const header = document.querySelector('header');
     const headerH = header ? header.getBoundingClientRect().height : 0;
-    const top = section.getBoundingClientRect().top + window.scrollY - headerH - stripH - 8;
+    const top = section.getBoundingClientRect().top + window.scrollY - headerH - stripH - TAB_SCROLL_TOP_OFFSET_PX;
     window.scrollTo({ top, behavior: 'smooth' });
   }
 

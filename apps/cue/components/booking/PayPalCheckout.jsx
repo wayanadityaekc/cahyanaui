@@ -5,6 +5,9 @@ import { useEffect, useRef, useState } from 'react';
 import { API_BASE } from '@/lib/constants';
 import { chargeCurrency } from '@/lib/rails';
 
+const HTTP_STATUS_PAYMENT_REQUIRED = 402;
+const PAYPAL_BUTTON_HEIGHT_PX = 46;
+
 function buildSdkId(current) {
   return `paypal-sdk-${current}`;
 }
@@ -80,7 +83,8 @@ export default function PayPalCheckout({ bookingRef, option, copy, currency = 'U
         body: JSON.stringify({ order_id: orderId }),
       });
       const data = await response.json().catch(() => null);
-      if (response.status === 402) throw Object.assign(new Error(copy.declined), { soft: true });
+      if (response.status === HTTP_STATUS_PAYMENT_REQUIRED)
+        throw Object.assign(new Error(copy.declined), { soft: true });
       if (!response.ok || !data || data.status !== 'ok') {
         throw Object.assign(new Error((data && data.detail) || copy.failed), { soft: true });
       }
@@ -111,7 +115,7 @@ export default function PayPalCheckout({ bookingRef, option, copy, currency = 'U
 
         await sdk
           .Buttons({
-            style: { layout: 'vertical', shape: 'pill', height: 46 },
+            style: { layout: 'vertical', shape: 'pill', height: PAYPAL_BUTTON_HEIGHT_PX },
             createOrder,
             onApprove: async (data) => {
               try {

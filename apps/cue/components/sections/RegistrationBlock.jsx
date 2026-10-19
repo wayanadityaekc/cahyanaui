@@ -1,8 +1,10 @@
 import { Check, ShieldCheck } from 'lucide-react';
 import { REGISTRATION as registration } from '@/content/shared/registration';
 
+const ICON_STROKE_WIDTH_REGULAR = 1.7;
+
 function SealIcon({ className }) {
-  return <ShieldCheck className={className} strokeWidth={1.7} aria-hidden="true" />;
+  return <ShieldCheck className={className} strokeWidth={ICON_STROKE_WIDTH_REGULAR} aria-hidden="true" />;
 }
 function CheckIcon({ className }) {
   return <Check className={className} aria-hidden="true" />;

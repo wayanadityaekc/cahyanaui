@@ -12,6 +12,9 @@ import { answerFor } from '@/lib/chatAnswers';
 import { API_BASE, WHATSAPP_LINK } from '@/lib/constants';
 import { CHAT_COPY, SUGGESTIONS, isWayanAround } from '@/content/chat';
 
+const CHAT_PANEL_DURATION_SECONDS = 0.3;
+const ICON_STROKE_WIDTH_BOLD = 1.8;
+
 const THREAD_KEY = 'upv_chat_thread_v1';
 const EASE_OUT = [0.16, 1, 0.3, 1];
 const PHONE = '(max-width: 768px)';
@@ -47,7 +50,7 @@ export default function ChatWindow({ open = false, onClose = () => {} }) {
   });
 
   const off = isMobile ? SHEET_OFF : DRAWER_OFF;
-  const duration = reduced ? 0 : 0.3;
+  const duration = reduced ? 0 : CHAT_PANEL_DURATION_SECONDS;
 
   return createPortal(
     <LazyMotion features={domAnimation}>
@@ -88,7 +91,7 @@ export default function ChatWindow({ open = false, onClose = () => {} }) {
                 href: WHATSAPP_LINK,
                 label: CHAT_COPY.whatsappLabel,
                 note: CHAT_COPY.whatsappNote,
-                icon: <MessageCircle strokeWidth={1.8} aria-hidden="true" />,
+                icon: <MessageCircle strokeWidth={ICON_STROKE_WIDTH_BOLD} aria-hidden="true" />,
               }}
             />
           </motionElement.div>

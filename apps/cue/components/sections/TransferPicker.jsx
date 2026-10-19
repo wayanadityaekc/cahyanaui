@@ -13,6 +13,9 @@ import LiveRegion from '@/components/ui/LiveRegion';
 import { withSymbol } from '@/components/Price';
 import { useTransferRoute } from '@/components/sections/TransferRouteProvider';
 
+const RETURN_TRIP_DISCOUNT_FACTOR = 0.9;
+const TOAST_DURATION_MS = 2600;
+
 const UBUD = 'Ubud';
 
 export default function TransferPicker() {
@@ -39,7 +42,7 @@ export default function TransferPicker() {
 
   const symbol = (catalog && catalog.symbol) || '$';
   const base = entry ? entry.display : null;
-  const amount = base == null ? null : isReturn ? Math.round(base * 2 * 0.9) : base;
+  const amount = base == null ? null : isReturn ? Math.round(base * 2 * RETURN_TRIP_DISCOUNT_FACTOR) : base;
   const priceText = amount == null ? '—' : symbol + amount.toLocaleString(currency === 'IDR' ? 'id-ID' : 'en-US');
 
   const options = [
@@ -64,7 +67,7 @@ export default function TransferPicker() {
     if (goto) window.location.href = '/my-trips.html';
     else {
       setToast('Added to My Trips');
-      setTimeout(() => setToast(''), 2600);
+      setTimeout(() => setToast(''), TOAST_DURATION_MS);
     }
   }
 

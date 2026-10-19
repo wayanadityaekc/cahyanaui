@@ -1,6 +1,8 @@
 import { cn } from '../lib/cn.js';
 import { FOOT_COMPACT, FOOT_CONTACT_LINK, FOOT_CONTACT_SVG } from './footerClasses.js';
 
+const ICON_STROKE_WIDTH_BOLD = 1.8;
+
 export default function CompactFooter({
   brand,
   links = [],
@@ -27,7 +29,7 @@ export default function CompactFooter({
               className={FOOT_CONTACT_LINK}
               {...(external ? { target: '_blank', rel: 'noopener' } : {})}
             >
-              {Icon && <Icon className={FOOT_CONTACT_SVG} strokeWidth={1.8} aria-hidden="true" />}
+              {Icon && <Icon className={FOOT_CONTACT_SVG} strokeWidth={ICON_STROKE_WIDTH_BOLD} aria-hidden="true" />}
               <span className="max-[560px]:hidden">{label}</span>
             </a>
           ))}

@@ -19,6 +19,9 @@ import { AVAILABILITY_COPY, STAY_RULES, formatBaliToday, checkStay } from '@/lib
 import StayCheckout from '@/components/booking/StayCheckout';
 import useVillaAvailability from '@/components/booking/useVillaAvailability';
 
+const ICON_STROKE_WIDTH_MEDIUM = 1.8;
+const VILLA_THUMBNAIL_SIZE_PX = 64;
+
 export default function BookingSheet() {
   const {
     isOpen,
@@ -117,7 +120,11 @@ export default function BookingSheet() {
                   aria-label="Back"
                   className="text-gold cursor-pointer"
                 >
-                  <ChevronLeft className="w-[var(--icon-md)] h-[var(--icon-md)]" strokeWidth={1.8} aria-hidden="true" />
+                  <ChevronLeft
+                    className="w-[var(--icon-md)] h-[var(--icon-md)]"
+                    strokeWidth={ICON_STROKE_WIDTH_MEDIUM}
+                    aria-hidden="true"
+                  />
                 </button>
               )}
               <h3 className="text-h3 font-semibold text-gold">
@@ -125,14 +132,24 @@ export default function BookingSheet() {
               </h3>
             </div>
             <button type="button" onClick={handleBookingClose} aria-label="Close" className="text-gold cursor-pointer">
-              <CloseIcon className="w-[var(--icon-md)] h-[var(--icon-md)]" strokeWidth={1.8} aria-hidden="true" />
+              <CloseIcon
+                className="w-[var(--icon-md)] h-[var(--icon-md)]"
+                strokeWidth={ICON_STROKE_WIDTH_MEDIUM}
+                aria-hidden="true"
+              />
             </button>
           </div>
 
           {step === 'details' ? (
             <div className="p-5 flex flex-col gap-5">
               <div className="flex items-center gap-3 p-3 rounded-lg bg-cream">
-                <img src={villa.cardImg} alt="" width={64} height={64} className="w-16 h-16 object-cover" />
+                <img
+                  src={villa.cardImg}
+                  alt=""
+                  width={VILLA_THUMBNAIL_SIZE_PX}
+                  height={VILLA_THUMBNAIL_SIZE_PX}
+                  className="w-16 h-16 object-cover"
+                />
                 <div className="flex-1">
                   <p className="text-h3 font-semibold text-gold">{villa.name}</p>
                   <p className="text-small text-muted">{format(villa.nightlyRateIdr)} / night</p>
@@ -201,7 +218,13 @@ export default function BookingSheet() {
           ) : (
             <div className="p-5 flex flex-col gap-5">
               <div className="flex items-center gap-3 p-3 rounded-lg bg-cream">
-                <img src={villa.cardImg} alt="" width={64} height={64} className="w-16 h-16 object-cover" />
+                <img
+                  src={villa.cardImg}
+                  alt=""
+                  width={VILLA_THUMBNAIL_SIZE_PX}
+                  height={VILLA_THUMBNAIL_SIZE_PX}
+                  className="w-16 h-16 object-cover"
+                />
                 <div className="flex-1">
                   <p className="text-h3 font-semibold text-gold">{villa.name}</p>
                   <p className="text-small text-muted">
@@ -241,7 +264,7 @@ export default function BookingSheet() {
                 <Button as="a" full href={buildWhatsappLink(message)} target="_blank" rel="noopener">
                   <MessageCircle
                     className="w-[var(--icon-sm)] h-[var(--icon-sm)]"
-                    strokeWidth={1.8}
+                    strokeWidth={ICON_STROKE_WIDTH_MEDIUM}
                     aria-hidden="true"
                   />
                   Continue to WhatsApp

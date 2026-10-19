@@ -11,6 +11,9 @@ import DateField from '@/components/ui/DateField';
 import { priceUnit } from '@/lib/priceUnit';
 import { withSymbol } from '@/components/Price';
 
+const ICON_STROKE_WIDTH_LIGHT = 1.6;
+const ICON_STROKE_WIDTH_THIN = 1.5;
+
 const SERVICE_TYPES = [
   { value: 'tour', label: 'Tour Program' },
   { value: 'experience', label: 'Experience' },
@@ -36,10 +39,10 @@ const ACTIVITY_MODE_INFO = {
 
 const GUEST_OPTIONS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
-const CAL_ICON = <Calendar strokeWidth={1.6} />;
-const PEOPLE_ICON = <UserRound strokeWidth={1.6} />;
-const SPARK_ICON = <Sparkles strokeWidth={1.5} />;
-const SHIELD_ICON = <ShieldCheck strokeWidth={1.6} />;
+const CAL_ICON = <Calendar strokeWidth={ICON_STROKE_WIDTH_LIGHT} />;
+const PEOPLE_ICON = <UserRound strokeWidth={ICON_STROKE_WIDTH_LIGHT} />;
+const SPARK_ICON = <Sparkles strokeWidth={ICON_STROKE_WIDTH_THIN} />;
+const SHIELD_ICON = <ShieldCheck strokeWidth={ICON_STROKE_WIDTH_LIGHT} />;
 
 export default function BookingForm({
   presetItem = '',

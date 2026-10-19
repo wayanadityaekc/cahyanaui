@@ -2,6 +2,8 @@
 
 import { useEffect, useRef } from 'react';
 
+const DEFAULT_CODE_LENGTH = 6;
+
 const BOX =
   'flex-1 min-w-0 max-w-[2.6rem] h-[2.8rem] text-center font-body text-h3 font-semibold rounded-md ' +
   '[border:1.5px_solid_var(--line)] bg-white text-green ' +
@@ -10,7 +12,7 @@ const BOX =
   'disabled:opacity-50';
 
 export default function OtpFields({
-  length = 6,
+  length = DEFAULT_CODE_LENGTH,
   value = '',
   onChange = () => {},
   onComplete = null,

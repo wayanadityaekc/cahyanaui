@@ -1,5 +1,7 @@
 import { BTN_SM } from '@/components/ui/btnClasses';
 
+const TYPING_DOT_DELAY_SECONDS = 0.15;
+
 export function PANEL(open) {
   return [
     'fixed z-[130] flex flex-col bg-white overflow-hidden',
@@ -82,7 +84,7 @@ export const DOT = 'w-[5px] h-[5px] rounded-[50%] bg-muted';
 export const TYPING_ROW = `${DOTS} items-center gap-[0.45rem]`;
 export const TYPING_WHO = 'font-body text-label font-medium tracking-[0.06em] uppercase text-cta';
 export function DOT_LIVE(dotIndex) {
-  return `${DOT} motion-safe:animate-[chatdot_1.1s_ease-in-out_infinite] [animation-delay:${dotIndex * 0.15}s]`;
+  return `${DOT} motion-safe:animate-[chatdot_1.1s_ease-in-out_infinite] [animation-delay:${dotIndex * TYPING_DOT_DELAY_SECONDS}s]`;
 }
 
 export const BUBBLE_WAYAN =

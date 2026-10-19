@@ -3,6 +3,8 @@ import { MessageCircle } from 'lucide-react';
 import ContactForm from '@/components/contact/ContactForm';
 import { WHATSAPP_NUMBER } from '@/lib/constants';
 
+const ICON_STROKE_WIDTH_MEDIUM = 1.8;
+
 export default function ContactSection({ company = false }) {
   return (
     <>
@@ -24,7 +26,10 @@ export default function ContactSection({ company = false }) {
               target="_blank"
               rel="noopener"
             >
-              <MessageCircle className="w-[var(--icon-sm)] h-[var(--icon-sm)] flex-none" strokeWidth={1.8} />
+              <MessageCircle
+                className="w-[var(--icon-sm)] h-[var(--icon-sm)] flex-none"
+                strokeWidth={ICON_STROKE_WIDTH_MEDIUM}
+              />
               WhatsApp
             </a>
             <ul className="list-none">

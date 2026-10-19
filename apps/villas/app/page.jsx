@@ -27,6 +27,10 @@ import { EXPLORE_MORE, STAY_ADDONS } from '@/content/crossSell';
 import { buildPageMeta } from '@/lib/seo';
 import { buildSiteSchema } from '@/lib/schema';
 
+const ICON_STROKE_WIDTH_LIGHT = 1.6;
+const ADDON_IMAGE_WIDTH_PX = 700;
+const ADDON_IMAGE_HEIGHT_PX = 525;
+
 export const metadata = buildPageMeta({
   title: 'Private Pool Villas in Ubud, Bali | Ubud Private Villas',
   description:
@@ -100,7 +104,11 @@ export default function HomePage() {
             {WHY_STAY.map((item) => (
               <div key={item.title} className="flex items-start gap-4">
                 <span className={ICON_CIRCLE}>
-                  <item.Icon className="w-[var(--icon-md)] h-[var(--icon-md)]" strokeWidth={1.6} aria-hidden="true" />
+                  <item.Icon
+                    className="w-[var(--icon-md)] h-[var(--icon-md)]"
+                    strokeWidth={ICON_STROKE_WIDTH_LIGHT}
+                    aria-hidden="true"
+                  />
                 </span>
                 <div>
                   <h3 className="text-h3 font-semibold text-gold">{item.title}</h3>
@@ -179,7 +187,13 @@ export default function HomePage() {
               as={addon.external ? 'a' : Link}
               href={addon.href}
               {...(addon.external ? { target: '_blank', rel: 'noopener' } : {})}
-              image={{ src: addon.img, alt: addon.alt, width: 700, height: 525, ratio: 'aspect-[4/3]' }}
+              image={{
+                src: addon.img,
+                alt: addon.alt,
+                width: ADDON_IMAGE_WIDTH_PX,
+                height: ADDON_IMAGE_HEIGHT_PX,
+                ratio: 'aspect-[4/3]',
+              }}
               footer={
                 <span className={`${CAPS} text-cta`}>
                   {addon.cta}

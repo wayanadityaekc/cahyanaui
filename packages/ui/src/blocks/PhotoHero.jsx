@@ -4,6 +4,12 @@ import { useState } from 'react';
 import { AnimatePresence, LazyMotion, domAnimation, m as motionElement, useReducedMotion } from 'motion/react';
 import { cn } from '../lib/cn.js';
 
+const FADE_DURATION_SECONDS = 0.3;
+const MAIN_IMAGE_WIDTH_PX = 1600;
+const MAIN_IMAGE_HEIGHT_PX = 1000;
+const THUMBNAIL_WIDTH_PX = 400;
+const THUMBNAIL_HEIGHT_PX = 300;
+
 const MAIN =
   'relative block w-full overflow-hidden min-[769px]:rounded-base p-0 border-none bg-cream cursor-pointer ' +
   'aspect-[4/5] min-[561px]:aspect-[3/2] min-[993px]:aspect-[16/7] ' +
@@ -31,7 +37,7 @@ const MORE =
 
 const THUMBS_SHOWN = 6;
 
-const FADE = { duration: 0.3, ease: [0.4, 0, 0.2, 1] };
+const FADE = { duration: FADE_DURATION_SECONDS, ease: [0.4, 0, 0.2, 1] };
 
 export default function PhotoHero({
   images = [],
@@ -72,8 +78,8 @@ export default function PhotoHero({
                 key={main.src}
                 src={main.src}
                 alt={main.alt || ''}
-                width={main.w || 1600}
-                height={main.h || 1000}
+                width={main.w || MAIN_IMAGE_WIDTH_PX}
+                height={main.h || MAIN_IMAGE_HEIGHT_PX}
                 fetchPriority={active === 0 ? 'high' : undefined}
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
@@ -106,7 +112,13 @@ export default function PhotoHero({
                 aria-pressed={isMore ? undefined : index === active}
                 aria-label={isMore ? `${moreLabel} (${images.length})` : `${photoLabel} ${index + 1}`}
               >
-                <img src={photo.src} alt="" width={photo.w || 400} height={photo.h || 300} loading="lazy" />
+                <img
+                  src={photo.src}
+                  alt=""
+                  width={photo.w || THUMBNAIL_WIDTH_PX}
+                  height={photo.h || THUMBNAIL_HEIGHT_PX}
+                  loading="lazy"
+                />
                 {isMore ? <span className={MORE}>+{images.length - THUMBS_SHOWN + 1}</span> : null}
               </button>
             );

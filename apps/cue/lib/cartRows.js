@@ -1,5 +1,7 @@
 import { CHARTER_SERVICE } from '@/lib/constants';
 
+const RADIX_DECIMAL = 10;
+
 export function buildCartRows(state, displayGuests) {
   const cartRowItems = [];
   (state.days || []).forEach((day, index) => {
@@ -10,7 +12,7 @@ export function buildCartRows(state, displayGuests) {
         type: 'tour',
         service: name,
         date: day.date || '',
-        guests: parseInt(day.guests, 10) || displayGuests,
+        guests: parseInt(day.guests, RADIX_DECIMAL) || displayGuests,
         mode: (day.itemModes && day.itemModes[itemIndex]) || 'standard',
         time: (day.itemTimes && day.itemTimes[itemIndex]) || '',
         itemIndex: itemIndex,
@@ -24,7 +26,7 @@ export function buildCartRows(state, displayGuests) {
       type: 'transfer',
       service: transfer.route,
       date: transfer.date || '',
-      guests: parseInt(transfer.guests, 10) || displayGuests,
+      guests: parseInt(transfer.guests, RADIX_DECIMAL) || displayGuests,
       return: !!transfer.return,
       localIndex: transferIndex,
       ...(transfer.direction ? { direction: transfer.direction } : null),
@@ -41,7 +43,7 @@ export function buildCartRows(state, displayGuests) {
       type: 'charter',
       service: CHARTER_SERVICE,
       date: charter.date || '',
-      guests: parseInt(charter.guests, 10) || displayGuests,
+      guests: parseInt(charter.guests, RADIX_DECIMAL) || displayGuests,
       area: charter.area || 'Ubud',
       duration: charter.dur || charter.duration,
       extra: charter.extra || 0,

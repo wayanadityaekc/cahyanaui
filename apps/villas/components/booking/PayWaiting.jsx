@@ -7,6 +7,9 @@ import { API_BASE, TOKEN_KEY, buildWhatsappLink } from '@/lib/constants';
 import { VILLA_LIST } from '@/lib/villas';
 import useBodyLock from '@/components/ui/useBodyLock';
 
+const HTTP_STATUS_UNAUTHORIZED = 401;
+const HTTP_STATUS_NOT_FOUND = 404;
+
 const POLL_MS = 4000;
 const GIVE_UP_MS = 120000;
 const SLIDE_MS = 6000;
@@ -87,7 +90,7 @@ export default function PayWaiting({ bookingRef = '', onClose = () => {}, onConf
           headers: { Authorization: `Bearer ${token}` },
         });
         if (stop) return;
-        if (response.status === 401 || response.status === 404) {
+        if (response.status === HTTP_STATUS_UNAUTHORIZED || response.status === HTTP_STATUS_NOT_FOUND) {
           setPhase('blind');
           return;
         }

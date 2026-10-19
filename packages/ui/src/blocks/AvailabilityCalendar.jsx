@@ -6,6 +6,18 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { cn } from '../lib/cn.js';
 import { canCheckIn, canCheckOut, isBookedNight, nightsBetween, stayLimits } from '../lib/stayRules.js';
 
+const MAX_STAY_NIGHTS = 30;
+const MAX_DAYS_AHEAD = 365;
+const YEAR_END_INDEX = 4;
+const MONTH_START_INDEX = 5;
+const MONTH_END_INDEX = 7;
+const MONTHS_PER_YEAR = 12;
+const DAY_START_INDEX = 8;
+const DAY_END_INDEX = 10;
+const ICON_STROKE_WIDTH_BOLD = 1.8;
+const MONTH_SLIDE_OFFSET_PX = 48;
+const MONTH_SLIDE_DURATION_SECONDS = 0.25;
+
 const DOW = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
 const MONTHS = [
   'January',
@@ -61,8 +73,8 @@ export default function AvailabilityCalendar({
   busy = [],
   today = '',
   minNights = 1,
-  maxNights = 30,
-  maxDaysAhead = 365,
+  maxNights = MAX_STAY_NIGHTS,
+  maxDaysAhead = MAX_DAYS_AHEAD,
   note = null,
   loading = false,
   months = 2,
@@ -73,20 +85,26 @@ export default function AvailabilityCalendar({
   const reduce = useReducedMotion();
   const start = checkIn || base;
   const [cursor, setCursor] = useState(() => ({
-    year: Number(start.slice(0, 4)),
-    month: Number(start.slice(5, 7)) - 1,
+    year: Number(start.slice(0, YEAR_END_INDEX)),
+    month: Number(start.slice(MONTH_START_INDEX, MONTH_END_INDEX)) - 1,
     dir: 0,
   }));
   const isChoosingEnd = !!checkIn && !checkOut;
   const nights = nightsBetween(checkIn, checkOut);
 
-  const firstMonth = Number(base.slice(0, 4)) * 12 + Number(base.slice(5, 7)) - 1;
-  const lastMonth = Number(limits.lastCheckIn.slice(0, 4)) * 12 + Number(limits.lastCheckIn.slice(5, 7)) - 1;
-  const current = cursor.year * 12 + cursor.month;
+  const firstMonth =
+    Number(base.slice(0, YEAR_END_INDEX)) * MONTHS_PER_YEAR +
+    Number(base.slice(MONTH_START_INDEX, MONTH_END_INDEX)) -
+    1;
+  const lastMonth =
+    Number(limits.lastCheckIn.slice(0, YEAR_END_INDEX)) * MONTHS_PER_YEAR +
+    Number(limits.lastCheckIn.slice(MONTH_START_INDEX, MONTH_END_INDEX)) -
+    1;
+  const current = cursor.year * MONTHS_PER_YEAR + cursor.month;
 
   function move(step) {
     const next = current + step;
-    setCursor({ year: Math.floor(next / 12), month: next % 12, dir: step });
+    setCursor({ year: Math.floor(next / MONTHS_PER_YEAR), month: next % MONTHS_PER_YEAR, dir: step });
   }
 
   function isDaySelectable(day) {
@@ -138,7 +156,7 @@ export default function AvailabilityCalendar({
             !isEdgeDay && !ok && !booked && 'text-muted opacity-35 cursor-not-allowed',
           )}
         >
-          {Number(day.slice(8, 10))}
+          {Number(day.slice(DAY_START_INDEX, DAY_END_INDEX))}
         </button>
       </div>
     );
@@ -146,8 +164,8 @@ export default function AvailabilityCalendar({
 
   function renderMonth(offset) {
     const index = current + offset;
-    const year = Math.floor(index / 12);
-    const monthIndex = index % 12;
+    const year = Math.floor(index / MONTHS_PER_YEAR);
+    const monthIndex = index % MONTHS_PER_YEAR;
     return (
       <div
         key={index}
@@ -188,7 +206,11 @@ export default function AvailabilityCalendar({
           disabled={current <= firstMonth}
           onClick={() => move(-1)}
         >
-          <ChevronLeft className="w-[var(--icon-md)] h-[var(--icon-md)]" strokeWidth={1.8} aria-hidden="true" />
+          <ChevronLeft
+            className="w-[var(--icon-md)] h-[var(--icon-md)]"
+            strokeWidth={ICON_STROKE_WIDTH_BOLD}
+            aria-hidden="true"
+          />
         </button>
         <p className="m-0 text-small text-muted text-center" aria-live="polite" data-calendar-hint>
           {hint}
@@ -200,7 +222,11 @@ export default function AvailabilityCalendar({
           disabled={current >= lastMonth}
           onClick={() => move(1)}
         >
-          <ChevronRight className="w-[var(--icon-md)] h-[var(--icon-md)]" strokeWidth={1.8} aria-hidden="true" />
+          <ChevronRight
+            className="w-[var(--icon-md)] h-[var(--icon-md)]"
+            strokeWidth={ICON_STROKE_WIDTH_BOLD}
+            aria-hidden="true"
+          />
         </button>
       </div>
       <LazyMotion features={domAnimation}>
@@ -210,14 +236,14 @@ export default function AvailabilityCalendar({
               key={current}
               custom={cursor.dir}
               variants={{
-                enter: (dir) => ({ x: reduce ? 0 : dir * 48, opacity: 0 }),
+                enter: (dir) => ({ x: reduce ? 0 : dir * MONTH_SLIDE_OFFSET_PX, opacity: 0 }),
                 center: { x: 0, opacity: 1 },
-                exit: (dir) => ({ x: reduce ? 0 : dir * -48, opacity: 0 }),
+                exit: (dir) => ({ x: reduce ? 0 : dir * -MONTH_SLIDE_OFFSET_PX, opacity: 0 }),
               }}
               initial="enter"
               animate="center"
               exit="exit"
-              transition={{ duration: reduce ? 0 : 0.25, ease: [0.4, 0, 0.2, 1] }}
+              transition={{ duration: reduce ? 0 : MONTH_SLIDE_DURATION_SECONDS, ease: [0.4, 0, 0.2, 1] }}
               className={cn('grid grid-cols-1 gap-x-10', months === 2 && 'md:grid-cols-2')}
             >
               {renderMonth(0)}

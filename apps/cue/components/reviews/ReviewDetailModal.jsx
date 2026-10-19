@@ -3,6 +3,9 @@
 import { useRef } from 'react';
 import Modal from '@/components/ui/Modal';
 
+const MAX_RATING_STARS = 5;
+const RADIX_DECIMAL = 10;
+
 function formatDate(iso) {
   if (!iso) return '';
   try {
@@ -17,8 +20,8 @@ export default function ReviewDetailModal({ review, onClose }) {
   const lastRef = useRef(null);
   if (review) lastRef.current = review;
   const currentReview = review || lastRef.current || {};
-  const starCount = Math.max(1, Math.min(5, parseInt(currentReview.rating, 10) || 0));
-  const stars = '★'.repeat(starCount) + '☆'.repeat(5 - starCount);
+  const starCount = Math.max(1, Math.min(MAX_RATING_STARS, parseInt(currentReview.rating, RADIX_DECIMAL) || 0));
+  const stars = '★'.repeat(starCount) + '☆'.repeat(MAX_RATING_STARS - starCount);
 
   return (
     <Modal open={isOpen} onClose={onClose} title="Guest review">

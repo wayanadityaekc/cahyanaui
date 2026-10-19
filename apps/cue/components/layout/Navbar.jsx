@@ -19,6 +19,11 @@ import AccountMenu from './AccountMenu';
 import TripPrefsFields from './TripPrefsFields';
 import DesktopNav from './DesktopNav';
 
+const SCROLL_RETURN_THRESHOLD_PX = 8;
+const SCROLL_AWAY_THRESHOLD_PX = 80;
+const ICON_STROKE_WIDTH_LIGHT = 1.6;
+const ICON_STROKE_WIDTH_REGULAR = 1.7;
+
 const BURGER_BAR =
   'w-full h-[2px] bg-gold max-[992px]:w-[20px] ' +
   '[transition:translate_var(--dur)_var(--ease),rotate_var(--dur)_var(--ease),opacity_var(--dur-fast)_var(--ease)] ' +
@@ -81,7 +86,9 @@ export default function Navbar() {
   const [isScrolledAway, setIsScrolledAway] = useState(false);
   useEffect(() => {
     function handleScroll() {
-      return setIsScrolledAway((was) => (was ? window.scrollY > 8 : window.scrollY > 80));
+      return setIsScrolledAway((was) =>
+        was ? window.scrollY > SCROLL_RETURN_THRESHOLD_PX : window.scrollY > SCROLL_AWAY_THRESHOLD_PX,
+      );
     }
     handleScroll();
     window.addEventListener('scroll', handleScroll, { passive: true });
@@ -158,7 +165,7 @@ export default function Navbar() {
           className={`${APP_HIDE} relative inline-flex items-center text-gold mr-[1.3rem] transition-[color] duration-200 ease-[ease] hover:text-gold-d max-[992px]:mr-[0.85rem]`}
           aria-label="My Trips"
         >
-          <ShoppingBag className="w-5 h-5" strokeWidth={1.6} aria-hidden="true" />
+          <ShoppingBag className="w-5 h-5" strokeWidth={ICON_STROKE_WIDTH_LIGHT} aria-hidden="true" />
           <span className={`absolute top-[-7px] right-[-9px] bg-gold ${BADGE_BASE}`} hidden={!count}>
             {count}
           </span>
@@ -189,7 +196,7 @@ export default function Navbar() {
 
             <li className={NAV_LI}>
               <a href="/" className={buildNavLinkClass(isActive('/'))}>
-                <House strokeWidth={1.7} aria-hidden="true" />
+                <House strokeWidth={ICON_STROKE_WIDTH_REGULAR} aria-hidden="true" />
                 Home
               </a>
             </li>
@@ -200,7 +207,7 @@ export default function Navbar() {
                 aria-expanded={isDropOpen}
                 onClick={() => setIsDropOpen((wasOpen) => !wasOpen)}
               >
-                <Compass strokeWidth={1.7} aria-hidden="true" />
+                <Compass strokeWidth={ICON_STROKE_WIDTH_REGULAR} aria-hidden="true" />
                 Program
                 <span
                   className={`ml-auto inline-block transition-[rotate] duration-200 ease-[ease] ${isDropOpen ? 'rotate-90' : ''}`}
@@ -255,19 +262,19 @@ export default function Navbar() {
             </li>
             <li className={NAV_LI}>
               <a href="/bali-guide.html" className={buildNavLinkClass(isActive('/bali-guide.html'))}>
-                <BookOpen strokeWidth={1.7} aria-hidden="true" />
+                <BookOpen strokeWidth={ICON_STROKE_WIDTH_REGULAR} aria-hidden="true" />
                 Guide
               </a>
             </li>
             <li className={NAV_LI}>
               <a href="/all-reviews.html" className={buildNavLinkClass(isActive('/all-reviews.html'))}>
-                <Star strokeWidth={1.7} aria-hidden="true" />
+                <Star strokeWidth={ICON_STROKE_WIDTH_REGULAR} aria-hidden="true" />
                 Reviews
               </a>
             </li>
             <li className={NAV_LI}>
               <a href="/our-company.html" className={buildNavLinkClass(isActive('/our-company.html'))}>
-                <Building2 strokeWidth={1.7} aria-hidden="true" />
+                <Building2 strokeWidth={ICON_STROKE_WIDTH_REGULAR} aria-hidden="true" />
                 Our Company
               </a>
             </li>
@@ -278,7 +285,11 @@ export default function Navbar() {
                 rel="noopener"
                 className={`flex w-full gap-2 ${BTN_SM} border-0 bg-cta no-underline text-white transition-[background,scale] duration-200 ease-[var(--ease)] hover:bg-cta-d`}
               >
-                <MessageCircle className="w-[18px] h-[18px] flex-none" strokeWidth={1.7} aria-hidden="true" />
+                <MessageCircle
+                  className="w-[18px] h-[18px] flex-none"
+                  strokeWidth={ICON_STROKE_WIDTH_REGULAR}
+                  aria-hidden="true"
+                />
                 WhatsApp
               </a>
             </li>

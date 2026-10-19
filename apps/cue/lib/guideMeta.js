@@ -1,5 +1,7 @@
 import { GUIDE_HUB } from '@/content/shared/guide-hub';
 
+const READING_WORDS_PER_MINUTE = 200;
+
 const CARD = {};
 (function collect(node) {
   if (!node || typeof node !== 'object') return;
@@ -22,7 +24,7 @@ export function readMinutes(body = []) {
     .replace(/<[^>]*>/g, ' ')
     .split(/\s+/)
     .filter(Boolean).length;
-  return Math.max(1, Math.round(words / 200));
+  return Math.max(1, Math.round(words / READING_WORDS_PER_MINUTE));
 }
 
 export function findGuideCategory(tabs = []) {

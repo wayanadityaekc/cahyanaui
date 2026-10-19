@@ -3,6 +3,14 @@
 import { useEffect, useRef, useState } from 'react';
 import { cn } from '../lib/cn.js';
 
+const LOGO_WIDTH_PX = 1005;
+const LOGO_HEIGHT_PX = 324;
+const MIN_VISIBLE_MS = 260;
+const FADE_DURATION_MS = 450;
+const FAST_HIDE_DELAY_MS = 350;
+const HIDE_DELAY_MS = 1400;
+const SAFETY_FADE_DELAY_MS = 3000;
+
 const BASE =
   'fixed inset-0 z-[9999] flex flex-col items-center justify-center gap-[1.2rem] bg-cream ' +
   '[transition:opacity_var(--splash-fade)_var(--ease),visibility_var(--splash-fade)_var(--ease)]';
@@ -11,11 +19,11 @@ const OUT = 'opacity-0 invisible pointer-events-none';
 export default function LoadingScreen({
   logo,
   alt = '',
-  width = 1005,
-  height = 324,
+  width = LOGO_WIDTH_PX,
+  height = LOGO_HEIGHT_PX,
   routeKey,
-  minVisible = 260,
-  fadeMs = 450,
+  minVisible = MIN_VISIBLE_MS,
+  fadeMs = FADE_DURATION_MS,
 }) {
   const [isFadingOut, setIsFadingOut] = useState(false);
   const elRef = useRef(null);
@@ -29,10 +37,10 @@ export default function LoadingScreen({
     }
     let cap;
     if (document.readyState === 'complete') {
-      cap = setTimeout(hide, 350);
+      cap = setTimeout(hide, FAST_HIDE_DELAY_MS);
     } else {
       window.addEventListener('load', hide);
-      cap = setTimeout(hide, 1400);
+      cap = setTimeout(hide, HIDE_DELAY_MS);
     }
     return () => {
       window.removeEventListener('load', hide);
@@ -88,7 +96,7 @@ export default function LoadingScreen({
       setIsFadingOut(false);
 
       clearTimeout(safety.current);
-      safety.current = setTimeout(() => setIsFadingOut(true), 3000);
+      safety.current = setTimeout(() => setIsFadingOut(true), SAFETY_FADE_DELAY_MS);
     }
     document.addEventListener('click', handleLinkClick, true);
     function handlePageShow() {

@@ -2,6 +2,8 @@
 
 import { useRef, useState } from 'react';
 
+const SWIPE_THRESHOLD_PX = 40;
+
 const DOT_MAX = 5;
 
 export default function HeroSlider({ slides = [] }) {
@@ -37,7 +39,8 @@ export default function HeroSlider({ slides = [] }) {
       onTouchEnd={(event) => {
         const deltaX = event.changedTouches[0].clientX - touch.current.x;
         const deltaY = event.changedTouches[0].clientY - touch.current.y;
-        if (Math.abs(deltaX) > 40 && Math.abs(deltaX) > Math.abs(deltaY)) goTo(deltaX < 0 ? current + 1 : current - 1);
+        if (Math.abs(deltaX) > SWIPE_THRESHOLD_PX && Math.abs(deltaX) > Math.abs(deltaY))
+          goTo(deltaX < 0 ? current + 1 : current - 1);
       }}
     >
       {slides.map((slide, index) => (

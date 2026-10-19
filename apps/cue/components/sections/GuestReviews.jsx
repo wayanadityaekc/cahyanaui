@@ -1,6 +1,8 @@
 import ReviewsStrip from '@/components/reviews/ReviewsStrip';
 import { SECTION_TITLE, SECTION_TITLE_SUB, ST_LEFT } from '@/components/ui/sectionTitle';
 
+const GUEST_REVIEWS_LIMIT = 10;
+
 export default function GuestReviews() {
   return (
     <section className="py-16 px-[var(--container-x)]" id="reviews">
@@ -12,7 +14,7 @@ export default function GuestReviews() {
       </div>
       <ReviewsStrip
         variant="slider"
-        limit={10}
+        limit={GUEST_REVIEWS_LIMIT}
         emptyText="Reviews are on their way - be one of the first to share your trip."
         emptyCta
       />

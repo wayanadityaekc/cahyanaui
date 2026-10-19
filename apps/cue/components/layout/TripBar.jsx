@@ -6,6 +6,8 @@ import { normalizePath } from '@/lib/pathname';
 import { Tag, ShieldCheck, CalendarDays, Info, Car } from 'lucide-react';
 import { findPromosForPath } from '@/content/shared/promo';
 
+const ICON_STROKE_WIDTH_REGULAR = 1.7;
+
 const BAR =
   'flex items-center justify-center gap-2 w-full py-[0.5rem] px-5 [border-bottom:1px_solid_var(--line)] bg-cream text-[0.72rem] font-normal leading-[1.3] text-muted no-underline whitespace-nowrap [@media(max-width:560px)]:gap-[0.35rem] [@media(max-width:560px)]:px-[0.9rem]';
 const CTA = 'ml-2 shrink-0 text-gold underline [@media(max-width:560px)]:ml-[0.3rem]';
@@ -50,7 +52,7 @@ export default function TripBar() {
   const Icon = ICONS[message.icon] || Tag;
   const inner = (
     <span className={`${FADE} ${isDimmed ? 'opacity-0' : 'opacity-100'}`}>
-      <Icon className={ICON} strokeWidth={1.7} aria-hidden="true" />
+      <Icon className={ICON} strokeWidth={ICON_STROKE_WIDTH_REGULAR} aria-hidden="true" />
       <span className="truncate">{message.text}</span>
       {message.cta && <span className={CTA}>{message.cta}</span>}
     </span>

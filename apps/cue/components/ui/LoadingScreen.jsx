@@ -3,6 +3,10 @@
 import { useEffect, useRef, useState } from 'react';
 import clsx from 'clsx';
 
+const LOADING_CAP_FAST_MS = 350;
+const LOADING_CAP_SLOW_MS = 1400;
+const LOADING_SAFETY_TIMEOUT_MS = 3000;
+
 export default function LoadingScreen() {
   const [isFadingOut, setIsFadingOut] = useState(false);
   const safety = useRef(null);
@@ -14,10 +18,10 @@ export default function LoadingScreen() {
     }
     let cap;
     if (document.readyState === 'complete') {
-      cap = setTimeout(hide, 350);
+      cap = setTimeout(hide, LOADING_CAP_FAST_MS);
     } else {
       window.addEventListener('load', hide);
-      cap = setTimeout(hide, 1400);
+      cap = setTimeout(hide, LOADING_CAP_SLOW_MS);
     }
     return () => {
       window.removeEventListener('load', hide);
@@ -56,7 +60,7 @@ export default function LoadingScreen() {
       }
       setIsFadingOut(false);
       clearTimeout(safety.current);
-      safety.current = setTimeout(() => setIsFadingOut(true), 3000);
+      safety.current = setTimeout(() => setIsFadingOut(true), LOADING_SAFETY_TIMEOUT_MS);
     }
     document.addEventListener('click', handleLinkClick, true);
     function handleShow() {

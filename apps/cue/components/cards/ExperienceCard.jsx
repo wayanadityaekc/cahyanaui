@@ -5,6 +5,10 @@ import Rating from '@/components/Rating';
 import { PRICE_FROM } from '@/components/ui/priceClasses';
 import { BADGE_POPULAR, CARD_FRAME, CARD_IMG } from '@/components/ui/cardClasses';
 
+const DEFAULT_IMAGE_WIDTH_PX = 600;
+const DEFAULT_IMAGE_HEIGHT_PX = 600;
+const ICON_STROKE_WIDTH_REGULAR = 1.7;
+
 const PLACEHOLDER_GRADIENT = 'linear-gradient(135deg, rgba(31, 61, 43, 0.92), rgba(46, 90, 64, 0.86))';
 
 const IMG_WRAP =
@@ -43,8 +47,8 @@ export default function ExperienceCard({
   program,
   variant = 'link',
   inclText,
-  width = 600,
-  height = 600,
+  width = DEFAULT_IMAGE_WIDTH_PX,
+  height = DEFAULT_IMAGE_HEIGHT_PX,
   children,
 }) {
   const isIncluded = variant === 'incl';
@@ -61,7 +65,11 @@ export default function ExperienceCard({
         {!isIncluded && priceName && <Rating name={priceName} className={RATING} />}
         {meta && (
           <div className={META}>
-            {metaIcon === 'pin' ? <MapPin strokeWidth={1.7} /> : <Clock strokeWidth={1.7} />}
+            {metaIcon === 'pin' ? (
+              <MapPin strokeWidth={ICON_STROKE_WIDTH_REGULAR} />
+            ) : (
+              <Clock strokeWidth={ICON_STROKE_WIDTH_REGULAR} />
+            )}
             <span>{meta}</span>
           </div>
         )}

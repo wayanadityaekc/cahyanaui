@@ -49,6 +49,14 @@ import {
   SIGNIN_BTN,
 } from './chatClasses';
 
+const CHAT_POLL_INTERVAL_MS = 5000;
+const INPUT_FOCUS_DELAY_MS = 60;
+const TYPING_NOTIFY_THROTTLE_MS = 2000;
+const ICON_STROKE_WIDTH_LIGHT = 1.6;
+const CHAT_EMAIL_MAX_LENGTH = 200;
+const CHAT_MESSAGE_MAX_LENGTH = 300;
+const ICON_STROKE_WIDTH_MEDIUM = 1.8;
+
 const THINK_MS = 400;
 
 let seq = 0;
@@ -167,7 +175,7 @@ export default function ChatPanel({ open, onClose }) {
   useEffect(() => {
     if (!open || !thread || isLive) return undefined;
     catchUp();
-    const pollTimer = setInterval(catchUp, 5000);
+    const pollTimer = setInterval(catchUp, CHAT_POLL_INTERVAL_MS);
     return () => clearInterval(pollTimer);
   }, [open, thread, isLive, catchUp]);
 
@@ -195,7 +203,7 @@ export default function ChatPanel({ open, onClose }) {
 
   useEffect(() => {
     if (!open) return undefined;
-    const focusTimer = setTimeout(() => inputRef.current && inputRef.current.focus(), 60);
+    const focusTimer = setTimeout(() => inputRef.current && inputRef.current.focus(), INPUT_FOCUS_DELAY_MS);
     function handleKeyDown(event) {
       if (event.key === 'Escape' && !isAuthOpen) onClose();
     }
@@ -298,7 +306,7 @@ export default function ChatPanel({ open, onClose }) {
     setDraft(draftText);
     if (!thread || !sock.current) return;
     const now = Date.now();
-    if (now - lastTyped.current < 2000) return;
+    if (now - lastTyped.current < TYPING_NOTIFY_THROTTLE_MS) return;
     lastTyped.current = now;
     sock.current.typing();
   }
@@ -331,7 +339,7 @@ export default function ChatPanel({ open, onClose }) {
       >
         <div className={HEAD}>
           <span className={HEAD_AVATAR} aria-hidden="true">
-            <MessageCircle strokeWidth={1.6} />
+            <MessageCircle strokeWidth={ICON_STROKE_WIDTH_LIGHT} />
           </span>
           <span className={HEAD_STACK}>
             <span className={HEAD_TITLE}>{CHAT_COPY.title}</span>
@@ -381,7 +389,7 @@ export default function ChatPanel({ open, onClose }) {
                   onChange={(event) => setMailDraft(event.target.value)}
                   placeholder={CHAT_COPY.emailField}
                   aria-label={CHAT_COPY.emailField}
-                  maxLength={200}
+                  maxLength={CHAT_EMAIL_MAX_LENGTH}
                 />
               </span>
               {mailErr && <p className={NOTE}>{mailErr}</p>}
@@ -435,7 +443,7 @@ export default function ChatPanel({ open, onClose }) {
             onChange={(event) => handleDraftChange(event.target.value)}
             placeholder={thread ? 'Write to Wayan...' : CHAT_COPY.placeholder}
             aria-label="Your question"
-            maxLength={300}
+            maxLength={CHAT_MESSAGE_MAX_LENGTH}
           />
           <button
             type="submit"
@@ -444,7 +452,7 @@ export default function ChatPanel({ open, onClose }) {
             disabled={!draft.trim() || isThinking || isSending}
             aria-label="Send"
           >
-            <Send strokeWidth={1.8} aria-hidden="true" />
+            <Send strokeWidth={ICON_STROKE_WIDTH_MEDIUM} aria-hidden="true" />
           </button>
         </form>
       </div>

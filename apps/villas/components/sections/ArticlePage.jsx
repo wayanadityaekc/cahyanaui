@@ -11,6 +11,10 @@ import { ARTICLES, CATEGORIES, findCategoryLabel } from '@/content/articles';
 import { CAPS, Card, Container, EYEBROW_LINE, Section, Breadcrumb } from '@cahyana/ui';
 import { buildArticleCrumbs } from '@/lib/crumbs';
 
+const MAX_MORE_ARTICLES = 3;
+const ICON_STROKE_WIDTH_REGULAR = 1.7;
+const ICON_STROKE_WIDTH_THIN = 1.6;
+
 const PROSE =
   'max-w-[var(--container-read)] ' +
   '[&_p]:m-0 [&_p]:mb-4 [&_p]:text-body [&_p]:text-ink [&_p]:leading-[var(--lh-body)] ' +
@@ -37,7 +41,7 @@ function CatList({ activeId, onPick }) {
 }
 
 export default function ArticlePage({ article }) {
-  const moreArticles = ARTICLES.filter((other) => other.slug !== article.slug).slice(0, 3);
+  const moreArticles = ARTICLES.filter((other) => other.slug !== article.slug).slice(0, MAX_MORE_ARTICLES);
 
   return (
     <article>
@@ -49,7 +53,8 @@ export default function ArticlePage({ article }) {
           <p className="mt-3 max-w-2xl text-body text-muted">{article.sub}</p>
           <p className={`${META} mt-4`}>
             <span className="inline-flex items-center gap-1.5">
-              <Clock className={ICON} strokeWidth={1.7} aria-hidden="true" />~{article.read} min read
+              <Clock className={ICON} strokeWidth={ICON_STROKE_WIDTH_REGULAR} aria-hidden="true" />~{article.read} min
+              read
             </span>
           </p>
         </Container>
@@ -82,7 +87,7 @@ export default function ArticlePage({ article }) {
             <p className={`${CAPS} text-muted`}>Guide</p>
             <CatList activeId={article.cat} />
             <Link href="/guide" className="inline-flex items-center gap-1.5 mt-2 text-body text-gold hover:text-cta">
-              All articles <ArrowRight className={ICON} strokeWidth={1.6} aria-hidden="true" />
+              All articles <ArrowRight className={ICON} strokeWidth={ICON_STROKE_WIDTH_THIN} aria-hidden="true" />
             </Link>
           </nav>
         </div>
@@ -104,7 +109,7 @@ export default function ArticlePage({ article }) {
                 <h3 className="text-h3 font-semibold text-gold">{related.title}</h3>
                 <p className="text-small text-muted">{related.sub}</p>
                 <span className={`${CAPS} mt-auto pt-3 inline-flex items-center gap-1.5 text-cta`}>
-                  Read <ArrowRight className={ICON} strokeWidth={1.6} aria-hidden="true" />
+                  Read <ArrowRight className={ICON} strokeWidth={ICON_STROKE_WIDTH_THIN} aria-hidden="true" />
                 </span>
               </Card>
             ))}

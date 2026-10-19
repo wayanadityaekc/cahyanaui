@@ -5,11 +5,16 @@ import { useDialog } from '@cahyana/ui';
 import useMobile from './useMobile';
 import useBodyLock from './useBodyLock';
 
+const CARD_ENTER_OFFSET_PX = 14;
+const CARD_ENTER_SCALE = 0.96;
+const SCRIM_DURATION_SECONDS = 0.25;
+const PANEL_DURATION_SECONDS = 0.3;
+
 const EASE_OUT = [0.16, 1, 0.3, 1];
 
 const SHEET_FROM = { y: '100%', opacity: 1 };
 const SHEET_TO = { y: 0, opacity: 1 };
-const CARD_FROM = { opacity: 0, y: 14, scale: 0.96 };
+const CARD_FROM = { opacity: 0, y: CARD_ENTER_OFFSET_PX, scale: CARD_ENTER_SCALE };
 const CARD_TO = { opacity: 1, y: 0, scale: 1 };
 
 export default function SheetPresence({
@@ -25,8 +30,8 @@ export default function SheetPresence({
   useBodyLock(open);
   const dialogRef = useDialog({ shown: open, onClose });
 
-  const scrimDur = reduced ? 0 : 0.25;
-  const panelDur = reduced ? 0 : 0.3;
+  const scrimDur = reduced ? 0 : SCRIM_DURATION_SECONDS;
+  const panelDur = reduced ? 0 : PANEL_DURATION_SECONDS;
   const from = isMobile ? SHEET_FROM : CARD_FROM;
   const to = isMobile ? SHEET_TO : CARD_TO;
 

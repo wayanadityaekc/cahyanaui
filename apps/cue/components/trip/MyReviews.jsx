@@ -4,6 +4,9 @@ import { useEffect } from 'react';
 import { useAccount } from '@/state/AccountProvider';
 import { ROW_RULE } from '@/components/ui/separatorClasses';
 
+const MAX_RATING_STARS = 5;
+const RADIX_DECIMAL = 10;
+
 function formatDate(iso) {
   if (!iso) return '';
   try {
@@ -28,8 +31,8 @@ export default function MyReviews() {
   return (
     <ul className="list-none m-0 p-0" data-my-reviews>
       {myReviews.map((myReview) => {
-        const ratingStars = Math.max(1, Math.min(5, parseInt(myReview.rating, 10) || 0));
-        const stars = '★'.repeat(ratingStars) + '☆'.repeat(5 - ratingStars);
+        const ratingStars = Math.max(1, Math.min(MAX_RATING_STARS, parseInt(myReview.rating, RADIX_DECIMAL) || 0));
+        const stars = '★'.repeat(ratingStars) + '☆'.repeat(MAX_RATING_STARS - ratingStars);
         return (
           <li key={myReview.id} className={`py-3 ${ROW_RULE}`}>
             <div className="flex items-center justify-between gap-3 flex-wrap">

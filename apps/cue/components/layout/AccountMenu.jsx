@@ -9,6 +9,10 @@ import TripPrefsFields from './TripPrefsFields';
 import { BTN_CTA } from '@/components/ui/btnClasses';
 import Separator from '@/components/ui/Separator';
 
+const ICON_STROKE_WIDTH_LIGHT = 1.6;
+const ICON_STROKE_WIDTH_MEDIUM = 1.8;
+const ICON_STROKE_WIDTH_REGULAR = 1.7;
+
 const PHONE =
   'max-[992px]:h-auto max-[992px]:p-0 max-[992px]:border-none max-[992px]:bg-transparent max-[992px]:hover:bg-transparent';
 
@@ -80,7 +84,7 @@ export default function AccountMenu({ onLogin }) {
           className={`inline-flex items-center h-[var(--btn-h)] px-3 rounded-sm border border-line bg-white text-small font-semibold font-body text-gold cursor-pointer whitespace-nowrap [transition:background-color_var(--dur)_var(--ease),scale_var(--dur-fast)_var(--ease)] hover:bg-cream ${PHONE}`}
         >
           <span className="max-[992px]:hidden">Log in</span>
-          <UserRound className="min-[993px]:hidden w-5 h-5" strokeWidth={1.6} aria-hidden="true" />
+          <UserRound className="min-[993px]:hidden w-5 h-5" strokeWidth={ICON_STROKE_WIDTH_LIGHT} aria-hidden="true" />
         </button>
         <PopMenu open={isOpen}>
           <div
@@ -129,7 +133,7 @@ export default function AccountMenu({ onLogin }) {
         <span className="max-[992px]:hidden max-w-[9rem] overflow-hidden text-ellipsis whitespace-nowrap">{first}</span>
         <ChevronDown
           className={`max-[992px]:hidden w-[var(--icon-sm)] h-[var(--icon-sm)] transition-[rotate] duration-200 ${isOpen ? 'rotate-180' : ''}`}
-          strokeWidth={1.8}
+          strokeWidth={ICON_STROKE_WIDTH_MEDIUM}
           aria-hidden="true"
         />
       </button>
@@ -148,7 +152,7 @@ export default function AccountMenu({ onLogin }) {
           </div>
           <Separator className="mb-1" />
           <a href="/settings.html" className={ROW}>
-            <Settings strokeWidth={1.7} aria-hidden="true" />
+            <Settings strokeWidth={ICON_STROKE_WIDTH_REGULAR} aria-hidden="true" />
             Settings
           </a>
           {PREFS}
@@ -162,7 +166,7 @@ export default function AccountMenu({ onLogin }) {
                 logout();
               }}
             >
-              <LogOut strokeWidth={1.7} aria-hidden="true" />
+              <LogOut strokeWidth={ICON_STROKE_WIDTH_REGULAR} aria-hidden="true" />
               Sign out
             </button>
           </div>

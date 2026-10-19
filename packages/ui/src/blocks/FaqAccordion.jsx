@@ -1,6 +1,8 @@
 import { ChevronDown } from 'lucide-react';
 import { RAIL_BODY_TEXT, RAIL_TITLE, FAQ_CAT, FAQ_Q, FAQ_CHEV, FAQ_ROW, FAQ_A } from './railClasses.js';
 
+const ICON_STROKE_WIDTH_REGULAR = 1.7;
+
 export default function FaqAccordion({ title, groups = [], answerHtml = false }) {
   if (!groups.length) {
     return <p className="text-body text-muted">Sorry, we could not load this information. Please try again.</p>;
@@ -15,7 +17,7 @@ export default function FaqAccordion({ title, groups = [], answerHtml = false })
             <details className={FAQ_ROW} name="faq" key={index}>
               <summary className={FAQ_Q}>
                 {item.q}
-                <ChevronDown className={FAQ_CHEV} strokeWidth={1.7} aria-hidden="true" />
+                <ChevronDown className={FAQ_CHEV} strokeWidth={ICON_STROKE_WIDTH_REGULAR} aria-hidden="true" />
               </summary>
               {answerHtml && typeof item.a === 'string' ? (
                 <div className={FAQ_A} dangerouslySetInnerHTML={{ __html: item.a }} />

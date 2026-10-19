@@ -2,6 +2,8 @@
 
 import { useEffect, useRef } from 'react';
 
+const FOCUS_RETRY_DELAY_MS = 120;
+
 const FOCUSABLE =
   'a[href], button:not([disabled]), input:not([disabled]):not([type="hidden"]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
 
@@ -34,7 +36,7 @@ export default function useDialog({ shown = false, onClose = null, escape = true
     let timer = 0;
     if (!focusBox()) {
       raf = requestAnimationFrame(() => {
-        if (!focusBox()) timer = setTimeout(focusBox, 120);
+        if (!focusBox()) timer = setTimeout(focusBox, FOCUS_RETRY_DELAY_MS);
       });
     }
 

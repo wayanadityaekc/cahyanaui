@@ -8,6 +8,9 @@ import { readLocal } from '@/lib/storage';
 import { BTN, BTN_WA, STACK } from '@/components/ui/modalClasses';
 import useBodyLock from '@/components/ui/useBodyLock';
 
+const HTTP_STATUS_UNAUTHORIZED = 401;
+const HTTP_STATUS_NOT_FOUND = 404;
+
 const POLL_MS = 4000;
 const GIVE_UP_MS = 120000;
 
@@ -49,7 +52,7 @@ export default function PayWaiting({ bookingRef, onClose, onConfirmed }) {
           headers: { Authorization: `Bearer ${token}` },
         });
         if (stop) return;
-        if (response.status === 401 || response.status === 404) {
+        if (response.status === HTTP_STATUS_UNAUTHORIZED || response.status === HTTP_STATUS_NOT_FOUND) {
           setPhase('blind');
           return;
         }

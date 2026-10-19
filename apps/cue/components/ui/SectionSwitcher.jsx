@@ -4,6 +4,8 @@ import { useEffect, useState } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { BAR_SHELL, BAR_UPTO_MD } from '@/components/ui/stickyBar';
 
+const SECTION_SCROLL_OFFSET_PX = 160;
+
 function Chevron({ dir }) {
   const Icon = dir === 'left' ? ChevronLeft : ChevronRight;
   return <Icon aria-hidden="true" />;
@@ -15,7 +17,7 @@ export default function SectionSwitcher({ zones = [] }) {
   useEffect(() => {
     if (!zones.length) return;
     function probe() {
-      const scrollPosition = window.scrollY + 160;
+      const scrollPosition = window.scrollY + SECTION_SCROLL_OFFSET_PX;
       let current = 0;
       zones.forEach((zone, indexItem) => {
         const section = document.getElementById(zone.id);

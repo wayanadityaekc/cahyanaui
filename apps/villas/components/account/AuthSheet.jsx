@@ -7,6 +7,10 @@ import SheetPresence from '@/components/ui/SheetPresence';
 import { useAccount } from '@/components/providers/AccountProvider';
 import { createAccountSchema, signInSchema } from '@/lib/schemas';
 
+const COOLDOWN_TICK_MS = 1000;
+const ICON_STROKE_WIDTH_MEDIUM = 1.8;
+const OTP_CODE_LENGTH = 6;
+
 const RESEND_SECONDS = 30;
 const EMPTY_FORM = { name: '', email: '', phone: '' };
 const LINK_BUTTON =
@@ -27,7 +31,7 @@ export default function AuthSheet({ open = false, onClose = () => {} }) {
 
   useEffect(() => {
     if (cooldown <= 0) return undefined;
-    const timer = setInterval(() => setCooldown((seconds) => Math.max(0, seconds - 1)), 1000);
+    const timer = setInterval(() => setCooldown((seconds) => Math.max(0, seconds - 1)), COOLDOWN_TICK_MS);
     return () => clearInterval(timer);
   }, [cooldown]);
 
@@ -155,7 +159,11 @@ export default function AuthSheet({ open = false, onClose = () => {} }) {
         aria-label="Close"
         className="absolute top-3 right-4 text-green bg-transparent border-none cursor-pointer"
       >
-        <CloseIcon className="w-[var(--icon-md)] h-[var(--icon-md)]" strokeWidth={1.8} aria-hidden="true" />
+        <CloseIcon
+          className="w-[var(--icon-md)] h-[var(--icon-md)]"
+          strokeWidth={ICON_STROKE_WIDTH_MEDIUM}
+          aria-hidden="true"
+        />
       </button>
       <h3 className="mb-5 font-body text-h3 text-center font-semibold tracking-normal text-gold">{title}</h3>
 
@@ -184,7 +192,7 @@ export default function AuthSheet({ open = false, onClose = () => {} }) {
                 {note}
               </p>
             )}
-            <Button full onClick={() => verifyEnteredCode(code)} disabled={isBusy || code.length < 6}>
+            <Button full onClick={() => verifyEnteredCode(code)} disabled={isBusy || code.length < OTP_CODE_LENGTH}>
               {isBusy ? 'Checking...' : 'Verify'}
             </Button>
             <p className="text-center text-small text-muted">

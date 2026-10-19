@@ -10,6 +10,8 @@ import { PAY_COPY, payOptions } from '@/lib/payment';
 import { usePricing } from '@/state/PricingProvider';
 import { buildRailNote, pickRail, RAIL_CHOICES } from '@/lib/rails';
 
+const ICON_STROKE_WIDTH_REGULAR = 1.7;
+
 const CARD = 'rounded-md bg-white [transition:border-color_var(--dur)_ease,background-color_var(--dur)_ease]';
 const CARD_ON = '[border:1.5px_solid_var(--color-cta)] bg-cream';
 const CARD_OFF = '[border:1.5px_solid_var(--line)] hover:[border-color:var(--color-gold)]';
@@ -154,7 +156,11 @@ export default function PaymentStep({
               onClick={() => onRail && onRail(railChoiceItem.id)}
             >
               {railChoiceItem.id === 'doku' ? (
-                <CreditCard strokeWidth={1.7} className={`${METHOD_ICON} text-green`} aria-hidden="true" />
+                <CreditCard
+                  strokeWidth={ICON_STROKE_WIDTH_REGULAR}
+                  className={`${METHOD_ICON} text-green`}
+                  aria-hidden="true"
+                />
               ) : (
                 <PayPalMark className={METHOD_ICON} />
               )}
@@ -244,7 +250,7 @@ export default function PaymentStep({
           {PAY_COPY.detailsMore}
           <ChevronDown
             className="w-[var(--icon-sm)] h-[var(--icon-sm)] shrink-0"
-            strokeWidth={1.7}
+            strokeWidth={ICON_STROKE_WIDTH_REGULAR}
             aria-hidden="true"
           />
         </button>

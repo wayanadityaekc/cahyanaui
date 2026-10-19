@@ -12,6 +12,11 @@ import { buildBookingBody, buildBookingLines } from '@/lib/bookingPayload';
 import { API_BASE, TOKEN_KEY } from '@/lib/constants';
 import { DEFAULT_RAIL, RAIL_CHOICES, buildRailNote, chooseRail } from '@/lib/rails';
 
+const ICON_STROKE_WIDTH_REGULAR = 1.7;
+const MIN_PHONE_DIGITS = 7;
+const ICON_STROKE_WIDTH_MEDIUM = 1.8;
+const CHECKOUT_STEP_COUNT = 3;
+
 const PAY_COPY = {
   secure: 'Card details go straight to PayPal from a secure field. They never reach our site or our server.',
   declined: 'That card was declined. Try another card, or pay with PayPal.',
@@ -26,7 +31,7 @@ const RAILS = RAIL_CHOICES.map(({ id, label }) => ({
     id === 'paypal' ? (
       <BrandIcon name="PayPal" className={ICON} />
     ) : (
-      <CreditCard className={`${ICON} text-gold`} strokeWidth={1.7} aria-hidden="true" />
+      <CreditCard className={`${ICON} text-gold`} strokeWidth={ICON_STROKE_WIDTH_REGULAR} aria-hidden="true" />
     ),
 }));
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[a-z]{2,}$/i;
@@ -48,7 +53,7 @@ function collectGuestProblems({ name, email, phone }) {
   const problems = {};
   if (!name.trim()) problems.name = 'Please enter your name.';
   if (!EMAIL_RE.test(email.trim())) problems.email = 'Please enter a valid email, like you@gmail.com.';
-  if (phone.replace(/\D/g, '').length < 7)
+  if (phone.replace(/\D/g, '').length < MIN_PHONE_DIGITS)
     problems.phone = 'Please enter a phone or WhatsApp number with the country code.';
   return problems;
 }
@@ -171,10 +176,14 @@ export default function CheckoutSheet({ open = false, onClose = () => {}, cart =
         aria-label="Close"
         className="absolute top-3 right-4 text-green bg-transparent border-none cursor-pointer"
       >
-        <CloseIcon className="w-[var(--icon-md)] h-[var(--icon-md)]" strokeWidth={1.8} aria-hidden="true" />
+        <CloseIcon
+          className="w-[var(--icon-md)] h-[var(--icon-md)]"
+          strokeWidth={ICON_STROKE_WIDTH_MEDIUM}
+          aria-hidden="true"
+        />
       </button>
       <p className="m-0 mb-1 text-label font-medium tracking-[0.08em] uppercase text-muted">
-        Step {step === 'details' ? 1 : step === 'pay' ? 2 : 3} of 3
+        Step {step === 'details' ? 1 : step === 'pay' ? 2 : CHECKOUT_STEP_COUNT} of 3
       </p>
       <h3 className="m-0 mb-5 font-body text-h3 font-semibold text-gold">{title}</h3>
 

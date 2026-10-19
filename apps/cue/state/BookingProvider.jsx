@@ -5,9 +5,13 @@ import { useAccount } from './AccountProvider';
 import { readLocalJSON, writeLocal, removeLocal } from '@/lib/storage';
 import { KEY } from '@/lib/constants';
 
+const MINUTES_PER_HOUR = 60;
+const SECONDS_PER_MINUTE = 60;
+const MILLISECONDS_PER_SECOND = 1000;
+
 const BookingContext = createContext(null);
 
-const RESUME_MS = 60 * 60 * 1000;
+const RESUME_MS = MINUTES_PER_HOUR * SECONDS_PER_MINUTE * MILLISECONDS_PER_SECOND;
 
 function readPathname() {
   return window.location.pathname;

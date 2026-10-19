@@ -12,6 +12,8 @@ import { CART_TOAST } from '@/components/ui/cartToastClasses';
 import LiveRegion from '@/components/ui/LiveRegion';
 import useBodyLock from '@/components/ui/useBodyLock';
 
+const TOAST_DURATION_MS = 2600;
+
 export default function BookSidebar({ item, presetType = 'tour', perPerson = false, belowPrice }) {
   const [ask, setAsk] = useState(null);
   const [pending, setPending] = useState(null);
@@ -41,7 +43,7 @@ export default function BookSidebar({ item, presetType = 'tour', perPerson = fal
     if (goto) window.location.href = '/my-trips.html';
     else {
       setToast('Added to My Trips');
-      setTimeout(() => setToast(''), 2600);
+      setTimeout(() => setToast(''), TOAST_DURATION_MS);
     }
   }
 

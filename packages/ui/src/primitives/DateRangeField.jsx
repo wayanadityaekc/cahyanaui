@@ -28,6 +28,11 @@ import {
   CHEV,
 } from './controlClasses.js';
 
+const MILLISECONDS_PER_DAY = 86400000;
+const MAX_DAYS_AHEAD = 365;
+const DAYS_PER_WEEK = 7;
+const ICON_STROKE_WIDTH_BOLD = 1.8;
+
 const DOW = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
 function buildRangePanelClasses(open) {
@@ -84,7 +89,7 @@ function formatDateLabel(isoDate) {
 
 function countNightsBetween(startDate, endDate) {
   if (!startDate || !endDate) return 0;
-  return Math.round((new Date(endDate) - new Date(startDate)) / 86400000);
+  return Math.round((new Date(endDate) - new Date(startDate)) / MILLISECONDS_PER_DAY);
 }
 
 export default function DateRangeField({
@@ -100,7 +105,7 @@ export default function DateRangeField({
   icon = null,
   busy = [],
   minNights = 1,
-  maxDaysAhead = 365,
+  maxDaysAhead = MAX_DAYS_AHEAD,
 }) {
   const { checkIn = '', checkOut = '' } = value || {};
   const [isOpen, setIsOpen] = useState(false);
@@ -141,7 +146,7 @@ export default function DateRangeField({
       leadingBlanks.push({ date: new Date(base.getFullYear(), base.getMonth(), 1 - leadIndex), faded: true });
     for (let dayOfMonth = 1; dayOfMonth <= days; dayOfMonth++)
       leadingBlanks.push({ date: new Date(base.getFullYear(), base.getMonth(), dayOfMonth), faded: false });
-    while (leadingBlanks.length % 7)
+    while (leadingBlanks.length % DAYS_PER_WEEK)
       leadingBlanks.push({
         date: new Date(base.getFullYear(), base.getMonth(), days + (leadingBlanks.length - lead - days + 1)),
         faded: true,
@@ -195,7 +200,7 @@ export default function DateRangeField({
         <span className={valueItem ? CONTROL_VAL : CONTROL_VAL_PLACEHOLDER}>
           {valueItem ? formatDateLabel(valueItem) : placeholder}
         </span>
-        <Calendar className={CHEV_CAL} strokeWidth={1.8} aria-hidden="true" />
+        <Calendar className={CHEV_CAL} strokeWidth={ICON_STROKE_WIDTH_BOLD} aria-hidden="true" />
       </button>
     );
   }
@@ -327,7 +332,7 @@ export default function DateRangeField({
             {hint ? <span className={CONTROL_HINT}>{hint}</span> : null}
             <span className={checkIn ? CONTROL_VAL_RICH : CONTROL_VAL_RICH_PLACEHOLDER}>{rangeLabel}</span>
           </span>
-          <Calendar className={CHEV} strokeWidth={1.8} aria-hidden="true" />
+          <Calendar className={CHEV} strokeWidth={ICON_STROKE_WIDTH_BOLD} aria-hidden="true" />
         </button>
       ) : (
         <div className={RANGE_ROW}>

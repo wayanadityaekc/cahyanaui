@@ -4,15 +4,20 @@ import { AnimatePresence, LazyMotion, domAnimation, m as motionTags, useReducedM
 import { SHELL, BOX } from './modalClasses';
 import useDialog from './useDialog';
 
+const MODAL_ENTER_OFFSET_PX = 14;
+const MODAL_ENTER_SCALE = 0.96;
+const MODAL_SHELL_DURATION_SECONDS = 0.25;
+const MODAL_CARD_DURATION_SECONDS = 0.32;
+
 const EASE_OUT = [0.16, 1, 0.3, 1];
-const BOX_FROM = { opacity: 0, y: 14, scale: 0.96 };
+const BOX_FROM = { opacity: 0, y: MODAL_ENTER_OFFSET_PX, scale: MODAL_ENTER_SCALE };
 const BOX_TO = { opacity: 1, y: 0, scale: 1 };
 
 export default function ModalPresence({ open, onClose, label, box = BOX, shellClass = SHELL, children }) {
   const boxRef = useDialog({ shown: open, onClose });
   const reduced = useReducedMotion();
-  const shell = reduced ? 0 : 0.25;
-  const card = reduced ? 0 : 0.32;
+  const shell = reduced ? 0 : MODAL_SHELL_DURATION_SECONDS;
+  const card = reduced ? 0 : MODAL_CARD_DURATION_SECONDS;
 
   return (
     <LazyMotion features={domAnimation}>

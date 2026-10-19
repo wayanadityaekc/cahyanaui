@@ -23,6 +23,9 @@ import {
   TRIP_CANCEL_BTN,
 } from './tripClasses.js';
 
+const ICON_STROKE_WIDTH_REGULAR = 1.7;
+const ICON_STROKE_WIDTH_THIN = 1.6;
+
 const STATUS = { new: 'New', paid: 'Paid', pending: 'Pending', confirmed: 'Confirmed', mismatch: 'Mismatch' };
 
 const COPY = {
@@ -90,7 +93,7 @@ export default function BookedTrips({
                 style={image ? { backgroundImage: `url(${image})` } : undefined}
                 aria-hidden="true"
               >
-                {!image && <CalendarCheck strokeWidth={1.7} />}
+                {!image && <CalendarCheck strokeWidth={ICON_STROKE_WIDTH_REGULAR} />}
               </span>
               <div className={TRIP_BODY}>
                 <p className={TRIP_TITLE}>{trip.name}</p>
@@ -114,7 +117,7 @@ export default function BookedTrips({
                   onClick={() => onToggle(isOpen ? null : trip.ref)}
                 >
                   {isOpen ? mergedCopy.hide : mergedCopy.view(lines.length)}
-                  <ChevronDown className={TRIP_DET_CHEV} strokeWidth={1.6} aria-hidden="true" />
+                  <ChevronDown className={TRIP_DET_CHEV} strokeWidth={ICON_STROKE_WIDTH_THIN} aria-hidden="true" />
                 </button>
                 {isOpen && (
                   <ul className={TRIP_DET_LIST}>

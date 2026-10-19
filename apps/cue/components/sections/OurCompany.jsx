@@ -12,6 +12,8 @@ import { LEGAL } from '@/content/shared/legal';
 import { FAQ } from '@/content/shared/faq';
 import Prose from '@/components/prose/Prose';
 
+const ICON_STROKE_WIDTH_REGULAR = 1.7;
+
 const TABS = [
   { id: 'about', label: 'About Us', Icon: Building2 },
   { id: 'contact', label: 'Contact', Icon: Mail },
@@ -67,7 +69,7 @@ function FAQBody() {
             <details className={FAQ_ROW} name="faq" key={index}>
               <summary className={FAQ_Q}>
                 {item.q}
-                <ChevronDown className={FAQ_CHEV} strokeWidth={1.7} aria-hidden="true" />
+                <ChevronDown className={FAQ_CHEV} strokeWidth={ICON_STROKE_WIDTH_REGULAR} aria-hidden="true" />
               </summary>
               <div className={FAQ_A} dangerouslySetInnerHTML={{ __html: item.a }} />
             </details>
@@ -83,7 +85,7 @@ function HelpCard({ className = '' }) {
     <div className={`${RAIL_HELP} ${className}`}>
       <p className={RAIL_HELP_TEXT}>Still not sure about something?</p>
       <a className={RAIL_HELP_BTN} href={`https://wa.me/${WHATSAPP_NUMBER}`} target="_blank" rel="noopener">
-        <MessageCircle strokeWidth={1.7} aria-hidden="true" />
+        <MessageCircle strokeWidth={ICON_STROKE_WIDTH_REGULAR} aria-hidden="true" />
         WhatsApp
       </a>
     </div>

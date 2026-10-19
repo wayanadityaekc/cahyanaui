@@ -14,6 +14,9 @@ import LoadingScreen from '@/components/ui/LoadingScreen';
 import BookConfirmModal from '@/components/booking/BookConfirmModal';
 import BookingGate from '@/components/booking/BookingGate';
 
+const ASSET_HASH_LENGTH = 8;
+const CATALOG_FETCH_TIMEOUT_MS = 10000;
+
 const inter = localFont({
   src: '../public/assets/fonts/inter-latin.woff2',
   weight: '300 700',
@@ -27,7 +30,7 @@ function hashAsset(...rel) {
   return createHash('sha1')
     .update(readFileSync(join(process.cwd(), 'public', ...rel)))
     .digest('hex')
-    .slice(0, 8);
+    .slice(0, ASSET_HASH_LENGTH);
 }
 
 const STYLE_V = hashAsset('style.css');
@@ -45,7 +48,9 @@ function fetchBuildCatalog() {
     const query = new URLSearchParams({ currency: 'USD', guests: String(DISPLAY_GUESTS), stay: '' });
     buildCatalog = (async () => {
       try {
-        const response = await fetch(`${API_BASE}/pricing/catalog?${query}`, { signal: AbortSignal.timeout(10000) });
+        const response = await fetch(`${API_BASE}/pricing/catalog?${query}`, {
+          signal: AbortSignal.timeout(CATALOG_FETCH_TIMEOUT_MS),
+        });
         const catalog = response.ok ? await response.json() : null;
         return catalog && Array.isArray(catalog.items) ? catalog : null;
       } catch (e) {

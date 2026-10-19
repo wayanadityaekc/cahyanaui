@@ -5,6 +5,8 @@ import Slider from '@/components/ui/Slider';
 import { CAROUSEL_SECTION, CAROUSEL_TITLE } from '@/components/ui/carouselSection';
 import { isHiddenTour } from '@/lib/routes';
 
+const RELATED_ITEM_COUNT = 4;
+
 export default function Related({ href }) {
   const current = RELATED_ITEMS.find((it) => it.href === href);
   if (!current) return null;
@@ -16,8 +18,8 @@ export default function Related({ href }) {
   const otherZoneItems = relatedPool
     .filter((it) => it.zone !== current.zone)
     .sort((a, b) => Math.abs(a.p - current.p) - Math.abs(b.p - current.p));
-  const picks = sameZoneItems.concat(otherZoneItems).slice(0, 4);
-  if (picks.length < 4) return null;
+  const picks = sameZoneItems.concat(otherZoneItems).slice(0, RELATED_ITEM_COUNT);
+  if (picks.length < RELATED_ITEM_COUNT) return null;
 
   const all = RELATED_ALL[current.type];
 

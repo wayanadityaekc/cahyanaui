@@ -36,6 +36,8 @@ import {
   MTC_CANCEL_BTN,
 } from './myTripsClasses';
 
+const ICON_STROKE_WIDTH_LIGHT = 1.6;
+
 export default function BookedTrips({ isPast, openRef, setOpenRef, setReview }) {
   const { account, trips, reviewableItems } = useAccount();
   const { currency } = useTripPrefs();
@@ -93,7 +95,7 @@ export default function BookedTrips({ isPast, openRef, setOpenRef, setReview }) 
               onClick={() => setOpenRef(isOpen ? null : trip.ref)}
             >
               {isOpen ? 'Hide details' : `View details (${items.length}${items.length > 1 ? ' items)' : ' item)'}`}
-              <ChevronDown className={MTC_DET_CHEV} strokeWidth={1.6} aria-hidden="true" />
+              <ChevronDown className={MTC_DET_CHEV} strokeWidth={ICON_STROKE_WIDTH_LIGHT} aria-hidden="true" />
             </button>
             {isOpen && (
               <ul className={MTC_DET_LIST}>

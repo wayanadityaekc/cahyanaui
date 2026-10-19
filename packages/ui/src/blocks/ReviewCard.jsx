@@ -2,6 +2,8 @@ import { cn } from '../lib/cn.js';
 import { CARD_TONES } from './cardClasses.js';
 import { REVIEW_CARD as REVIEW_CARD_CLASSES, starText } from './reviewClasses.js';
 
+const MAX_STAR_COUNT = 5;
+
 export default function ReviewCard({
   name,
   country,
@@ -34,7 +36,7 @@ export default function ReviewCard({
         </div>
         {service && <div className={REVIEW_CARD_CLASSES.meta}>{service}</div>}
         <div className={cn(REVIEW_CARD_CLASSES.stars, 'opacity-30')} aria-hidden="true">
-          {'\u2605'.repeat(5)}
+          {'\u2605'.repeat(MAX_STAR_COUNT)}
         </div>
         <p className={cn(REVIEW_CARD_CLASSES.text, '!text-muted')}>{message}</p>
         {logo && <img className={REVIEW_CARD_CLASSES.logo} src={logo.src} alt={logo.alt || ''} loading="lazy" />}

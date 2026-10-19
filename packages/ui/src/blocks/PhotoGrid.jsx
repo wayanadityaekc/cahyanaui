@@ -5,6 +5,8 @@ import { cn } from '../lib/cn.js';
 import useBodyLock from '../lib/useBodyLock.js';
 import useDialog from '../lib/useDialog.js';
 
+const EAGER_IMAGE_COUNT = 3;
+
 export default function PhotoGrid({ images = [], open, onClose, startAt = 0, label = 'Photos' }) {
   const scroller = useRef(null);
   const pushed = useRef(false);
@@ -89,7 +91,7 @@ export default function PhotoGrid({ images = [], open, onClose, startAt = 0, lab
               <img
                 src={image.src}
                 alt={image.alt || ''}
-                loading={index < 3 ? undefined : 'lazy'}
+                loading={index < EAGER_IMAGE_COUNT ? undefined : 'lazy'}
                 className="block w-full h-auto object-cover rounded-base bg-cream"
               />
             </figure>

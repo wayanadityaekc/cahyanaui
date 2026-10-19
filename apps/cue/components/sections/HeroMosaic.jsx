@@ -8,6 +8,8 @@ import Slider from '@/components/ui/Slider';
 import { BLEED_MOBILE } from '@/components/ui/gridClasses';
 import useBodyLock from '@/components/ui/useBodyLock';
 
+const MOSAIC_PHOTOS_PER_GROUP = 3;
+
 const PILL_FROM = 10;
 
 const TILE_BASE =
@@ -66,8 +68,8 @@ export default function HeroMosaic({ photos = [], title }) {
   }
 
   const tiles = [];
-  [...Array(Math.ceil(photos.length / 3)).keys()]
-    .map((groupIndex) => groupIndex * 3)
+  [...Array(Math.ceil(photos.length / MOSAIC_PHOTOS_PER_GROUP)).keys()]
+    .map((groupIndex) => groupIndex * MOSAIC_PHOTOS_PER_GROUP)
     .forEach((startIndex) => {
       tiles.push(renderTile(startIndex, BIG));
       const pair = [startIndex + 1, startIndex + 2].filter((photoIndex) => photoIndex < photos.length);

@@ -6,6 +6,8 @@ import { WHATSAPP_NUMBER } from '@/lib/constants';
 import { REGISTRATION as registration } from '@/content/shared/registration';
 import FooterPayChips from './FooterPayChips';
 
+const ICON_STROKE_WIDTH_MEDIUM = 1.8;
+
 const COMPACT_PATHS = ['/settings.html', '/my-trips.html', '/our-company.html'];
 
 function isCompactPath(pathname) {
@@ -68,11 +70,11 @@ function CompactFooter() {
             aria-label="WhatsApp"
             className={CONTACT_LINK}
           >
-            <MessageCircle className={CONTACT_SVG} strokeWidth={1.8} />
+            <MessageCircle className={CONTACT_SVG} strokeWidth={ICON_STROKE_WIDTH_MEDIUM} />
             <span className="max-[560px]:hidden">WhatsApp</span>
           </a>
           <a href="mailto:cahyanabaliexperience@gmail.com" aria-label="Email" className={CONTACT_LINK}>
-            <Mail className={CONTACT_SVG} strokeWidth={1.8} />
+            <Mail className={CONTACT_SVG} strokeWidth={ICON_STROKE_WIDTH_MEDIUM} />
             <span className="max-[560px]:hidden">Email</span>
           </a>
         </div>
@@ -101,15 +103,15 @@ export default function Footer() {
           </a>
           <div className="mt-[0.9rem] flex flex-col gap-[0.55rem]">
             <a href={`https://wa.me/${WHATSAPP_NUMBER}`} target="_blank" rel="noopener" className={CONTACT_LINK}>
-              <MessageCircle className={CONTACT_SVG} strokeWidth={1.8} />
+              <MessageCircle className={CONTACT_SVG} strokeWidth={ICON_STROKE_WIDTH_MEDIUM} />
               Message us on WhatsApp
             </a>
             <a href="mailto:cahyanabaliexperience@gmail.com" className={CONTACT_LINK}>
-              <Mail className={CONTACT_SVG} strokeWidth={1.8} />
+              <Mail className={CONTACT_SVG} strokeWidth={ICON_STROKE_WIDTH_MEDIUM} />
               cahyanabaliexperience@gmail.com
             </a>
             <span className={CONTACT_ITEM}>
-              <MapPin className={CONTACT_SVG} strokeWidth={1.8} />
+              <MapPin className={CONTACT_SVG} strokeWidth={ICON_STROKE_WIDTH_MEDIUM} />
               Based in Ubud, Bali
             </span>
           </div>

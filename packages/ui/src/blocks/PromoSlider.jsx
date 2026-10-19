@@ -3,6 +3,8 @@
 import { useRef, useState } from 'react';
 import { BTN_SM } from '../primitives/btnClasses.js';
 
+const SWIPE_THRESHOLD_PX = 40;
+
 export default function PromoSlider({ slides = [], label = 'Other Cahyana programs', external = false }) {
   const [current, setCurrent] = useState(0);
   const touch = useRef({ x: 0, y: 0 });
@@ -33,7 +35,8 @@ export default function PromoSlider({ slides = [], label = 'Other Cahyana progra
       onTouchEnd={(event) => {
         const deltaX = event.changedTouches[0].clientX - touch.current.x;
         const deltaY = event.changedTouches[0].clientY - touch.current.y;
-        if (Math.abs(deltaX) > 40 && Math.abs(deltaX) > Math.abs(deltaY)) goTo(current + (deltaX < 0 ? 1 : -1));
+        if (Math.abs(deltaX) > SWIPE_THRESHOLD_PX && Math.abs(deltaX) > Math.abs(deltaY))
+          goTo(current + (deltaX < 0 ? 1 : -1));
       }}
     >
       {slides.map((slide, index) => (

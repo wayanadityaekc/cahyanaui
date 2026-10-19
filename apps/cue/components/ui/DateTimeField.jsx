@@ -4,13 +4,18 @@ import DateField from './DateField';
 import Select from './Select';
 import { formatHour } from '@/content/shared/timeSlots';
 
-const HOURS = Array.from({ length: 24 }, (unusedValue, index) => String(index).padStart(2, '0'));
-const MINUTES = Array.from({ length: 60 }, (unusedValue, index) => String(index).padStart(2, '0'));
+const HOURS_PER_DAY = 24;
+const MINUTES_PER_HOUR = 60;
+const TIME_MINUTE_START_INDEX = 3;
+const TIME_MINUTE_END_INDEX = 5;
+
+const HOURS = Array.from({ length: HOURS_PER_DAY }, (unusedValue, index) => String(index).padStart(2, '0'));
+const MINUTES = Array.from({ length: MINUTES_PER_HOUR }, (unusedValue, index) => String(index).padStart(2, '0'));
 
 export default function DateTimeField({ label = 'Date & time', value, onChange, min, id }) {
   const [datePart = '', timePart = ''] = (value || '').split('T');
   const hour = timePart.slice(0, 2);
-  const minute = timePart.slice(3, 5);
+  const minute = timePart.slice(TIME_MINUTE_START_INDEX, TIME_MINUTE_END_INDEX);
 
   function emit(dateValue, hourValue, minuteValue) {
     if (!dateValue) return onChange('');

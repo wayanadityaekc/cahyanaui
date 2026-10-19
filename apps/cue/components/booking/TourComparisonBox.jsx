@@ -1,6 +1,8 @@
 import { ChevronRight } from 'lucide-react';
 import Price from '@/components/Price';
 
+const ICON_STROKE_WIDTH_REGULAR = 1.7;
+
 const BTN =
   'group flex items-center gap-3 w-full py-[0.7rem] px-[0.85rem] rounded-md no-underline text-left ' +
   'bg-white [border:1px_solid_var(--line)] cursor-pointer ' +
@@ -29,7 +31,7 @@ export default function TourComparisonBox({ tours }) {
                 className="flex-none inline-flex w-[var(--icon-sm)] h-[var(--icon-sm)] text-muted group-hover:text-cta [&>svg]:w-full [&>svg]:h-full"
                 aria-hidden="true"
               >
-                <ChevronRight strokeWidth={1.7} />
+                <ChevronRight strokeWidth={ICON_STROKE_WIDTH_REGULAR} />
               </span>
             </a>
           </li>

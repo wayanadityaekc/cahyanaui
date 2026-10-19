@@ -1,3 +1,5 @@
+const HTTP_STATUS_NOT_FOUND = 404;
+
 const THREAD_ID = /^[a-f0-9]{48}$/;
 
 export function createChatThread({ apiBase, storageKey }) {
@@ -42,7 +44,7 @@ export function createChatThread({ apiBase, storageKey }) {
 
   async function poll(id, since) {
     const response = await fetch(`${apiBase}/chat/${id}?since=${Number(since) || 0}`);
-    if (response.status === 404) {
+    if (response.status === HTTP_STATUS_NOT_FOUND) {
       write(null);
       return { gone: true, messages: [] };
     }

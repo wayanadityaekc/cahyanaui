@@ -12,6 +12,8 @@ import { useMemo, useState } from 'react';
 import GuideCard from '@/components/cards/GuideCard';
 import { GUIDE_HUB } from '@/content/shared/guide-hub';
 
+const ICON_STROKE_WIDTH_REGULAR = 1.7;
+
 const GC_SECTION = 'mt-[2.4rem] [scroll-margin-top:80px]';
 const GC_NAV = 'relative flex-[0_0_auto] flex order-2 [border-left:1px_solid_var(--line)]';
 const GC_MENU =
@@ -75,7 +77,7 @@ export default function GuideHub() {
                   {GUIDE_HUB.navItems.map((navItem) => (
                     <a className={GC_MENU_A} href={`#${navItem.id}`} key={navItem.id} onClick={() => setIsOpen(false)}>
                       <span>
-                        <navItem.Icon strokeWidth={1.7} aria-hidden="true" />
+                        <navItem.Icon strokeWidth={ICON_STROKE_WIDTH_REGULAR} aria-hidden="true" />
                       </span>
                       {navItem.label}
                     </a>

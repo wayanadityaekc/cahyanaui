@@ -3,6 +3,8 @@
 import { Plus, Trash2 } from 'lucide-react';
 import { ROW_RULE } from '../primitives/separatorClasses.js';
 
+const ICON_STROKE_WIDTH_BOLD = 1.8;
+
 const ICON = 'w-[var(--icon-sm)] h-[var(--icon-sm)] shrink-0';
 const TOGGLE_ON =
   'inline-flex items-center gap-1.5 shrink-0 rounded-pill px-3 h-8 border-none bg-cta text-white text-small font-semibold cursor-pointer';
@@ -55,11 +57,11 @@ function ExtraRow({
           >
             {added ? (
               <>
-                <Trash2 className={ICON} strokeWidth={1.8} aria-hidden="true" /> Remove
+                <Trash2 className={ICON} strokeWidth={ICON_STROKE_WIDTH_BOLD} aria-hidden="true" /> Remove
               </>
             ) : (
               <>
-                <Plus className={ICON} strokeWidth={1.8} aria-hidden="true" /> Add
+                <Plus className={ICON} strokeWidth={ICON_STROKE_WIDTH_BOLD} aria-hidden="true" /> Add
               </>
             )}
           </button>

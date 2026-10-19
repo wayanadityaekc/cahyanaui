@@ -4,6 +4,8 @@ import { createContext, useContext, useEffect, useState } from 'react';
 import { readLocal, writeLocal, removeLocal } from '@/lib/storage';
 import { KEY, CURRENCIES, DISPLAY_GUESTS, DEFAULT_CURRENCY } from '@/lib/constants';
 
+const RADIX_DECIMAL = 10;
+
 const TripPrefsContext = createContext(null);
 
 export function TripPrefsProvider({ children }) {
@@ -17,7 +19,7 @@ export function TripPrefsProvider({ children }) {
   useEffect(() => {
     const current = readLocal(KEY.currency, DEFAULT_CURRENCY);
     setCurrencyState(CURRENCIES.includes(current) ? current : DEFAULT_CURRENCY);
-    setGuestsState(parseInt(readLocal(KEY.guests, '0'), 10) || 0);
+    setGuestsState(parseInt(readLocal(KEY.guests, '0'), RADIX_DECIMAL) || 0);
     setStayState(readLocal(KEY.stay, '') || '');
     setDateFromState(readLocal(KEY.dateFrom, '') || '');
     setDateToState(readLocal(KEY.dateTo, '') || '');
@@ -31,7 +33,7 @@ export function TripPrefsProvider({ children }) {
   }
 
   function setGuests(guestCount) {
-    const parsedGuests = parseInt(guestCount, 10) || 0;
+    const parsedGuests = parseInt(guestCount, RADIX_DECIMAL) || 0;
     setGuestsState(parsedGuests);
     if (parsedGuests) writeLocal(KEY.guests, String(parsedGuests));
     else removeLocal(KEY.guests);

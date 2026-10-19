@@ -14,13 +14,13 @@ import {
 } from './confirmClasses.js';
 
 export function ReadBackRows({ label, rows = [] }) {
-  const shown = rows.filter(([, value]) => value !== '' && value != null);
-  if (!shown.length) return null;
+  const shownRows = rows.filter(([, value]) => value !== '' && value != null);
+  if (!shownRows.length) return null;
   return (
     <>
       <p className={GROUP_LABEL}>{label}</p>
       <div className={ROWSET}>
-        {shown.map(([name, value]) => (
+        {shownRows.map(([name, value]) => (
           <div className={ROW} key={name}>
             <span>{name}</span>
             <span>{value}</span>

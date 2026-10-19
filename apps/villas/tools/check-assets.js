@@ -88,21 +88,21 @@ cssFiles.forEach((css) => {
   });
 });
 
-const missing = [...referenced].filter(([file]) => !fs.existsSync(path.join(OUT, file.replace(/^\//, ''))));
+const missingAssets = [...referenced].filter(([file]) => !fs.existsSync(path.join(OUT, file.replace(/^\//, ''))));
 
 console.log(`Pages scanned        : ${pages.length} (+ ${cssFiles.length} stylesheets)`);
 console.log(`Assets referenced    : ${referenced.size}`);
-console.log(`Referenced but absent: ${missing.length}`);
+console.log(`Referenced but absent: ${missingAssets.length}`);
 if (!pages.length || !referenced.size) {
   console.error('\nASSET CHECK FAILED - it found nothing to check, so it proved nothing.');
   process.exit(1);
 }
-if (missing.length) {
+if (missingAssets.length) {
   console.error('\nMISSING ASSETS:');
-  missing.slice(0, 30).forEach(([file, page]) => {
+  missingAssets.slice(0, 30).forEach(([file, page]) => {
     console.error(`  ${file}   (first seen on ${page})`);
   });
-  if (missing.length > 30) console.error(`  ... and ${missing.length - 30} more`);
+  if (missingAssets.length > 30) console.error(`  ... and ${missingAssets.length - 30} more`);
   process.exit(1);
 }
 

@@ -57,8 +57,8 @@ function isCrumb(schemaNode) {
 }
 function stripCrumb(block) {
   if (Array.isArray(block.json)) {
-    const kept = block.json.filter((schemaNode) => !isCrumb(schemaNode));
-    return kept.length ? { ...block, json: kept } : null;
+    const keptNodes = block.json.filter((schemaNode) => !isCrumb(schemaNode));
+    return keptNodes.length ? { ...block, json: keptNodes } : null;
   }
   return isCrumb(block.json) ? null : block;
 }
@@ -69,7 +69,7 @@ export default async function JsonLd({ page, crumbs }) {
   const blocks = given ? raw.map(stripCrumb).filter(Boolean) : raw;
   const hasCrumb = blocks.some((block) => (Array.isArray(block.json) ? block.json.some(isCrumb) : isCrumb(block.json)));
   const trail = given || (hasCrumb ? [] : buildCrumbs(page));
-  const extra =
+  const extraBlocks =
     trail.length > 1
       ? [
           {
@@ -87,13 +87,13 @@ export default async function JsonLd({ page, crumbs }) {
           },
         ]
       : [];
-  const all = [...(blocks || []), ...extra];
-  if (!all.length) return null;
+  const allBlocks = [...(blocks || []), ...extraBlocks];
+  if (!allBlocks.length) return null;
   const prices = await fetchLivePrices();
 
   return (
     <>
-      {all.map((block, index) => (
+      {allBlocks.map((block, index) => (
         <script
           key={index}
           type="application/ld+json"

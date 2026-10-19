@@ -217,9 +217,11 @@ export default function BookConfirmModal() {
   }
   function setDT(lineIndex, fieldName, fieldValue) {
     setLineDT((prev) => {
-      const next = prev.length ? [...prev] : lines.map((line) => ({ date: line.date || '', time: line.time || '' }));
-      next[lineIndex] = { ...next[lineIndex], [fieldName]: fieldValue };
-      return next;
+      const nextLineTimes = prev.length
+        ? [...prev]
+        : lines.map((line) => ({ date: line.date || '', time: line.time || '' }));
+      nextLineTimes[lineIndex] = { ...nextLineTimes[lineIndex], [fieldName]: fieldValue };
+      return nextLineTimes;
     });
     setDtErr((prev) => (prev[lineIndex] ? { ...prev, [lineIndex]: undefined } : prev));
   }

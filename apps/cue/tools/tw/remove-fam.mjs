@@ -91,12 +91,12 @@ function processBlock(blockText) {
         .split(',')
         .map((line) => line.replace(/\n/g, ' ').trim())
         .filter(Boolean);
-      const keep = sels.filter((sx) => !checkIsSelectorDead(sx));
-      if (keep.length === 0) {
-      } else if (keep.length === sels.length) out += `${prelude}{${body}}`;
+      const keptSelectors = sels.filter((sx) => !checkIsSelectorDead(sx));
+      if (keptSelectors.length === 0) {
+      } else if (keptSelectors.length === sels.length) out += `${prelude}{${body}}`;
       else {
         const lead = (prelude.match(/^(\s*(?:\/\*[\s\S]*?\*\/\s*)*)/) || [''])[0];
-        out += `${lead}${keep.join(',\n')} {${body}}`;
+        out += `${lead}${keptSelectors.join(',\n')} {${body}}`;
       }
     }
     position = close + 1;

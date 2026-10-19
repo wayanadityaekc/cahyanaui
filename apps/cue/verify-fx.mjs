@@ -105,17 +105,17 @@ for (const width of [390, 1280]) {
     txt.includes('¥') && txt.replace(/[^0-9]/g, '') === String(want),
     `${width}: Ubud Tour reads ¥${want} (got "${txt}")`,
   );
-  const all = await page.$$eval('[data-price]', (elements) =>
+  const priceTexts = await page.$$eval('[data-price]', (elements) =>
     elements.map((event) => event.textContent.trim()).filter(Boolean),
   );
-  const nums = all.map((text) => Number(text.replace(/.*?([\d,]+)$/, '$1').replace(/,/g, '')));
-  const off = nums.filter((num) => num > 0 && !checkIsOnLadder(num));
+  const nums = priceTexts.map((text) => Number(text.replace(/.*?([\d,]+)$/, '$1').replace(/,/g, '')));
+  const offLadderNumbers = nums.filter((num) => num > 0 && !checkIsOnLadder(num));
   checkAssertion(
-    all.length > 5 && off.length === 0,
-    `${width}: all ${all.length} JPY prices are clean ladder numbers (${off.slice(0, 4).join(',')})`,
+    priceTexts.length > 5 && offLadderNumbers.length === 0,
+    `${width}: all ${priceTexts.length} JPY prices are clean ladder numbers (${offLadderNumbers.slice(0, 4).join(',')})`,
   );
   checkAssertion(
-    all.every((text) => text.includes('¥')),
+    priceTexts.every((text) => text.includes('¥')),
     `${width}: every price is in yen`,
   );
   await page.screenshot({ path: `${SHOT}/fx-jpy-${width}.png`, fullPage: false });

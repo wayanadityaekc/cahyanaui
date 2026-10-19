@@ -47,8 +47,10 @@ export default function ListingPage({ data, page }) {
 
   const allCards = [];
   cats.forEach((cat) => {
-    const shown = cat.cards.filter((card) => !isHiddenTour(card.href));
-    shown.forEach((card, index) => allCards.push({ card, catId: cat.id, anchor: index === 0 ? cat.id : null }));
+    const shownCardsItem = cat.cards.filter((card) => !isHiddenTour(card.href));
+    shownCardsItem.forEach((card, index) =>
+      allCards.push({ card, catId: cat.id, anchor: index === 0 ? cat.id : null }),
+    );
   });
   const shownCards = term ? allCards.filter((allCard) => allCard.card.name.toLowerCase().includes(term)) : allCards;
   const tabs = [{ id: 'all', label: listTitle }, ...chips];

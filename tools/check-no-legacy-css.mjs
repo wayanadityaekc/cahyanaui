@@ -63,10 +63,10 @@ for (const keptClass of KEPT) {
   recordCheck(pattern.test(css), `.${keptClass} should still be present and is not`);
 }
 
-const html = files.filter((file) => file.endsWith('.html'));
+const htmlFiles = files.filter((file) => file.endsWith('.html'));
 for (const retiredClass of RETIRED) {
   const hits = [];
-  for (const htmlFile of html) {
+  for (const htmlFile of htmlFiles) {
     const htmlSource = fs.readFileSync(htmlFile, 'utf8');
     for (const classMatch of htmlSource.matchAll(/class="([^"]*)"/g)) {
       if (classMatch[1].split(/\s+/).includes(retiredClass)) {
@@ -78,5 +78,5 @@ for (const retiredClass of RETIRED) {
   recordCheck(hits.length === 0, `class "${retiredClass}" still in markup: ${hits.slice(0, 3).join(', ')}`);
 }
 
-console.log(`\n${pass}/${pass + fail} | ${html.length} pages, ${(css.length / 1024).toFixed(0)}KB css`);
+console.log(`\n${pass}/${pass + fail} | ${htmlFiles.length} pages, ${(css.length / 1024).toFixed(0)}KB css`);
 process.exit(fail ? 1 : 0);

@@ -215,7 +215,7 @@ async function measureHoverShift(base, url, viewportWidth, selector) {
   const { ctx: browserContext, page } = await open(base, url, viewportWidth);
   const elements = page.locator(selector);
   const elementCount = Math.min(await elements.count(), 3);
-  const out = [];
+  const sampledElements = [];
   for (let elementIndex = 0; elementIndex < elementCount; elementIndex++) {
     const element = elements.nth(elementIndex);
     await element.scrollIntoViewIfNeeded();
@@ -225,10 +225,10 @@ async function measureHoverShift(base, url, viewportWidth, selector) {
     await element.hover();
     await page.waitForTimeout(450);
     const r1 = await element.boundingBox();
-    out.push(Math.abs(r1.y - r0.y) + Math.abs(r1.x - r0.x));
+    sampledElements.push(Math.abs(r1.y - r0.y) + Math.abs(r1.x - r0.x));
   }
   await browserContext.close();
-  return out;
+  return sampledElements;
 }
 const CARD_SELS = [
   ['/', '.hcard'],

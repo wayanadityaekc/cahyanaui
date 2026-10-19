@@ -187,35 +187,35 @@ for (const width of [320, 390, 768, 1280]) {
     '/destinations.html',
   ];
   let seen = 0;
-  const odd = [];
+  const oddButtons = [];
   for (const pagePath of pages) {
     const response = await page.goto(baseUrl + pagePath, { waitUntil: 'load' });
     checkAssertion(response.status() === 200, `sweep ${pagePath}: HTTP 200`);
     await page.waitForTimeout(500);
     const rows = await page.evaluate(() => {
-      const out = [];
+      const buttonRows = [];
       document.querySelectorAll('button, a').forEach((button) => {
         const bb = button.getBoundingClientRect();
         if (bb.width < 40 || bb.height < 20) return;
         const computedStyle = getComputedStyle(button);
         if (computedStyle.visibility === 'hidden' || computedStyle.display === 'none') return;
         if (Math.round(parseFloat(computedStyle.height)) !== 34 || computedStyle.fontWeight !== '600') return;
-        out.push({
+        buttonRows.push({
           fam: computedStyle.fontFamily.split(',')[0].replace(/["']/g, ''),
           t: (button.textContent || '').trim().slice(0, 24),
         });
       });
-      return out;
+      return buttonRows;
     });
     seen += rows.length;
     rows.forEach((row) => {
-      if (row.fam !== 'Inter') odd.push(`${pagePath} "${row.t}" -> ${row.fam}`);
+      if (row.fam !== 'Inter') oddButtons.push(`${pagePath} "${row.t}" -> ${row.fam}`);
     });
   }
   checkAssertion(seen > 40, `sweep: ada tombol aksi yang ke-ukur (${seen})`);
   checkAssertion(
-    odd.length === 0,
-    `sweep: nol tombol aksi pakai font browser${odd.length ? ` :: ${odd.join(' | ')}` : ''}`,
+    oddButtons.length === 0,
+    `sweep: nol tombol aksi pakai font browser${oddButtons.length ? ` :: ${oddButtons.join(' | ')}` : ''}`,
   );
   checkAssertion(errs.length === 0, `sweep: nol page error${errs[0] ? ` :: ${errs[0]}` : ''}`);
 

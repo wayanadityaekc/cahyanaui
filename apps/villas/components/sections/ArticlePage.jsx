@@ -37,7 +37,7 @@ function CatList({ activeId, onPick }) {
 }
 
 export default function ArticlePage({ article }) {
-  const more = ARTICLES.filter((other) => other.slug !== article.slug).slice(0, 3);
+  const moreArticles = ARTICLES.filter((other) => other.slug !== article.slug).slice(0, 3);
 
   return (
     <article>
@@ -88,11 +88,11 @@ export default function ArticlePage({ article }) {
         </div>
       </div>
 
-      {more.length > 0 && (
+      {moreArticles.length > 0 && (
         <Section tone="cream">
           <h2 className="text-h2 font-medium text-gold mb-6">Keep reading</h2>
           <div className={GRID_CARDS}>
-            {more.map((related) => (
+            {moreArticles.map((related) => (
               <Card
                 as={Link}
                 hover

@@ -21,12 +21,12 @@ function findFaqAnswer(question) {
 let INDEX = null;
 export function itemIndex() {
   if (INDEX) return INDEX;
-  const out = [];
+  const indexEntries = [];
   Object.keys(LISTINGS).forEach((section) => {
     (LISTINGS[section].cats || []).forEach((cat) => {
       (cat.cards || []).forEach((card) => {
         if (!card.name || !card.href) return;
-        out.push({
+        indexEntries.push({
           name: card.name,
           href: card.href,
           meta: card.meta || '',
@@ -38,8 +38,8 @@ export function itemIndex() {
       });
     });
   });
-  INDEX = out;
-  return out;
+  INDEX = indexEntries;
+  return indexEntries;
 }
 
 const STOP = new Set([

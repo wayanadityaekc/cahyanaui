@@ -88,13 +88,13 @@ export default function MyBookingCart() {
   const nights = stay ? countNightsBetween(stay.checkIn, stay.checkOut) : 0;
   const shown = convert(breakdown);
   const isInRupiah = currency === 'IDR';
-  const chosen = cart.services.map(findServiceById).filter(Boolean);
+  const chosenServices = cart.services.map(findServiceById).filter(Boolean);
   const extras = stay ? cart.extras : [];
   const totals = calculateExtrasTotals(extras, catalog);
   const isBlocked =
     extras.some((extra) => findExtraProblem(extra, stay, catalog?.items[extra.key]?.category || null)) ||
     (extras.length > 0 && !totals);
-  const isEmpty = !stay && chosen.length === 0;
+  const isEmpty = !stay && chosenServices.length === 0;
 
   const message = buildBookingMessage({
     stay,
@@ -106,7 +106,7 @@ export default function MyBookingCart() {
     extras,
     totals,
     catalog,
-    services: chosen,
+    services: chosenServices,
     formatAmount,
   });
 
@@ -237,11 +237,11 @@ export default function MyBookingCart() {
               </div>
             )}
 
-            {chosen.length > 0 && (
+            {chosenServices.length > 0 && (
               <div className="mt-5 pt-4 border-t border-line">
                 <p className={LABEL}>At the villa</p>
                 <ul className="list-none mt-2 flex flex-col gap-1.5">
-                  {chosen.map((service) => (
+                  {chosenServices.map((service) => (
                     <li key={service.id} className={LINE}>
                       <span className="text-muted">{service.label}</span>
                       <span className="text-muted">paid at the villa</span>

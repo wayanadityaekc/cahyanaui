@@ -5,7 +5,7 @@ import { useEffect, useRef } from 'react';
 const FOCUSABLE =
   'a[href], button:not([disabled]), input:not([disabled]):not([type="hidden"]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
 
-const stack = [];
+const dialogStack = [];
 
 function checkIsVisible(node) {
   return node.getClientRects().length > 0 && getComputedStyle(node).visibility !== 'hidden';
@@ -23,7 +23,7 @@ export default function useDialog({ shown, onClose, escape = true }) {
 
     const opener = document.activeElement;
     const token = {};
-    stack.push(token);
+    dialogStack.push(token);
 
     if (!node.hasAttribute('tabindex')) node.setAttribute('tabindex', '-1');
     function focusBox() {
@@ -39,7 +39,7 @@ export default function useDialog({ shown, onClose, escape = true }) {
     }
 
     function handleKeyDown(event) {
-      if (stack[stack.length - 1] !== token) return;
+      if (dialogStack[dialogStack.length - 1] !== token) return;
 
       if (event.key === 'Escape') {
         if (!escape || event.defaultPrevented) return;
@@ -77,8 +77,8 @@ export default function useDialog({ shown, onClose, escape = true }) {
       cancelAnimationFrame(raf);
       clearTimeout(timer);
       document.removeEventListener('keydown', handleKeyDown);
-      const index = stack.indexOf(token);
-      if (index >= 0) stack.splice(index, 1);
+      const index = dialogStack.indexOf(token);
+      if (index >= 0) dialogStack.splice(index, 1);
       if (opener && opener !== document.body && document.contains(opener) && opener.focus) {
         opener.focus({ preventScroll: true });
       }

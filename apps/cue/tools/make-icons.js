@@ -92,8 +92,8 @@ async function measureInkBox() {
   head.writeUInt16LE(1, 2);
   head.writeUInt16LE(frames.length, 4);
   let offset = 6 + frames.length * 16;
-  const dir = [],
-    body = [];
+  const directoryEntries = [],
+    imageBodies = [];
   frames.forEach(({ size, buf }) => {
     const entryBuffer = Buffer.alloc(16);
     entryBuffer[0] = size;
@@ -102,11 +102,11 @@ async function measureInkBox() {
     entryBuffer.writeUInt16LE(32, 6);
     entryBuffer.writeUInt32LE(buf.length, 8);
     entryBuffer.writeUInt32LE(offset, 12);
-    dir.push(entryBuffer);
-    body.push(buf);
+    directoryEntries.push(entryBuffer);
+    imageBodies.push(buf);
     offset += buf.length;
   });
-  fs.writeFileSync(`${OUT}favicon.ico`, Buffer.concat([head, ...dir, ...body]));
+  fs.writeFileSync(`${OUT}favicon.ico`, Buffer.concat([head, ...directoryEntries, ...imageBodies]));
 
   const png = await extractDisc().resize(128, 128).png(PNG).toBuffer();
   fs.writeFileSync(

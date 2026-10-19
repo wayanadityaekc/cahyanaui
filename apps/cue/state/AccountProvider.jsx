@@ -73,10 +73,10 @@ export function AccountProvider({ children }) {
 
   const reviewableItems = useMemo(() => {
     if (!trips || !trips.history) return [];
-    const out = [];
+    const reviewRows = [];
     trips.history.forEach((trip) => {
       (trip.review_items || []).forEach((reviewItem) =>
-        out.push({
+        reviewRows.push({
           ref: trip.ref,
           service: reviewItem,
           tripName: trip.name,
@@ -84,7 +84,7 @@ export function AccountProvider({ children }) {
         }),
       );
     });
-    return out;
+    return reviewRows;
   }, [trips]);
 
   const refreshMyReviews = useCallback(async () => {

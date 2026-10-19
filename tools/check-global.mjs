@@ -23,9 +23,9 @@ async function compareFile(file) {
 async function checkAllFiles() {
   try {
     const results = await Promise.all(SHARED_FILES.map(compareFile));
-    const differing = results.filter((result) => !result.isSame);
+    const differingResults = results.filter((result) => !result.isSame);
     results.forEach((result) => console.log(`${result.isSame ? 'same' : 'DIFFERS'}  ${result.file}`));
-    if (differing.length) {
+    if (differingResults.length) {
       console.log('Copy the master from cahyanaui with: node tools/sync-global.mjs (run in cahyanaui)');
       process.exit(1);
     }

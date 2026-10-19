@@ -47,9 +47,9 @@ export default function ReviewsStrip({
   }, [service, group]);
 
   const all = service ? rows || [] : groupReviews(rows || []);
-  const list = limit ? all.slice(0, limit) : all;
+  const visibleReviews = limit ? all.slice(0, limit) : all;
 
-  if (list.length === 0) {
+  if (visibleReviews.length === 0) {
     if (!showEmpty) return null;
     return (
       <div className={GRID}>
@@ -61,7 +61,9 @@ export default function ReviewsStrip({
     );
   }
 
-  const cards = list.map((review, index) => <ReviewCard key={index} {...review} onClick={() => setSelected(review)} />);
+  const cards = visibleReviews.map((review, index) => (
+    <ReviewCard key={index} {...review} onClick={() => setSelected(review)} />
+  ));
 
   return (
     <>

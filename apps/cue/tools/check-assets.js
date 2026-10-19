@@ -10,16 +10,16 @@ if (!fs.existsSync(OUT)) {
 }
 
 function walk(dir, test) {
-  const found = [];
+  const foundAssets = [];
   (function walkDirectory(directory) {
     fs.readdirSync(directory, { withFileTypes: true }).forEach((event) => {
       if (event.name === '_next') return;
       const entryPath = path.join(directory, event.name);
       if (event.isDirectory()) walkDirectory(entryPath);
-      else if (test(event.name)) found.push(entryPath);
+      else if (test(event.name)) foundAssets.push(entryPath);
     });
   })(dir);
-  return found;
+  return foundAssets;
 }
 
 const pages = walk(OUT, (fileName) => fileName.endsWith('.html'));
@@ -34,18 +34,18 @@ pages.forEach((page) => {
   });
 });
 
-const missing = [];
+const missingAssets = [];
 referenced.forEach((reference) => {
-  if (!fs.existsSync(path.join(OUT, reference.replace(/^\//, '')))) missing.push(reference);
+  if (!fs.existsSync(path.join(OUT, reference.replace(/^\//, '')))) missingAssets.push(reference);
 });
 
 console.log(`Pages scanned        : ${pages.length}`);
 console.log(`Assets referenced    : ${referenced.size}`);
-console.log(`Referenced but absent: ${missing.length}`);
-if (missing.length) {
+console.log(`Referenced but absent: ${missingAssets.length}`);
+if (missingAssets.length) {
   console.error('\nMISSING ASSETS:');
-  missing.slice(0, 30).forEach((missingAsset) => console.error(`  ${missingAsset}`));
-  if (missing.length > 30) console.error(`  ... and ${missing.length - 30} more`);
+  missingAssets.slice(0, 30).forEach((missingAsset) => console.error(`  ${missingAsset}`));
+  if (missingAssets.length > 30) console.error(`  ... and ${missingAssets.length - 30} more`);
   process.exit(1);
 }
 const pagesWithoutIcon = pages.filter((page) => !/rel="icon"/.test(fs.readFileSync(page, 'utf8')));

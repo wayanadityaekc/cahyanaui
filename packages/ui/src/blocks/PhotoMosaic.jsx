@@ -51,12 +51,12 @@ export default function PhotoMosaic({ images = [], onOpen, moreLabel = null, ble
     );
   }
 
-  const children = [];
+  const tileGroups = [];
   for (let startIndex = 0; startIndex < images.length; startIndex += 3) {
-    children.push(renderTile(startIndex, BIG));
+    tileGroups.push(renderTile(startIndex, BIG));
     const pair = [startIndex + 1, startIndex + 2].filter((imageIndex) => imageIndex < images.length);
     if (pair.length) {
-      children.push(
+      tileGroups.push(
         <div className={PAIR} key={`pair-${startIndex}`}>
           {pair.map((imageIndex) => renderTile(imageIndex, TILE))}
         </div>,
@@ -73,7 +73,7 @@ export default function PhotoMosaic({ images = [], onOpen, moreLabel = null, ble
           {images.map((image, index) => renderTile(index, TILE))}
         </div>
       ) : (
-        <div className={cn(TRACK, bleed && BLEED_MOBILE)}>{children}</div>
+        <div className={cn(TRACK, bleed && BLEED_MOBILE)}>{tileGroups}</div>
       )}
 
       {moreLabel && onOpen ? (

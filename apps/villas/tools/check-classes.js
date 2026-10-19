@@ -42,22 +42,22 @@ function splitSegments(token) {
 }
 
 function extractStringLiterals(src) {
-  const found = [];
-  const stack = [{ kind: 'code', depth: 0 }];
+  const foundClasses = [];
+  const scopeStack = [{ kind: 'code', depth: 0 }];
   let chunk = null;
   let charIndex = 0;
   function open(kind) {
-    stack.push({ kind });
+    scopeStack.push({ kind });
     chunk = { text: '', start: charIndex + 1 };
   }
   function close() {
-    if (chunk) found.push(chunk);
+    if (chunk) foundClasses.push(chunk);
     chunk = null;
-    stack.pop();
+    scopeStack.pop();
   }
   while (charIndex < src.length) {
     const ch = src[charIndex];
-    const top = stack[stack.length - 1];
+    const top = scopeStack[scopeStack.length - 1];
     if (top.kind === 'code') {
       if (ch === '/' && src[charIndex + 1] === '/') {
         charIndex = src.indexOf('\n', charIndex);
@@ -72,7 +72,7 @@ function extractStringLiterals(src) {
       if (ch === '"' || ch === "'" || ch === '`') open(ch);
       else if (ch === '{') top.depth++;
       else if (ch === '}' && top.inTemplate && top.depth === 0) {
-        stack.pop();
+        scopeStack.pop();
         chunk = { text: '', start: charIndex + 1 };
       } else if (ch === '}') top.depth--;
     } else if (ch === '\\') {
@@ -83,11 +83,11 @@ function extractStringLiterals(src) {
       close();
     } else if (ch === '\n' && top.kind !== '`') {
       chunk = null;
-      stack.pop();
+      scopeStack.pop();
     } else if (top.kind === '`' && ch === '$' && src[charIndex + 1] === '{') {
-      if (chunk) found.push(chunk);
+      if (chunk) foundClasses.push(chunk);
       chunk = null;
-      stack.push({ kind: 'code', depth: 0, inTemplate: true });
+      scopeStack.push({ kind: 'code', depth: 0, inTemplate: true });
       charIndex += 2;
       continue;
     } else if (chunk) {
@@ -95,7 +95,7 @@ function extractStringLiterals(src) {
     }
     charIndex++;
   }
-  return found;
+  return foundClasses;
 }
 
 function findLineNumber(src, index) {
@@ -108,7 +108,7 @@ if (!files.length) {
   process.exit(1);
 }
 
-const bad = [];
+const badClasses = [];
 let tokensChecked = 0;
 files.forEach((file) => {
   const rel = path.relative(ROOT, file);
@@ -123,12 +123,13 @@ files.forEach((file) => {
       const last = parts.pop();
       if (!parts.length || !parts.every((part) => VARIANT.test(part))) return;
       tokensChecked++;
-      if (last === '') bad.push([rel, findLineNumber(src, at), token, 'variant prefix with no utility after it']);
+      if (last === '')
+        badClasses.push([rel, findLineNumber(src, at), token, 'variant prefix with no utility after it']);
       else if (new Set(parts).size !== parts.length)
-        bad.push([rel, findLineNumber(src, at), token, 'the same variant prefix twice']);
+        badClasses.push([rel, findLineNumber(src, at), token, 'the same variant prefix twice']);
     });
     const empty = text.indexOf('var(--)');
-    if (empty !== -1) bad.push([rel, findLineNumber(src, start + empty), 'var(--)', 'empty custom property']);
+    if (empty !== -1) badClasses.push([rel, findLineNumber(src, start + empty), 'var(--)', 'empty custom property']);
   });
 });
 
@@ -137,12 +138,12 @@ if (!tokensChecked) {
   process.exit(1);
 }
 
-if (!bad.length) {
+if (!badClasses.length) {
   console.log(`check-classes: OK (${files.length} files, ${tokensChecked} variant utilities, no malformed utilities)`);
   process.exit(0);
 }
-console.error(`check-classes: ${bad.length} malformed utilit${bad.length > 1 ? 'ies' : 'y'}\n`);
-bad.forEach(([file, line, token, why]) => {
+console.error(`check-classes: ${badClasses.length} malformed utilit${badClasses.length > 1 ? 'ies' : 'y'}\n`);
+badClasses.forEach(([file, line, token, why]) => {
   console.error(`  ${file}:${line}\n    ${token}\n    ${why} - it generates no CSS at all\n`);
 });
 process.exit(1);

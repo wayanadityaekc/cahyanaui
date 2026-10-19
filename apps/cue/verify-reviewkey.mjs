@@ -20,7 +20,7 @@ const browser = await chromium.launch({ executablePath: '/opt/pw-browsers/chromi
 
 async function open(path, viewportWidth) {
   const browserContext = await browser.newContext({ viewport: { width: viewportWidth, height: 900 } });
-  const asked = [];
+  const askedRequests = [];
   await browserContext.route('**/api/**', (route) => {
     const requestUrl = new URL(route.request().url());
     if (requestUrl.pathname.endsWith('/reviews/summary'))
@@ -28,7 +28,7 @@ async function open(path, viewportWidth) {
     if (requestUrl.pathname.endsWith('/reviews')) {
       const svc = requestUrl.searchParams.get('service'),
         grp = requestUrl.searchParams.get('group');
-      asked.push(svc ?? (grp ? `group:${grp}` : '(all)'));
+      askedRequests.push(svc ?? (grp ? `group:${grp}` : '(all)'));
       return route.fulfill({ json: !svc && !grp ? [REVIEW] : svc === 'Ubud Tour' ? [REVIEW] : [] });
     }
     return route.fulfill({ status: 503, body: '{}' });
@@ -39,7 +39,7 @@ async function open(path, viewportWidth) {
   page.on('pageerror', (error) => errors.push(String(error)));
   const result = await page.goto(SITE + path, { waitUntil: 'networkidle' });
   await page.waitForTimeout(600);
-  return { ctx: browserContext, page, asked, errors, status: result.status() };
+  return { ctx: browserContext, page, asked: askedRequests, errors, status: result.status() };
 }
 
 function writeButtons(page) {

@@ -15,9 +15,9 @@ export default function PickupAreaSelect({ id, className = '' }) {
   const catalog = pricing && pricing.catalog;
 
   const options = useMemo(() => {
-    const base = [{ value: 'ubud', label: 'Ubud & nearby' }];
-    if (!catalog) return base;
-    return base.concat(
+    const baseOptions = [{ value: 'ubud', label: 'Ubud & nearby' }];
+    if (!catalog) return baseOptions;
+    return baseOptions.concat(
       catalog.transfers.map((transfer) => ({ value: transfer.route, label: extractAreaName(transfer.route) })),
     );
   }, [catalog]);

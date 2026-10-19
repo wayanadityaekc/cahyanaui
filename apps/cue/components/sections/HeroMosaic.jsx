@@ -65,14 +65,14 @@ export default function HeroMosaic({ photos = [], title }) {
     );
   }
 
-  const children = [];
+  const tiles = [];
   [...Array(Math.ceil(photos.length / 3)).keys()]
     .map((groupIndex) => groupIndex * 3)
     .forEach((startIndex) => {
-      children.push(renderTile(startIndex, BIG));
+      tiles.push(renderTile(startIndex, BIG));
       const pair = [startIndex + 1, startIndex + 2].filter((photoIndex) => photoIndex < photos.length);
       if (pair.length) {
-        children.push(
+        tiles.push(
           <div className={PAIR} key={`pair-${startIndex}`}>
             {pair.map((photoIndex) => renderTile(photoIndex, TILE_BASE))}
           </div>,
@@ -86,7 +86,7 @@ export default function HeroMosaic({ photos = [], title }) {
     ) : photos.length === 2 ? (
       <div className={STATIC_2}>{photos.map((photo, index) => renderTile(index, TILE_BASE))}</div>
     ) : (
-      <Slider gridClassName={TRACK}>{children}</Slider>
+      <Slider gridClassName={TRACK}>{tiles}</Slider>
     );
 
   return (

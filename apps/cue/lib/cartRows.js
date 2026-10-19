@@ -1,11 +1,11 @@
 import { CHARTER_SERVICE } from '@/lib/constants';
 
 export function buildCartRows(state, displayGuests) {
-  const out = [];
+  const cartRowItems = [];
   (state.days || []).forEach((day, index) => {
     if (!day.items || !day.items.length) return;
     day.items.forEach((name, itemIndex) => {
-      out.push({
+      cartRowItems.push({
         kind: 'day',
         type: 'tour',
         service: name,
@@ -19,7 +19,7 @@ export function buildCartRows(state, displayGuests) {
     });
   });
   (state.transfers || []).forEach((transfer, transferIndex) =>
-    out.push({
+    cartRowItems.push({
       kind: 'transfer',
       type: 'transfer',
       service: transfer.route,
@@ -36,7 +36,7 @@ export function buildCartRows(state, displayGuests) {
     }),
   );
   (state.charters || []).forEach((charter, charterIndex) =>
-    out.push({
+    cartRowItems.push({
       kind: 'charter',
       type: 'charter',
       service: CHARTER_SERVICE,
@@ -49,5 +49,5 @@ export function buildCartRows(state, displayGuests) {
       ...(charter.time ? { time: charter.time } : null),
     }),
   );
-  return out;
+  return cartRowItems;
 }

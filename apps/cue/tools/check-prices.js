@@ -44,14 +44,14 @@ function readSchemaProducts() {
   const HEAD = 'export const PAGE_SCHEMA = ';
   const src = fs.readFileSync(path.join(ROOT, 'content/shared/schema.js'), 'utf8');
   const parsed = JSON.parse(src.slice(HEAD.length).replace(/;\s*$/, ''));
-  const out = [];
+  const priceEntries = [];
   Object.entries(parsed).forEach(([page, blocks]) => {
     blocks.forEach((block) => {
       if (block && block.json && block.json['@type'] === 'Product' && block.json.offers)
-        out.push({ page, block: block });
+        priceEntries.push({ page, block: block });
     });
   });
-  return out;
+  return priceEntries;
 }
 
 async function checkCopies(api) {
@@ -78,20 +78,20 @@ async function checkCopies(api) {
   else if (!api[match[1]]) problems.push(`Airport.jsx: "${match[1]}" is not sold by the API`);
   else compareValues(`Airport.jsx band "${match[1]}"`, parseNumber(match[2]), api[match[1]].usd);
 
-  const transferUsd = Object.entries(api)
+  const transferPrices = Object.entries(api)
     .filter(([name]) => / – Ubud$/.test(name))
     .map(([, route]) => route.usd)
     .filter((price) => price > 0);
   readSchemaProducts().forEach(({ page, block }) => {
     const offers = block.json.offers;
     if (block.priceGroup === 'transfers') {
-      if (!transferUsd.length) {
+      if (!transferPrices.length) {
         problems.push('schema.js: no transfer routes found in the API');
         return;
       }
-      compareValues(`schema.js ${page} lowPrice`, parseNumber(offers.lowPrice), Math.min(...transferUsd));
-      compareValues(`schema.js ${page} highPrice`, parseNumber(offers.highPrice), Math.max(...transferUsd));
-      compareValues(`schema.js ${page} offerCount`, Number(offers.offerCount), transferUsd.length);
+      compareValues(`schema.js ${page} lowPrice`, parseNumber(offers.lowPrice), Math.min(...transferPrices));
+      compareValues(`schema.js ${page} highPrice`, parseNumber(offers.highPrice), Math.max(...transferPrices));
+      compareValues(`schema.js ${page} offerCount`, Number(offers.offerCount), transferPrices.length);
       return;
     }
     const key = block.priceKey || block.json.name;
@@ -130,42 +130,45 @@ async function main() {
 
   const { LISTINGS } = await import('../content/shared/listings.js');
 
-  const drift = [];
-  const unknown = [];
-  const missing = [];
+  const driftRows = [];
+  const unknownRows = [];
+  const missingRows = [];
   let ok = 0;
 
   Object.entries(LISTINGS).forEach(([listing, data]) => {
     collectCards(data).forEach((card) => {
       const live = api[card.priceName];
       if (!live) {
-        unknown.push(`${listing}: "${card.priceName}" (${card.href}) is not sold by the API`);
+        unknownRows.push(`${listing}: "${card.priceName}" (${card.href}) is not sold by the API`);
         return;
       }
       if (!card.priceFallback) {
-        missing.push(`${listing}: "${card.priceName}" has no priceFallback, so it shows blank until the catalog loads`);
+        missingRows.push(
+          `${listing}: "${card.priceName}" has no priceFallback, so it shows blank until the catalog loads`,
+        );
         return;
       }
       const shown = Number(String(card.priceFallback).replace(/[^0-9]/g, ''));
-      if (shown !== live.usd) drift.push(`${listing}: "${card.priceName}" card says $${shown}, API says $${live.usd}`);
+      if (shown !== live.usd)
+        driftRows.push(`${listing}: "${card.priceName}" card says $${shown}, API says $${live.usd}`);
       else ok++;
     });
   });
 
   const copies = await checkCopies(api);
 
-  console.log(`Cards checked        : ${ok + drift.length + unknown.length + missing.length}`);
+  console.log(`Cards checked        : ${ok + driftRows.length + unknownRows.length + missingRows.length}`);
   console.log(`Matching the API     : ${ok}`);
-  console.log(`Drifted              : ${drift.length}`);
-  console.log(`No price in the API  : ${unknown.length}`);
-  console.log(`No fallback on card  : ${missing.length}`);
+  console.log(`Drifted              : ${driftRows.length}`);
+  console.log(`No price in the API  : ${unknownRows.length}`);
+  console.log(`No fallback on card  : ${missingRows.length}`);
   console.log(`Other copies checked : ${copies.ok + copies.problems.length}`);
   console.log(`Other copies drifted : ${copies.problems.length}`);
-  [...drift, ...unknown, ...missing, ...copies.problems].forEach((line) => {
+  [...driftRows, ...unknownRows, ...missingRows, ...copies.problems].forEach((line) => {
     console.log(`   - ${line}`);
   });
 
-  if (drift.length || unknown.length || missing.length || copies.problems.length) {
+  if (driftRows.length || unknownRows.length || missingRows.length || copies.problems.length) {
     console.log("\nFix: copy the API's usd value into whichever copy drifted - the card's");
     console.log("priceFallback, the band's fallback prop, or the JSON-LD offer in schema.js.");
     return 1;

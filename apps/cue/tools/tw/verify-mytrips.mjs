@@ -177,7 +177,7 @@ function check(label, cond) {
 
 {
   const pg = await browser.newPage({ viewport: { width: 1280, height: 1200 } });
-  const posted = [];
+  const postedBookings = [];
   await pg.route('**/bookings/mine', (route) =>
     route.fulfill({
       status: 200,
@@ -227,7 +227,7 @@ function check(label, cond) {
   );
   await pg.route('**/reviews', (route) => {
     if (route.request().method() === 'POST') {
-      posted.push(JSON.parse(route.request().postData()));
+      postedBookings.push(JSON.parse(route.request().postData()));
       return route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ ok: true }) });
     }
     return route.continue();
@@ -275,15 +275,15 @@ function check(label, cond) {
   await pg.fill('#rvm-message', 'Loved every stop, driver was great.');
   await pg.click('button:has-text("Submit review")');
   await pg.waitForTimeout(600);
-  check(`Submitting fanned out to 2 POSTs, got ${posted.length}`, posted.length === 2);
-  const refs = posted.map((postedReview) => postedReview.booking_ref).sort();
+  check(`Submitting fanned out to 2 POSTs, got ${postedBookings.length}`, postedBookings.length === 2);
+  const refs = postedBookings.map((postedReview) => postedReview.booking_ref).sort();
   check(
     `Both booking refs used, got ${JSON.stringify(refs)}`,
     JSON.stringify(refs) === JSON.stringify(['CUE-040', 'CUE-050']),
   );
   check(
     'Same rating/message reused on both',
-    posted.every(
+    postedBookings.every(
       (postedReview) =>
         postedReview.rating === 5 &&
         postedReview.message === 'Loved every stop, driver was great.' &&

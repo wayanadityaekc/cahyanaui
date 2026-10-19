@@ -47,7 +47,7 @@ for (const width of [390, 1280]) {
   page.on('pageerror', (error) => errs.push(String(error).slice(0, 110)));
   let seen = 0,
     token = '';
-  const bad = [];
+  const badRows = [];
   const cards = {};
   for (const pagePath of PAGES) {
     const response = await page.goto(baseUrl + pagePath, { waitUntil: 'load' });
@@ -61,7 +61,7 @@ for (const width of [390, 1280]) {
         .split(/\s+/)
         .filter(Boolean)
         .map(parseFloat);
-      const out = [];
+      const shadowRows = [];
       let shadowCount = 0,
         card = 0;
       document.querySelectorAll('*').forEach((element) => {
@@ -100,23 +100,23 @@ for (const width of [390, 1280]) {
           if (Math.abs(ox) > 0 || Math.abs(oy) > 0 || blur > 2) elevation = true;
         });
         if (elevation) {
-          out.push(
+          shadowRows.push(
             `<${element.tagName.toLowerCase()} class="${(element.className || '').toString().slice(0, 55)}"> ${sh.slice(0, 60)}`,
           );
         }
       });
-      return { n: shadowCount, out, card, tok };
+      return { n: shadowCount, out: shadowRows, card, tok };
     });
     seen += result.n;
     cards[pagePath] = result.card;
     token = result.tok;
     result.out.forEach((offender) => {
-      if (bad.length < 8) bad.push(`${pagePath} ${offender}`);
+      if (badRows.length < 8) badRows.push(`${pagePath} ${offender}`);
     });
   }
   checkAssertion(
-    bad.length === 0,
-    `${width}: nol shadow elevasi se-web${bad.length ? `\n        :: ${bad.join('\n        :: ')}` : ''}`,
+    badRows.length === 0,
+    `${width}: nol shadow elevasi se-web${badRows.length ? `\n        :: ${badRows.join('\n        :: ')}` : ''}`,
   );
   checkAssertion(seen > 0, `${width}: ring/hairline yang disengaja masih ke-render (${seen} elemen)`);
   checkAssertion(/\d/.test(token), `${width}: --shadow-card kedefinisi (${token || 'KOSONG'})`);
@@ -318,7 +318,7 @@ for (const width of [390, 1280]) {
       if (!bars.length) return null;
       return { left: Math.min(...bars.map((bar) => bar.left)), right: Math.max(...bars.map((bar) => bar.right)) };
     }
-    const out = [];
+    const childBoxes = [];
     [...row.children].forEach((element) => {
       if (element.getBoundingClientRect().width === 0) return;
       if (element.querySelector('img')) return;
@@ -330,17 +330,17 @@ for (const width of [390, 1280]) {
           ? element.querySelector('button').getBoundingClientRect()
           : measureInk(element);
       if (contentBox)
-        out.push({
+        childBoxes.push({
           tag: element.id || element.getAttribute('aria-label') || element.tagName,
           l: contentBox.left,
           r: contentBox.right,
         });
     });
-    out.sort((a, b) => a.l - b.l);
-    return out.slice(1).map((current, index) => ({
-      from: out[index].tag,
+    childBoxes.sort((a, b) => a.l - b.l);
+    return childBoxes.slice(1).map((current, index) => ({
+      from: childBoxes[index].tag,
       to: current.tag,
-      gap: +(current.l - out[index].r).toFixed(1),
+      gap: +(current.l - childBoxes[index].r).toFixed(1),
     }));
   });
   console.log(`     celah tinta ikon: ${gaps.map((gap) => `${gap.from}->${gap.to} ${gap.gap}`).join(' · ')}`);

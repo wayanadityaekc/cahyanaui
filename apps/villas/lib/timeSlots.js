@@ -1,11 +1,11 @@
 export const TIME_SLOTS = (() => {
-  const out = [];
+  const timeSlots = [];
   [...Array(48).keys()]
     .map((slotIndex) => slotIndex * 30)
     .forEach((minutes) => {
-      out.push(`${String(Math.floor(minutes / 60)).padStart(2, '0')}:${String(minutes % 60).padStart(2, '0')}`);
+      timeSlots.push(`${String(Math.floor(minutes / 60)).padStart(2, '0')}:${String(minutes % 60).padStart(2, '0')}`);
     });
-  return out;
+  return timeSlots;
 })();
 
 function filterSlotRange(from, to) {

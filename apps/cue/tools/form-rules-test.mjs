@@ -4,15 +4,16 @@ import { validateWith } from '../lib/validate.js';
 const STRINGS = ['', '   ', 'x', 'Wayan Aditya'];
 const EMAILS = ['', '  ', 'nope', 'a@b', 'a@b.c', ' a@b.co '];
 let checked = 0;
-const bad = [];
+const badRows = [];
 
 function compareMessages(label, oldMsg, { ok, errors }, field) {
   checked++;
   const newMsg = ok ? '' : errors[field] || '';
   const isOldValid = !oldMsg;
-  if (isOldValid !== (newMsg === '')) bad.push(`${label}: old=${JSON.stringify(oldMsg)} new=${JSON.stringify(newMsg)}`);
+  if (isOldValid !== (newMsg === ''))
+    badRows.push(`${label}: old=${JSON.stringify(oldMsg)} new=${JSON.stringify(newMsg)}`);
   else if (oldMsg && oldMsg !== newMsg)
-    bad.push(`${label}: message differs old=${JSON.stringify(oldMsg)} new=${JSON.stringify(newMsg)}`);
+    badRows.push(`${label}: message differs old=${JSON.stringify(oldMsg)} new=${JSON.stringify(newMsg)}`);
 }
 
 const EMAIL_RE = /^\S+@\S+\.\S+$/;
@@ -157,9 +158,9 @@ FLAGS.forEach((flags) => {
 });
 
 console.log(`compared ${checked} field outcomes`);
-if (bad.length) {
-  console.log(`MISMATCHES: ${bad.length}`);
-  console.log([...new Set(bad)].slice(0, 20).join('\n'));
+if (badRows.length) {
+  console.log(`MISMATCHES: ${badRows.length}`);
+  console.log([...new Set(badRows)].slice(0, 20).join('\n'));
   process.exit(1);
 }
 console.log('all identical to the old rules');

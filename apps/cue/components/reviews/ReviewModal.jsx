@@ -127,12 +127,12 @@ export default function ReviewModal({ open = false, prefill = null, onClose = ()
     }
     setIsBusy(false);
     if (results.some((result) => result.ok)) sent.current = true;
-    const failed = results.filter((result) => !result.ok);
-    if (failed.length === results.length) {
-      setError(failed[0].reason);
+    const failedResults = results.filter((result) => !result.ok);
+    if (failedResults.length === results.length) {
+      setError(failedResults[0].reason);
       return;
     }
-    setPartial(failed.map((failure) => ({ service: failure.it.service, reason: failure.reason })));
+    setPartial(failedResults.map((failure) => ({ service: failure.it.service, reason: failure.reason })));
     setIsDone(true);
   }
 

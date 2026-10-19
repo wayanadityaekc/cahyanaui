@@ -18,15 +18,15 @@ import { withSymbol } from '@/components/Price';
 const GUESTS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
 const TIMES = (() => {
-  const out = [];
+  const timeOptions = [];
   [...Array(23).keys()]
     .map((slotIndex) => 6 * 60 + slotIndex * 30)
     .forEach((minutesSinceMidnight) => {
-      out.push(
+      timeOptions.push(
         `${String(Math.floor(minutesSinceMidnight / 60)).padStart(2, '0')}:${String(minutesSinceMidnight % 60).padStart(2, '0')}`,
       );
     });
-  return out;
+  return timeOptions;
 })();
 
 export default function CharterBuilder() {

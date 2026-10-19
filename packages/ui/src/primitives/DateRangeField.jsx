@@ -136,17 +136,17 @@ export default function DateRangeField({
     const first = new Date(base.getFullYear(), base.getMonth(), 1);
     const days = new Date(base.getFullYear(), base.getMonth() + 1, 0).getDate();
     const lead = first.getDay();
-    const out = [];
+    const leadingBlanks = [];
     for (let leadIndex = lead; leadIndex > 0; leadIndex--)
-      out.push({ date: new Date(base.getFullYear(), base.getMonth(), 1 - leadIndex), faded: true });
+      leadingBlanks.push({ date: new Date(base.getFullYear(), base.getMonth(), 1 - leadIndex), faded: true });
     for (let dayOfMonth = 1; dayOfMonth <= days; dayOfMonth++)
-      out.push({ date: new Date(base.getFullYear(), base.getMonth(), dayOfMonth), faded: false });
-    while (out.length % 7)
-      out.push({
-        date: new Date(base.getFullYear(), base.getMonth(), days + (out.length - lead - days + 1)),
+      leadingBlanks.push({ date: new Date(base.getFullYear(), base.getMonth(), dayOfMonth), faded: false });
+    while (leadingBlanks.length % 7)
+      leadingBlanks.push({
+        date: new Date(base.getFullYear(), base.getMonth(), days + (leadingBlanks.length - lead - days + 1)),
         faded: true,
       });
-    return out;
+    return leadingBlanks;
   }
   const months = [cursor, new Date(cursor.getFullYear(), cursor.getMonth() + 1, 1)];
 

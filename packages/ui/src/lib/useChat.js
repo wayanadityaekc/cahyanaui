@@ -89,18 +89,18 @@ export default function useChat({
   }, [client]);
 
   const takeOwner = useCallback((list) => {
-    const fresh = [];
+    const freshMessages = [];
     list.forEach((message) => {
       if (message.id > lastSeen.current) lastSeen.current = message.id;
       if (message.sender !== 'owner' || seenIds.current.has(message.id)) return;
       seenIds.current.add(message.id);
-      fresh.push(message);
+      freshMessages.push(message);
     });
-    if (!fresh.length) return;
+    if (!freshMessages.length) return;
     heard.current = true;
     setLog((prev) => [
       ...prev,
-      ...fresh.map((message) => ({ id: createMessageId(), from: 'owner', text: message.body })),
+      ...freshMessages.map((message) => ({ id: createMessageId(), from: 'owner', text: message.body })),
     ]);
   }, []);
 

@@ -25,13 +25,13 @@ export function hasClash({ days }, isFullDay) {
 
 export function findClashDates({ days }, isFullDay) {
   const seen = {};
-  const out = [];
+  const mergedRows = [];
   (days || []).forEach((day) => {
     if (!day.date || !(day.items || []).some(isFullDay)) return;
-    if (seen[day.date]) out.push(day.date);
+    if (seen[day.date]) mergedRows.push(day.date);
     seen[day.date] = true;
   });
-  return out;
+  return mergedRows;
 }
 
 export function setItemMode(state, dayIndex, itemIndex, mode) {

@@ -17,14 +17,14 @@ export default function OtpFields({ length = 6, value, onChange, onComplete, err
   }
 
   function spreadDigits(digitIndex, raw) {
-    const next = digits.slice();
+    const nextDigits = digits.slice();
     let pos = digitIndex;
     for (const char of raw) {
       if (pos >= length) break;
-      next[pos] = char;
+      nextDigits[pos] = char;
       pos += 1;
     }
-    commit(next);
+    commit(nextDigits);
     refs.current[Math.min(pos, length - 1)]?.focus();
   }
 
@@ -32,18 +32,18 @@ export default function OtpFields({ length = 6, value, onChange, onComplete, err
     return (event) => {
       const raw = event.target.value.replace(/\D/g, '');
       if (!raw) {
-        const next = digits.slice();
-        next[digitIndex] = '';
-        commit(next);
+        const nextDigits = digits.slice();
+        nextDigits[digitIndex] = '';
+        commit(nextDigits);
         return;
       }
       if (raw.length > 1) {
         spreadDigits(digitIndex, raw);
         return;
       }
-      const next = digits.slice();
-      next[digitIndex] = raw;
-      commit(next);
+      const nextDigitsItem = digits.slice();
+      nextDigitsItem[digitIndex] = raw;
+      commit(nextDigitsItem);
       if (digitIndex < length - 1) refs.current[digitIndex + 1]?.focus();
     };
   }
@@ -51,9 +51,9 @@ export default function OtpFields({ length = 6, value, onChange, onComplete, err
   function handleKeyDown(digitIndex) {
     return (event) => {
       if (event.key === 'Backspace' && !digits[digitIndex] && digitIndex > 0) {
-        const next = digits.slice();
-        next[digitIndex - 1] = '';
-        commit(next);
+        const nextDigits = digits.slice();
+        nextDigits[digitIndex - 1] = '';
+        commit(nextDigits);
         refs.current[digitIndex - 1]?.focus();
       } else if (event.key === 'ArrowLeft' && digitIndex > 0) {
         event.preventDefault();

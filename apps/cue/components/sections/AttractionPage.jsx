@@ -24,12 +24,12 @@ export default function AttractionPage({ data }) {
   const slug = (data.__page || '').replace('attractions/', '');
   const onTours = findToursContaining(slug);
   const gallery = buildGallery(data);
-  const crumb = (data.crumb || []).map((crumbPart, index, crumbParts) =>
+  const crumbPartsItem = (data.crumb || []).map((crumbPart, index, crumbParts) =>
     index === crumbParts.length - 1 && crumbPart.type === 'text' ? { ...crumbPart, text: data.title } : crumbPart,
   );
   return (
     <>
-      <JsonLd page={data.__page} crumbs={buildItemsFromLegacy(crumb)} />
+      <JsonLd page={data.__page} crumbs={buildItemsFromLegacy(crumbPartsItem)} />
       <DetailHero
         heroBg={data.heroBg}
         heroSlides={data.heroSlides}
@@ -39,7 +39,7 @@ export default function AttractionPage({ data }) {
         hooks={data.hooks}
         cta={data.cta}
         ctaHref={data.ctaHref}
-        crumb={gallery.length ? crumb : undefined}
+        crumb={gallery.length ? crumbPartsItem : undefined}
         ratingName={data.bookItem}
         belowChips={
           gallery.length && data.bookItem ? (

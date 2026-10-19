@@ -68,16 +68,16 @@ function listTransitionProperties(base) {
 }
 
 function walk(dir) {
-  const found = [];
+  const foundMotions = [];
   (function walkDirectory(directory) {
     fs.readdirSync(directory, { withFileTypes: true }).forEach((event) => {
       if (event.name === '_next') return;
       const entryPath = path.join(directory, event.name);
       if (event.isDirectory()) walkDirectory(entryPath);
-      else if (event.name.endsWith('.html')) found.push(entryPath);
+      else if (event.name.endsWith('.html')) foundMotions.push(entryPath);
     });
   })(dir);
-  return found;
+  return foundMotions;
 }
 
 const pages = walk(OUT);
@@ -130,9 +130,9 @@ pages.forEach((pageItem) => {
       }
       const where = scope ? ` (under ${scope}:)` : '';
 
-      const standalone = ['translate', 'rotate', 'scale'].filter((transformName) => set.has(transformName));
-      if (trans.includes('transform') && !set.has('transform') && standalone.length) {
-        const key = `transition names 'transform'${where} but the element sets ${standalone.join('/')} - name it ${standalone.join(',')} instead`;
+      const standaloneTransforms = ['translate', 'rotate', 'scale'].filter((transformName) => set.has(transformName));
+      if (trans.includes('transform') && !set.has('transform') && standaloneTransforms.length) {
+        const key = `transition names 'transform'${where} but the element sets ${standaloneTransforms.join('/')} - name it ${standaloneTransforms.join(',')} instead`;
         if (!dead.has(key)) dead.set(key, `${page}  <${tag} class="…${cls.slice(0, 90)}…">`);
       }
 

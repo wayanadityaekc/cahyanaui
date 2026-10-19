@@ -137,9 +137,9 @@ pages.forEach((file) => {
       }
       const where = scope ? ` (under ${scope}:)` : '';
 
-      const standalone = ['translate', 'rotate', 'scale'].filter((prop) => set.has(prop) && !has(prop));
-      if (list.includes('transform') && !set.has('transform') && standalone.length) {
-        const key = `transition names 'transform'${where} but the element sets ${standalone.join('/')} - name it ${standalone.join(',')} instead`;
+      const standaloneTransforms = ['translate', 'rotate', 'scale'].filter((prop) => set.has(prop) && !has(prop));
+      if (list.includes('transform') && !set.has('transform') && standaloneTransforms.length) {
+        const key = `transition names 'transform'${where} but the element sets ${standaloneTransforms.join('/')} - name it ${standaloneTransforms.join(',')} instead`;
         if (!dead.has(key)) dead.set(key, `${page}  <${tag} class="…${cls.slice(0, 90)}…">`);
       }
 
@@ -160,12 +160,12 @@ console.log(`Dead transitions     : ${dead.size}`);
 console.log(`Snapping clickables  : ${snap.size}`);
 console.log(`Self-referencing vars: ${cycles.length}`);
 
-const blind = [];
-if (!pages.length || !elements) blind.push('no pages or no classed elements found in out/');
+const blindSpots = [];
+if (!pages.length || !elements) blindSpots.push('no pages or no classed elements found in out/');
 if (!sentinelSeen)
-  blind.push(`no scanned stylesheet defines ${SENTINEL_TOKEN} - rule 3 is not reading the token files`);
-if (blind.length) {
-  blind.forEach((why) => {
+  blindSpots.push(`no scanned stylesheet defines ${SENTINEL_TOKEN} - rule 3 is not reading the token files`);
+if (blindSpots.length) {
+  blindSpots.forEach((why) => {
     console.log(`\n  BLIND ${why}`);
   });
   console.log('\nMotion check FAILED - it scanned nothing.');

@@ -8,7 +8,7 @@ const FX = request('/home/user/cahyana-api/fx.js');
 const CURS = FX.CURRENCIES;
 
 let checked = 0;
-const bad = [];
+const badRows = [];
 
 const CASES = [700000, 450000, 1300000, 1000000, 200000];
 
@@ -45,7 +45,7 @@ CASES.forEach((idr) => {
           const isServerAvailable = serverOption.available !== false;
           checked++;
           if (isSiteAvailable !== isServerAvailable) {
-            bad.push(
+            badRows.push(
               `${id} availability ${current}/${stay || 'ubud'}/ref=${ref}: site=${isSiteAvailable} server=${isServerAvailable}`,
             );
             return;
@@ -54,7 +54,9 @@ CASES.forEach((idr) => {
           const aAmt = siteOption.amount;
           const bAmt = serverOption.amount ? serverOption.amount.display : null;
           if (aAmt !== bAmt) {
-            bad.push(`${id} ${current} base=${base} stay=${stay || 'ubud'} ref=${ref}: site=${aAmt} server=${bAmt}`);
+            badRows.push(
+              `${id} ${current} base=${base} stay=${stay || 'ubud'} ref=${ref}: site=${aAmt} server=${bAmt}`,
+            );
           }
           const bIdr = serverOption.amount
             ? current === 'IDR'
@@ -63,7 +65,7 @@ CASES.forEach((idr) => {
             : null;
           const aIdr = current === 'IDR' ? siteOption.amount : siteOption.amountIdr;
           if (aIdr !== bIdr) {
-            bad.push(`${id} rupiah ${current} idr=${idr} ref=${ref}: site=${aIdr} server=${bIdr}`);
+            badRows.push(`${id} rupiah ${current} idr=${idr} ref=${ref}: site=${aIdr} server=${bIdr}`);
           }
           if (current === 'IDR') {
             const pp = SRV.quotePayment({
@@ -76,7 +78,7 @@ CASES.forEach((idr) => {
             }).options.find((option) => option.id === id);
             const bUsd = pp && pp.amount ? pp.amount.display : null;
             if (siteOption.amountUsd !== bUsd)
-              bad.push(`${id} paypal-usd idr=${idr} ref=${ref}: site=${siteOption.amountUsd} server=${bUsd}`);
+              badRows.push(`${id} paypal-usd idr=${idr} ref=${ref}: site=${siteOption.amountUsd} server=${bUsd}`);
           }
         });
       });
@@ -91,16 +93,16 @@ process.env.DOKU_CLIENT_ID = process.env.DOKU_CLIENT_ID || 'harness';
 process.env.DOKU_SECRET = process.env.DOKU_SECRET || 'harness';
 
 let rails = 0;
-if (PROV.DEFAULT_RAIL !== DEFAULT_RAIL) bad.push(`default rail: site=${DEFAULT_RAIL} server=${PROV.DEFAULT_RAIL}`);
+if (PROV.DEFAULT_RAIL !== DEFAULT_RAIL) badRows.push(`default rail: site=${DEFAULT_RAIL} server=${PROV.DEFAULT_RAIL}`);
 CURS.forEach((current) => {
   if (PROV.routeFor(current).provider !== DEFAULT_RAIL)
-    bad.push(`no choice ${current}: server=${PROV.routeFor(current).provider}`);
+    badRows.push(`no choice ${current}: server=${PROV.routeFor(current).provider}`);
   RAILS.forEach((rail) => {
     const srv = PROV.routeFor(current, rail);
     rails++;
-    if (srv.provider !== rail) bad.push(`rail ${current}/${rail}: server=${srv.provider}`);
+    if (srv.provider !== rail) badRows.push(`rail ${current}/${rail}: server=${srv.provider}`);
     if (srv.chargeCurrency !== chargeCurrency(current, rail)) {
-      bad.push(
+      badRows.push(
         `charge currency ${current}/${rail}: site=${chargeCurrency(current, rail)} server=${srv.chargeCurrency}`,
       );
     }
@@ -110,6 +112,6 @@ process.env = envWas;
 
 console.log(`kombinasi dicek : ${checked}`);
 console.log(`rail dicek      : ${rails} (default ${DEFAULT_RAIL})`);
-console.log(`beda            : ${bad.length}`);
-bad.slice(0, 12).forEach((problem) => console.log(`  ${problem}`));
-process.exit(bad.length ? 1 : 0);
+console.log(`beda            : ${badRows.length}`);
+badRows.slice(0, 12).forEach((problem) => console.log(`  ${problem}`));
+process.exit(badRows.length ? 1 : 0);

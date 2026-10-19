@@ -26,8 +26,8 @@ function loadScript(src) {
 }
 
 function adoptShell(before) {
-  const added = [...document.body.children].filter((node) => !before.has(node));
-  added.forEach((node) => {
+  const addedNodes = [...document.body.children].filter((node) => !before.has(node));
+  addedNodes.forEach((node) => {
     if (node.tagName === 'SCRIPT' || node.tagName === 'STYLE') return;
     node.dataset.dokuShell = '1';
     const style = getComputedStyle(node);
@@ -43,7 +43,7 @@ function adoptShell(before) {
       if (style.position === 'fixed' || style.position === 'absolute') node.style.borderRadius = 'var(--r-xl)';
     }
   });
-  return added.length;
+  return addedNodes.length;
 }
 
 export default function DokuCheckout({ bookingRef, option, amountText }) {

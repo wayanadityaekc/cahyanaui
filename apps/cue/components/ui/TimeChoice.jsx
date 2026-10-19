@@ -7,7 +7,7 @@ import { FIELD_LABEL } from './formClasses';
 
 export default function TimeChoice({ category, itemName, value, onChange, label = 'Start time', id }) {
   const allowed = findAllowedSlots(category, itemName);
-  const list = (allowed || TIME_SLOTS).map((timeSlot) => ({ value: timeSlot, label: formatTime(timeSlot) }));
+  const timeOptions = (allowed || TIME_SLOTS).map((timeSlot) => ({ value: timeSlot, label: formatTime(timeSlot) }));
 
   useEffect(() => {
     if (!allowed || !onChange) return;
@@ -19,7 +19,14 @@ export default function TimeChoice({ category, itemName, value, onChange, label 
       <label className={FIELD_LABEL} htmlFor={id}>
         {label}
       </label>
-      <Select id={id} label={label} value={value || ''} onChange={onChange} options={list} placeholder="Pick a time" />
+      <Select
+        id={id}
+        label={label}
+        value={value || ''}
+        onChange={onChange}
+        options={timeOptions}
+        placeholder="Pick a time"
+      />
     </div>
   );
 }

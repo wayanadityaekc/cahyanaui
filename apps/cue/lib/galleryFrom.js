@@ -27,19 +27,19 @@ export function buildGallery(data) {
     meta.set(fileName, { ...existing, title: existing.title || slide.title, alt: existing.alt || slide.title });
   });
 
-  const order = [
+  const orderedFiles = [
     FILE(data.heroBg),
     ...(data.heroSlides || []).map((slide) => FILE(slide.src || slide.img || slide)),
     ...sections.map((section) => FILE(section.img)),
   ];
 
   const seen = new Set();
-  const out = [];
-  order.forEach((fileName) => {
+  const galleryFiles = [];
+  orderedFiles.forEach((fileName) => {
     if (!fileName || seen.has(fileName)) return;
     seen.add(fileName);
     const fileMeta = meta.get(fileName) || {};
-    out.push({
+    galleryFiles.push({
       src: `/assets/images/${fileName}`,
       alt: fileMeta.alt || fileMeta.title || '',
       title: fileMeta.title || '',
@@ -47,5 +47,5 @@ export function buildGallery(data) {
       hgt: fileMeta.hgt,
     });
   });
-  return out;
+  return galleryFiles;
 }

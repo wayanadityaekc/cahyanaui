@@ -174,7 +174,7 @@ for (const width of [390, 768, 1280]) {
       checkAssertion(cta.words <= 2, `${width}${path}: "${cta.label}" is ${cta.words} words, the rule is 2`);
     });
 
-    const chipBox = await panel.evaluate(
+    const chipBoxes = await panel.evaluate(
       (root) =>
         [...root.querySelectorAll('[data-chip]')].map((element) => {
           const cs = getComputedStyle(element);
@@ -186,7 +186,7 @@ for (const width of [390, 768, 1280]) {
         }),
       await panel.elementHandle(),
     );
-    chipBox.forEach((chip) => {
+    chipBoxes.forEach((chip) => {
       checkAssertion(Math.abs(chip.h - std.h) < 0.5, `${width}${path}: a chip is ${chip.h}px, not ${std.h}`);
       checkAssertion(chip.fs === std.fs, `${width}${path}: a chip font is ${chip.fs}, not ${std.fs}`);
       checkAssertion(chip.rad > 100, `${width}${path}: a chip lost its pill shape (${chip.rad})`);
@@ -273,9 +273,9 @@ for (const width of [390, 768, 1280]) {
       route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(CATALOG) }),
     );
     const chat = { started: [], sent: [], reply: null, id: 'a'.repeat(48) };
-    const acct = [];
+    const accountRequests = [];
     await hctx.route('**/api/account', async (route) => {
-      acct.push(JSON.parse(route.request().postData() || '{}'));
+      accountRequests.push(JSON.parse(route.request().postData() || '{}'));
       return route.fulfill({
         status: 200,
         contentType: 'application/json',
@@ -394,11 +394,11 @@ for (const width of [390, 768, 1280]) {
     await sctx.route('**/api/pricing/catalog*', (route) =>
       route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(CATALOG) }),
     );
-    const started = [];
+    const startedChats = [];
     await sctx.route('**/api/chat/**', (route) => {
       const request = route.request();
       if (request.method() === 'POST' && request.url().includes('/chat/start')) {
-        started.push(JSON.parse(request.postData() || '{}'));
+        startedChats.push(JSON.parse(request.postData() || '{}'));
         return route.fulfill({
           status: 200,
           contentType: 'application/json',
@@ -439,11 +439,14 @@ for (const width of [390, 768, 1280]) {
     const i2 = panel.getByLabel('Your question');
     await i2.fill('my mother is elderly, how much walking is there');
     await i2.press('Enter');
-    for (let attempt = 0; attempt < 40 && !started.length; attempt += 1) await page.waitForTimeout(150);
-    checkAssertion(started.length === 1, `${width}: the signed-in handover never started`);
-    checkAssertion((started[0] || {}).name === 'Hannah Wills', `${width}: the handover did not carry the account name`);
+    for (let attempt = 0; attempt < 40 && !startedChats.length; attempt += 1) await page.waitForTimeout(150);
+    checkAssertion(startedChats.length === 1, `${width}: the signed-in handover never started`);
     checkAssertion(
-      (started[0] || {}).email === 'hannah@example.com',
+      (startedChats[0] || {}).name === 'Hannah Wills',
+      `${width}: the handover did not carry the account name`,
+    );
+    checkAssertion(
+      (startedChats[0] || {}).email === 'hannah@example.com',
       `${width}: the handover did not carry the account email`,
     );
 

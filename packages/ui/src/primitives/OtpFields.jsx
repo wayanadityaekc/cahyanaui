@@ -32,12 +32,12 @@ export default function OtpFields({
   }
 
   function spreadPastedDigits(start, raw) {
-    const next = [...digits];
+    const nextDigits = [...digits];
     const fits = raw.slice(0, length - start).split('');
     fits.forEach((char, offset) => {
-      next[start + offset] = char;
+      nextDigits[start + offset] = char;
     });
-    commit(next);
+    commit(nextDigits);
     refs.current[Math.min(start + fits.length, length - 1)]?.focus();
   }
 
@@ -45,18 +45,18 @@ export default function OtpFields({
     return (event) => {
       const raw = event.target.value.replace(/\D/g, '');
       if (!raw) {
-        const next = [...digits];
-        next[index] = '';
-        commit(next);
+        const nextDigits = [...digits];
+        nextDigits[index] = '';
+        commit(nextDigits);
         return;
       }
       if (raw.length > 1) {
         spreadPastedDigits(index, raw);
         return;
       }
-      const next = [...digits];
-      next[index] = raw;
-      commit(next);
+      const nextDigitsItem = [...digits];
+      nextDigitsItem[index] = raw;
+      commit(nextDigitsItem);
       if (index < length - 1) refs.current[index + 1]?.focus();
     };
   }
@@ -64,9 +64,9 @@ export default function OtpFields({
   function handleKeyDown(index) {
     return (event) => {
       if (event.key === 'Backspace' && !digits[index] && index > 0) {
-        const next = [...digits];
-        next[index - 1] = '';
-        commit(next);
+        const nextDigits = [...digits];
+        nextDigits[index - 1] = '';
+        commit(nextDigits);
         refs.current[index - 1]?.focus();
       } else if (event.key === 'ArrowLeft' && index > 0) {
         event.preventDefault();

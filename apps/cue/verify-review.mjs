@@ -50,7 +50,7 @@ for (const width of [390, 1280]) {
     const errs = [];
     page.on('pageerror', (error) => errs.push(String(error)));
 
-    const posted = [];
+    const postedReviews = [];
     const reviewed = new Set();
     let mineHits = 0;
     await browserContext.route('**/api/**', async (route) => {
@@ -60,15 +60,15 @@ for (const width of [390, 1280]) {
       }
       if (url.includes('/bookings/mine')) {
         mineHits += 1;
-        const history = MINE.history.map((trip) => ({
+        const historyTrips = MINE.history.map((trip) => ({
           ...trip,
           review_items: trip.review_items.filter((svc) => !reviewed.has(`${trip.ref}::${svc}`)),
         }));
-        return route.fulfill({ json: { ...MINE, history } });
+        return route.fulfill({ json: { ...MINE, history: historyTrips } });
       }
       if (url.includes('/reviews') && route.request().method() === 'POST') {
         const body = JSON.parse(route.request().postData() || '{}');
-        posted.push(body.service);
+        postedReviews.push(body.service);
         const shouldRefuse = mode === 'partial' && body.booking_ref === 'CUE-103';
         if (!shouldRefuse) reviewed.add(`${body.booking_ref}::${body.service}`);
         return route.fulfill({
@@ -122,7 +122,7 @@ for (const width of [390, 1280]) {
     const shell = page.locator('div.fixed.inset-0').filter({ hasText: 'Leave a Review' }).last();
     const txt = await shell.innerText();
     recordCheck(/Leave a Review/.test(txt), `${width}/${mode}: HARNESS READ THE WRONG BOX`);
-    recordCheck(posted.length === 2, `${width}/${mode}: ${posted.length} of 2 reviews were attempted`);
+    recordCheck(postedReviews.length === 2, `${width}/${mode}: ${postedReviews.length} of 2 reviews were attempted`);
 
     if (mode === 'all-ok') {
       recordCheck(/Thank you/.test(txt), `${width}/${mode}: no thank-you after a clean submit`);
@@ -159,16 +159,16 @@ for (const width of [390, 1280]) {
       if (await again.count()) {
         await again.click();
         await page.locator('[data-step="write"]').waitFor({ timeout: 10000 });
-        const postedCount = posted.length;
+        const postedCount = postedReviews.length;
         await page.locator('[data-step="write"] button[aria-label="5 stars"]').click();
         await page.fill('#rvm-message', 'Second try for the one that was left.');
         await page.locator('[data-step="write"] button', { hasText: /Submit review/ }).click();
         await page.waitForTimeout(800);
-        const sentNow = posted.slice(postedCount);
-        recordCheck(!sentNow.includes('Ubud Tour'), `${width}/${mode}: THE TRIP JUST REVIEWED WAS SENT AGAIN`);
+        const sentReviews = postedReviews.slice(postedCount);
+        recordCheck(!sentReviews.includes('Ubud Tour'), `${width}/${mode}: THE TRIP JUST REVIEWED WAS SENT AGAIN`);
         recordCheck(
-          sentNow.length === 1 && sentNow[0] === 'Kecak Dance',
-          `${width}/${mode}: second submit sent ${JSON.stringify(sentNow)}`,
+          sentReviews.length === 1 && sentReviews[0] === 'Kecak Dance',
+          `${width}/${mode}: second submit sent ${JSON.stringify(sentReviews)}`,
         );
       }
     }

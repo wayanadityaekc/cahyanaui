@@ -114,12 +114,12 @@ export function findToursContaining(refId) {
 export function listTourDestinations(tourSlug, attractions) {
   const tour = TOUR_CONTENT[tourSlug];
   if (!tour) return [];
-  const out = [];
+  const stopEntries = [];
   (tour.items || []).forEach((it) => {
-    if (!it.refId || out.some((existing) => existing.refId === it.refId)) return;
+    if (!it.refId || stopEntries.some((existing) => existing.refId === it.refId)) return;
     const attraction = attractions[it.refId];
     if (!attraction) return;
-    out.push({
+    stopEntries.push({
       refId: it.refId,
       href: `/attractions/${it.refId}.html`,
       name: attraction.title,
@@ -133,5 +133,5 @@ export function listTourDestinations(tourSlug, attractions) {
         ).value || '',
     });
   });
-  return out;
+  return stopEntries;
 }

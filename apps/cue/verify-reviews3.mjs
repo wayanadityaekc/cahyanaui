@@ -32,13 +32,13 @@ for (const width of [390, 1280]) {
   for (const pageEntry of PAGES) {
     const browserContext = await browser.newContext({ viewport: { width: width, height: 900 } });
     const page = await browserContext.newPage();
-    const asked = [];
+    const askedRequests = [];
     const errs = [];
     page.on('pageerror', (error) => errs.push(String(error)));
     await page.route('**/api/**', async (route) => {
       const requestUrl = route.request().url();
       if (/\/reviews(\?|$)/.test(requestUrl)) {
-        asked.push(requestUrl);
+        askedRequests.push(requestUrl);
         return route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(REVIEWS) });
       }
       return route.fulfill({ status: 200, contentType: 'application/json', body: '{}' });
@@ -47,12 +47,12 @@ for (const width of [390, 1280]) {
     await page.waitForTimeout(500);
 
     const tag = `${pageEntry.label}@${width}`;
-    recordCheck(asked.length > 0, `${tag}: the page never asked for reviews`);
+    recordCheck(askedRequests.length > 0, `${tag}: the page never asked for reviews`);
     recordCheck(
-      asked.some((requestUrl) => decodeURIComponent(requestUrl).includes(pageEntry.expect)),
-      `${tag}: asked ${asked.map((requestUrl) => decodeURIComponent(requestUrl).split('/reviews')[1]).join(' , ')} - expected ${pageEntry.expect}`,
+      askedRequests.some((requestUrl) => decodeURIComponent(requestUrl).includes(pageEntry.expect)),
+      `${tag}: asked ${askedRequests.map((requestUrl) => decodeURIComponent(requestUrl).split('/reviews')[1]).join(' , ')} - expected ${pageEntry.expect}`,
     );
-    recordCheck(asked.length === 1, `${tag}: asked for reviews ${asked.length} times`);
+    recordCheck(askedRequests.length === 1, `${tag}: asked for reviews ${askedRequests.length} times`);
 
     const txt = await page.locator('body').innerText();
     recordCheck(/What guests say/i.test(txt), `${tag}: no reviews heading`);

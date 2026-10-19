@@ -27,10 +27,9 @@ function checkIsBehindUpstream() {
 
 let fails = 0;
 function assertCondition(cond, message) {
-  if (!cond) {
-    console.error(`  FAIL  ${message}`);
-    fails++;
-  }
+  if (cond) return;
+  console.error(`  FAIL  ${message}`);
+  fails++;
 }
 function assertEqual(got, want, message) {
   return assertCondition(

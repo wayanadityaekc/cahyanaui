@@ -97,7 +97,8 @@ for (const width of [390, 1280]) {
             card++;
             return;
           }
-          if (Math.abs(ox) > 0 || Math.abs(oy) > 0 || blur > 2) elevation = true;
+          const hasVisibleShadow = Math.abs(ox) > 0 || Math.abs(oy) > 0 || blur > 2;
+          if (hasVisibleShadow) elevation = true;
         });
         if (elevation) {
           shadowRows.push(

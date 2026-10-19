@@ -89,16 +89,15 @@ function findBottomBars(page) {
       `css ${classe}: no (display-mode: standalone) rule - installed Android/iOS 16.4+ would get nothing`,
     );
     checkAssertion(!!attrHit, `css ${classe}: no html[data-standalone] rule - older iPhones would get nothing`);
-    if (mediaHit && attrHit) {
-      checkAssertion(
-        mediaHit.decl === attrHit.decl,
-        `css ${classe}: branches declare different things ("${mediaHit.decl}" vs "${attrHit.decl}")`,
-      );
-      checkAssertion(
-        mediaHit.scoped && attrHit.scoped,
-        `css ${classe}: one branch is not width-scoped (media ${mediaHit.scoped}, attr ${attrHit.scoped})`,
-      );
-    }
+    if (!(mediaHit && attrHit)) return;
+    checkAssertion(
+      mediaHit.decl === attrHit.decl,
+      `css ${classe}: branches declare different things ("${mediaHit.decl}" vs "${attrHit.decl}")`,
+    );
+    checkAssertion(
+      mediaHit.scoped && attrHit.scoped,
+      `css ${classe}: one branch is not width-scoped (media ${mediaHit.scoped}, attr ${attrHit.scoped})`,
+    );
   });
 }
 

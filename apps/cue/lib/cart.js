@@ -16,7 +16,8 @@ export function cascadeDates(state, dayIndex, date) {
 export function hasClash({ days }, isFullDay) {
   const seen = {};
   return (days || []).some((day) => {
-    if (!day.date || !(day.items || []).some(isFullDay)) return false;
+    const isPartialDayDate = !day.date || !(day.items || []).some(isFullDay);
+    if (isPartialDayDate) return false;
     if (seen[day.date]) return true;
     seen[day.date] = true;
     return false;
@@ -27,7 +28,8 @@ export function findClashDates({ days }, isFullDay) {
   const seen = {};
   const mergedRows = [];
   (days || []).forEach((day) => {
-    if (!day.date || !(day.items || []).some(isFullDay)) return;
+    const isPartialDayDate = !day.date || !(day.items || []).some(isFullDay);
+    if (isPartialDayDate) return;
     if (seen[day.date]) mergedRows.push(day.date);
     seen[day.date] = true;
   });
@@ -74,7 +76,8 @@ export function removeRow(state, { kind, localIndex, day_no, service }) {
   else if (kind === 'charter') next.charters.splice(localIndex, 1);
   else {
     let dayItem = next.days[day_no - 1];
-    if (!dayItem || !(dayItem.items || []).includes(service)) {
+    const isServiceMissingFromDay = !dayItem || !(dayItem.items || []).includes(service);
+    if (isServiceMissingFromDay) {
       dayItem = (next.days || []).find((day) => (day.items || []).includes(service));
     }
     if (dayItem) {

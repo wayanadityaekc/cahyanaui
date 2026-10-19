@@ -37,11 +37,10 @@ function adoptShell(before) {
       node.style.backdropFilter = 'blur(2px)';
     }
     const frame = node.tagName === 'IFRAME' ? node : node.querySelector('iframe');
-    if (frame) {
-      frame.style.borderRadius = 'var(--r-xl)';
-      frame.style.border = '0';
-      if (style.position === 'fixed' || style.position === 'absolute') node.style.borderRadius = 'var(--r-xl)';
-    }
+    if (!frame) return;
+    frame.style.borderRadius = 'var(--r-xl)';
+    frame.style.border = '0';
+    if (style.position === 'fixed' || style.position === 'absolute') node.style.borderRadius = 'var(--r-xl)';
   });
   return addedNodes.length;
 }
@@ -60,7 +59,8 @@ export default function DokuCheckout({ bookingRef, option, amountText }) {
         body: JSON.stringify({ booking_ref: bookingRef, option }),
       });
       const data = await response.json().catch(() => null);
-      if (!response.ok || !data || !data.url) {
+      const isCheckoutUrlMissing = !response.ok || !data || !data.url;
+      if (isCheckoutUrlMissing) {
         setErr(
           data && data.code === 'not_ready'
             ? 'Card payments are not available right now. Please go back and choose PayPal, or contact us.'

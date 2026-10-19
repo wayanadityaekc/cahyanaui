@@ -58,7 +58,8 @@ export function formatTime(time) {
 export function formatDate(dateString) {
   if (!dateString) return '';
   const [year, month, day] = String(dateString).split('-').map(Number);
-  if (!year || !month || !day) return String(dateString);
+  const isDatePartMissing = !year || !month || !day;
+  if (isDatePartMissing) return String(dateString);
   return new Date(year, month - 1, day).toLocaleDateString('en-GB', {
     day: 'numeric',
     month: 'short',

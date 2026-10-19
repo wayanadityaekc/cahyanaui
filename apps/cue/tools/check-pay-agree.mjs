@@ -67,19 +67,18 @@ CASES.forEach((idr) => {
           if (aIdr !== bIdr) {
             badRows.push(`${id} rupiah ${current} idr=${idr} ref=${ref}: site=${aIdr} server=${bIdr}`);
           }
-          if (current === 'IDR') {
-            const pp = SRV.quotePayment({
-              baseUsd: usd,
-              baseIdr: idr,
-              baseDisplay: null,
-              currency: 'USD',
-              stay,
-              hasReferral: ref,
-            }).options.find((option) => option.id === id);
-            const bUsd = pp && pp.amount ? pp.amount.display : null;
-            if (siteOption.amountUsd !== bUsd)
-              badRows.push(`${id} paypal-usd idr=${idr} ref=${ref}: site=${siteOption.amountUsd} server=${bUsd}`);
-          }
+          if (current !== 'IDR') return;
+          const pp = SRV.quotePayment({
+            baseUsd: usd,
+            baseIdr: idr,
+            baseDisplay: null,
+            currency: 'USD',
+            stay,
+            hasReferral: ref,
+          }).options.find((option) => option.id === id);
+          const bUsd = pp && pp.amount ? pp.amount.display : null;
+          if (siteOption.amountUsd !== bUsd)
+            badRows.push(`${id} paypal-usd idr=${idr} ref=${ref}: site=${siteOption.amountUsd} server=${bUsd}`);
         });
       });
     });

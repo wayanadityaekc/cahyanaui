@@ -173,7 +173,8 @@ export default function ChatPanel({ open, onClose }) {
   }, [open, thread, catchUp, takeOwner]);
 
   useEffect(() => {
-    if (!open || !thread || isLive) return undefined;
+    const shouldSkipLiveSync = !open || !thread || isLive;
+    if (shouldSkipLiveSync) return undefined;
     catchUp();
     const pollTimer = setInterval(catchUp, CHAT_POLL_INTERVAL_MS);
     return () => clearInterval(pollTimer);
@@ -254,7 +255,8 @@ export default function ChatPanel({ open, onClose }) {
   const handleQuestionAsk = useCallback(
     (question) => {
       const text = String(question || '').trim();
-      if (!text || isThinking || isSending) return;
+      const isSendBlocked = !text || isThinking || isSending;
+      if (isSendBlocked) return;
       setDraft('');
       setLog((prev) => [...prev, { id: createMessageId(), from: 'me', text: text }]);
 
@@ -299,7 +301,8 @@ export default function ChatPanel({ open, onClose }) {
   }, [thread, mail, account]);
 
   useEffect(() => {
-    if (isQuiet && mail === 'idle' && !heard.current) setMail('ask');
+    const shouldAskForEmail = isQuiet && mail === 'idle' && !heard.current;
+    if (shouldAskForEmail) setMail('ask');
   }, [isQuiet, mail]);
 
   function handleDraftChange(draftText) {

@@ -16,7 +16,8 @@ export default function useExtrasCatalog(currency = 'USD', guests = 2) {
         );
         if (!response.ok) return;
         const data = await response.json();
-        if (!alive || !data || !Array.isArray(data.items)) return;
+        const isCatalogDataUnusable = !alive || !data || !Array.isArray(data.items);
+        if (isCatalogDataUnusable) return;
         const items = {};
         data.items.forEach((item) => {
           items[item.name] = item;

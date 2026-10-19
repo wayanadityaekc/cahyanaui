@@ -46,12 +46,11 @@ async function setupContext(viewportWidth, { signedIn = false, marker = null } =
   });
   await browserContext.addInitScript(
     ([cart, tok, mk]) => {
-      if (!sessionStorage.getItem('seeded')) {
-        sessionStorage.setItem('seeded', '1');
-        localStorage.setItem('cue_itinerary_v1', cart);
-        if (tok) localStorage.setItem('cue_token', tok);
-        if (mk) localStorage.setItem('cue_resume_book', JSON.stringify(mk));
-      }
+      if (sessionStorage.getItem('seeded')) return;
+      sessionStorage.setItem('seeded', '1');
+      localStorage.setItem('cue_itinerary_v1', cart);
+      if (tok) localStorage.setItem('cue_token', tok);
+      if (mk) localStorage.setItem('cue_resume_book', JSON.stringify(mk));
     },
     [CART, signedIn ? 'tok-old' : '', marker],
   );

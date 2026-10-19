@@ -77,7 +77,9 @@ export default function BookingForm({
 
   useEffect(() => {
     if (isLocked) return;
-    if (itemOptions.length && item && !itemOptions.some((itemOption) => itemOption.value === item)) setItem('');
+    const isItemMissingFromOptions =
+      itemOptions.length && item && !itemOptions.some((itemOption) => itemOption.value === item);
+    if (isItemMissingFromOptions) setItem('');
   }, [isLocked, itemOptions, item]);
 
   const entry = catalog && item ? catalog.items.find((itemItem) => itemItem.name === item) : null;

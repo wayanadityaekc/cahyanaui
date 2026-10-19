@@ -7,7 +7,8 @@ export default function useQuote({ lines, currency, stay, referral = '', enabled
   const [priced, setPriced] = useState(null);
 
   useEffect(() => {
-    if (!enabled || !lines || !lines.length) {
+    const isQuoteBlocked = !enabled || !lines || !lines.length;
+    if (isQuoteBlocked) {
       setPriced(null);
       return;
     }
@@ -15,7 +16,8 @@ export default function useQuote({ lines, currency, stay, referral = '', enabled
     async function load() {
       try {
         const quoteResult = await quote({ lines, currency, stay, referral: referral || '' });
-        if (!cancelled && quoteResult && quoteResult.lines) setPriced(quoteResult);
+        const hasQuoteLines = !cancelled && quoteResult && quoteResult.lines;
+        if (hasQuoteLines) setPriced(quoteResult);
       } catch (e) {}
     }
     load();

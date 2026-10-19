@@ -67,7 +67,8 @@ export default function PayPalCheckout({ bookingRef, option, copy, currency = 'U
         body: JSON.stringify({ booking_ref: bookingRef, option }),
       });
       const data = await response.json().catch(() => null);
-      if (!response.ok || !data || !data.id) throw new Error((data && data.detail) || 'Could not start the payment.');
+      const isOrderIdMissing = !response.ok || !data || !data.id;
+      if (isOrderIdMissing) throw new Error((data && data.detail) || 'Could not start the payment.');
       if (data.converted && !cancelled) {
         setMessage(
           `PayPal cannot charge ${data.converted.from}, so this is billed as ${data.currency} ${data.amount}.`,
@@ -85,7 +86,8 @@ export default function PayPalCheckout({ bookingRef, option, copy, currency = 'U
       const data = await response.json().catch(() => null);
       if (response.status === HTTP_STATUS_PAYMENT_REQUIRED)
         throw Object.assign(new Error(copy.declined), { soft: true });
-      if (!response.ok || !data || data.status !== 'ok') {
+      const isCaptureFailed = !response.ok || !data || data.status !== 'ok';
+      if (isCaptureFailed) {
         throw Object.assign(new Error((data && data.detail) || copy.failed), { soft: true });
       }
       return data;
@@ -125,10 +127,9 @@ export default function PayPalCheckout({ bookingRef, option, copy, currency = 'U
               }
             },
             onCancel: () => {
-              if (!cancelled) {
-                setState('ready');
-                setMessage(copy.cancelled);
-              }
+              if (cancelled) return;
+              setState('ready');
+              setMessage(copy.cancelled);
             },
             onError: (error) => fail(error instanceof Error ? error : new Error(copy.failed)),
           })
@@ -148,7 +149,8 @@ export default function PayPalCheckout({ bookingRef, option, copy, currency = 'U
             })
           : null;
 
-        if (cardFields && cardFields.isEligible() && !cancelled) {
+        const canMountCardFields = cardFields && cardFields.isEligible() && !cancelled;
+        if (canMountCardFields) {
           cardFields.NumberField().render('#pp-card-number');
           cardFields.ExpiryField().render('#pp-card-expiry');
           cardFields.CVVField().render('#pp-card-cvv');

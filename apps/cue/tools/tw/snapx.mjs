@@ -5,7 +5,8 @@ import { execSync } from 'node:child_process';
 import { chromium } from 'playwright-core';
 
 const [, , page, selAll, outfile] = process.argv;
-if (!page || !selAll || !outfile) {
+const isSnapArgumentMissing = !page || !selAll || !outfile;
+if (isSnapArgumentMissing) {
   console.error('usage: node tools/tw/snapx.mjs <page.html> "<selector>" <out.json>');
   process.exit(2);
 }

@@ -137,7 +137,8 @@ export default function DetailTabs({
       content: <GoodToKnow isActivity={bookType === 'experience' || bookType === 'performance'} />,
     });
   }
-  if ((included && included.length) || (excluded && excluded.length)) {
+  const hasIncludedOrExcluded = (included && included.length) || (excluded && excluded.length);
+  if (hasIncludedOrExcluded) {
     sections.push({
       id: 'included',
       label: 'Included',

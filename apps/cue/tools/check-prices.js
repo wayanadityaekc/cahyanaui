@@ -47,8 +47,8 @@ function readSchemaProducts() {
   const priceEntries = [];
   Object.entries(parsed).forEach(([page, blocks]) => {
     blocks.forEach((block) => {
-      if (block && block.json && block.json['@type'] === 'Product' && block.json.offers)
-        priceEntries.push({ page, block: block });
+      const hasProductOffers = block && block.json && block.json['@type'] === 'Product' && block.json.offers;
+      if (hasProductOffers) priceEntries.push({ page, block: block });
     });
   });
   return priceEntries;
@@ -168,7 +168,8 @@ async function main() {
     console.log(`   - ${line}`);
   });
 
-  if (driftRows.length || unknownRows.length || missingRows.length || copies.problems.length) {
+  const hasPriceProblems = driftRows.length || unknownRows.length || missingRows.length || copies.problems.length;
+  if (hasPriceProblems) {
     console.log("\nFix: copy the API's usd value into whichever copy drifted - the card's");
     console.log("priceFallback, the band's fallback prop, or the JSON-LD offer in schema.js.");
     return 1;

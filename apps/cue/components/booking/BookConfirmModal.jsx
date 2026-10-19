@@ -120,7 +120,8 @@ export default function BookConfirmModal() {
           stay,
           referral: (referral && referral.code) || '',
         });
-        if (!cancelled && quoteResult && quoteResult.lines) setPriced(quoteResult);
+        const hasQuoteLines = !cancelled && quoteResult && quoteResult.lines;
+        if (hasQuoteLines) setPriced(quoteResult);
       } catch (e) {}
     }
     load();
@@ -260,7 +261,8 @@ export default function BookConfirmModal() {
     setErrors(fieldErrors);
     const dateErrors = {};
     (bookingContext.lines || []).forEach((line, index) => {
-      if (isAirportLine(line) && index === 0 && needsFlight) return;
+      const isFlightDetailsNeeded = isAirportLine(line) && index === 0 && needsFlight;
+      if (isFlightDetailsNeeded) return;
       if (!findLineDate(line, index)) dateErrors[index] = 'Please pick a date.';
       else if (!timeOf(line, index)) dateErrors[index] = 'Please pick a start time.';
     });
@@ -404,10 +406,9 @@ export default function BookConfirmModal() {
               categoryOfLine={findLineCategory}
               dtErr={dtErr}
               onContinue={() => {
-                if (validate()) {
-                  setError('');
-                  setStep(2);
-                }
+                if (!validate()) return;
+                setError('');
+                setStep(2);
               }}
             />
           ) : step === 2 ? (

@@ -64,10 +64,9 @@ export default function Navbar() {
       const bar = barRef.current ? barRef.current.offsetHeight : 0;
       root.style.setProperty('--header-h', `${headerHeight - bar}px`);
       root.style.setProperty('--tripbar-h', `${bar}px`);
-      if (headerHeight > max) {
-        max = headerHeight;
-        root.style.setProperty('--header-h-max', `${headerHeight}px`);
-      }
+      if (!(headerHeight > max)) return;
+      max = headerHeight;
+      root.style.setProperty('--header-h-max', `${headerHeight}px`);
     }
     function handleResize() {
       max = 0;
@@ -106,7 +105,8 @@ export default function Navbar() {
       const inNav = navRef.current && navRef.current.contains(event.target);
       const onBurger = burgerRef.current && burgerRef.current.contains(event.target);
       const inPopup = event.target.closest && event.target.closest('[data-portal]');
-      if (!inNav && !onBurger && !inPopup) setIsMenuOpen(false);
+      const isClickOutsideTargets = !inNav && !onBurger && !inPopup;
+      if (isClickOutsideTargets) setIsMenuOpen(false);
     }
     function handleKeyDown(event) {
       if (event.key !== 'Escape') return;

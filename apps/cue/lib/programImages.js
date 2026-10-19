@@ -11,7 +11,8 @@ function buildMap() {
     (section.cats || []).forEach((cat) => {
       (cat.cards || []).forEach((card) => {
         const name = card.priceName || (card.add && card.add.item) || card.name;
-        if (name && card.img && !map[name]) map[name] = card.img;
+        const shouldMapProgramImage = name && card.img && !map[name];
+        if (shouldMapProgramImage) map[name] = card.img;
       });
     });
   });

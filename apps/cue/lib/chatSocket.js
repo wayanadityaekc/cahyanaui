@@ -102,7 +102,8 @@ export function openChatSocket(thread, { onMessage, onTyping, onPresence, onOpen
         if (onTyping) onTyping(message.expiresIn || DEFAULT_TYPING_DURATION_MS);
         return;
       }
-      if (message.type === 'message' && message.message && onMessage) onMessage(message.message);
+      const isMessageDeliverable = message.type === 'message' && message.message && onMessage;
+      if (isMessageDeliverable) onMessage(message.message);
     };
 
     sock.onerror = () => {};
@@ -131,12 +132,11 @@ export function openChatSocket(thread, { onMessage, onTyping, onPresence, onOpen
       stopTimers();
       clearTimeout(retryTimer);
       setLive(false);
-      if (ws) {
-        ws.onclose = null;
-        try {
-          ws.close();
-        } catch (e) {}
-      }
+      if (!ws) return;
+      ws.onclose = null;
+      try {
+        ws.close();
+      } catch (e) {}
     },
     typing() {
       if (ws && ws.readyState === WebSocket.OPEN) {

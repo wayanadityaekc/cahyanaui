@@ -62,7 +62,8 @@ export function ladder(value) {
 }
 
 export function perIdr(fx, currency) {
-  if (!fx || !fx.perUsd || !fx.idrPerUsd) return null;
+  const isRateMissing = !fx || !fx.perUsd || !fx.idrPerUsd;
+  if (isRateMissing) return null;
   const perUsd = fx.perUsd[currency];
   return perUsd ? perUsd / fx.idrPerUsd : null;
 }

@@ -99,10 +99,9 @@ export default function OurCompany() {
   useEffect(() => {
     function applyHash() {
       const id = readIdFromHash();
-      if (id) {
-        setTab(id);
-        setIsReading(true);
-      }
+      if (!id) return;
+      setTab(id);
+      setIsReading(true);
     }
     applyHash();
     window.addEventListener('hashchange', applyHash);

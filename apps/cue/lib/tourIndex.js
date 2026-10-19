@@ -45,7 +45,8 @@ export function addAttractionCards(listing, attractions = {}) {
       const place = attractions[match[1]];
       if (place) {
         if (next.metaIcon === 'pin' || !next.meta) {
-          if (next.metaIcon === 'pin' && next.meta && !next.area) next.area = next.meta;
+          const shouldClearMetaIcon = next.metaIcon === 'pin' && next.meta && !next.area;
+          if (shouldClearMetaIcon) next.area = next.meta;
           const timeHere = (
             (place.hooks || []).find((hook) => /time here|duration/i.test(hook.label)) ||
             (place.facts || []).find((fact) => /time here|duration/i.test(fact.label)) ||

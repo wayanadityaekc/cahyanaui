@@ -123,10 +123,9 @@ export function openChatSocket({ apiBase, thread, onMessage, onTyping, onPresenc
       stopTimers();
       clearTimeout(retryTimer);
       setLive(false);
-      if (ws) {
-        ws.onclose = null;
-        closeQuietly();
-      }
+      if (!ws) return;
+      ws.onclose = null;
+      closeQuietly();
     },
     typing() {
       if (!ws || ws.readyState !== WebSocket.OPEN) return;

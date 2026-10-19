@@ -47,10 +47,9 @@ pages.forEach((page) => {
   });
   if (html.includes('hero-slider__dots')) sliders++;
   if (html.includes('related__title')) related++;
-  if (problems.length) {
-    console.error(`  ${page}: ${problems.join(', ')}`);
-    bad++;
-  }
+  if (!problems.length) return;
+  console.error(`  ${page}: ${problems.join(', ')}`);
+  bad++;
 });
 
 console.log(`Detail pages checked : ${pages.length}`);

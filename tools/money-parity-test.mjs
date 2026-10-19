@@ -17,10 +17,9 @@ let checked = 0;
 let failed = 0;
 function recordCheck(cond, label) {
   checked += 1;
-  if (!cond) {
-    failed += 1;
-    if (failed <= 15) console.log(`FAIL ${label}`);
-  }
+  if (cond) return;
+  failed += 1;
+  if (failed <= 15) console.log(`FAIL ${label}`);
 }
 
 recordCheck(

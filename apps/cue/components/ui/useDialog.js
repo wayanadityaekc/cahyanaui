@@ -52,7 +52,9 @@ export default function useDialog({ shown, onClose, escape = true }) {
 
       if (event.key !== 'Tab') return;
       const focused = document.activeElement;
-      if (focused && !node.contains(focused) && focused.closest && focused.closest('[data-portal]')) return;
+      const isFocusInsidePortal =
+        focused && !node.contains(focused) && focused.closest && focused.closest('[data-portal]');
+      if (isFocusInsidePortal) return;
 
       const items = Array.from(node.querySelectorAll(FOCUSABLE)).filter(checkIsVisible);
       if (!items.length) {
@@ -81,7 +83,8 @@ export default function useDialog({ shown, onClose, escape = true }) {
       document.removeEventListener('keydown', handleKeyDown);
       const index = dialogStack.indexOf(token);
       if (index >= 0) dialogStack.splice(index, 1);
-      if (opener && opener !== document.body && document.contains(opener) && opener.focus) {
+      const canRestoreOpenerFocus = opener && opener !== document.body && document.contains(opener) && opener.focus;
+      if (canRestoreOpenerFocus) {
         opener.focus({ preventScroll: true });
       }
     };

@@ -43,7 +43,8 @@ export async function fetchAvailability(villaSlug) {
     if (!response.ok) return { known: false, busy: [] };
     const data = await response.json();
     const villa = data && data.villas && data.villas[villaSlug];
-    if (!villa || !villa.known || !Array.isArray(villa.busy)) return { known: false, busy: [] };
+    const isVillaAvailabilityUnknown = !villa || !villa.known || !Array.isArray(villa.busy);
+    if (isVillaAvailabilityUnknown) return { known: false, busy: [] };
     return { known: true, busy: villa.busy.filter((range) => range && range.from && range.to) };
   } catch (e) {
     return { known: false, busy: [] };

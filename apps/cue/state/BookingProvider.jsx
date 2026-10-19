@@ -67,7 +67,8 @@ export function BookingProvider({ children }) {
   }, [account, hydrated, isGateOpen]);
 
   useEffect(() => {
-    if (!hydrated || !account || !justSignedIn) return;
+    const shouldSkipSignInPrompt = !hydrated || !account || !justSignedIn;
+    if (shouldSkipSignInPrompt) return;
     const marker = readMarker();
     if (marker && marker.path !== readPathname()) window.location.replace(marker.path);
   }, [hydrated, account, justSignedIn]);
@@ -89,7 +90,8 @@ export function useResumeBooking(ready, run) {
   const { account, hydrated } = useAccount();
   const done = useRef(false);
   useEffect(() => {
-    if (done.current || !hydrated || !account || !ready) return;
+    const shouldSkipAutoOpen = done.current || !hydrated || !account || !ready;
+    if (shouldSkipAutoOpen) return;
     const marker = readMarker();
     if (!marker || marker.path !== readPathname()) return;
     done.current = true;

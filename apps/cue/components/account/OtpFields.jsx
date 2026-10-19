@@ -60,7 +60,8 @@ export default function OtpFields({
 
   function handleKeyDown(digitIndex) {
     return (event) => {
-      if (event.key === 'Backspace' && !digits[digitIndex] && digitIndex > 0) {
+      const isBackspaceOnEmptyDigit = event.key === 'Backspace' && !digits[digitIndex] && digitIndex > 0;
+      if (isBackspaceOnEmptyDigit) {
         const nextDigits = digits.slice();
         nextDigits[digitIndex - 1] = '';
         commit(nextDigits);

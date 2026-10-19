@@ -158,7 +158,8 @@ export default function DateRangeField({
   function findDayState(isoDate) {
     if (checkIn && isoDate === checkIn) return 'start';
     if (checkOut && isoDate === checkOut) return 'end';
-    if (checkIn && checkOut && isoDate > checkIn && isoDate < checkOut) return 'in';
+    const isDateInsideRange = checkIn && checkOut && isoDate > checkIn && isoDate < checkOut;
+    if (isDateInsideRange) return 'in';
     return null;
   }
 
@@ -177,7 +178,8 @@ export default function DateRangeField({
       setIsOpen(false);
       return;
     }
-    if ((isChoosingEnd && isoDate > checkIn) || !canCheckIn(isoDate, { busy, limits })) return;
+    const isDateUnavailable = (isChoosingEnd && isoDate > checkIn) || !canCheckIn(isoDate, { busy, limits });
+    if (isDateUnavailable) return;
     onChange({ checkIn: isoDate, checkOut: '' });
     setEditing('end');
   }

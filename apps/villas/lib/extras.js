@@ -61,7 +61,8 @@ export function timeLabel(time) {
 }
 
 export function findExtraProblem(extra, stay, category) {
-  if (!stay || !stay.checkIn || !stay.checkOut) return 'Pick your stay dates first.';
+  const isStayDatesMissing = !stay || !stay.checkIn || !stay.checkOut;
+  if (isStayDatesMissing) return 'Pick your stay dates first.';
   if (extra.kind === 'transfer') {
     if (!extra.time) return 'Add the pickup time for your flight.';
     return '';

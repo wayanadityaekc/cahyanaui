@@ -20,8 +20,11 @@ function isFunctionNode(node) {
 function containsLexicalThis(rootNode) {
   let hasLexicalThis = false;
   function visit(node) {
-    if (hasLexicalThis || !node || typeof node.type !== 'string') return;
-    if (node !== rootNode && (node.type === 'FunctionExpression' || node.type === 'FunctionDeclaration')) return;
+    const isOutsideFunctionScope = hasLexicalThis || !node || typeof node.type !== 'string';
+    if (isOutsideFunctionScope) return;
+    const isNestedFunctionBoundary =
+      node !== rootNode && (node.type === 'FunctionExpression' || node.type === 'FunctionDeclaration');
+    if (isNestedFunctionBoundary) return;
     const isThisLike =
       node.type === 'ThisExpression' ||
       node.type === 'Super' ||
@@ -123,8 +126,11 @@ function isNameReferencedInside(sourceCode, node, name) {
 
 function isShorthandProperty(identifier) {
   const parent = identifier.parent;
-  if (parent && parent.type === 'Property' && parent.shorthand && parent.value === identifier) return true;
-  if (parent && parent.type === 'AssignmentPattern' && parent.left === identifier) {
+  const isShorthandPropertyValue =
+    parent && parent.type === 'Property' && parent.shorthand && parent.value === identifier;
+  if (isShorthandPropertyValue) return true;
+  const isAssignmentDefaultTarget = parent && parent.type === 'AssignmentPattern' && parent.left === identifier;
+  if (isAssignmentDefaultTarget) {
     const grand = parent.parent;
     return Boolean(grand && grand.type === 'Property' && grand.shorthand && grand.value === parent);
   }
@@ -197,8 +203,9 @@ function findSingular(pluralName) {
 
 function findCollectionName(node) {
   if (node.type === 'Identifier') return node.name;
-  if (node.type === 'MemberExpression' && !node.computed && node.property.type === 'Identifier')
-    return node.property.name;
+  const isPlainPropertyAccess =
+    node.type === 'MemberExpression' && !node.computed && node.property.type === 'Identifier';
+  if (isPlainPropertyAccess) return node.property.name;
   return null;
 }
 
@@ -262,7 +269,8 @@ function suggestNameFor(variable) {
   if (!isArrayCallback) return null;
   const collectionName = findCollectionName(call.callee.object);
   const singular = collectionName && findSingular(collectionName);
-  if (!singular || singular.length < 3 || BANNED_SHORT_NAMES.includes(singular)) return null;
+  const isSingularNameInvalid = !singular || singular.length < 3 || BANNED_SHORT_NAMES.includes(singular);
+  if (isSingularNameInvalid) return null;
   return singular;
 }
 

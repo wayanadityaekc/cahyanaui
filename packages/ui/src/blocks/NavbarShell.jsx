@@ -61,10 +61,9 @@ export default function NavbarShell({
       const bar = barRef.current ? barRef.current.offsetHeight : 0;
       root.style.setProperty('--header-h', `${height - bar}px`);
       root.style.setProperty('--tripbar-h', `${bar}px`);
-      if (height > max) {
-        max = height;
-        root.style.setProperty('--header-h-max', `${height}px`);
-      }
+      if (!(height > max)) return;
+      max = height;
+      root.style.setProperty('--header-h-max', `${height}px`);
     }
     function handleWindowResize() {
       max = 0;
@@ -100,7 +99,8 @@ export default function NavbarShell({
       const inNav = navRef.current && navRef.current.contains(event.target);
       const onBurger = burgerRef.current && burgerRef.current.contains(event.target);
       const inPopup = event.target.closest && event.target.closest('[data-portal]');
-      if (!inNav && !onBurger && !inPopup) setIsMenuOpen(false);
+      const isClickOutsideTargets = !inNav && !onBurger && !inPopup;
+      if (isClickOutsideTargets) setIsMenuOpen(false);
     }
     function handleEscapeKeyDown(event) {
       if (event.key !== 'Escape') return;

@@ -138,17 +138,19 @@ pages.forEach((file) => {
       const where = scope ? ` (under ${scope}:)` : '';
 
       const standaloneTransforms = ['translate', 'rotate', 'scale'].filter((prop) => set.has(prop) && !has(prop));
-      if (list.includes('transform') && !set.has('transform') && standaloneTransforms.length) {
+      const hasUnusedTransformTransition =
+        list.includes('transform') && !set.has('transform') && standaloneTransforms.length;
+      if (hasUnusedTransformTransition) {
         const key = `transition names 'transform'${where} but the element sets ${standaloneTransforms.join('/')} - name it ${standaloneTransforms.join(',')} instead`;
         if (!dead.has(key)) dead.set(key, `${page}  <${tag} class="…${cls.slice(0, 90)}…">`);
       }
 
       const isClickable =
         tag === 'button' || /role="button"/.test(attrs) || (tag === 'a' && tokens.includes('rounded-pill'));
-      if (!scope && isClickable && !has('scale')) {
-        const key = `${tag} transitions [${list.join(',')}] with no 'scale' - the press feedback will snap`;
-        if (!snap.has(key)) snap.set(key, `${page}  <${tag} class="…${cls.slice(0, 90)}…">`);
-      }
+      const isClickableWithoutScale = !scope && isClickable && !has('scale');
+      if (!isClickableWithoutScale) return;
+      const key = `${tag} transitions [${list.join(',')}] with no 'scale' - the press feedback will snap`;
+      if (!snap.has(key)) snap.set(key, `${page}  <${tag} class="…${cls.slice(0, 90)}…">`);
     });
   });
 });
@@ -172,7 +174,8 @@ if (blindSpots.length) {
   process.exit(1);
 }
 
-if (dead.size || snap.size || cycles.length) {
+const hasMotionProblems = dead.size || snap.size || cycles.length;
+if (hasMotionProblems) {
   [...dead].forEach(([why, where]) => {
     console.log(`\n  DEAD  ${why}\n        first seen: ${where}`);
   });

@@ -32,13 +32,12 @@ Object.keys(beforeSnapshot).forEach((vw) => {
           beforeValue = normalizeShadow(beforeValue);
           afterValue = normalizeShadow(afterValue);
         }
-        if (beforeValue !== afterValue) {
-          diffs++;
-          if (samples.length < 40)
-            samples.push(
-              `@${vw} el${index}(${bv[index]._t}) ${layer}.${propertyName}: ${JSON.stringify(beforeValue)} -> ${JSON.stringify(afterValue)}`,
-            );
-        }
+        if (beforeValue === afterValue) return;
+        diffs++;
+        if (samples.length < 40)
+          samples.push(
+            `@${vw} el${index}(${bv[index]._t}) ${layer}.${propertyName}: ${JSON.stringify(beforeValue)} -> ${JSON.stringify(afterValue)}`,
+          );
       });
     });
   });

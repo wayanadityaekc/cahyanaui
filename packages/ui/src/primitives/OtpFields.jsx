@@ -30,7 +30,8 @@ export default function OtpFields({
   function commit(next) {
     const joined = next.join('');
     onChange(joined);
-    if (joined.length === length && next.every(Boolean) && onComplete) onComplete(joined);
+    const isCodeComplete = joined.length === length && next.every(Boolean) && onComplete;
+    if (isCodeComplete) onComplete(joined);
   }
 
   function spreadPastedDigits(start, raw) {
@@ -65,7 +66,8 @@ export default function OtpFields({
 
   function handleKeyDown(index) {
     return (event) => {
-      if (event.key === 'Backspace' && !digits[index] && index > 0) {
+      const isBackspaceOnEmptyDigit = event.key === 'Backspace' && !digits[index] && index > 0;
+      if (isBackspaceOnEmptyDigit) {
         const nextDigits = [...digits];
         nextDigits[index - 1] = '';
         commit(nextDigits);

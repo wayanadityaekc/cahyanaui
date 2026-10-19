@@ -145,10 +145,9 @@ function matchTopic(question) {
       if (hasMention(term, text, questionWords)) score += term.includes(' ') ? PHRASE_TERM_SCORE : 1;
     });
     (topic.strong || []).forEach((term) => {
-      if (hasMention(term, text, questionWords)) {
-        strong = true;
-        score += STRONG_TERM_SCORE;
-      }
+      if (!hasMention(term, text, questionWords)) return;
+      strong = true;
+      score += STRONG_TERM_SCORE;
     });
     if (!score) return;
     const better = !best || (strong && !best.strong) || (strong === best.strong && score > best.score);

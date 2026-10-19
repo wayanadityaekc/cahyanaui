@@ -32,12 +32,12 @@ async function measureInkBox() {
         data[pixelOffset + 2],
         data[pixelOffset + 3],
       ];
-      if (alpha > 10 && !(red > 245 && green > 245 && blue > 245)) {
-        if (columnIndex < minX) minX = columnIndex;
-        if (columnIndex > maxX) maxX = columnIndex;
-        if (rowIndex < minY) minY = rowIndex;
-        if (rowIndex > maxY) maxY = rowIndex;
-      }
+      const isOpaquePixel = alpha > 10 && !(red > 245 && green > 245 && blue > 245);
+      if (!isOpaquePixel) return;
+      if (columnIndex < minX) minX = columnIndex;
+      if (columnIndex > maxX) maxX = columnIndex;
+      if (rowIndex < minY) minY = rowIndex;
+      if (rowIndex > maxY) maxY = rowIndex;
     }),
   );
   if (maxX < 0) throw new Error('the source looks empty');

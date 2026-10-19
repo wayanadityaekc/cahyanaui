@@ -31,7 +31,8 @@ function fetchLivePrices() {
 
 function applyLivePrice({ json, priceGroup, priceKey }, prices) {
   const node = json;
-  if (!prices || !node || node['@type'] !== 'Product' || !node.offers) return node;
+  const hasMissingProductOffer = !prices || !node || node['@type'] !== 'Product' || !node.offers;
+  if (hasMissingProductOffer) return node;
 
   if (priceGroup === 'transfers') {
     const all = prices.transfers;

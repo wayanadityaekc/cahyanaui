@@ -36,10 +36,9 @@ export default function DesktopNav({ isActive }) {
       if (boxRef.current && !boxRef.current.contains(event.target)) setIsOpen(false);
     }
     function handleKeyDown(event) {
-      if (event.key === 'Escape') {
-        setIsOpen(false);
-        btnRef.current?.focus();
-      }
+      if (event.key !== 'Escape') return;
+      setIsOpen(false);
+      btnRef.current?.focus();
     }
     document.addEventListener('click', handleDocumentClick);
     document.addEventListener('keydown', handleKeyDown);

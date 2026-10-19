@@ -145,7 +145,8 @@ export default function useChat({
   }, [open, thread, apiBase, catchUp, takeOwner]);
 
   useEffect(() => {
-    if (!open || !thread || isLive) return undefined;
+    const shouldSkipLiveSync = !open || !thread || isLive;
+    if (shouldSkipLiveSync) return undefined;
     catchUp();
     const timer = setInterval(catchUp, POLL_MS);
     return () => clearInterval(timer);
@@ -196,7 +197,8 @@ export default function useChat({
   const ask = useCallback(
     (question) => {
       const text = String(question || '').trim();
-      if (!text || isThinking || isSending) return;
+      const isSendBlocked = !text || isThinking || isSending;
+      if (isSendBlocked) return;
       setDraft('');
       setLog((prev) => [...prev, { id: createMessageId(), from: 'me', text }]);
 
@@ -242,7 +244,8 @@ export default function useChat({
   }, [thread, mail, account, isAround]);
 
   useEffect(() => {
-    if (isQuiet && mail === 'idle' && !heard.current) setMail('ask');
+    const shouldAskForEmail = isQuiet && mail === 'idle' && !heard.current;
+    if (shouldAskForEmail) setMail('ask');
   }, [isQuiet, mail]);
 
   function handleDraftChange(value) {

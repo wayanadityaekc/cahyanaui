@@ -57,7 +57,8 @@ async function run() {
     const html = fs.readFileSync(file, 'utf8');
     [...html.matchAll(/<a\b[^>]*\shref="([^"]*)"/g)].forEach((match) => {
       const href = decode(match[1]);
-      if (/^(mailto:|tel:|javascript:|data:)/.test(href) || href.startsWith('#') || href === '') return;
+      const isNonPageLink = /^(mailto:|tel:|javascript:|data:)/.test(href) || href.startsWith('#') || href === '';
+      if (isNonPageLink) return;
       const target = new URL(href, `${SITE}${pageUrl}`);
       if (target.origin !== SITE) return;
       linksChecked++;
@@ -127,7 +128,8 @@ async function run() {
   console.log(`Sitemap URLs         : ${sitemapLocs.length} (indexablePaths: ${indexable.length})`);
   console.log(`Indexable pages      : ${indexablePages}`);
 
-  if (!pages.length || !linksChecked || !indexablePages)
+  const isPageListEmpty = !pages.length || !linksChecked || !indexablePages;
+  if (isPageListEmpty)
     problems.push('BLIND         found no pages, links or indexable pages - the gate proved nothing');
 
   if (problems.length) {

@@ -61,20 +61,20 @@ export default function LoadingScreen({
 
   useEffect(() => {
     function handleLinkClick(event) {
-      if (
+      const isModifiedOrNonPrimaryClick =
         event.defaultPrevented ||
         event.button !== 0 ||
         event.metaKey ||
         event.ctrlKey ||
         event.shiftKey ||
-        event.altKey
-      )
-        return;
+        event.altKey;
+      if (isModifiedOrNonPrimaryClick) return;
       const anchor = event.target.closest && event.target.closest('a[href]');
       if (!anchor) return;
       if (anchor.target === '_blank' || anchor.hasAttribute('download')) return;
       const href = anchor.getAttribute('href');
-      if (!href || href.startsWith('#') || /^(mailto:|tel:|javascript:)/i.test(href)) return;
+      const isNonNavigationLink = !href || href.startsWith('#') || /^(mailto:|tel:|javascript:)/i.test(href);
+      if (isNonNavigationLink) return;
       let url;
       try {
         url = new URL(anchor.href);

@@ -151,7 +151,8 @@ export function AccountProvider({ children }) {
         body: JSON.stringify({ email, code }),
       });
       const data = await response.json().catch(() => ({}));
-      if (response.ok && data.status === 'ok' && data.token) {
+      const isTokenReceived = response.ok && data.status === 'ok' && data.token;
+      if (isTokenReceived) {
         writeLocal(KEY.token, data.token);
         setAccount(data.account || null);
         refreshTrips();

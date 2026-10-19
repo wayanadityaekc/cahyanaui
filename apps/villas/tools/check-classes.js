@@ -69,7 +69,8 @@ function extractStringLiterals(src) {
         charIndex = end === -1 ? src.length : end + 2;
         continue;
       }
-      if (ch === '"' || ch === "'" || ch === '`') open(ch);
+      const isQuoteCharacter = ch === '"' || ch === "'" || ch === '`';
+      if (isQuoteCharacter) open(ch);
       else if (ch === '{') top.depth++;
       else if (ch === '}' && top.inTemplate && top.depth === 0) {
         scopeStack.pop();

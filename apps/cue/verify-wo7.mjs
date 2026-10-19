@@ -31,7 +31,9 @@ function serve(root, port) {
         if (urlPath.endsWith('/')) urlPath += 'index.html';
         let filePath = path.join(root, urlPath);
         if (!fs.existsSync(filePath) && !path.extname(filePath)) filePath = path.join(root, `${urlPath}.html`);
-        if (!filePath.startsWith(root) || !fs.existsSync(filePath) || fs.statSync(filePath).isDirectory()) {
+        const isOutsideServedRoot =
+          !filePath.startsWith(root) || !fs.existsSync(filePath) || fs.statSync(filePath).isDirectory();
+        if (isOutsideServedRoot) {
           rsp.writeHead(404);
           return rsp.end('nf');
         }
@@ -134,10 +136,9 @@ async function measure(base, url, viewportWidth) {
     document.querySelectorAll('body *').forEach((element) => {
       const cs = getComputedStyle(element);
       ['Top', 'Right', 'Bottom', 'Left'].forEach((side) => {
-        if (parseFloat(cs[`border${side}Width`]) > 0 && cs[`border${side}Style`] !== 'none') {
-          const borderKey = `${cs[`border${side}Color`]}|${cs[`border${side}Style`]}`;
-          hist[borderKey] = (hist[borderKey] || 0) + 1;
-        }
+        if (!(parseFloat(cs[`border${side}Width`]) > 0 && cs[`border${side}Style`] !== 'none')) return;
+        const borderKey = `${cs[`border${side}Color`]}|${cs[`border${side}Style`]}`;
+        hist[borderKey] = (hist[borderKey] || 0) + 1;
       });
     });
     return { hist, h: document.documentElement.scrollHeight, over: document.documentElement.scrollWidth - innerWidth };

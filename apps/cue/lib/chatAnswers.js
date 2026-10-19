@@ -194,10 +194,10 @@ function matchItem(question) {
     const hasStrongMatch = iw.some(
       (word) => word.length >= STRONG_MATCH_MIN_WORD_LENGTH && questionWords.includes(word),
     );
-    if (hits >= 2 || (hits === 1 && hasStrongMatch)) {
-      const score = hits + (hasStrongMatch ? 1 : 0);
-      if (!best || score > best.score) best = { item, score };
-    }
+    const hasEnoughHits = hits >= 2 || (hits === 1 && hasStrongMatch);
+    if (!hasEnoughHits) return;
+    const score = hits + (hasStrongMatch ? 1 : 0);
+    if (!best || score > best.score) best = { item, score };
   });
   return best ? best.item : null;
 }
@@ -215,10 +215,9 @@ function matchTopic(question) {
       } else if (questionWords.includes(word)) score += 1;
     });
     (topic.strong || []).forEach((word) => {
-      if (word.includes(' ') ? normalizedQuestion.includes(word) : questionWords.includes(word)) {
-        strong = true;
-        score += KEYWORD_MATCH_SCORE;
-      }
+      if (!(word.includes(' ') ? normalizedQuestion.includes(word) : questionWords.includes(word))) return;
+      strong = true;
+      score += KEYWORD_MATCH_SCORE;
     });
     if (!score) return;
     const better = !best || (strong && !best.strong) || (strong === best.strong && score > best.score);

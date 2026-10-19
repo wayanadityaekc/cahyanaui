@@ -8,16 +8,16 @@ function fetchLivePrices() {
   if (!catalogPromise) {
     catalogPromise = (async () => {
       try {
-        const catalogItem = await catalog({ currency: 'USD', guests: 2, stay: '' });
-        if (!catalogItem || !Array.isArray(catalogItem.items)) return null;
+        const catalogData = await catalog({ currency: 'USD', guests: 2, stay: '' });
+        if (!catalogData || !Array.isArray(catalogData.items)) return null;
         const byName = {};
-        catalogItem.items.forEach((item) => {
+        catalogData.items.forEach((item) => {
           byName[item.name] = item.standard.usd;
         });
-        (catalogItem.transfers || []).forEach((transfer) => {
+        (catalogData.transfers || []).forEach((transfer) => {
           byName[transfer.route] = transfer.usd;
         });
-        const transfers = (catalogItem.transfers || [])
+        const transfers = (catalogData.transfers || [])
           .map((transfer) => transfer.usd)
           .filter((priceUsd) => priceUsd > 0);
         return { byName, transfers };

@@ -51,9 +51,9 @@ export default function OtpFields({
         spreadDigits(digitIndex, raw);
         return;
       }
-      const nextDigitsItem = digits.slice();
-      nextDigitsItem[digitIndex] = raw;
-      commit(nextDigitsItem);
+      const updatedDigits = digits.slice();
+      updatedDigits[digitIndex] = raw;
+      commit(updatedDigits);
       if (digitIndex < length - 1) refs.current[digitIndex + 1]?.focus();
     };
   }

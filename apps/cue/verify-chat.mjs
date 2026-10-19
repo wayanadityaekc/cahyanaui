@@ -150,13 +150,13 @@ for (const width of [390, 768, 1280]) {
     const ctas = await panel.evaluate(
       (root) =>
         [...root.querySelectorAll('[data-cta]')].map((element) => {
-          const boxItem = element.getBoundingClientRect();
+          const bounds = element.getBoundingClientRect();
           const cs = getComputedStyle(element);
           const label = (element.innerText || element.getAttribute('aria-label') || '').trim();
           return {
             label,
             words: label ? label.split(/\s+/).length : 0,
-            h: boxItem.height,
+            h: bounds.height,
             fs: parseFloat(cs.fontSize),
             rad: parseFloat(cs.borderTopLeftRadius),
             pt: parseFloat(cs.paddingTop),

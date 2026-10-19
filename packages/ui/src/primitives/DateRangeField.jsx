@@ -194,7 +194,7 @@ export default function DateRangeField({
     setIsOpen(true);
   }
 
-  function trigger(which, label, valueItem, placeholder) {
+  function trigger(which, label, dateValue, placeholder) {
     return (
       <button
         type="button"
@@ -204,8 +204,8 @@ export default function DateRangeField({
         aria-label={label}
         onClick={() => openAt(which)}
       >
-        <span className={valueItem ? CONTROL_VAL : CONTROL_VAL_PLACEHOLDER}>
-          {valueItem ? formatDateLabel(valueItem) : placeholder}
+        <span className={dateValue ? CONTROL_VAL : CONTROL_VAL_PLACEHOLDER}>
+          {dateValue ? formatDateLabel(dateValue) : placeholder}
         </span>
         <Calendar className={CHEV_CAL} strokeWidth={ICON_STROKE_WIDTH_BOLD} aria-hidden="true" />
       </button>

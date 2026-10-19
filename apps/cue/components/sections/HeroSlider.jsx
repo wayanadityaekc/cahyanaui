@@ -69,8 +69,8 @@ export default function HeroSlider({ slides = [] }) {
           </div>
           <div className="hero-slider__dots absolute left-0 right-0 bottom-[16px] max-[768px]:left-auto max-[768px]:right-[14px] max-[768px]:bottom-[2.6rem] z-[2] flex justify-center items-center max-[768px]:justify-end gap-1.5 pointer-events-none">
             {Array.from({ length: count }, (unusedValue, index) => {
-              const indexItem = start + index;
-              return <span className={buildDotClass(indexItem, index)} key={indexItem} />;
+              const dotSlideIndex = start + index;
+              return <span className={buildDotClass(dotSlideIndex, index)} key={dotSlideIndex} />;
             })}
           </div>
         </>

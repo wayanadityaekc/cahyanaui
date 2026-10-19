@@ -28,8 +28,8 @@ export function PricingProvider({ children, initialCatalog = null }) {
       try {
         const response = await fetch(`${API_BASE}/pricing/catalog?${query}`);
         const catalogData = response.ok ? await response.json() : null;
-        const catalogItem = normalizeCatalog(catalogData);
-        if (!cancelled && catalogItem) setCatalog(catalogItem);
+        const normalizedCatalog = normalizeCatalog(catalogData);
+        if (!cancelled && normalizedCatalog) setCatalog(normalizedCatalog);
       } catch (e) {}
     }
     load();
@@ -40,7 +40,7 @@ export function PricingProvider({ children, initialCatalog = null }) {
 
   function lookup(name) {
     if (!catalog) return null;
-    const item = catalog.items.find((itemItem) => itemItem.name === name);
+    const item = catalog.items.find((catalogEntry) => catalogEntry.name === name);
     if (item) return item;
     const transfer = catalog.transfers.find((transferItem) => transferItem.route === name);
     if (transfer)

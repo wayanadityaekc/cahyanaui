@@ -19,10 +19,10 @@ export default function SectionSwitcher({ zones = [] }) {
     function probe() {
       const scrollPosition = window.scrollY + SECTION_SCROLL_OFFSET_PX;
       let current = 0;
-      zones.forEach((zone, indexItem) => {
+      zones.forEach((zone, zoneIndex) => {
         const section = document.getElementById(zone.id);
         if (!section) return;
-        if (section.getBoundingClientRect().top + window.scrollY <= scrollPosition) current = indexItem;
+        if (section.getBoundingClientRect().top + window.scrollY <= scrollPosition) current = zoneIndex;
       });
       setIndex(current);
     }

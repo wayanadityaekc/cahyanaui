@@ -71,7 +71,7 @@ export default function BookingForm({
       return catalog.transfers.map((transfer) => ({ value: transfer.route, label: transfer.route }));
     const cats = CATEGORY_OF[type] || [];
     return catalog.items
-      .filter((itemItem) => cats.includes(itemItem.category) && itemItem.active)
+      .filter((catalogEntry) => cats.includes(catalogEntry.category) && catalogEntry.active)
       .map((catalogItem) => ({ value: catalogItem.name, label: catalogItem.name }));
   }, [catalog, type]);
 
@@ -82,7 +82,7 @@ export default function BookingForm({
     if (isItemMissingFromOptions) setItem('');
   }, [isLocked, itemOptions, item]);
 
-  const entry = catalog && item ? catalog.items.find((itemItem) => itemItem.name === item) : null;
+  const entry = catalog && item ? catalog.items.find((catalogEntry) => catalogEntry.name === item) : null;
   const transferEntry = catalog && item ? catalog.transfers.find((transfer) => transfer.route === item) : null;
   const hasExclusive = !!(entry && entry.hasExclusive);
   const isActivity = !!(entry && (entry.category === 'experience' || entry.category === 'performance'));

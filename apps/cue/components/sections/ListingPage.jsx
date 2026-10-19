@@ -3,7 +3,7 @@ import { BTN_SM } from '@/components/ui/btnClasses';
 import Breadcrumb from '@/components/ui/Breadcrumb';
 import { buildCrumbs } from '@/lib/crumbs';
 
-import { Car, Check, MapPin, Search, UserRound, X as CloseIconItem } from 'lucide-react';
+import { Car, Check, MapPin, Search, UserRound, X as XIcon } from 'lucide-react';
 import { INFO_SECTION_DETAIL, INFO_CARD } from '@/components/ui/infoClasses';
 import InfoFacts from '@/components/ui/InfoFacts';
 import InfoBoxes, { InfoBox, InfoBoxList } from '@/components/ui/InfoBoxes';
@@ -23,7 +23,7 @@ function SearchIcon() {
   return <Search strokeWidth={ICON_STROKE_WIDTH_MEDIUM} aria-hidden="true" />;
 }
 function CloseIcon() {
-  return <CloseIconItem aria-hidden="true" />;
+  return <XIcon aria-hidden="true" />;
 }
 function CarIcon() {
   return <Car strokeWidth={ICON_STROKE_WIDTH_REGULAR} aria-hidden="true" />;
@@ -50,10 +50,8 @@ export default function ListingPage({ data, page }) {
 
   const allCards = [];
   cats.forEach((cat) => {
-    const shownCardsItem = cat.cards.filter((card) => !isHiddenTour(card.href));
-    shownCardsItem.forEach((card, index) =>
-      allCards.push({ card, catId: cat.id, anchor: index === 0 ? cat.id : null }),
-    );
+    const visibleCards = cat.cards.filter((card) => !isHiddenTour(card.href));
+    visibleCards.forEach((card, index) => allCards.push({ card, catId: cat.id, anchor: index === 0 ? cat.id : null }));
   });
   const shownCards = term ? allCards.filter((allCard) => allCard.card.name.toLowerCase().includes(term)) : allCards;
   const tabs = [{ id: 'all', label: listTitle }, ...chips];

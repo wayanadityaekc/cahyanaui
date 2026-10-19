@@ -24,7 +24,8 @@ export default function BookCta({ item, perPerson = false }) {
   const [confirm, setConfirm] = useState(null);
 
   function isFullDay(name) {
-    const catalogItem = pricing && pricing.catalog && pricing.catalog.items.find((itemItem) => itemItem.name === name);
+    const catalogItem =
+      pricing && pricing.catalog && pricing.catalog.items.find((catalogEntry) => catalogEntry.name === name);
     return !!catalogItem && (catalogItem.category === 'tour' || catalogItem.category === 'combo');
   }
 
@@ -57,7 +58,8 @@ export default function BookCta({ item, perPerson = false }) {
   }, [toast]);
 
   function findCategory(name) {
-    const catalogItem = pricing && pricing.catalog && pricing.catalog.items.find((itemItem) => itemItem.name === name);
+    const catalogItem =
+      pricing && pricing.catalog && pricing.catalog.items.find((catalogEntry) => catalogEntry.name === name);
     return catalogItem ? catalogItem.category : null;
   }
 

@@ -29,8 +29,8 @@ function measureBox(page, selector) {
     const element = document.querySelector(selectorItem);
     if (!element) return null;
     const cs = getComputedStyle(element);
-    const boxItem = element.getBoundingClientRect();
-    return { display: cs.display, h: Math.round(boxItem.height), bottom: Math.round(boxItem.bottom) };
+    const bounds = element.getBoundingClientRect();
+    return { display: cs.display, h: Math.round(bounds.height), bottom: Math.round(bounds.bottom) };
   }, selector);
 }
 

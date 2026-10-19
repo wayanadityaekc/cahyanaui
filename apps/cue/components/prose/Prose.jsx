@@ -59,8 +59,8 @@ export default function Prose({ blocks, headingVariant = 'legal' }) {
     if (block.type === 'list') {
       return (
         <ul className={`${pickInfoList(block.variant)} ${PROSE_LINK}`} key={index}>
-          {block.items.map((item, indexItem) => (
-            <li key={indexItem} dangerouslySetInnerHTML={{ __html: unlinkHiddenTours(item) }} />
+          {block.items.map((item, listIndex) => (
+            <li key={listIndex} dangerouslySetInnerHTML={{ __html: unlinkHiddenTours(item) }} />
           ))}
         </ul>
       );

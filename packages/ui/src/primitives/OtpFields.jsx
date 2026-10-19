@@ -57,9 +57,9 @@ export default function OtpFields({
         spreadPastedDigits(index, raw);
         return;
       }
-      const nextDigitsItem = [...digits];
-      nextDigitsItem[index] = raw;
-      commit(nextDigitsItem);
+      const updatedDigits = [...digits];
+      updatedDigits[index] = raw;
+      commit(updatedDigits);
       if (index < length - 1) refs.current[index + 1]?.focus();
     };
   }

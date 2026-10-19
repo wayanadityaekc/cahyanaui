@@ -142,12 +142,12 @@ for (const width of [390, 1280]) {
   function measureHeaderBox() {
     return page.evaluate(() => {
       const header = document.querySelector('header');
-      const boxItem = header.getBoundingClientRect();
+      const bounds = header.getBoundingClientRect();
       const cs = getComputedStyle(document.documentElement);
       return {
-        top: Math.round(boxItem.top),
-        bottom: Math.round(boxItem.bottom),
-        h: Math.round(boxItem.height),
+        top: Math.round(bounds.top),
+        bottom: Math.round(bounds.bottom),
+        h: Math.round(bounds.height),
         navH: parseFloat(cs.getPropertyValue('--header-h')),
         barH: parseFloat(cs.getPropertyValue('--tripbar-h')),
       };
@@ -227,7 +227,7 @@ for (const width of [390, 1280]) {
       .filter((event) => !event.closest('#nav-menu') && event.getBoundingClientRect().width > 0)
       .map((event) => event.getBoundingClientRect())
       .filter((box) => box.left >= 0)
-      .sort((a, bItem) => a.left - bItem.left);
+      .sort((a, b) => a.left - b.left);
     const probe = document.createElement('div');
     probe.style.cssText = 'position:absolute;width:var(--container-x)';
     document.body.appendChild(probe);
@@ -489,8 +489,12 @@ for (const [label, url] of [
     return page.evaluate(() => {
       const image = document.querySelector('header ~ * img, main img') || document.querySelector('img');
       if (!image) return null;
-      const boxItem = image.getBoundingClientRect();
-      return { w: +boxItem.width.toFixed(1), h: +boxItem.height.toFixed(1), tr: getComputedStyle(image).transform };
+      const imageBounds = image.getBoundingClientRect();
+      return {
+        w: +imageBounds.width.toFixed(1),
+        h: +imageBounds.height.toFixed(1),
+        tr: getComputedStyle(image).transform,
+      };
     });
   }
   const before = await measureImage();

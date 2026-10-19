@@ -128,14 +128,14 @@ export default function PayWaiting({ bookingRef, onClose, onConfirmed }) {
 
   return createPortal(
     <div className="fixed inset-0 z-[300] overflow-hidden" role="dialog" aria-modal="true" aria-live="polite">
-      {WAIT_PHOTOS.map((photo, indexItem) =>
-        indexItem <= index + 1 || indexItem === WAIT_PHOTOS.length - 1 ? (
+      {WAIT_PHOTOS.map((photo, photoIndex) =>
+        photoIndex <= index + 1 || photoIndex === WAIT_PHOTOS.length - 1 ? (
           <img
             key={photo.src}
             src={photo.src}
-            alt={indexItem === index ? photo.alt : ''}
-            aria-hidden={indexItem === index ? undefined : 'true'}
-            className={`absolute inset-0 w-full h-full object-cover [transition:opacity_1.2s_var(--ease)] ${indexItem === index ? 'opacity-100' : 'opacity-0'}`}
+            alt={photoIndex === index ? photo.alt : ''}
+            aria-hidden={photoIndex === index ? undefined : 'true'}
+            className={`absolute inset-0 w-full h-full object-cover [transition:opacity_1.2s_var(--ease)] ${photoIndex === index ? 'opacity-100' : 'opacity-0'}`}
           />
         ) : null,
       )}
@@ -150,8 +150,8 @@ export default function PayWaiting({ bookingRef, onClose, onConfirmed }) {
         )}
         <h2 className="mb-3 font-body text-h2 font-semibold text-white">{COPY.title}</h2>
         <div className="max-w-[420px]">
-          {COPY.lines.map((line, indexItem) => (
-            <p className="mb-2 text-body leading-[var(--lh-body)] text-[rgba(255,255,255,0.86)]" key={indexItem}>
+          {COPY.lines.map((line, lineIndex) => (
+            <p className="mb-2 text-body leading-[var(--lh-body)] text-[rgba(255,255,255,0.86)]" key={lineIndex}>
               {line}
             </p>
           ))}

@@ -56,8 +56,8 @@ export default function Prose({ blocks = [], headingVariant = 'legal' }) {
     if (block.type === 'list') {
       return (
         <ul className={pickInfoListClasses(block.variant)} key={index}>
-          {block.items.map((item, indexItem) => (
-            <li key={indexItem} dangerouslySetInnerHTML={{ __html: String(item) }} />
+          {block.items.map((item, itemIndex) => (
+            <li key={itemIndex} dangerouslySetInnerHTML={{ __html: String(item) }} />
           ))}
         </ul>
       );

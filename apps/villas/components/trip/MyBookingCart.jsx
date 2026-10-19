@@ -59,7 +59,7 @@ export default function MyBookingCart() {
     addExtra,
     removeExtra,
     updateExtra,
-    clear: handleStayClearItem,
+    clear: handleCartClear,
   } = useCart();
   const { currency, formatAmount, breakdown: convert } = useCurrency();
   const [isSent, setIsSent] = useState(false);
@@ -295,7 +295,7 @@ export default function MyBookingCart() {
             {isSent && (
               <button
                 type="button"
-                onClick={handleStayClearItem}
+                onClick={handleCartClear}
                 className="mt-4 w-full text-body text-muted hover:text-err bg-transparent border-none cursor-pointer"
               >
                 Clear this booking
@@ -313,9 +313,7 @@ export default function MyBookingCart() {
           setWaitingRef(ref);
         }}
       />
-      {waitingRef && (
-        <PayWaiting bookingRef={waitingRef} onClose={handleWaitingClose} onConfirmed={handleStayClearItem} />
-      )}
+      {waitingRef && <PayWaiting bookingRef={waitingRef} onClose={handleWaitingClose} onConfirmed={handleCartClear} />}
     </Container>
   );
 }

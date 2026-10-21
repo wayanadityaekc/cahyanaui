@@ -46,7 +46,6 @@ const base = {
   title: 'Ubud: Rice Terrace & Monkey Forest',
   meta: '5–7 hours',
   cat: 'Nature',
-  catLabel: 'Nature',
   image: { src: '/images/tegallalang-girl.webp', alt: 'Ubud Tour' },
 };
 const plainMarkup = renderToStaticMarkup(React.createElement(ProgramCard, { ...base, price: '$42' }));
@@ -61,6 +60,10 @@ check(
 );
 check('no extra colour tint over the photo', !plainMarkup.includes('mix-blend-multiply'));
 check("green categories get CUE's green accent", plainMarkup.includes('bg-[rgb(61,92,70)]'));
+check(
+  'no category badge on the photo (Wayan, 21 Oct 2026)',
+  !plainMarkup.includes('>Nature<') && !plainMarkup.includes('top-3 left-3') && !/uppercase/.test(plainMarkup),
+);
 check(
   'one link with the photo and its alt text',
   (plainMarkup.match(/<a /g) || []).length === 1 && plainMarkup.includes('alt="Ubud Tour"'),

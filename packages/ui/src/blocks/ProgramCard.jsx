@@ -1,4 +1,4 @@
-import { Clock, Landmark, Leaf, Mountain, Star, UserRound, VenetianMask } from 'lucide-react';
+import { Clock, Star, UserRound } from 'lucide-react';
 import { cn } from '../lib/cn.js';
 
 const DEFAULT_IMAGE_WIDTH_PX = 600;
@@ -10,10 +10,6 @@ const FRAME =
   "after:content-[''] after:absolute after:inset-0 after:z-[1] " +
   'after:bg-[linear-gradient(to_top,rgba(12,14,10,0.86)_0%,rgba(12,14,10,0.40)_40%,rgba(12,14,10,0)_66%,rgba(12,14,10,0.14)_100%)]';
 const IMG = 'absolute inset-0 w-full h-full object-cover';
-const CAT_BASE =
-  'absolute top-3 left-3 z-[3] inline-flex items-center gap-[6px] px-3 py-[6px] rounded-sm text-[0.64rem] font-semibold ' +
-  'tracking-[0.06em] uppercase text-white bg-[rgba(12,14,10,0.52)] border border-[rgba(255,255,255,0.2)] ' +
-  '[&>svg]:w-[13px] [&>svg]:h-[13px] [&>svg]:shrink-0';
 const RATE =
   'absolute top-3 right-3 z-[3] inline-flex items-center gap-[3px] px-[10px] py-[5px] rounded-sm ' +
   'bg-[rgba(255,255,255,0.92)] text-ink text-small font-semibold ' +
@@ -56,12 +52,7 @@ function splitPriceSymbol(text) {
   );
 }
 
-const CATS = {
-  Culture: { tone: 'gold', Icon: VenetianMask },
-  Temple: { tone: 'gold', Icon: Landmark },
-  Nature: { tone: 'green', Icon: Leaf },
-  Adventure: { tone: 'green', Icon: Mountain },
-};
+const GREEN_CATEGORIES = ['Nature', 'Adventure'];
 
 export default function ProgramCard({
   href = '#',
@@ -72,7 +63,6 @@ export default function ProgramCard({
   external = false,
   className,
   cat = '',
-  catLabel = '',
   rating = '',
   ratingCount = 0,
   newLabel = 'New',
@@ -80,10 +70,7 @@ export default function ProgramCard({
   fromLabel = 'from',
 }) {
   const linkProps = external ? { target: '_blank', rel: 'noopener' } : {};
-  const category = CATS[cat] || null;
-  const tone = category ? category.tone : 'gold';
-  const catTone = tone === 'green' ? 'bg-[rgba(61,92,70,0.84)]' : 'bg-[rgba(176,141,67,0.86)]';
-  const accentTone = tone === 'green' ? 'bg-[rgb(61,92,70)]' : 'bg-amber';
+  const accentTone = GREEN_CATEGORIES.includes(cat) ? 'bg-[rgb(61,92,70)]' : 'bg-amber';
 
   return (
     <a className={cn(FRAME, className)} href={href} {...linkProps}>
@@ -98,12 +85,6 @@ export default function ProgramCard({
         />
       ) : (
         <div className="absolute inset-0" style={{ backgroundImage: PLACEHOLDER_GRADIENT }} />
-      )}
-      {category && (
-        <span className={`${CAT_BASE} ${catTone}`}>
-          <category.Icon fill="currentColor" aria-hidden="true" />
-          {catLabel || cat}
-        </span>
       )}
       <span className={RATE}>
         <Star fill="currentColor" stroke="none" aria-hidden="true" />

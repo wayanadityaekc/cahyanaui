@@ -12,10 +12,10 @@ const PANEL =
   'fixed z-[96] inset-x-0 bottom-0 bg-surface-raised [border-top:1px_solid_var(--line)] rounded-t-xl ' +
   'pb-[calc(16px+env(safe-area-inset-bottom))] pt-4 font-body text-ink';
 const INNER =
-  'mx-auto max-w-[var(--container)] px-[var(--container-x)] flex flex-col gap-3 ' +
+  'mx-auto max-w-[var(--container)] px-[var(--container-x)] flex flex-col gap-4 ' +
   'min-[993px]:flex-row min-[993px]:items-center min-[993px]:gap-8';
 const TEXT = 'min-[993px]:flex-1';
-const TITLE = 'm-0 mb-1 text-strong font-semibold text-gold';
+const TITLE = 'm-0 mb-2 text-strong font-semibold text-gold';
 const BODY = 'm-0 text-small leading-[var(--lh-body)] text-muted';
 const LINK = 'text-gold underline underline-offset-2';
 const ACTIONS = 'flex flex-col gap-2 min-[561px]:flex-row min-[993px]:flex-none';

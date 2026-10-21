@@ -67,6 +67,7 @@ picks one - the variants do not get scattered back into the apps.
 | `ProgramCard` | CUE's homepage tour card (CUE `HomepageCard`): 4:5 photo, 22px corners, category badge, rating or New, time \| Private Tour bar, price with the symbol set apart; site passes texts, `price`, `rating`, `ratingCount`; lay a row out with `GRID_XPLORE` (CUE's explore grid) (test: `tests/program-card-test.mjs`) | - |
 | `ConsentBanner` | CUE's cookie banner: a panel fixed at the bottom with a title, one line and the privacy link, then Accept all, Only necessary, Reject all (both last two mean `denied`); site passes the texts, `policyHref`, `isOpen` and `onChoose(value)`, and stores the choice itself (test: `tests/consent-banner-test.mjs`) | - |
 | `CompactFooter` | the one-line footer for app-like pages: brand, contact links, a note; an optional `action` (`{ label, Icon, onClick }`) adds one button in the same style, for example Cookie settings | - |
+| `VillaPackageCard` | a villa package (villa + tours + transfers + services): 4:3 photo, optional badge, eyebrow, title, tagline, item list with icons, price with its label, coins line with the coin, a note and the site's action; replaces the discounted `PackageCard` of the old stay packages (test: `tests/villa-package-card-test.mjs`) | - |
 | `FooterShell` | five columns, one hairline | content-driven |
 | `StickyBar` | the one thing at the bottom of a phone screen | **flush** (both sites), floating (unused) |
 | `Breadcrumb` | CUE's trail: nav + ol, last item is the current page | - |

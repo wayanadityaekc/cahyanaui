@@ -52,6 +52,7 @@ export { default as NavDesktop } from './blocks/NavDesktop.jsx';
 export { default as AccountMenu, initialsOf, firstNameOf } from './blocks/AccountMenu.jsx';
 export { default as MyCahyanaPill } from './blocks/MyCahyanaPill.jsx';
 export { default as ConsentBanner } from './blocks/ConsentBanner.jsx';
+export { default as VillaPackageCard } from './blocks/VillaPackageCard.jsx';
 export { default as FooterShell } from './blocks/FooterShell.jsx';
 export { default as BrandIcon } from './blocks/BrandIcon.jsx';
 export { default as Breadcrumb, CRUMB_NAV, CRUMB_OL, CRUMB_LINK, CRUMB_HERE, CRUMB_SEP } from './blocks/Breadcrumb.jsx';

@@ -388,6 +388,13 @@ site passes, and the three buttons in CUE's order (Accept all primary, the other
 Run: node packages/ui/tests/consent-banner-test.mjs [node_modules dir] (same needs as my-cahyana-pill-test). Proven to
 fail with the accept button showing the reject label.
 
+## packages/ui/tests/villa-package-card-test.mjs
+
+VillaPackageCard (1.4.0): photo with alt text, title, every item with its icon, price with its label, coins line with the
+coin, the site action, the badge when given; with only a title, no photo, price, coins or badge.
+Run: node packages/ui/tests/villa-package-card-test.mjs [node_modules dir] (same needs as my-cahyana-pill-test). Proven
+to fail with the first item dropped from the list.
+
 ## packages/ui/tests/my-cahyana-pill-test.mjs
 
 MyCahyanaPill: one link to my., person | bag, the dot only until seen, no count, onTap wired, the EN button's box.

@@ -2,11 +2,13 @@ import { cn } from '../lib/cn.js';
 import { FOOT_COMPACT, FOOT_CONTACT_LINK, FOOT_CONTACT_SVG } from './footerClasses.js';
 
 const ICON_STROKE_WIDTH_BOLD = 1.8;
+const ACTION_RESET = 'p-0 border-0 bg-transparent cursor-pointer font-body';
 
 export default function CompactFooter({
   brand,
   links = [],
   note = '',
+  action = null,
   surface = 'bg-[#ebe8e2]',
   linkAs: Link = 'a',
   className,
@@ -33,6 +35,20 @@ export default function CompactFooter({
               <span className="max-[560px]:hidden">{label}</span>
             </a>
           ))}
+          {action && (
+            <button
+              type="button"
+              aria-label={action.label}
+              onClick={action.onClick}
+              className={cn(FOOT_CONTACT_LINK, ACTION_RESET)}
+              data-footer-action
+            >
+              {action.Icon && (
+                <action.Icon className={FOOT_CONTACT_SVG} strokeWidth={ICON_STROKE_WIDTH_BOLD} aria-hidden="true" />
+              )}
+              <span className="max-[560px]:hidden">{action.label}</span>
+            </button>
+          )}
         </div>
         <p className="max-[560px]:hidden text-small opacity-70 m-0 shrink-0">{note}</p>
       </div>

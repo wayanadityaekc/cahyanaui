@@ -381,6 +381,13 @@ Rule 3 CYCLE: a custom property defined as itself (--x: var(--x)) resolves to no
 GATE (villa version of CUE's check-urls): links, sitemap, canonicals and robots.txt all agree with what the build wrote.
 Every internal link lands on a built page, out/sitemap.xml lists exactly lib/routes.js indexablePaths(), every sitemap URL was built, every indexable page's canonical is its own sitemap URL, and robots.txt points at the sitemap.
 
+## packages/ui/tests/consent-banner-test.mjs
+
+ConsentBanner (1.3.0): closed draws nothing; open draws one region named by the title, the body, the policy link the
+site passes, and the three buttons in CUE's order (Accept all primary, the other two ghost).
+Run: node packages/ui/tests/consent-banner-test.mjs [node_modules dir] (same needs as my-cahyana-pill-test). Proven to
+fail with the accept button showing the reject label.
+
 ## packages/ui/tests/my-cahyana-pill-test.mjs
 
 MyCahyanaPill: one link to my., person | bag, the dot only until seen, no count, onTap wired, the EN button's box.

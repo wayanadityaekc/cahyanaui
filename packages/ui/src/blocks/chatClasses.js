@@ -41,7 +41,7 @@ export const CHAT_ROW =
   '[transition:background-color_var(--dur)_var(--ease),scale_var(--dur-fast)_var(--ease)] hover:bg-cream';
 export const CHAT_ROW_NAME = 'flex-1 min-w-0 font-body text-small text-green';
 export const CHAT_ROW_NOTE = 'block font-body text-label text-muted truncate';
-export const CHAT_ROW_PRICE = 'flex-none font-body text-small font-semibold text-amber tabular-nums';
+export const CHAT_ROW_PRICE = 'flex-none font-body text-small font-semibold text-gold tabular-nums';
 
 export const CHAT_LINK =
   `inline-flex flex-none ${BTN_SM} self-start bg-surface-raised text-gold [border:1px_solid_var(--line)] no-underline cursor-pointer ` +

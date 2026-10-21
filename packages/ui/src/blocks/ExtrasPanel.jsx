@@ -44,7 +44,7 @@ function ExtraRow({
         </div>
         <div className="flex items-center gap-3 shrink-0">
           {price !== null ? (
-            <span className="text-small font-semibold text-amber" data-extra-price>
+            <span className="text-small font-semibold text-gold" data-extra-price>
               {price}
             </span>
           ) : null}

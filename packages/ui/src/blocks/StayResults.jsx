@@ -48,7 +48,7 @@ export default function StayResults({ items = [], linkAs = 'a', className }) {
               <p className="text-small mt-1 mb-3" aria-live="polite">
                 {status === 'free' ? (
                   <>
-                    <span className="text-amber font-semibold">{price}</span>
+                    <span className="text-gold font-semibold">{price}</span>
                     <span className="text-muted"> · {priceNote}</span>
                   </>
                 ) : (

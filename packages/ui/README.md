@@ -81,7 +81,7 @@ picks one - the variants do not get scattered back into the apps.
 | `AvailabilityCalendar` | big stay calendar: booked nights struck through, 1 month on phones / 2 from md, months slide (Framer Motion, needs the `motion` peer) | site passes busy nights, today, min nights, value, onChange |
 | `BookingPanel` | the sticky panel beside a stay | - |
 | `SearchBar` | dates + guests + the button | hero, panel, stack |
-| `PriceBlock` | "From Rp… / night" | amber, gold |
+| `PriceBlock` | "From Rp… / night" | always soft black (`text-gold`); no price in the library is amber (test: `tests/price-colour-test.mjs`) |
 | `Slider` | a card row that scrolls sideways, arrows on desktop | track class is a prop |
 | `ReviewCard` / `ReviewDetail` | one review as a fixed-size card; its full text in a dialog | - |
 | `ReviewList` | reviews as cards + the detail dialog | **slider** (a review section), **grid** (the full list) |

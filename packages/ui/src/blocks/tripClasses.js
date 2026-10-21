@@ -11,7 +11,7 @@ export const TRIP_BODY = 'flex-[1_1_auto] min-w-0';
 export const TRIP_TITLE = 'font-semibold text-green m-0';
 export const TRIP_DESC = 'text-small text-muted mt-[0.15rem] mx-0 mb-0';
 export const TRIP_DATE = 'text-small font-medium text-muted mt-[0.3rem] mx-0 mb-0';
-export const TRIP_PRICE = 'flex-[0_0_auto] text-right whitespace-nowrap font-semibold text-amber-d';
+export const TRIP_PRICE = 'flex-[0_0_auto] text-right whitespace-nowrap font-semibold text-gold';
 export const TRIP_DET_BOX = 'm-0 pt-0 px-[0.95rem] pb-[0.55rem]';
 export const TRIP_DET_TOGGLE =
   'flex items-center gap-[0.35rem] border-none bg-transparent py-[0.35rem] px-0 font-body text-small font-medium text-muted cursor-pointer hover:text-gold';
@@ -22,6 +22,6 @@ export const TRIP_DET_LINE =
   'flex items-baseline justify-between gap-[0.75rem] py-2 px-0 text-small [&+&]:[border-top:1px_solid_var(--line)]';
 export const TRIP_DET_NAME = 'flex flex-col gap-[0.15rem] min-w-0 text-green';
 export const TRIP_DET_META = 'text-label text-muted';
-export const TRIP_DET_AMT = 'flex-[0_0_auto] whitespace-nowrap font-semibold text-amber-d';
+export const TRIP_DET_AMT = 'flex-[0_0_auto] whitespace-nowrap font-semibold text-gold';
 export const TRIP_CANCEL_BOX = 'flex justify-end m-0 py-[0.7rem] px-[0.95rem] border-t border-line bg-cream';
 export const TRIP_CANCEL_BTN = `inline-flex w-auto ${BTN_SM} [border:1px_solid_var(--color-gold)] bg-surface-raised text-gold-d font-body font-semibold text-small no-underline [transition:background-color_var(--dur)_ease,color_var(--dur)_ease,scale_var(--dur-fast)_var(--ease)] hover:bg-gold hover:text-white max-[600px]:w-full max-[600px]:justify-center`;

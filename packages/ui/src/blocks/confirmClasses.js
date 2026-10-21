@@ -19,7 +19,7 @@ export const ROWSET = 'mb-4 [border-top:1px_solid_var(--line)]';
 export const PBAR =
   'flex items-center justify-between gap-[10px] py-[10px] px-3 rounded-md bg-cream [border:1px_solid_var(--line)]';
 export const PBAR_L = 'text-body font-medium text-green';
-export const PBAR_V = 'text-[1.15rem] font-semibold text-amber';
+export const PBAR_V = 'text-[1.15rem] font-semibold text-gold';
 export const BACK_LINK =
   'block w-full pt-[10px] text-center text-body font-medium text-green bg-transparent border-none cursor-pointer';
 export const DETAILS_LI_ROW =

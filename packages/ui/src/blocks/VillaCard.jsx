@@ -137,7 +137,7 @@ export default function VillaCard({
             {price ? (
               <p className="m-0 text-left min-[560px]:text-right leading-none">
                 <span className="block text-label text-white/75 mb-1">{fromLabel}</span>
-                <span className="font-semibold text-[1.75rem] text-amber">{price}</span>
+                <span className="font-semibold text-[1.75rem] text-gold">{price}</span>
                 <span className="ml-1.5 text-small text-white/80">{unit}</span>
               </p>
             ) : (

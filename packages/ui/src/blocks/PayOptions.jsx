@@ -77,7 +77,7 @@ export default function PayOptions({
                     <span className="block mt-[0.2rem] text-small text-muted leading-[var(--lh-body)]">{sub}</span>
                   ) : null}
                 </span>
-                <span className="font-semibold text-amber text-[1rem] whitespace-nowrap" data-pay-amount>
+                <span className="font-semibold text-gold text-[1rem] whitespace-nowrap" data-pay-amount>
                   {amount}
                 </span>
               </button>

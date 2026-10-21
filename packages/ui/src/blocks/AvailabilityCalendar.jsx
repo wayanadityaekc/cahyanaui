@@ -6,6 +6,9 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { cn } from '../lib/cn.js';
 import { canCheckIn, canCheckOut, isBookedNight, nightsBetween, stayLimits } from '../lib/stayRules.js';
 
+const CLEAR_DATES =
+  'inline-flex shrink-0 items-center h-8 px-3 rounded-pill [border:1px_solid_var(--line)] bg-white whitespace-nowrap font-body text-label font-medium text-gold cursor-pointer transition-colors duration-150 hover:bg-cream hover:[border-color:var(--color-gold)] focus-visible:outline-none focus-visible:[box-shadow:var(--focus-ring)]';
+
 const MAX_STAY_NIGHTS = 30;
 const MAX_DAYS_AHEAD = 365;
 const YEAR_END_INDEX = 4;
@@ -274,11 +277,7 @@ export default function AvailabilityCalendar({
           </span>
         </div>
         {checkIn ? (
-          <button
-            type="button"
-            className="bg-transparent border-none p-0 text-small font-medium text-gold underline cursor-pointer"
-            onClick={() => onChange({ checkIn: '', checkOut: '' })}
-          >
+          <button type="button" className={CLEAR_DATES} onClick={() => onChange({ checkIn: '', checkOut: '' })}>
             Clear dates
           </button>
         ) : null}

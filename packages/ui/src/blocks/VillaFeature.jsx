@@ -77,7 +77,7 @@ export default function VillaFeature({
           {price ? (
             <p className="m-0 text-right">
               {priceNote ? <span className="block text-label text-muted">{priceNote}</span> : null}
-              <span className="text-[1.5rem] font-semibold text-amber">{price}</span>
+              <span className="text-[1.5rem] font-semibold text-gold">{price}</span>
             </p>
           ) : null}
           {action}

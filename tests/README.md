@@ -388,6 +388,12 @@ Run: node packages/ui/tests/my-cahyana-pill-test.mjs [node_modules dir]
 Needs a node_modules with @swc/core, react, react-dom, lucide-react and clsx; default: the sibling villa repo's
 (../ubud-private-villas/node_modules next to this repo). Measured layout is checked in each site's verify-my-pill.mjs.
 
+## packages/ui/tests/program-card-test.mjs
+
+ProgramCard is CUE's HomepageCard: 22px corners and the 4:5 shape, no tint over the photo, CUE's green accent, New until rated,
+score and count once rated, the currency symbol set apart and rupiah thousands set smaller, CUE's green gradient without a photo.
+Run: node packages/ui/tests/program-card-test.mjs [node_modules dir] (same needs as my-cahyana-pill-test). Proven to fail on 1.1.0's card.
+
 ## tools/check-no-legacy-css.mjs
 
 Phase 3's own gate: the component CSS classes are GONE, from the stylesheet

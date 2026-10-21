@@ -6,7 +6,7 @@ const DEFAULT_IMAGE_HEIGHT_PX = 600;
 const ICON_STROKE_WIDTH_REGULAR = 1.7;
 
 const FRAME =
-  'relative block overflow-hidden rounded-base text-white no-underline bg-white aspect-[4/5] shadow-card ' +
+  'relative block overflow-hidden text-white no-underline bg-white rounded-xl aspect-[4/5] shadow-card ' +
   "after:content-[''] after:absolute after:inset-0 after:z-[1] " +
   'after:bg-[linear-gradient(to_top,rgba(12,14,10,0.86)_0%,rgba(12,14,10,0.40)_40%,rgba(12,14,10,0)_66%,rgba(12,14,10,0.14)_100%)]';
 const IMG = 'absolute inset-0 w-full h-full object-cover';
@@ -21,12 +21,40 @@ const RATE =
 const OVERLAY = 'absolute left-0 right-0 bottom-0 z-[2] px-[15px] pb-[14px]';
 const TITLE =
   'mt-0 mb-[9px] font-semibold text-[1.125rem] leading-[1.2] text-white line-clamp-2 [text-shadow:0_2px_12px_rgba(0,0,0,0.5)]';
-const ACCENT = 'block w-[38px] h-[3px] rounded-base mb-3';
+const ACCENT = 'block w-[38px] h-[3px] rounded-[2px] mb-3';
 const BAR =
   'flex items-center justify-between gap-2 px-[11px] py-2 rounded-md bg-[rgba(12,14,10,0.42)] border border-[rgba(255,255,255,0.2)]';
 const META =
   'inline-flex items-center gap-[6px] text-[rgba(255,255,255,0.92)] text-[0.62rem] min-w-0 flex-[0_1_auto] whitespace-nowrap ' +
   '[&_svg]:w-3 [&_svg]:h-3 [&_svg]:flex-[0_0_auto]';
+
+const PLACEHOLDER_GRADIENT = 'linear-gradient(135deg, rgba(31, 61, 43, 0.92), rgba(46, 90, 64, 0.86))';
+const PRICE_SYM = 'text-[0.66em] font-semibold [vertical-align:0.12em] mr-px';
+const PRICE_TAIL = 'text-[0.55em] [vertical-align:0.05em]';
+const RATE_COUNT = 'ml-[1px] text-[0.8em] font-normal opacity-70';
+
+function splitPriceThousands(priceText) {
+  const dotIndex = priceText.lastIndexOf('.');
+  if (dotIndex === -1) return priceText;
+  return (
+    <>
+      {priceText.slice(0, dotIndex + 1)}
+      <span className={PRICE_TAIL}>{priceText.slice(dotIndex + 1)}</span>
+    </>
+  );
+}
+
+function splitPriceSymbol(text) {
+  const matchResult = String(text).match(/^(\D+)(\d.*)$/);
+  if (!matchResult) return text;
+  const [, symbol, digits] = matchResult;
+  return (
+    <>
+      <span className={PRICE_SYM}>{symbol}</span>
+      {symbol.trim() === 'Rp' ? splitPriceThousands(digits) : digits}
+    </>
+  );
+}
 
 const CATS = {
   Culture: { tone: 'gold', Icon: VenetianMask },
@@ -46,6 +74,8 @@ export default function ProgramCard({
   cat = '',
   catLabel = '',
   rating = '',
+  ratingCount = 0,
+  newLabel = 'New',
   privateLabel = 'Private Tour',
   fromLabel = 'from',
 }) {
@@ -53,11 +83,11 @@ export default function ProgramCard({
   const category = CATS[cat] || null;
   const tone = category ? category.tone : 'gold';
   const catTone = tone === 'green' ? 'bg-[rgba(61,92,70,0.84)]' : 'bg-[rgba(176,141,67,0.86)]';
-  const accentTone = tone === 'green' ? 'bg-gold' : 'bg-amber';
+  const accentTone = tone === 'green' ? 'bg-[rgb(61,92,70)]' : 'bg-amber';
 
   return (
     <a className={cn(FRAME, className)} href={href} {...linkProps}>
-      {image && (
+      {image ? (
         <img
           className={IMG}
           src={image.src}
@@ -66,12 +96,8 @@ export default function ProgramCard({
           height={image.height || DEFAULT_IMAGE_HEIGHT_PX}
           loading="lazy"
         />
-      )}
-      {image && (
-        <span
-          aria-hidden="true"
-          className="absolute inset-0 pointer-events-none mix-blend-multiply [background:linear-gradient(180deg,rgba(214,178,120,0.18),rgba(120,80,40,0.30))]"
-        />
+      ) : (
+        <div className="absolute inset-0" style={{ backgroundImage: PLACEHOLDER_GRADIENT }} />
       )}
       {category && (
         <span className={`${CAT_BASE} ${catTone}`}>
@@ -79,12 +105,17 @@ export default function ProgramCard({
           {catLabel || cat}
         </span>
       )}
-      {rating ? (
-        <span className={RATE}>
-          <Star fill="currentColor" stroke="none" aria-hidden="true" />
-          {rating}
-        </span>
-      ) : null}
+      <span className={RATE}>
+        <Star fill="currentColor" stroke="none" aria-hidden="true" />
+        {rating ? (
+          <>
+            {rating}
+            <span className={RATE_COUNT}>({ratingCount})</span>
+          </>
+        ) : (
+          newLabel
+        )}
+      </span>
       <div className={OVERLAY}>
         <h3 className={TITLE}>{title}</h3>
         <span className={`${ACCENT} ${accentTone}`} />
@@ -99,7 +130,7 @@ export default function ProgramCard({
           {price ? (
             <span className="flex-[0_0_auto] text-right leading-[1.05] whitespace-nowrap text-white">
               <small className="block text-[9px] opacity-85 font-medium">{fromLabel}</small>
-              <span className="text-white font-bold text-[0.875rem]">{price}</span>
+              <span className="text-white font-bold text-[0.875rem]">{splitPriceSymbol(price)}</span>
             </span>
           ) : null}
         </div>

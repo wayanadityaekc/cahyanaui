@@ -1,5 +1,9 @@
 import { chromium } from 'playwright-core';
 const BASE = process.argv[2];
+if (!BASE) {
+  console.error('Usage: node tools/check-policy.mjs <base URL of a running site, for example http://localhost:4000>');
+  process.exit(2);
+}
 let pass = 0,
   fail = 0;
 function recordCheck(isPassing, message) {

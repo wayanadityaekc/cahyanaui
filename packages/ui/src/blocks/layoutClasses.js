@@ -10,7 +10,7 @@ export const SECTION = 'py-7 md:py-14';
 
 export const SECTION_TONES = {
   plain: '',
-  cream: 'bg-surface-raised border-y border-line',
+  cream: 'bg-surface-raised',
   white: 'bg-surface-raised',
   dark: 'bg-gold',
 };

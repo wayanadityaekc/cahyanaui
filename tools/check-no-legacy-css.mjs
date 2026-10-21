@@ -2,6 +2,10 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 const OUT = process.argv[2];
+if (!OUT || !fs.existsSync(OUT)) {
+  console.error('Usage: node tools/check-no-legacy-css.mjs <path to a site build out/ folder>');
+  process.exit(2);
+}
 const RETIRED = [
   'wrap',
   'wrap-mid',

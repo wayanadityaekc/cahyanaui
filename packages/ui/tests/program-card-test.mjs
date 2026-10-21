@@ -55,7 +55,10 @@ const ratedMarkup = renderToStaticMarkup(
 );
 const photolessMarkup = renderToStaticMarkup(React.createElement(ProgramCard, { ...base, image: null }));
 
-check("CUE's 22px corners (rounded-xl), 4:5 card", /\brounded-xl\b/.test(plainMarkup) && plainMarkup.includes('aspect-[4/5]'));
+check(
+  "CUE's 22px corners (rounded-xl), 4:5 card",
+  /\brounded-xl\b/.test(plainMarkup) && plainMarkup.includes('aspect-[4/5]'),
+);
 check('no extra colour tint over the photo', !plainMarkup.includes('mix-blend-multiply'));
 check("green categories get CUE's green accent", plainMarkup.includes('bg-[rgb(61,92,70)]'));
 check(

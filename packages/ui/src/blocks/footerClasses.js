@@ -39,6 +39,6 @@ export const FOOT_GRID_SIX =
   'grid-cols-[1.5fr_0.9fr_0.9fr_1fr_1fr_1.1fr] ' +
   'max-[900px]:grid-cols-2 max-[900px]:gap-y-8';
 export const FOOT_COMPACT =
-  'footerbar fixed inset-x-0 bottom-0 z-[90] px-4 min-[561px]:px-6 py-[1rem] min-[561px]:pt-5 ' +
+  'footerbar static max-[992px]:mt-auto min-[993px]:fixed inset-x-0 bottom-0 z-[90] px-4 min-[561px]:px-6 py-[1rem] min-[561px]:pt-5 ' +
   'min-[561px]:pb-[max(1.25rem,env(safe-area-inset-bottom))] pb-[max(1rem,env(safe-area-inset-bottom))] ' +
   'leading-[normal] text-green [border-top:1px_solid_rgba(0,0,0,0.08)]';

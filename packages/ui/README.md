@@ -76,7 +76,10 @@ picks one - the variants do not get scattered back into the apps.
 | `SourceMark` | a review's source platform mark, bottom-right like CUE's | - |
 | `AccountSettings` | CUE's Account Settings body: avatar, name/phone (email locked), prefs slot, save, sign out, delete trigger | site passes handlers and its delete confirm |
 | `ExtrasPanel` | "Add to your stay": groups of add-on rows with price, Add/Remove, and a fields slot when added | site passes prices, date/time fields, handlers |
-| `PayOptions` | payment step: rail tiles (icon, name in aria-label) + option rows with amounts | site passes rails, options, amounts, handlers |
+| `PayOptions` | payment step: rail tiles (icon, name in aria-label) + option rows with amounts; an option with `available: false` (the quote's, for example the deposit on a booking that uses a coin) is not shown | site passes rails, options, amounts, handlers |
+| `UseCoin` | one "Use coin" button (on/off), never a coin count to pick; the server decides how many coins go on the item; site passes `on`, `canUse`, `onToggle` and, when on, the coins used as `countText` (test: `tests/coin-blocks-test.mjs`) | row, cta |
+| `CoinPrice` | an item's price with a coin on it: the list price struck through, then the new price, no sum shown; site passes both from the quote (`list`, `display`) | - |
+| `CoinBalance` | the guest's coins: usable count, pending coins (`pendingText`) and, when a refund left the balance below zero, `owedText` | card, row |
 | `PlanList` | CUE's charter plan rows, read-only: name, badge, sub, price (dash while loading) | site passes plans with formatted prices |
 | `AvailabilityCalendar` | big stay calendar: booked nights struck through, 1 month on phones / 2 from md, months slide (Framer Motion, needs the `motion` peer) | site passes busy nights, today, min nights, value, onChange |
 | `BookingPanel` | the sticky panel beside a stay | - |

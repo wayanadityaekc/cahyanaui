@@ -33,6 +33,7 @@ export { default as CoinBalance } from './blocks/CoinBalance.jsx';
 export { default as UseCoin } from './blocks/UseCoin.jsx';
 export { default as CoinBand } from './blocks/CoinBand.jsx';
 export { default as CoinRow } from './blocks/CoinRow.jsx';
+export { default as CoinPrice } from './blocks/CoinPrice.jsx';
 export { default as Container } from './blocks/Container.jsx';
 export { default as Section } from './blocks/Section.jsx';
 export { default as SectionHeading } from './blocks/SectionHeading.jsx';

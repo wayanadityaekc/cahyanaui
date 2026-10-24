@@ -24,7 +24,8 @@ export default function PayOptions({
   optionsTitle = 'How much now?',
   optionsNote = '',
 }) {
-  if (!options.length)
+  const availableOptions = options.filter((option) => option.available !== false);
+  if (!availableOptions.length)
     return <p className="m-0 text-body text-muted">Sorry, we could not load this information. Please try again.</p>;
   return (
     <div data-pay-options>
@@ -63,7 +64,7 @@ export default function PayOptions({
         </p>
       ) : null}
       <div className="flex flex-col gap-2" role="radiogroup" aria-label={optionsTitle}>
-        {options.map(({ id, label, sub, amount }) => {
+        {availableOptions.map(({ id, label, sub, amount }) => {
           const isActive = value === id;
           return (
             <div key={id} className={cn(CARD, isActive ? CARD_ON : CARD_OFF)} data-pay-option={id}>
